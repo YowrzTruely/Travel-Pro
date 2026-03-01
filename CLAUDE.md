@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A SaaS platform for Israeli event producers who organize group trips, team-building days, and retreats. Core features: client-facing quote builder, supplier database management, and project pipeline tracking. The entire UI is **Hebrew RTL** (`dir="rtl"`).
 
-Originally scaffolded from **Figma Make** (code bundle export). The Figma design source: `figma:asset/...` imports resolve via a custom Vite plugin to placeholder SVGs in local dev.
+Originally scaffolded from **Figma Make** (code bundle export). The Figma design source: `figma:asset/...` imports resolve via a custom Vite plugin to `src/figma-placeholder.svg` in local dev.
 
 ## Commands
 
@@ -16,7 +16,19 @@ bun run dev          # Start Vite dev server
 bun run build        # Production build
 npx convex dev       # Start Convex dev server (syncs schema + functions)
 npx convex run seed:seedAll  # Seed initial data (idempotent)
-npx playwright test  # Run Playwright e2e tests (config not yet created)
+```
+
+Development requires **two terminals**: `bun run dev` (frontend) and `npx convex dev` (backend). The Convex dev server watches `convex/` and hot-deploys function/schema changes.
+
+No linting or formatting tools are configured (no ESLint, Biome, or Prettier). No root `tsconfig.json` — frontend TS is handled by Vite's built-in transpilation; only `convex/tsconfig.json` exists for backend functions.
+
+## Environment Variables
+
+`.env.local` (required for local dev):
+```
+CONVEX_DEPLOYMENT=dev:unique-ermine-475
+VITE_CONVEX_URL=https://unique-ermine-475.convex.cloud
+VITE_CONVEX_SITE_URL=https://unique-ermine-475.convex.site
 ```
 
 ## Architecture
@@ -24,18 +36,19 @@ npx playwright test  # Run Playwright e2e tests (config not yet created)
 ### Frontend (Vite + React 18 + TypeScript)
 
 - **Entry**: `src/main.tsx` → `src/app/App.tsx`
-- **Routing**: React Router v7 (`src/app/routes.ts`) — Layout wraps all authenticated pages, `/quote/:id` is a public route (no auth)
+- **Routing**: React Router v7 (`src/app/routes.ts`). `App.tsx` creates a **separate `publicRouter`** for `/quote/:id` (no auth). The main router uses `Layout` which wraps all authenticated pages. Auth gating is in `AppInner()` in `App.tsx`, not in the Layout component itself
 - **Auth**: Convex Auth via `src/app/components/AuthContext.tsx` — provides `useAuth()` hook with `login`, `signup`, `logout`. Uses `@convex-dev/auth` with email/password provider
 - **Backend calls**: All pages use `useQuery` / `useMutation` hooks from `convex/react` directly — no API client layer. Data is real-time reactive
 - **Data types**: `src/app/components/data.ts` — `Supplier`, `Project`, `Client`, `CalendarEvent`, `QuoteVersion` interfaces
-- **UI components**: `src/app/components/ui/` — 50+ shadcn/ui components (Radix + Tailwind + CVA)
+- **UI components**: `src/app/components/ui/` — ~46 shadcn/ui components (Radix + Tailwind + CVA), plus utilities (`utils.ts`, `use-mobile.ts`)
 - **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin. Styles in `src/styles/` (index.css imports fonts.css, tailwind.css, theme.css). Font: Assistant (Hebrew/Latin)
 - **Path alias**: `@` maps to `./src` (configured in `vite.config.ts`)
+- **Assets**: `vite.config.ts` includes `assetsInclude: ['**/*.svg', '**/*.csv']` — CSVs are importable as raw assets (used by ImportWizard)
 
 ### Backend (Convex)
 
 - **Deployment**: `unique-ermine-475.convex.cloud`
-- **Schema**: `convex/schema.ts` — 11 domain tables + metadata + authTables. All entities use `_id` (Convex internal) with `legacyId` for backward-compatible URL routing
+- **Schema**: `convex/schema.ts` — 11 domain tables + `metadata` + `authTables`. All entities use `_id` (Convex internal) with `legacyId` for backward-compatible URL routing
 - **Functions** (in `convex/`):
   - `suppliers.ts` — list, get, getByLegacyId, summaries, create, update, remove, archive, bulkImport, bulkRollback
   - `supplierContacts.ts`, `supplierProducts.ts`, `supplierDocuments.ts` — sub-resources by supplierId
@@ -45,10 +58,11 @@ npx playwright test  # Run Playwright e2e tests (config not yet created)
   - `dashboard.ts` — aggregated stats query
   - `publicQuote.ts` — public queries/mutations (no auth) for client-facing quote page
   - `images.ts` — `generateUploadUrl` for Convex file storage
+  - `http.ts` — HTTP router, adds auth routes via `auth.addHttpRoutes(http)`
   - `seed.ts` — idempotent `seedAll` mutation
-- **Auth**: `convex/auth.ts` — Password provider via `@convex-dev/auth`
+- **Auth**: `convex/auth.ts` — Password provider via `@convex-dev/auth`. `convex/auth.config.ts` uses `CONVEX_SITE_URL` for JWT issuer config
 - **ID mapping**: Convex uses `_id` internally. All queries map `id: doc._id` in return values so frontend uses `.id`. Projects also have `legacyId` for URL routing
-- **Image storage**: Convex file storage. Upload flow: `generateUploadUrl()` → `fetch(url, { method: "POST", body: file })` → store `storageId`. Hook: `src/app/components/hooks/useImageUpload.ts`
+- **Image storage**: Convex file storage. Upload flow: `generateUploadUrl()` → `fetch(url, { method: "POST", body: file })` → store `storageId`. Hook: `src/app/components/hooks/useImageUpload.ts`. Exception: `kanbanTasks` attachments use inline `dataUrl` (base64), not file storage
 
 ### Convex Provider
 
@@ -62,13 +76,10 @@ npx playwright test  # Run Playwright e2e tests (config not yet created)
 - **Optimistic updates**: Some pages (KanbanBoard) maintain local state and sync to server via `useMutation`
 - **Toast notifications**: Use `appToast.success()` / `appToast.error()` from `src/app/components/AppToast.tsx` (wraps Sonner)
 - **Forms**: `react-hook-form` with custom `FormField` / `FormSelect` components and validation rules from `src/app/components/FormField.tsx`
-- **Maps**: Leaflet via `react-leaflet` for supplier location maps
+- **Maps**: Leaflet via `react-leaflet` for supplier location maps. Suppliers have `location: { lat, lng }` in schema
 - **Drag & drop**: `react-dnd` for Kanban board and timeline
 - **Charts**: Recharts for dashboard analytics
-
-## MCP Integrations
-
-Configured in `.mcp.json`: Playwright (testing), Miro (diagrams), Vercel (deployment), Clerk (auth evaluation).
+- **Calendar views**: `src/app/components/calendar/` — DailyView, WeeklyView, MonthlyView, EventFormModal
 
 ## Project Status
 
