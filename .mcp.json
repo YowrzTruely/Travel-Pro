@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "miro": {
+      "type": "http",
+      "url": "https://mcp.miro.com"
+    },
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com",
+      "headers": {}
+    },
+    "clerk": {
+      "type": "http",
+      "url": "https://mcp.clerk.com/mcp",
+      "headers": {}
+    },
+    "resend": {
+      "type": "command",
+      "command": "node ABSOLUTE_PATH_TO_MCP_SEND_EMAIL_PROJECT/build/index.js"
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=mvmoewcvc",
+      "headers": {}
+    }
+  }
+}
