@@ -1,5 +1,6 @@
-import { publicApi } from './api';
-import { useState, useEffect } from 'react';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { useState } from 'react';
 import { useParams } from 'react-router';
 import { ChevronDown, ChevronUp, Check, ArrowRight, Share2, Loader2, Printer } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -14,22 +15,17 @@ const VAN_IMG = 'https://images.unsplash.com/photo-1760954661834-fca0f39ead42?cr
 const ACTIVITY_IMAGES = [VINEYARD_IMG, LUNCH_IMG, VAN_IMG];
 
 export function ClientQuote() {
-  const { id } = useParams();
+  const { id: projectId } = useParams();
   const [expandedTimeline, setExpandedTimeline] = useState<number | null>(null);
   const [expandedActivities, setExpandedActivities] = useState<Record<number, boolean>>({});
   const [confirmed, setConfirmed] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [showVersions, setShowVersions] = useState(false);
-  const [quoteData, setQuoteData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!id) return;
-    publicApi.quote(id)
-      .then(setQuoteData)
-      .catch(err => console.error('[ClientQuote] Failed to load:', err))
-      .finally(() => setLoading(false));
-  }, [id]);
+  const quoteData = useQuery(api.publicQuote.getQuote, projectId ? { id: projectId } : "skip");
+  const approveQuote = useMutation(api.publicQuote.approveQuote);
+
+  const loading = quoteData === undefined;
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -111,10 +107,10 @@ export function ClientQuote() {
   ];
 
   const handleApprove = async () => {
-    if (!id || confirmed) return;
+    if (!projectId || confirmed) return;
     try {
       setConfirming(true);
-      await publicApi.approve(id);
+      await approveQuote({ id: projectId });
       setConfirmed(true);
     } catch (err) {
       console.error('[ClientQuote] Approve failed:', err);

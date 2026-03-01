@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { Search, X, Loader2 } from 'lucide-react';
-import { suppliersApi, projectsApi } from './api';
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import type { Supplier } from './data';
 
 interface SearchResult {
@@ -17,11 +18,11 @@ export function GlobalSearch() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const suppliers = useQuery(api.suppliers.list);
+  const projects = useQuery(api.projects.list);
 
   // Close on outside click
   useEffect(() => {
@@ -51,71 +52,60 @@ export function GlobalSearch() {
     return () => document.removeEventListener('keydown', handler);
   }, []);
 
-  const doSearch = useCallback(async (q: string) => {
-    if (!q.trim()) { setResults([]); return; }
-    setLoading(true);
-    try {
-      const [suppliers, projects] = await Promise.all([
-        suppliersApi.list(),
-        projectsApi.list(),
-      ]);
-      const lq = q.toLowerCase();
-      const matched: SearchResult[] = [];
+  const loading = suppliers === undefined || projects === undefined;
 
-      projects.forEach((p: any) => {
-        if (
-          p.name?.toLowerCase().includes(lq) ||
-          p.client?.toLowerCase().includes(lq) ||
-          p.company?.toLowerCase().includes(lq) ||
-          p.id?.toLowerCase().includes(lq)
-        ) {
-          matched.push({
-            id: p.id,
-            type: 'project',
-            title: p.name,
-            subtitle: `${p.company} • ${p.participants} משתתפים • ${p.status}`,
-            icon: '📋',
-            path: `/projects/${p.id}`,
-          });
-        }
-      });
+  const results = useMemo(() => {
+    if (!query.trim() || !suppliers || !projects) return [];
 
-      suppliers.forEach((s: Supplier) => {
-        if (
-          s.name?.toLowerCase().includes(lq) ||
-          s.category?.toLowerCase().includes(lq) ||
-          s.region?.toLowerCase().includes(lq)
-        ) {
-          matched.push({
-            id: s.id,
-            type: 'supplier',
-            title: s.name,
-            subtitle: `${s.category} • ${s.region} • ${'★'.repeat(Math.round(s.rating))}`,
-            icon: s.icon,
-            path: `/suppliers/${s.id}`,
-          });
-        }
-      });
+    const lq = query.toLowerCase();
+    const matched: SearchResult[] = [];
 
-      setResults(matched.slice(0, 8));
-    } catch (err) {
-      console.error('[GlobalSearch] Error:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    projects.forEach((p: any) => {
+      if (
+        p.name?.toLowerCase().includes(lq) ||
+        p.client?.toLowerCase().includes(lq) ||
+        p.company?.toLowerCase().includes(lq) ||
+        p._id?.toLowerCase().includes(lq)
+      ) {
+        matched.push({
+          id: p._id,
+          type: 'project',
+          title: p.name,
+          subtitle: `${p.company} • ${p.participants} משתתפים • ${p.status}`,
+          icon: '📋',
+          path: `/projects/${p._id}`,
+        });
+      }
+    });
+
+    suppliers.forEach((s: any) => {
+      if (
+        s.name?.toLowerCase().includes(lq) ||
+        s.category?.toLowerCase().includes(lq) ||
+        s.region?.toLowerCase().includes(lq)
+      ) {
+        matched.push({
+          id: s._id,
+          type: 'supplier',
+          title: s.name,
+          subtitle: `${s.category} • ${s.region} • ${'★'.repeat(Math.round(s.rating))}`,
+          icon: s.icon,
+          path: `/suppliers/${s._id}`,
+        });
+      }
+    });
+
+    return matched.slice(0, 8);
+  }, [query, suppliers, projects]);
 
   const handleChange = (val: string) => {
     setQuery(val);
     if (!open) setOpen(true);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => doSearch(val), 250);
   };
 
   const selectResult = (result: SearchResult) => {
     setOpen(false);
     setQuery('');
-    setResults([]);
     navigate(result.path);
   };
 
@@ -134,7 +124,7 @@ export function GlobalSearch() {
           autoComplete="off"
         />
         {query && (
-          <button onClick={() => { setQuery(''); setResults([]); setOpen(false); }} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#b8a990] hover:text-[#181510]">
+          <button onClick={() => { setQuery(''); setOpen(false); }} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#b8a990] hover:text-[#181510]">
             <X size={14} />
           </button>
         )}

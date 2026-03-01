@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, X } from 'lucide-react';
-import { suppliersApi } from './api';
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import type { Supplier } from './data';
 
 interface SupplierSearchProps {
@@ -12,36 +13,23 @@ interface SupplierSearchProps {
 
 export function SupplierSearch({ value, onChange, placeholder = 'חפש ספק...', label = 'ספק' }: SupplierSearchProps) {
   const [query, setQuery] = useState(value);
-  const [results, setResults] = useState<Supplier[]>([]);
-  const [allSuppliers, setAllSuppliers] = useState<Supplier[]>([]);
   const [open, setOpen] = useState(false);
-  const [loaded, setLoaded] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Load suppliers on first focus
-  const loadSuppliers = async () => {
-    if (loaded) return;
-    try {
-      const list = await suppliersApi.list();
-      setAllSuppliers(list);
-      setLoaded(true);
-    } catch (err) {
-      console.error('[SupplierSearch] Failed to load suppliers:', err);
-    }
-  };
+  const allSuppliers = useQuery(api.suppliers.list);
+
+  const loaded = allSuppliers !== undefined;
 
   // Filter results when query changes
-  useEffect(() => {
+  const results = useMemo(() => {
+    if (!allSuppliers) return [];
     if (!query.trim()) {
-      setResults(allSuppliers.slice(0, 8));
-    } else {
-      const q = query.toLowerCase();
-      setResults(
-        allSuppliers
-          .filter(s => s.name.toLowerCase().includes(q) || s.category.toLowerCase().includes(q) || s.region.toLowerCase().includes(q))
-          .slice(0, 8)
-      );
+      return allSuppliers.slice(0, 8);
     }
+    const q = query.toLowerCase();
+    return allSuppliers
+      .filter((s: any) => s.name.toLowerCase().includes(q) || s.category.toLowerCase().includes(q) || s.region.toLowerCase().includes(q))
+      .slice(0, 8);
   }, [query, allSuppliers]);
 
   // Close on outside click
@@ -55,7 +43,7 @@ export function SupplierSearch({ value, onChange, placeholder = 'חפש ספק..
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const selectSupplier = (supplier: Supplier) => {
+  const selectSupplier = (supplier: any) => {
     setQuery(supplier.name);
     onChange(supplier.name);
     setOpen(false);
@@ -76,7 +64,7 @@ export function SupplierSearch({ value, onChange, placeholder = 'חפש ספק..
           type="text"
           value={query}
           onChange={e => handleInputChange(e.target.value)}
-          onFocus={() => { loadSuppliers(); setOpen(true); }}
+          onFocus={() => { setOpen(true); }}
           placeholder={placeholder}
           className="w-full pr-9 pl-8 py-2.5 bg-[#f5f3f0] border border-[#e7e1da] rounded-xl text-[14px] text-[#181510] focus:border-[#ff8c00] focus:ring-1 focus:ring-[#ff8c00] outline-none transition-all"
           autoComplete="off"
@@ -94,9 +82,9 @@ export function SupplierSearch({ value, onChange, placeholder = 'חפש ספק..
 
       {open && results.length > 0 && (
         <div className="absolute z-50 top-full mt-1 w-full bg-white border border-[#e7e1da] rounded-xl shadow-xl max-h-60 overflow-y-auto">
-          {results.map(s => (
+          {results.map((s: any) => (
             <button
-              key={s.id}
+              key={s._id}
               type="button"
               onClick={() => selectSupplier(s)}
               className="w-full flex items-center gap-3 px-4 py-3 text-right hover:bg-[#f5f3f0] transition-colors border-b border-[#f5f3f0] last:border-b-0"

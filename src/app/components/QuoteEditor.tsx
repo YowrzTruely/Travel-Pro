@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useForm } from 'react-hook-form';
@@ -12,12 +12,45 @@ import {
 import { FormField, rules } from './FormField';
 import { SupplierSearch } from './SupplierSearch';
 import { appToast } from './AppToast';
-import { projectsApi, quoteItemsApi, timelineApi } from './api';
-import type { QuoteItem, TimelineEvent } from './api';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import type { Project } from './data';
 import { ItemEditor } from './ItemEditor';
 import { useConfirmDelete } from './ConfirmDeleteModal';
 import { CategoryIcon } from './CategoryIcons';
+
+// ─── Types (previously from api.ts) ───
+interface QuoteItem {
+  _id: Id<"quoteItems">;
+  _creationTime: number;
+  id: string;
+  projectId: Id<"projects">;
+  type: string;
+  icon: string;
+  name: string;
+  supplier: string;
+  description: string;
+  cost: number;
+  directPrice: number;
+  sellingPrice: number;
+  profitWeight: number;
+  status: string;
+  alternatives?: { id: string; name: string; description: string; costPerPerson: number; selected: boolean }[];
+  images?: { id: string; url: string; name: string }[];
+  notes?: string;
+}
+
+interface TimelineEvent {
+  _id: Id<"timelineEvents">;
+  _creationTime: number;
+  id: string;
+  projectId: Id<"projects">;
+  time: string;
+  title: string;
+  description: string;
+  icon: string;
+}
 
 const KAYAK_IMG = 'https://images.unsplash.com/photo-1550515710-9324b8e4262e?w=800';
 const BUS_IMG = 'https://images.unsplash.com/photo-1765739099920-81a456008253?w=800';
@@ -177,15 +210,33 @@ interface AddItemForm {
 
 export function QuoteEditor() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id: projectId } = useParams();
   const [activeTab, setActiveTab] = useState('components');
 
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const [project, setProject] = useState<Project | null>(null);
-  const [items, setItems] = useState<QuoteItem[]>([]);
-  const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+  // ─── Convex queries ───
+  const project = useQuery(api.projects.get, projectId ? { id: projectId } : "skip");
+  const items = useQuery(
+    api.quoteItems.listByProjectId,
+    project?._id ? { projectId: project._id } : "skip"
+  ) as QuoteItem[] | undefined;
+  const timeline = useQuery(
+    api.timelineEvents.listByProjectId,
+    project?._id ? { projectId: project._id } : "skip"
+  ) as TimelineEvent[] | undefined;
+
+  // ─── Convex mutations ───
+  const createItem = useMutation(api.quoteItems.create);
+  const updateItem = useMutation(api.quoteItems.update);
+  const removeItem = useMutation(api.quoteItems.remove);
+  const createEvent = useMutation(api.timelineEvents.create);
+  const removeEvent = useMutation(api.timelineEvents.remove);
+  const updateProject = useMutation(api.projects.update);
+
+  // Loading: any query still returning undefined
+  const loading = project === undefined || (project !== null && (items === undefined || timeline === undefined));
+
   const [saving, setSaving] = useState(false);
 
   const [showPreview, setShowPreview] = useState(false);
@@ -231,38 +282,18 @@ export function QuoteEditor() {
     defaultValues: { type: '', name: '', supplier: '', description: '', cost: '', directPrice: '', sellingPrice: '' },
   });
 
-  // ─── Load data ───
-  const loadData = useCallback(async () => {
-    if (!id) return;
-    try {
-      setLoading(true);
-      const [proj, qi, tl] = await Promise.all([
-        projectsApi.get(id),
-        quoteItemsApi.list(id),
-        timelineApi.list(id),
-      ]);
-      setProject(proj);
-      setItems(qi);
-      setTimeline(tl);
-    } catch (err) {
-      console.error('[QuoteEditor] Failed to load:', err);
-      appToast.error('שגיאה בטעינה', 'לא ניתן לטעון את נתוני הפרויקט');
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
-
-  useEffect(() => { loadData(); }, [loadData]);
-
   // ─── Pricing ───
+  const currentItems = items ?? [];
+  const currentTimeline = timeline ?? [];
+
   const getSellingPrice = (cost: number, weight: number) => {
     const margin = 0.05 + (weight * 0.05);
     return Math.round(cost * (1 + margin));
   };
 
-  const totalCost = items.reduce((sum, item) => sum + (item.cost || 0), 0);
-  const totalDirectPrice = items.reduce((sum, item) => sum + (item.directPrice || 0), 0);
-  const totalSelling = items.reduce((sum, item) => sum + (item.sellingPrice || 0), 0);
+  const totalCost = currentItems.reduce((sum, item) => sum + (item.cost || 0), 0);
+  const totalDirectPrice = currentItems.reduce((sum, item) => sum + (item.directPrice || 0), 0);
+  const totalSelling = currentItems.reduce((sum, item) => sum + (item.sellingPrice || 0), 0);
   const totalProfit = totalSelling - totalCost;
   const profitPercent = totalSelling > 0 ? Math.round((totalProfit / totalSelling) * 100) : 0;
   const participants = project?.participants || 1;
@@ -274,11 +305,10 @@ export function QuoteEditor() {
   const animatedPPP = useAnimatedCounter(pricePerPerson);
 
   const updateProfitWeight = async (item: QuoteItem, newWeight: number) => {
-    if (!id) return;
+    if (!project?._id) return;
     const newSelling = getSellingPrice(item.cost, newWeight);
     try {
-      const updated = await quoteItemsApi.update(id, item.id, { profitWeight: newWeight, sellingPrice: newSelling });
-      setItems(prev => prev.map(i => i.id === item.id ? updated : i));
+      await updateItem({ id: item._id, profitWeight: newWeight, sellingPrice: newSelling });
     } catch (err) {
       console.error('[QuoteEditor] Failed to update weight:', err);
       appToast.error('שגיאה', 'לא ניתן לעדכן את משקל הרווח');
@@ -297,12 +327,11 @@ export function QuoteEditor() {
   };
 
   const saveDirectPrice = async (item: QuoteItem) => {
-    if (!id) return;
+    if (!project?._id) return;
     const newPrice = parseFloat(editingDirectPriceValue) || 0;
     if (newPrice === (item.directPrice || 0)) { cancelEditDirectPrice(); return; }
     try {
-      const updated = await quoteItemsApi.update(id, item.id, { directPrice: newPrice });
-      setItems(prev => prev.map(i => i.id === item.id ? updated : i));
+      await updateItem({ id: item._id, directPrice: newPrice });
       appToast.success('תמחור ישיר עודכן', `₪${newPrice.toLocaleString()}`);
     } catch (err) {
       console.error('[QuoteEditor] Failed to update direct price:', err);
@@ -313,14 +342,14 @@ export function QuoteEditor() {
   };
 
   const onAddItem = async (data: AddItemForm) => {
-    if (!id || !showAddForm) return;
+    if (!project?._id || !showAddForm) return;
     try {
       setSaving(true);
-      const typeInfo = COMPONENT_TYPES.find(c => c.type === showAddForm);
       const cost = parseFloat(data.cost) || 0;
       const directPrice = parseFloat(data.directPrice) || Math.round(cost * 1.25);
       const sellingPrice = parseFloat(data.sellingPrice) || getSellingPrice(cost, 3);
-      const newItem = await quoteItemsApi.create(id, {
+      await createItem({
+        projectId: project._id,
         type: showAddForm,
         icon: showAddForm || 'אחר',
         name: data.name.trim(),
@@ -332,7 +361,6 @@ export function QuoteEditor() {
         profitWeight: 3,
         status: 'pending',
       });
-      setItems(prev => [...prev, newItem]);
       setShowAddForm(null);
       setShowAddComponent(false);
       addForm.reset();
@@ -346,11 +374,10 @@ export function QuoteEditor() {
   };
 
   const deleteItem = async (itemId: string) => {
-    if (!id) return;
+    if (!project?._id) return;
     try {
       setDeletingItemId(itemId);
-      await quoteItemsApi.delete(id, itemId);
-      setItems(prev => prev.filter(i => i.id !== itemId));
+      await removeItem({ id: itemId as Id<"quoteItems"> });
       appToast.success('רכיב הוסר', 'הרכיב הוסר מההצעה');
     } catch (err) {
       console.error('[QuoteEditor] Failed to delete item:', err);
@@ -361,11 +388,11 @@ export function QuoteEditor() {
   };
 
   const saveDraft = async () => {
-    if (!id || !project) return;
+    if (!projectId || !project) return;
     try {
       setSaving(true);
       const margin = totalSelling > 0 ? Math.round((totalProfit / totalSelling) * 100) : 0;
-      await projectsApi.update(id, { totalPrice: totalSelling, pricePerPerson, profitMargin: margin });
+      await updateProject({ id: projectId, totalPrice: totalSelling, pricePerPerson, profitMargin: margin });
       appToast.success('הטיוטה נשמרה', 'מחירים ורווח עודכנו בפרויקט');
     } catch (err) {
       console.error('[QuoteEditor] Failed to save draft:', err);
@@ -376,10 +403,14 @@ export function QuoteEditor() {
   };
 
   // ─── Item editor update handler ───
-  const handleItemUpdate = (updated: QuoteItem) => {
-    setItems(prev => prev.map(i => i.id === updated.id ? updated : i));
-    // Keep editingItem in sync
-    if (editingItem?.id === updated.id) setEditingItem(updated);
+  // With Convex, the items list auto-updates via the reactive query.
+  // We keep this handler for the ItemEditor callback, but it is now
+  // essentially a no-op since Convex will push the update through the query.
+  // We still sync editingItem so the drawer reflects the latest state.
+  const handleItemUpdate = (updated: any) => {
+    if (editingItem && (editingItem.id === updated.id || editingItem._id === updated._id)) {
+      setEditingItem(updated);
+    }
   };
 
   if (loading) {
@@ -412,12 +443,12 @@ export function QuoteEditor() {
           </button>
           <div>
             <h1 className="text-[22px] text-[#181510]" style={{ fontWeight: 700 }}>פרויקט: {project.name}</h1>
-            <p className="text-[12px] text-[#8d785e]">מזהה פרויקט: #{id} &bull; {project.company}</p>
+            <p className="text-[12px] text-[#8d785e]">מזהה פרויקט: #{projectId} &bull; {project.company}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <button
-            onClick={() => navigate(`/quote/${id}`)}
+            onClick={() => navigate(`/quote/${projectId}`)}
             className="flex items-center gap-2 text-[13px] text-[#6b5d45] border border-[#e7e1da] px-3 py-2 rounded-lg hover:bg-[#f5f3f0] transition-colors"
           >
             <Eye size={15} />
@@ -425,7 +456,7 @@ export function QuoteEditor() {
           </button>
           <button
             onClick={() => {
-              if (items.length === 0) {
+              if (currentItems.length === 0) {
                 appToast.warning('אין רכיבים', 'הוסף לפחות רכיב אחד להצעה');
               } else {
                 appToast.success('בדיקה הושלמה', 'ההצעה תקינה ומוכנה לשליחה ללקוח');
@@ -564,7 +595,7 @@ export function QuoteEditor() {
         <div className="flex items-center justify-between">
           <h2 className="text-[18px] text-[#181510] flex items-center gap-2" style={{ fontWeight: 700 }}>
             <SectionIcon><Package size={15} /></SectionIcon>
-            רכיבים וספקים ({items.length})
+            רכיבים וספקים ({currentItems.length})
           </h2>
           <button
             onClick={() => setShowAddComponent(true)}
@@ -576,7 +607,7 @@ export function QuoteEditor() {
           </button>
         </div>
 
-        {items.length === 0 && (
+        {currentItems.length === 0 && (
           <div className="text-center py-12 bg-white rounded-xl border border-[#e7e1da]">
             <div className="flex justify-center mb-3"><SectionIcon size="lg"><Package size={22} /></SectionIcon></div>
             <p className="text-[16px] text-[#8d785e] mb-2">אין רכיבים בהצעה</p>
@@ -584,7 +615,7 @@ export function QuoteEditor() {
           </div>
         )}
 
-        {items.map(item => {
+        {currentItems.map(item => {
           const statusInfo = STATUS_LABELS[item.status] || STATUS_LABELS.pending;
           const imageCount = item.images?.length || 0;
           return (
@@ -717,7 +748,7 @@ export function QuoteEditor() {
           תמחור ורווח יעד
         </h2>
 
-        {items.length === 0 ? (
+        {currentItems.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl border border-[#e7e1da]">
             <p className="text-[16px] text-[#8d785e]">הוסף רכיבים כדי לראות תמחור</p>
           </div>
@@ -752,7 +783,7 @@ export function QuoteEditor() {
                 </tr>
               </thead>
               <tbody>
-                {items.map(item => {
+                {currentItems.map(item => {
                   const dp = item.directPrice || 0;
                   const savingsVsDirect = dp > 0 ? dp - item.sellingPrice : 0;
                   return (
@@ -826,7 +857,7 @@ export function QuoteEditor() {
                   <td className="p-3 text-[14px]" style={{ fontWeight: 700 }}>₪{totalSelling.toLocaleString()}</td>
                   <td className="p-3 text-[14px] text-green-400" style={{ fontWeight: 700 }}>₪{totalProfit.toLocaleString()} ({profitPercent}%)</td>
                   <td className="p-3 text-[14px] text-[#c4b89a]">
-                    ממוצע: {items.length > 0 ? (items.reduce((s, i) => s + i.profitWeight, 0) / items.length).toFixed(1) : '0'}
+                    ממוצע: {currentItems.length > 0 ? (currentItems.reduce((s, i) => s + i.profitWeight, 0) / currentItems.length).toFixed(1) : '0'}
                   </td>
                 </tr>
               </tfoot>
@@ -846,7 +877,7 @@ export function QuoteEditor() {
           לו"ז הפעילות
         </h2>
 
-        {timeline.length === 0 ? (
+        {currentTimeline.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl border border-[#e7e1da]">
             <div className="flex justify-center mb-3"><SectionIcon size="lg"><Clock size={22} /></SectionIcon></div>
             <p className="text-[16px] text-[#8d785e]">אין אירועי לו"ז לפרויקט זה</p>
@@ -854,11 +885,11 @@ export function QuoteEditor() {
         ) : (
           <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
             <div className="space-y-0">
-              {timeline.map((event, idx) => (
+              {currentTimeline.map((event, idx) => (
                 <div key={event.id} className="flex gap-4">
                   <div className="flex flex-col items-center">
                     <div className="w-10 h-10 rounded-full bg-[#ff8c00]/10 flex items-center justify-center text-[#b8a990]">{getItemIcon(event.icon)}</div>
-                    {idx < timeline.length - 1 && <div className="w-0.5 flex-1 bg-[#e7e1da] my-1" />}
+                    {idx < currentTimeline.length - 1 && <div className="w-0.5 flex-1 bg-[#e7e1da] my-1" />}
                   </div>
                   <div className="pb-6">
                     <div className="flex items-center gap-2 mb-1">
@@ -889,9 +920,9 @@ export function QuoteEditor() {
           onClick={() => {
             const printWin = window.open('', '_blank');
             if (!printWin) { appToast.error('חלון הדפסה נחסם'); return; }
-            const rows = items.map(i => `<tr><td style="padding:10px;border-bottom:1px solid #e7e1da">${i.type}</td><td style="padding:10px;border-bottom:1px solid #e7e1da">${i.name}</td><td style="padding:10px;border-bottom:1px solid #e7e1da">${i.supplier || '-'}</td><td style="padding:10px;border-bottom:1px solid #e7e1da;font-weight:600">₪${i.sellingPrice.toLocaleString()}</td></tr>`).join('');
-            const tlRows = timeline.map(e => `<div style="display:flex;gap:12px;margin-bottom:12px"><div style="width:40px;text-align:center;font-weight:700;color:#ff8c00">${e.time}</div><div><b>${e.title}</b><br/><span style="color:#8d785e;font-size:13px">${e.description}</span></div></div>`).join('');
-            printWin.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>הצעת מחיר — ${project?.name || ''}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Assistant,Helvetica,Arial,sans-serif;color:#181510;padding:40px;max-width:800px;margin:0 auto}h1{font-size:24px;margin-bottom:4px}h2{font-size:18px;margin:24px 0 12px;border-bottom:2px solid #ff8c00;padding-bottom:6px}table{width:100%;border-collapse:collapse;margin-bottom:20px}th{text-align:right;padding:10px;background:#f5f3f0;border-bottom:2px solid #e7e1da;font-size:13px}.summary{display:flex;gap:24px;background:#f8f7f5;padding:16px;border-radius:12px;margin:16px 0}.summary div{text-align:center}.summary .value{font-size:22px;font-weight:700}.summary .label{font-size:12px;color:#8d785e}@media print{body{padding:20px}}</style></head><body><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h1>הצעת מחיר</h1><p style="color:#8d785e;font-size:14px">${project?.name} — ${project?.company || ''}</p></div><div style="text-align:left"><p style="font-size:13px;color:#8d785e">מזהה: #${id}</p><p style="font-size:13px;color:#8d785e">${new Date().toLocaleDateString('he-IL')}</p></div></div><div class="summary"><div><div class="label">משתתפים</div><div class="value">${participants}</div></div><div><div class="label">מחיר לאדם</div><div class="value">₪${pricePerPerson.toLocaleString()}</div></div><div><div class="label">סה"כ</div><div class="value">₪${totalSelling.toLocaleString()}</div></div><div><div class="label">אזור</div><div class="value">${project?.region || ''}</div></div></div><h2>פירוט רכיבים</h2><table><thead><tr><th>סוג</th><th>רכיב</th><th>ספק</th><th>מחיר</th></tr></thead><tbody>${rows}</tbody><tfoot><tr style="background:#181510;color:white"><td colspan="3" style="padding:10px;font-weight:600">סה"כ</td><td style="padding:10px;font-weight:700">₪${totalSelling.toLocaleString()}</td></tr></tfoot></table>${tlRows ? `<h2>לו"ז הפעילות</h2>${tlRows}` : ''}<div style="margin-top:40px;text-align:center;color:#b8a990;font-size:12px"><p>הופק ע"י TravelPro &bull; ${new Date().toLocaleDateString('he-IL')}</p></div></body></html>`);
+            const rows = currentItems.map(i => `<tr><td style="padding:10px;border-bottom:1px solid #e7e1da">${i.type}</td><td style="padding:10px;border-bottom:1px solid #e7e1da">${i.name}</td><td style="padding:10px;border-bottom:1px solid #e7e1da">${i.supplier || '-'}</td><td style="padding:10px;border-bottom:1px solid #e7e1da;font-weight:600">₪${i.sellingPrice.toLocaleString()}</td></tr>`).join('');
+            const tlRows = currentTimeline.map(e => `<div style="display:flex;gap:12px;margin-bottom:12px"><div style="width:40px;text-align:center;font-weight:700;color:#ff8c00">${e.time}</div><div><b>${e.title}</b><br/><span style="color:#8d785e;font-size:13px">${e.description}</span></div></div>`).join('');
+            printWin.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>הצעת מחיר — ${project?.name || ''}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Assistant,Helvetica,Arial,sans-serif;color:#181510;padding:40px;max-width:800px;margin:0 auto}h1{font-size:24px;margin-bottom:4px}h2{font-size:18px;margin:24px 0 12px;border-bottom:2px solid #ff8c00;padding-bottom:6px}table{width:100%;border-collapse:collapse;margin-bottom:20px}th{text-align:right;padding:10px;background:#f5f3f0;border-bottom:2px solid #e7e1da;font-size:13px}.summary{display:flex;gap:24px;background:#f8f7f5;padding:16px;border-radius:12px;margin:16px 0}.summary div{text-align:center}.summary .value{font-size:22px;font-weight:700}.summary .label{font-size:12px;color:#8d785e}@media print{body{padding:20px}}</style></head><body><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h1>הצעת מחיר</h1><p style="color:#8d785e;font-size:14px">${project?.name} — ${project?.company || ''}</p></div><div style="text-align:left"><p style="font-size:13px;color:#8d785e">מזהה: #${projectId}</p><p style="font-size:13px;color:#8d785e">${new Date().toLocaleDateString('he-IL')}</p></div></div><div class="summary"><div><div class="label">משתתפים</div><div class="value">${participants}</div></div><div><div class="label">מחיר לאדם</div><div class="value">₪${pricePerPerson.toLocaleString()}</div></div><div><div class="label">סה"כ</div><div class="value">₪${totalSelling.toLocaleString()}</div></div><div><div class="label">אזור</div><div class="value">${project?.region || ''}</div></div></div><h2>פירוט רכיבים</h2><table><thead><tr><th>סוג</th><th>רכיב</th><th>ספק</th><th>מחיר</th></tr></thead><tbody>${rows}</tbody><tfoot><tr style="background:#181510;color:white"><td colspan="3" style="padding:10px;font-weight:600">סה"כ</td><td style="padding:10px;font-weight:700">₪${totalSelling.toLocaleString()}</td></tr></tfoot></table>${tlRows ? `<h2>לו"ז הפעילות</h2>${tlRows}` : ''}<div style="margin-top:40px;text-align:center;color:#b8a990;font-size:12px"><p>הופק ע"י TravelPro &bull; ${new Date().toLocaleDateString('he-IL')}</p></div></body></html>`);
             printWin.document.close();
             setTimeout(() => { printWin.print(); }, 500);
             appToast.success('PDF מוכן', 'חלון ההדפסה נפתח — בחר "שמור כ-PDF"');
@@ -902,7 +933,7 @@ export function QuoteEditor() {
           ייצוא PDF
         </button>
         <button
-          onClick={() => loadData().then(() => appToast.neutral('השינויים בוטלו', 'הנתונים נטענו מחדש מהשרת'))}
+          onClick={() => appToast.neutral('הנתונים עודכנו', 'הנתונים מסונכרנים אוטומטית עם Convex')}
           className="text-[#8d785e] border border-[#e7e1da] px-6 py-2.5 rounded-xl text-[14px] hover:bg-[#f5f3f0] transition-colors"
         >
           ביטול שינויים
@@ -922,7 +953,7 @@ export function QuoteEditor() {
               </div>
               <div className="flex justify-between text-[13px] mb-2">
                 <span className="text-[#8d785e]">רכיבים:</span>
-                <span className="text-[#181510]" style={{ fontWeight: 600 }}>{items.length}</span>
+                <span className="text-[#181510]" style={{ fontWeight: 600 }}>{currentItems.length}</span>
               </div>
               <div className="flex justify-between text-[13px] mb-2">
                 <span className="text-[#8d785e]">סה"כ:</span>
@@ -939,7 +970,7 @@ export function QuoteEditor() {
                   await saveDraft();
                   setShowPreview(false);
                   appToast.success('גרסת הצעה V1.0 נוצרה בהצלחה!', 'מעביר לתצוגת לקוח...');
-                  setTimeout(() => navigate(`/quote/${id}`), 1200);
+                  setTimeout(() => navigate(`/quote/${projectId}`), 1200);
                 }}
                 className="flex-1 bg-[#ff8c00] hover:bg-[#e67e00] text-white py-2.5 rounded-xl transition-colors"
                 style={{ fontWeight: 600 }}
@@ -1009,10 +1040,10 @@ export function QuoteEditor() {
       )}
 
       {/* ═══ Item Editor Drawer ═══ */}
-      {editingItem && id && (
+      {editingItem && projectId && (
         <ItemEditor
-          item={editingItem}
-          projectId={id}
+          item={editingItem as any}
+          projectId={projectId}
           isOpen={!!editingItem}
           onClose={() => setEditingItem(null)}
           onUpdate={handleItemUpdate}

@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { Bell, X, CheckCircle, AlertTriangle, FileText, Users, FolderOpen } from 'lucide-react';
-import { projectsApi, suppliersApi } from './api';
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import type { Project } from './data';
 
 interface Notification {
@@ -63,25 +64,25 @@ function buildNotifications(projects: Project[], suppliers: any[]): Notification
   for (const s of suppliers) {
     if (s.verificationStatus === 'pending') {
       notifs.push({
-        id: `sup-pending-${s.id}`,
+        id: `sup-pending-${s._id || s.id}`,
         type: 'alert',
         title: 'ספק ממתין לאימות',
         message: `${s.name} — חסרים מסמכים לאימות. ${s.notes !== '-' ? s.notes : ''}`,
         time: 'היום',
         read: false,
-        path: `/suppliers/${s.id}`,
+        path: `/suppliers/${s._id || s.id}`,
         icon: 'supplier',
       });
     }
     if (s.verificationStatus === 'unverified') {
       notifs.push({
-        id: `sup-unverified-${s.id}`,
+        id: `sup-unverified-${s._id || s.id}`,
         type: 'warning',
         title: 'ספק לא מאומת',
         message: `${s.name} — ${s.notes !== '-' ? s.notes : 'נדרש אימות'}`,
         time: 'אתמול',
         read: true,
-        path: `/suppliers/${s.id}`,
+        path: `/suppliers/${s._id || s.id}`,
         icon: 'document',
       });
     }
@@ -107,9 +108,12 @@ const typeColors = {
 export function NotificationsPanel() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const [allMarkedRead, setAllMarkedRead] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  const projects = useQuery(api.projects.list);
+  const suppliers = useQuery(api.suppliers.list);
 
   // Close on outside click
   useEffect(() => {
@@ -122,31 +126,25 @@ export function NotificationsPanel() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const loadNotifications = async () => {
-    if (loaded) return;
-    try {
-      const [projects, suppliers] = await Promise.all([
-        projectsApi.list(),
-        suppliersApi.list(),
-      ]);
-      setNotifications(buildNotifications(projects, suppliers));
-      setLoaded(true);
-    } catch (err) {
-      console.error('[Notifications] Failed to load:', err);
+  const notifications = useMemo(() => {
+    if (!projects || !suppliers) return [];
+    const notifs = buildNotifications(projects as any, suppliers);
+    if (allMarkedRead) {
+      return notifs.map(n => ({ ...n, read: true }));
     }
-  };
+    return notifs.map(n => readIds.has(n.id) ? { ...n, read: true } : n);
+  }, [projects, suppliers, readIds, allMarkedRead]);
 
   const toggleOpen = () => {
-    if (!open) loadNotifications();
     setOpen(!open);
   };
 
   const markAllRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setAllMarkedRead(true);
   };
 
   const handleClick = (notif: Notification) => {
-    setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, read: true } : n));
+    setReadIds(prev => new Set(prev).add(notif.id));
     if (notif.path) {
       navigate(notif.path);
       setOpen(false);

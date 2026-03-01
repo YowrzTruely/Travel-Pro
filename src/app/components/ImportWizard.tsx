@@ -7,7 +7,8 @@ import {
   AlertTriangle, Download, Trash2, Loader2, X, Sparkles, PartyPopper,
   FileText, ChevronDown, LayoutList, Replace, SkipForward, Users, Undo2, Clock, ShieldAlert
 } from 'lucide-react';
-import { suppliersApi } from './api';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { appToast } from './AppToast';
 import type { Supplier } from './data';
 
@@ -123,6 +124,10 @@ function ConfettiParticles() {
 export function ImportWizard() {
   const navigate = useNavigate();
 
+  const bulkImport = useMutation(api.suppliers.bulkImport);
+  const bulkRollback = useMutation(api.suppliers.bulkRollback);
+  const suppliersData = useQuery(api.suppliers.list);
+
   // Step state
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -192,7 +197,7 @@ export function ImportWizard() {
     setRollingBack(true);
     setShowUndoConfirm(false);
     try {
-      const result = await suppliersApi.bulkRollback(importedIds);
+      const result = await bulkRollback({ supplierIds: importedIds as any });
       setRollbackDone(true);
       setUndoAvailable(false);
       setUndoSecondsLeft(0);
@@ -205,7 +210,7 @@ export function ImportWizard() {
     } finally {
       setRollingBack(false);
     }
-  }, [importedIds]);
+  }, [importedIds, bulkRollback]);
 
   // ─── CSV Parsing ─────────────────────────────────
   const parseFile = useCallback((f: File) => {
@@ -254,9 +259,9 @@ export function ImportWizard() {
   const buildPreviewRows = useCallback(async () => {
     setLoadingDuplicates(true);
     try {
-      const suppliers = await suppliersApi.list();
-      setExistingSuppliers(suppliers);
-      const existingNames = new Set(suppliers.map(s => (s.name || '').trim().toLowerCase()));
+      const suppliers = suppliersData ?? [];
+      setExistingSuppliers(suppliers as any);
+      const existingNames = new Set(suppliers.map((s: any) => (s.name || '').trim().toLowerCase()));
 
       const mapped: ParsedRow[] = csvData.map((row, idx) => {
         const mapped: Record<string, any> = { _rowIdx: idx, _isDuplicate: false, _action: 'import' as const };
@@ -267,7 +272,7 @@ export function ImportWizard() {
         const name = (mapped.name || '').toLowerCase();
         if (name && existingNames.has(name)) {
           mapped._isDuplicate = true;
-          mapped._duplicateOf = suppliers.find(s => s.name.toLowerCase() === name)?.name;
+          mapped._duplicateOf = suppliers.find((s: any) => s.name.toLowerCase() === name)?.name;
           mapped._action = 'skip';
         }
         return mapped as ParsedRow;
@@ -310,7 +315,7 @@ export function ImportWizard() {
         _action: r._action === 'merge' ? 'merge' : undefined,
       }));
 
-      const result = await suppliersApi.bulkImport(suppliers);
+      const result = await bulkImport({ suppliers });
 
       clearInterval(interval);
       setImportProgress(100);
@@ -322,8 +327,8 @@ export function ImportWizard() {
       appToast.success('ייבוא הושלם בהצלחה!', `${result.imported} ספקים יובאו למערכת`);
 
       // Store imported IDs for rollback and start countdown
-      if (result.suppliers && result.suppliers.length > 0) {
-        setImportedIds(result.suppliers.map((s: any) => s.id));
+      if (result.supplierIds && result.supplierIds.length > 0) {
+        setImportedIds(result.supplierIds);
         startUndoTimer();
       }
 

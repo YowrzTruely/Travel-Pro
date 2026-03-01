@@ -4,9 +4,21 @@ import {
   X, Save, Loader2, Upload, ImagePlus, Trash2, ChevronLeft, ChevronRight,
   Package, Camera, FileText, Banknote, StickyNote, CheckCircle2
 } from 'lucide-react';
-import { supplierProductsApi } from './api';
-import type { SupplierProduct } from './api';
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { useImageUpload } from './hooks/useImageUpload';
 import { appToast } from './AppToast';
+
+interface SupplierProduct {
+  id: string;
+  supplierId: string;
+  name: string;
+  price: number;
+  description: string;
+  unit: string;
+  images?: { id: string; url: string; name: string; path?: string }[];
+  notes?: string;
+}
 import { useConfirmDelete } from './ConfirmDeleteModal';
 
 const UNIT_OPTIONS = ['אדם', 'אירוע', 'יום', 'קבוצה', 'חבילה', 'יחידה'];
@@ -20,6 +32,9 @@ interface ProductEditorProps {
 }
 
 export function ProductEditor({ product, supplierId, isOpen, onClose, onUpdate }: ProductEditorProps) {
+  const updateProduct = useMutation(api.supplierProducts.update);
+  const { upload } = useImageUpload();
+
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(product.price);
   const [description, setDescription] = useState(product.description);
@@ -47,11 +62,12 @@ export function ProductEditor({ product, supplierId, isOpen, onClose, onUpdate }
     setSaveSuccess(false);
   }, [product]);
 
-  // ─── Image upload ───
+  // ─── Image upload (Convex storage) ───
   const handleImageUpload = useCallback(async (files: FileList | File[]) => {
     if (!files.length) return;
     setUploading(true);
     try {
+      const currentImages = [...(images || [])];
       for (const file of Array.from(files)) {
         if (!file.type.startsWith('image/')) {
           appToast.warning('קובץ לא תקין', `${file.name} אינו תמונה`);
@@ -61,11 +77,16 @@ export function ProductEditor({ product, supplierId, isOpen, onClose, onUpdate }
           appToast.warning('קובץ גדול מדי', 'גודל מקסימלי 5MB');
           continue;
         }
-        const updated = await supplierProductsApi.uploadImage(supplierId, product.id, file);
-        setImages(updated.images || []);
-        onUpdate(updated);
-        setActiveImageIdx((updated.images || []).length - 1);
+        const storageId = await upload(file);
+        currentImages.push({ id: storageId, url: storageId, name: file.name });
+        await updateProduct({
+          id: product.id as any,
+          images: currentImages.map(img => ({ id: img.id, storageId: img.url || img.id, name: img.name })),
+        });
       }
+      setImages(currentImages);
+      setActiveImageIdx(currentImages.length - 1);
+      onUpdate({ ...product, images: currentImages });
       appToast.success('תמונה הועלתה', 'התמונה נוספה למוצר');
     } catch (err) {
       console.error('[ProductEditor] Upload failed:', err);
@@ -74,13 +95,17 @@ export function ProductEditor({ product, supplierId, isOpen, onClose, onUpdate }
       setUploading(false);
       setIsDragging(false);
     }
-  }, [supplierId, product.id, onUpdate]);
+  }, [product, images, upload, updateProduct, onUpdate]);
 
   const handleDeleteImage = async (imageId: string) => {
     try {
-      const updated = await supplierProductsApi.deleteImage(supplierId, product.id, imageId);
-      setImages(updated.images || []);
-      onUpdate(updated);
+      const newImages = (images || []).filter(img => img.id !== imageId);
+      await updateProduct({
+        id: product.id as any,
+        images: newImages.map(img => ({ id: img.id, storageId: img.url || img.id, name: img.name })),
+      });
+      setImages(newImages);
+      onUpdate({ ...product, images: newImages });
       setActiveImageIdx(Math.max(0, activeImageIdx - 1));
       appToast.success('תמונה הוסרה', '');
     } catch (err) {
@@ -100,13 +125,22 @@ export function ProductEditor({ product, supplierId, isOpen, onClose, onUpdate }
   const handleSave = async () => {
     setSaving(true);
     try {
-      const updated = await supplierProductsApi.update(supplierId, product.id, {
+      await updateProduct({
+        id: product.id as any,
         name: name.trim(),
         price,
         description: description.trim(),
         unit: unit.trim(),
         notes: notes.trim(),
       });
+      const updated = {
+        ...product,
+        name: name.trim(),
+        price,
+        description: description.trim(),
+        unit: unit.trim(),
+        notes: notes.trim(),
+      };
       onUpdate(updated);
       setSaveSuccess(true);
       appToast.success('המוצר עודכן', name);

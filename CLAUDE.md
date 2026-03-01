@@ -14,6 +14,8 @@ Originally scaffolded from **Figma Make** (code bundle export). The Figma design
 bun install          # Install dependencies (bun.lock is the lockfile)
 bun run dev          # Start Vite dev server
 bun run build        # Production build
+npx convex dev       # Start Convex dev server (syncs schema + functions)
+npx convex run seed:seedAll  # Seed initial data (idempotent)
 npx playwright test  # Run Playwright e2e tests (config not yet created)
 ```
 
@@ -23,26 +25,41 @@ npx playwright test  # Run Playwright e2e tests (config not yet created)
 
 - **Entry**: `src/main.tsx` → `src/app/App.tsx`
 - **Routing**: React Router v7 (`src/app/routes.ts`) — Layout wraps all authenticated pages, `/quote/:id` is a public route (no auth)
-- **Auth**: Supabase Auth via `src/app/components/AuthContext.tsx` — provides `useAuth()` hook with `login`, `signup`, `logout`
-- **API client**: `src/app/components/api.ts` — all backend calls go through a `request<T>()` wrapper that hits a Supabase Edge Function. API modules: `suppliersApi`, `projectsApi`, `clientsApi`, `quoteItemsApi`, `timelineApi`, `calendarApi`, `kanbanApi`, `dashboardApi`, `publicApi`
-- **Data types**: `src/app/components/data.ts` — `Supplier`, `Project`, `Client`, `CalendarEvent`, `QuoteVersion` interfaces + seed data
+- **Auth**: Convex Auth via `src/app/components/AuthContext.tsx` — provides `useAuth()` hook with `login`, `signup`, `logout`. Uses `@convex-dev/auth` with email/password provider
+- **Backend calls**: All pages use `useQuery` / `useMutation` hooks from `convex/react` directly — no API client layer. Data is real-time reactive
+- **Data types**: `src/app/components/data.ts` — `Supplier`, `Project`, `Client`, `CalendarEvent`, `QuoteVersion` interfaces
 - **UI components**: `src/app/components/ui/` — 50+ shadcn/ui components (Radix + Tailwind + CVA)
 - **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin. Styles in `src/styles/` (index.css imports fonts.css, tailwind.css, theme.css). Font: Assistant (Hebrew/Latin)
 - **Path alias**: `@` maps to `./src` (configured in `vite.config.ts`)
 
-### Backend (Supabase Edge Function)
+### Backend (Convex)
 
-- **Server**: `supabase/functions/server/index.tsx` — Hono framework running on Deno, serves REST API at `/make-server-0045c7fc/...`
-- **Storage**: Simple KV store (`supabase/functions/server/kv_store.tsx`) backed by a `kv_store_0045c7fc` Postgres table. Not a relational schema — all entities stored as JSON blobs by key
-- **Supabase config**: `utils/supabase/info.tsx` has the project ID and public anon key. Client initialized in `src/app/components/supabaseClient.ts`
+- **Deployment**: `unique-ermine-475.convex.cloud`
+- **Schema**: `convex/schema.ts` — 11 domain tables + metadata + authTables. All entities use `_id` (Convex internal) with `legacyId` for backward-compatible URL routing
+- **Functions** (in `convex/`):
+  - `suppliers.ts` — list, get, getByLegacyId, summaries, create, update, remove, archive, bulkImport, bulkRollback
+  - `supplierContacts.ts`, `supplierProducts.ts`, `supplierDocuments.ts` — sub-resources by supplierId
+  - `projects.ts` — CRUD with legacyId format `{seq}-{YY}` (e.g., "4829-24")
+  - `quoteItems.ts`, `timelineEvents.ts`, `projectDocuments.ts` — sub-resources by projectId
+  - `clients.ts`, `calendarEvents.ts`, `kanbanTasks.ts` — standard CRUD
+  - `dashboard.ts` — aggregated stats query
+  - `publicQuote.ts` — public queries/mutations (no auth) for client-facing quote page
+  - `images.ts` — `generateUploadUrl` for Convex file storage
+  - `seed.ts` — idempotent `seedAll` mutation
+- **Auth**: `convex/auth.ts` — Password provider via `@convex-dev/auth`
+- **ID mapping**: Convex uses `_id` internally. All queries map `id: doc._id` in return values so frontend uses `.id`. Projects also have `legacyId` for URL routing
+- **Image storage**: Convex file storage. Upload flow: `generateUploadUrl()` → `fetch(url, { method: "POST", body: file })` → store `storageId`. Hook: `src/app/components/hooks/useImageUpload.ts`
 
-### Convex (early stage)
+### Convex Provider
 
-- `convex/` directory has auth config but no application functions yet. Convex is being evaluated as a potential backend addition/replacement.
+- `src/app/components/ConvexProvider.tsx` — wraps app in `ConvexAuthProvider` with `ConvexReactClient`
+- `src/app/components/AuthContext.tsx` — wraps `useConvexAuth()` + `useAuthActions()` in familiar `useAuth()` interface
 
 ## Key Patterns
 
-- **Seed on startup**: `App.tsx` calls `ensureSeeded()` on mount which POSTs to `/seed` to populate initial data if empty
+- **Real-time data**: All pages use `useQuery(api.module.fn)` — data auto-updates across tabs. `useQuery` returns `undefined` while loading
+- **Conditional queries**: Use `"skip"` parameter: `useQuery(api.foo.bar, condition ? { id } : "skip")`
+- **Optimistic updates**: Some pages (KanbanBoard) maintain local state and sync to server via `useMutation`
 - **Toast notifications**: Use `appToast.success()` / `appToast.error()` from `src/app/components/AppToast.tsx` (wraps Sonner)
 - **Forms**: `react-hook-form` with custom `FormField` / `FormSelect` components and validation rules from `src/app/components/FormField.tsx`
 - **Maps**: Leaflet via `react-leaflet` for supplier location maps
@@ -51,8 +68,8 @@ npx playwright test  # Run Playwright e2e tests (config not yet created)
 
 ## MCP Integrations
 
-Configured in `.mcp.json`: Playwright (testing), Miro (diagrams), Vercel (deployment), Clerk (auth evaluation), Supabase (database).
+Configured in `.mcp.json`: Playwright (testing), Miro (diagrams), Vercel (deployment), Clerk (auth evaluation).
 
 ## Project Status
 
-~60-65% of MVP spec built. Core CRUD works. Missing "smart" features: PDF export, WhatsApp/email sending, supplier recommendation engine, duplicate detection, profit distribution, travel time calculation, Google Calendar sync. See `docs/project-status.md` for details.
+~60-65% of MVP spec built. Core CRUD works. Backend fully migrated from Supabase to Convex. Missing "smart" features: PDF export, WhatsApp/email sending, supplier recommendation engine, duplicate detection, profit distribution, travel time calculation, Google Calendar sync. See `docs/project-status.md` for details.

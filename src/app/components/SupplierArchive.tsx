@@ -1,42 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import {
   ArrowRight, Archive, ArchiveRestore, Search, Loader2, AlertTriangle, Star, Eye
 } from 'lucide-react';
 import type { Supplier } from './data';
-import { suppliersApi } from './api';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { appToast } from './AppToast';
 
 export function SupplierArchive() {
   const navigate = useNavigate();
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [restoringId, setRestoringId] = useState<string | null>(null);
 
-  const fetchArchived = async () => {
-    try {
-      setLoading(true);
-      const all = await suppliersApi.list();
-      setSuppliers(all.filter(s => s.category === 'ארכיון'));
-    } catch (err) {
-      console.error('[SupplierArchive] Failed to load:', err);
-      appToast.error('שגיאה בטעינת ספקים מאורכנים');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const allSuppliers = useQuery(api.suppliers.list);
+  const updateSupplier = useMutation(api.suppliers.update);
 
-  useEffect(() => {
-    fetchArchived();
-  }, []);
+  const loading = allSuppliers === undefined;
 
-  const restoreSupplier = async (supplier: Supplier) => {
+  const suppliers = useMemo(() => {
+    if (!allSuppliers) return [];
+    return allSuppliers.filter((s: any) => s.category === 'ארכיון');
+  }, [allSuppliers]);
+
+  const restoreSupplier = async (supplier: any) => {
     try {
-      setRestoringId(supplier.id);
+      setRestoringId(supplier._id);
       // Restore to default category 'כללי'
-      await suppliersApi.update(supplier.id, { category: 'כללי', categoryColor: '#8d785e' });
-      setSuppliers(prev => prev.filter(s => s.id !== supplier.id));
+      await updateSupplier({ id: supplier._id, category: 'כללי', categoryColor: '#8d785e' });
       appToast.success('הספק שוחזר בהצלחה', `${supplier.name} חזר לבנק הספקים`);
     } catch (err) {
       console.error('[SupplierArchive] Failed to restore:', err);
@@ -46,7 +37,7 @@ export function SupplierArchive() {
     }
   };
 
-  const filtered = suppliers.filter(s =>
+  const filtered = suppliers.filter((s: any) =>
     !search || s.name.includes(search) || s.region.includes(search)
   );
 
@@ -114,8 +105,8 @@ export function SupplierArchive() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((supplier) => (
-                  <tr key={supplier.id} className="border-b border-[#ece8e3] hover:bg-[#f5f3f0]/50 transition-colors">
+                {filtered.map((supplier: any) => (
+                  <tr key={supplier._id} className="border-b border-[#ece8e3] hover:bg-[#f5f3f0]/50 transition-colors">
                     <td className="p-3">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-lg bg-[#94a3b8]/10 flex items-center justify-center text-[16px]">
@@ -142,7 +133,7 @@ export function SupplierArchive() {
                     <td className="p-3">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => navigate(`/suppliers/${supplier.id}`)}
+                          onClick={() => navigate(`/suppliers/${supplier._id}`)}
                           className="p-1.5 text-[#8d785e] hover:text-[#ff8c00] hover:bg-[#ff8c00]/10 rounded-lg transition-all"
                           title="צפייה"
                         >
@@ -150,16 +141,16 @@ export function SupplierArchive() {
                         </button>
                         <button
                           onClick={() => restoreSupplier(supplier)}
-                          disabled={restoringId === supplier.id}
+                          disabled={restoringId === supplier._id}
                           className="flex items-center gap-1.5 text-[12px] text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-all"
                           style={{ fontWeight: 600 }}
                         >
-                          {restoringId === supplier.id ? (
+                          {restoringId === supplier._id ? (
                             <Loader2 size={13} className="animate-spin" />
                           ) : (
                             <ArchiveRestore size={13} />
                           )}
-                          {restoringId === supplier.id ? 'משחזר...' : 'שחזור'}
+                          {restoringId === supplier._id ? 'משחזר...' : 'שחזור'}
                         </button>
                       </div>
                     </td>

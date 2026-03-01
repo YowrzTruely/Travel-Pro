@@ -8,8 +8,10 @@ import {
   Cloud, CloudOff, RefreshCw, Loader2,
   Lightbulb, ArrowLeftCircle, MoveRight
 } from 'lucide-react';
-import { kanbanApi } from './api';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { useConfirmDelete } from './ConfirmDeleteModal';
+import { appToast } from './AppToast';
 
 // ═══════════════ TYPES ═══════════════
 
@@ -1506,43 +1508,32 @@ export function KanbanBoard() {
   const [viewMode, setViewMode] = useState<ViewMode>('kanban');
   const mountedRef = useRef(true);
 
-  // ─── Load from server on mount ─────────────────
+  // ─── Convex hooks ───
+  const serverTasks = useQuery(api.kanbanTasks.list);
+  const seedMutation = useMutation(api.kanbanTasks.seed);
+  const createMutation = useMutation(api.kanbanTasks.create);
+  const updateMutation = useMutation(api.kanbanTasks.update);
+  const removeMutation = useMutation(api.kanbanTasks.remove);
+
+  // ─── Seed on mount (idempotent) ─────────────────
   useEffect(() => {
     mountedRef.current = true;
-    let cancelled = false;
-
-    async function loadFromServer() {
-      try {
-        // 1. Seed INITIAL_TASKS to server (idempotent — skips if already seeded)
-        const tasksToSeed = INITIAL_TASKS.map(({ attachments, ...rest }) => rest);
-        await kanbanApi.seed(tasksToSeed as Task[], KANBAN_SEED_VERSION);
-
-        // 2. Fetch all tasks from server
-        const serverTasks = await kanbanApi.list();
-
-        if (cancelled) return;
-
-        if (serverTasks && serverTasks.length > 0) {
-          setTasks(serverTasks as Task[]);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(serverTasks));
-          console.log(`[Kanban] Loaded ${serverTasks.length} tasks from server`);
-        } else {
-          // Fallback — server empty after seed (shouldn't happen)
-          console.warn('[Kanban] Server returned 0 tasks, using INITIAL_TASKS');
-          setTasks(INITIAL_TASKS);
-        }
-        setSyncError(false);
-      } catch (err) {
-        console.error('[Kanban] Failed to load from server, using cached data:', err);
-        setSyncError(true);
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    }
-
-    loadFromServer();
-    return () => { cancelled = true; mountedRef.current = false; };
+    const tasksToSeed = INITIAL_TASKS.map(({ attachments, ...rest }) => rest);
+    seedMutation({ tasks: tasksToSeed as any[], version: KANBAN_SEED_VERSION })
+      .catch(err => console.error('[Kanban] Seed failed:', err));
+    return () => { mountedRef.current = false; };
   }, []);
+
+  // ─── Sync server tasks to local state ───────────
+  useEffect(() => {
+    if (serverTasks === undefined) return; // Still loading
+    if (serverTasks.length > 0) {
+      setTasks(serverTasks as Task[]);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(serverTasks));
+      setSyncError(false);
+    }
+    setIsLoading(false);
+  }, [serverTasks]);
 
   // ─── Cache to localStorage on change ───────────
   useEffect(() => {
@@ -1615,18 +1606,18 @@ export function KanbanBoard() {
     setEditingTask(null);
     setIsNewTask(false);
 
-    // Sync to server (without attachments — they're too large for KV)
-    const { attachments, ...serverTask } = task;
+    // Sync to server (without attachments — they're too large)
+    const { attachments, id: taskId, ...serverTask } = task;
     if (creating) {
-      syncToServer('create', () => kanbanApi.create(serverTask).then(() => {}));
+      syncToServer('create', () => createMutation(serverTask as any).then(() => {}));
     } else {
-      syncToServer('update', () => kanbanApi.update(task.id, serverTask).then(() => {}));
+      syncToServer('update', () => updateMutation({ id: taskId as any, ...serverTask } as any).then(() => {}));
     }
   };
 
   const handleDeleteTask = (id: string) => {
     setTasks(prev => prev.filter(t => t.id !== id));
-    syncToServer('delete', () => kanbanApi.delete(id).then(() => {}));
+    syncToServer('delete', () => removeMutation({ id: id as any }).then(() => {}));
   };
 
   const handleDragStart = (_e: React.DragEvent, taskId: string) => {
@@ -1653,14 +1644,14 @@ export function KanbanBoard() {
     setDraggedTaskId(null);
 
     // Sync to server
-    syncToServer('move', () => kanbanApi.update(taskId, { status: targetStatus }).then(() => {}));
+    syncToServer('move', () => updateMutation({ id: taskId as any, status: targetStatus }).then(() => {}));
   };
 
 
   const handlePromoteIdea = (task: Task) => {
     const promoted = { ...task, status: 'todo' as Status };
     setTasks(prev => prev.map(t => t.id === task.id ? promoted : t));
-    syncToServer('promote', () => kanbanApi.update(task.id, { status: 'todo' }).then(() => {}));
+    syncToServer('promote', () => updateMutation({ id: task.id as any, status: 'todo' }).then(() => {}));
   };
 
   const handleAddIdea = () => {
@@ -1682,19 +1673,12 @@ export function KanbanBoard() {
   };
 
   const handleRefreshFromServer = async () => {
-    setIsLoading(true);
-    try {
-      const serverTasks = await kanbanApi.list();
-      if (serverTasks && serverTasks.length > 0) {
-        setTasks(serverTasks as Task[]);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serverTasks));
-        setSyncError(false);
-      }
-    } catch (err) {
-      console.error('[Kanban] Refresh from server failed:', err);
-      setSyncError(true);
-    } finally {
-      setIsLoading(false);
+    // With Convex useQuery, data is always live — just re-sync from latest
+    if (serverTasks && serverTasks.length > 0) {
+      setTasks(serverTasks as Task[]);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(serverTasks));
+      setSyncError(false);
+      appToast.success('סונכרן', 'הנתונים עודכנו מהשרת');
     }
   };
 

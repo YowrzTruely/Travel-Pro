@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useForm } from 'react-hook-form';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import {
   Search, Plus, FolderOpen, Users, MapPin,
   DollarSign, ChevronLeft, Loader2, MoreVertical,
   Edit2, ArrowRightLeft, Trash2, X, AlertTriangle, Copy
 } from 'lucide-react';
 import type { Project } from './data';
-import { projectsApi } from './api';
 import { appToast } from './AppToast';
 import { FormField, FormSelect, rules } from './FormField';
 import { useConfirmDelete } from './ConfirmDeleteModal';
@@ -37,8 +38,15 @@ export function ProjectsList() {
   const initialFilter = searchParams.get('status') || 'הכל';
   const [statusFilter, setStatusFilter] = useState(initialFilter);
   const [search, setSearch] = useState('');
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+
+  // Convex query — returns undefined while loading, then an array
+  const projects = useQuery(api.projects.list);
+  const loading = projects === undefined;
+
+  // Convex mutations
+  const createProject = useMutation(api.projects.create);
+  const updateProject = useMutation(api.projects.update);
+  const removeProject = useMutation(api.projects.remove);
 
   // Action state
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -54,14 +62,6 @@ export function ProjectsList() {
     defaultValues: { name: '', client: '', participants: '', region: '' },
   });
 
-  useEffect(() => {
-    setLoading(true);
-    projectsApi.list()
-      .then(setProjects)
-      .catch(err => console.error('[ProjectsList] fetch failed:', err))
-      .finally(() => setLoading(false));
-  }, []);
-
   // Close menu on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -73,7 +73,7 @@ export function ProjectsList() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [openMenu]);
 
-  const filtered = projects.filter(p => {
+  const filtered = (projects ?? []).filter(p => {
     const matchesStatus = statusFilter === 'הכל' || p.status === statusFilter;
     const matchesSearch = !search || p.name.includes(search) || p.company.includes(search);
     return matchesStatus && matchesSearch;
@@ -95,17 +95,17 @@ export function ProjectsList() {
     if (!editingProject) return;
     try {
       setSaving(true);
-      const updated = await projectsApi.update(editingProject.id, {
+      await updateProject({
+        id: editingProject.id,
         name: data.name.trim(),
         client: data.client.trim(),
         company: data.client.trim(),
         participants: parseInt(data.participants) || 0,
         region: data.region.trim(),
       });
-      setProjects(prev => prev.map(p => p.id === editingProject.id ? updated : p));
       setEditingProject(null);
       editForm.reset();
-      appToast.success('פרויקט עודכן', `"${updated.name}" עודכן בהצלחה`);
+      appToast.success('פרויקט עודכן', `"${data.name.trim()}" עודכן בהצלחה`);
     } catch (err) {
       console.error('[ProjectsList] Update failed:', err);
       appToast.error('שגיאה', 'לא ניתן לעדכן את הפרויקט');
@@ -124,13 +124,13 @@ export function ProjectsList() {
     if (!statusProject) return;
     try {
       setSaving(true);
-      const updated = await projectsApi.update(statusProject.id, {
+      await updateProject({
+        id: statusProject.id,
         status: newStatus,
         statusColor: STATUS_COLORS[newStatus] || '#8d785e',
       });
-      setProjects(prev => prev.map(p => p.id === statusProject.id ? updated : p));
       setStatusProject(null);
-      appToast.success('סטטוס עודכן', `"${updated.name}" → ${newStatus}`);
+      appToast.success('סטטוס עודכן', `"${statusProject.name}" → ${newStatus}`);
     } catch (err) {
       console.error('[ProjectsList] Status change failed:', err);
       appToast.error('שגיאה', 'לא ניתן לשנות את הסטטוס');
@@ -143,15 +143,14 @@ export function ProjectsList() {
   const duplicateProject = async (project: Project) => {
     setOpenMenu(null);
     try {
-      const copy = await projectsApi.create({
+      await createProject({
         name: `${project.name} (עותק)`,
         client: project.client,
         company: project.company,
         participants: project.participants,
         region: project.region,
       });
-      setProjects(prev => [copy, ...prev]);
-      appToast.success('פרויקט שוכפל', `"${copy.name}" נוצר בהצלחה`);
+      appToast.success('פרויקט שוכפל', `"${project.name} (עותק)" נוצר בהצלחה`);
     } catch (err) {
       console.error('[ProjectsList] Duplicate failed:', err);
       appToast.error('שגיאה בשכפול פרויקט');
@@ -165,8 +164,7 @@ export function ProjectsList() {
       title: 'מחיקת פרויקט',
       itemName: project.name,
       onConfirm: async () => {
-        await projectsApi.delete(project.id);
-        setProjects(prev => prev.filter(p => p.id !== project.id));
+        await removeProject({ id: project.id });
         appToast.success('פרויקט נמחק', `"${project.name}" הוסר מהמערכת`);
       },
     });
@@ -249,21 +247,21 @@ export function ProjectsList() {
                 {openMenu === project.id && (
                   <div className="absolute left-0 top-9 bg-white rounded-xl border border-[#e7e1da] shadow-xl py-1 w-44 z-50">
                     <button
-                      onClick={() => openEdit(project)}
+                      onClick={() => openEdit(project as unknown as Project)}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 text-[13px] text-[#181510] hover:bg-[#f5f3f0] transition-colors"
                     >
                       <Edit2 size={14} className="text-[#8d785e]" />
                       ערוך פרטים
                     </button>
                     <button
-                      onClick={() => openStatusChange(project)}
+                      onClick={() => openStatusChange(project as unknown as Project)}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 text-[13px] text-[#181510] hover:bg-[#f5f3f0] transition-colors"
                     >
                       <ArrowRightLeft size={14} className="text-[#8d785e]" />
                       שנה סטטוס
                     </button>
                     <button
-                      onClick={() => duplicateProject(project)}
+                      onClick={() => duplicateProject(project as unknown as Project)}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 text-[13px] text-[#181510] hover:bg-[#f5f3f0] transition-colors"
                     >
                       <Copy size={14} className="text-[#8d785e]" />
@@ -271,7 +269,7 @@ export function ProjectsList() {
                     </button>
                     <div className="border-t border-[#f5f3f0] my-1" />
                     <button
-                      onClick={() => openDelete(project)}
+                      onClick={() => openDelete(project as unknown as Project)}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 text-[13px] text-red-500 hover:bg-red-50 transition-colors"
                     >
                       <Trash2 size={14} />

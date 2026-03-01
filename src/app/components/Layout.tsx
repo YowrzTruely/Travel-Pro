@@ -11,7 +11,8 @@ import imgAvatar from "figma:asset/3e33ffb968ecb98f421cfb68a6d08fed3e8bf007.png"
 import imgLogo from "figma:asset/b655d2164f14a54b258c6a8a069f10a88a1c4640.png";
 import { Breadcrumbs } from './Breadcrumbs';
 import { appToast } from './AppToast';
-import { projectsApi } from './api';
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { FormField, FormSelect, rules } from './FormField';
 import { useAuth } from './AuthContext';
 
@@ -44,6 +45,8 @@ export function Layout() {
   const [showNewProject, setShowNewProject] = useState(false);
   const [npSaving, setNpSaving] = useState(false);
 
+  const createProject = useMutation(api.projects.create);
+
   const { register, handleSubmit, formState: { errors, dirtyFields, isValid }, reset } = useForm<NewProjectForm>({
     mode: 'onChange',
     defaultValues: { name: '', client: '', participants: '', region: 'גליל עליון' },
@@ -70,7 +73,7 @@ export function Layout() {
   const onSubmitProject = async (data: NewProjectForm) => {
     try {
       setNpSaving(true);
-      const project = await projectsApi.create({
+      const projectId = await createProject({
         name: data.name.trim(),
         client: data.client.trim(),
         company: data.client.trim(),
@@ -80,7 +83,7 @@ export function Layout() {
       appToast.success('פרויקט חדש נוצר בהצלחה!', 'תוכל להתחיל להוסיף רכיבים וספקים');
       setShowNewProject(false);
       reset();
-      navigate(`/projects/${project.id}`);
+      navigate(`/projects/${projectId}`);
     } catch (err) {
       console.error('[Layout] Failed to create project:', err);
       appToast.error('שגיאה ביצירת פרויקט', String(err));

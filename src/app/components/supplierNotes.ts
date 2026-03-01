@@ -4,7 +4,36 @@
 // ═══════════════════════════════════════════════════
 
 import type { Supplier } from './data';
-import type { SupplierDocument, SupplierContact, SupplierProduct } from './api';
+
+export interface SupplierDocument {
+  id: string;
+  supplierId: string;
+  name: string;
+  expiry: string;
+  status: 'valid' | 'warning' | 'expired';
+  fileName?: string;
+}
+
+export interface SupplierContact {
+  id: string;
+  supplierId: string;
+  name: string;
+  role: string;
+  phone: string;
+  email: string;
+  primary: boolean;
+}
+
+export interface SupplierProduct {
+  id: string;
+  supplierId: string;
+  name: string;
+  price: number;
+  description: string;
+  unit: string;
+  images?: { id: string; url: string; name: string; path?: string }[];
+  notes?: string;
+}
 
 export type NoteLevel = 'critical' | 'warning' | 'info' | 'low';
 

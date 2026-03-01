@@ -5,9 +5,28 @@ import {
   Bus, BedDouble, Compass, UtensilsCrossed, Music, Package, Camera,
   FileText, Banknote, StickyNote, CheckCircle2, AlertCircle
 } from 'lucide-react';
-import { quoteItemsApi } from './api';
-import type { QuoteItem } from './api';
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { useImageUpload } from './hooks/useImageUpload';
 import { appToast } from './AppToast';
+
+interface QuoteItem {
+  id: string;
+  projectId: string;
+  type: string;
+  icon: string;
+  name: string;
+  supplier: string;
+  description: string;
+  cost: number;
+  directPrice: number;
+  sellingPrice: number;
+  profitWeight: number;
+  status: string;
+  alternatives?: { id: string; name: string; description: string; costPerPerson: number; selected: boolean }[];
+  images?: { id: string; url: string; name: string }[];
+  notes?: string;
+}
 import { useConfirmDelete } from './ConfirmDeleteModal';
 
 // ─── Type icon map (shared with QuoteEditor) ───
@@ -36,6 +55,9 @@ interface ItemEditorProps {
 }
 
 export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemEditorProps) {
+  const updateItem = useMutation(api.quoteItems.update);
+  const { upload } = useImageUpload();
+
   // ─── Editable fields ───
   const [name, setName] = useState(item.name);
   const [supplier, setSupplier] = useState(item.supplier);
@@ -74,11 +96,12 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
     setSaveSuccess(false);
   }, [item]);
 
-  // ─── Image upload ───
+  // ─── Image upload (Convex storage) ───
   const handleImageUpload = useCallback(async (files: FileList | File[]) => {
     if (!files.length) return;
     setUploading(true);
     try {
+      const currentImages = [...(images || [])];
       for (const file of Array.from(files)) {
         if (!file.type.startsWith('image/')) {
           appToast.warning('קובץ לא תקין', `${file.name} אינו תמונה`);
@@ -88,11 +111,17 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
           appToast.warning('קובץ גדול מדי', 'גודל מקסימלי 5MB');
           continue;
         }
-        const updated = await quoteItemsApi.uploadImage(projectId, item.id, file);
-        setImages(updated.images || []);
-        onUpdate(updated);
-        setActiveImageIdx((updated.images || []).length - 1);
+        const storageId = await upload(file);
+        const newImage = { id: storageId, storageId, name: file.name };
+        currentImages.push({ id: storageId, url: storageId, name: file.name });
+        await updateItem({
+          id: item.id as any,
+          images: currentImages.map(img => ({ id: img.id, storageId: img.url || img.id, name: img.name })),
+        });
       }
+      setImages(currentImages);
+      setActiveImageIdx(currentImages.length - 1);
+      onUpdate({ ...item, images: currentImages });
       appToast.success('תמונה הועלתה', 'התמונה נוספה לרכיב');
     } catch (err) {
       console.error('[ItemEditor] Upload failed:', err);
@@ -101,13 +130,17 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
       setUploading(false);
       setIsDragging(false);
     }
-  }, [projectId, item.id, onUpdate]);
+  }, [item, images, upload, updateItem, onUpdate]);
 
   const handleDeleteImage = async (imageId: string) => {
     try {
-      const updated = await quoteItemsApi.deleteImage(projectId, item.id, imageId);
-      setImages(updated.images || []);
-      onUpdate(updated);
+      const newImages = (images || []).filter(img => img.id !== imageId);
+      await updateItem({
+        id: item.id as any,
+        images: newImages.map(img => ({ id: img.id, storageId: img.url || img.id, name: img.name })),
+      });
+      setImages(newImages);
+      onUpdate({ ...item, images: newImages });
       setActiveImageIdx(Math.max(0, activeImageIdx - 1));
       appToast.success('תמונה הוסרה', '');
     } catch (err) {
@@ -142,7 +175,8 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
   const handleSave = async () => {
     setSaving(true);
     try {
-      const updated = await quoteItemsApi.update(projectId, item.id, {
+      await updateItem({
+        id: item.id as any,
         name: name.trim(),
         supplier: supplier.trim(),
         description: description.trim(),
@@ -153,6 +187,18 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
         status,
         notes: notes.trim(),
       });
+      const updated = {
+        ...item,
+        name: name.trim(),
+        supplier: supplier.trim(),
+        description: description.trim(),
+        cost,
+        directPrice,
+        sellingPrice,
+        profitWeight,
+        status,
+        notes: notes.trim(),
+      };
       onUpdate(updated);
       setSaveSuccess(true);
       appToast.success('הרכיב עודכן', name);

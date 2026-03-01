@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { MapPin, Search, Loader2, X, Navigation } from 'lucide-react';
 import L from 'leaflet';
 import type { Supplier } from './data';
-import { suppliersApi } from './api';
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { appToast } from './AppToast';
 import { useConfirmDelete } from './ConfirmDeleteModal';
 
@@ -44,6 +45,8 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
+
+  const updateSupplier = useMutation(api.suppliers.update);
 
   const [address, setAddress] = useState(supplier.address || '');
   const [searching, setSearching] = useState(false);
@@ -178,11 +181,12 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
     // Save to server
     try {
       setSaving(true);
-      const updated = await suppliersApi.update(supplier.id, {
+      await updateSupplier({
+        id: (supplier as any)._id,
         address: displayAddress,
         location: { lat, lng },
       });
-      onUpdate(updated);
+      onUpdate({ ...supplier, address: displayAddress, location: { lat, lng } });
       appToast.success('מיקום עודכן', displayAddress.split(',')[0]);
     } catch (err) {
       console.error('[SupplierLocation] save failed:', err);
@@ -207,11 +211,11 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
 
     try {
       setSaving(true);
-      const updated = await suppliersApi.update(supplier.id, {
+      await updateSupplier({
+        id: (supplier as any)._id,
         address: '',
-        location: undefined as any,
       });
-      onUpdate(updated);
+      onUpdate({ ...supplier, address: '', location: undefined as any });
       appToast.info('מיקום הוסר');
     } catch (err) {
       appToast.error('שגיאה בהסרת מיקום');

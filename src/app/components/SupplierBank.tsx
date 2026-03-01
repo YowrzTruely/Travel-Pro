@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import {
   Search, Plus, Filter, Eye, Edit2, Copy, Star, CheckCircle,
   AlertTriangle, Clock, X, ChevronLeft, ChevronRight, Users, Loader2, Archive
 } from 'lucide-react';
 import type { Supplier } from './data';
-import { suppliersApi } from './api';
 import { appToast } from './AppToast';
 import { SupplierMap } from './SupplierMap';
 import { FormField, FormSelect, rules } from './FormField';
@@ -46,11 +47,13 @@ export function SupplierBank() {
   const [selectedStatus, setSelectedStatus] = useState('הכל');
   const [showAddSupplier, setShowAddSupplier] = useState(false);
 
-  // ─── Live data from API ───
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [summaries, setSummaries] = useState<Record<string, SupplierSummary>>({});
+  // ─── Live data from Convex ───
+  const suppliers = useQuery(api.suppliers.list) as Supplier[] | undefined;
+  const summaries = useQuery(api.suppliers.summaries) as Record<string, SupplierSummary> | undefined;
+  const createSupplier = useMutation(api.suppliers.create);
+
+  const loading = suppliers === undefined;
+  const error: string | null = null;
 
   // ─── New supplier form state ───
   const [saving, setSaving] = useState(false);
@@ -63,38 +66,13 @@ export function SupplierBank() {
     defaultValues: { name: '', category: 'תחבורה', region: 'צפון', phone: '' },
   });
 
-  const fetchSuppliers = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const [data, summaryData] = await Promise.all([
-        suppliersApi.list(),
-        suppliersApi.summaries().catch(err => {
-          console.warn('[SupplierBank] Failed to load summaries:', err);
-          return {} as Record<string, SupplierSummary>;
-        }),
-      ]);
-      setSuppliers(data);
-      setSummaries(summaryData);
-    } catch (err) {
-      console.error('[SupplierBank] Failed to load suppliers:', err);
-      setError('שגיאה בטעינת ספקים');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSuppliers();
-  }, []);
-
   const onSubmitSupplier = async (data: NewSupplierForm) => {
     if (newSupplierCategories.length === 0) return;
     try {
       setSaving(true);
       const categoryStr = newSupplierCategories.join(',');
       const primaryCat = CATEGORY_COLOR_MAP[newSupplierCategories[0]];
-      await suppliersApi.create({
+      await createSupplier({
         name: data.name.trim(),
         category: categoryStr,
         categoryColor: primaryCat?.color || '#8d785e',
@@ -106,7 +84,6 @@ export function SupplierBank() {
       setShowAddSupplier(false);
       resetSupplierForm();
       setNewSupplierCategories(['תחבורה']);
-      fetchSuppliers();
     } catch (err) {
       console.error('[SupplierBank] Failed to create supplier:', err);
       appToast.error('שגיאה ביצירת ספק', String(err));
@@ -115,8 +92,9 @@ export function SupplierBank() {
     }
   };
 
+  const supplierList = suppliers ?? [];
 
-  const filtered = suppliers.filter(s => {
+  const filtered = supplierList.filter(s => {
     // Filter out archived suppliers
     if (s.category === 'ארכיון') return false;
     const cats = s.category.split(',').map(c => c.trim());
@@ -138,13 +116,13 @@ export function SupplierBank() {
     setCurrentPage(1);
   };
 
-  const activeSuppliers = suppliers.filter(s => s.category !== 'ארכיון');
-  const archivedCount = suppliers.filter(s => s.category === 'ארכיון').length;
+  const activeSuppliers = supplierList.filter(s => s.category !== 'ארכיון');
+  const archivedCount = supplierList.filter(s => s.category === 'ארכיון').length;
   const totalSuppliers = activeSuppliers.length;
   const verifiedCount = activeSuppliers.filter(s => s.verificationStatus === 'verified').length;
   const pendingCount = activeSuppliers.filter(s => s.verificationStatus === 'pending').length;
   const docsIssues = activeSuppliers.filter(s => {
-    const notes = computeAutoNotesFromSummary(s, summaries[s.id]);
+    const notes = computeAutoNotesFromSummary(s, (summaries ?? {})[s.id]);
     return notes.some(n => n.level === 'critical' || n.level === 'warning');
   }).length;
 
@@ -244,7 +222,6 @@ export function SupplierBank() {
         <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-[#e7e1da] shadow-sm mb-5">
           <AlertTriangle size={32} className="text-[#ef4444] mb-3" />
           <p className="text-[14px] text-[#ef4444]">{error}</p>
-          <button onClick={fetchSuppliers} className="mt-3 text-[13px] text-[#ff8c00] hover:text-[#e67e00]" style={{ fontWeight: 600 }}>נסה שוב</button>
         </div>
       ) : (
       <div className="bg-white rounded-2xl border border-[#e7e1da] shadow-sm overflow-hidden mb-5">
@@ -315,7 +292,7 @@ export function SupplierBank() {
                   </td>
                   <td className="p-3 text-[12px]">
                     {(() => {
-                      const notes = computeAutoNotesFromSummary(supplier, summaries[supplier.id]);
+                      const notes = computeAutoNotesFromSummary(supplier, (summaries ?? {})[supplier.id]);
                       if (notes.length === 0) return <span className="text-[#b8a990]">-</span>;
                       const first = notes[0];
                       const styles = noteLevelStyles(first.level);

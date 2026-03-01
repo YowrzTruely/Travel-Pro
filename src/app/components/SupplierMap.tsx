@@ -6,7 +6,8 @@ import {
 } from 'lucide-react';
 import L from 'leaflet';
 import type { Supplier } from './data';
-import { suppliersApi } from './api';
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 // ─── Region config with real lat/lng ───
 interface RegionDef {
@@ -33,8 +34,8 @@ function pinHtml(color: string, count: number, isActive: boolean) {
   return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${isActive ? color : '#fff'};border:3px solid ${color};display:flex;align-items:center;justify-content:center;box-shadow:${isActive ? `0 0 0 6px ${color}20, 0 4px 16px ${color}40` : '0 2px 8px rgba(0,0,0,0.18)'};transition:all .2s;cursor:pointer;"><span style="font-size:15px;font-weight:800;color:${isActive ? '#fff' : color};font-family:Assistant,sans-serif;">${count}</span></div>`;
 }
 
-function popupHtml(region: RegionDef, list: Supplier[]) {
-  const rows = list.map(s => `<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;" data-supplier-id="${s.id}" onmouseover="this.style.background='#f8f7f5'" onmouseout="this.style.background='transparent'"><span style="font-size:14px;">${s.icon}</span><span style="font-size:12px;color:#181510;font-weight:600;">${s.name}</span></div>`).join('');
+function popupHtml(region: RegionDef, list: any[]) {
+  const rows = list.map(s => `<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;" data-supplier-id="${s._id}" onmouseover="this.style.background='#f8f7f5'" onmouseout="this.style.background='transparent'"><span style="font-size:14px;">${s.icon}</span><span style="font-size:12px;color:#181510;font-weight:600;">${s.name}</span></div>`).join('');
   return `<div dir="rtl" style="font-family:Assistant,sans-serif;min-width:200px;"><div style="padding:10px 14px;background:${region.color}08;border-bottom:1px solid ${region.color}15;"><div style="font-size:13px;color:#181510;font-weight:700;">${region.label}</div><div style="font-size:11px;color:#8d785e;">${list.length} ספקים</div></div><div style="padding:6px 8px;max-height:180px;overflow-y:auto;">${rows}</div></div>`;
 }
 
@@ -42,17 +43,15 @@ function popupHtml(region: RegionDef, list: Supplier[]) {
 export function SupplierMap() {
   const navigate = useNavigate();
   const [activeRegion, setActiveRegion] = useState<string | null>(null);
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const mapRef = useRef<L.Map | null>(null);
   const mapElRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<Record<string, L.Marker>>({});
 
-  useEffect(() => {
-    suppliersApi.list().then(setSuppliers).catch(err => console.error('[SupplierMap] fetch failed:', err));
-  }, []);
+  const suppliersData = useQuery(api.suppliers.list);
+  const suppliers: any[] = suppliersData ?? [];
 
   const suppliersByRegion = useMemo(() => {
-    const map: Record<string, Supplier[]> = {};
+    const map: Record<string, any[]> = {};
     for (const s of suppliers) {
       if (!map[s.region]) map[s.region] = [];
       map[s.region].push(s);
@@ -173,12 +172,12 @@ export function SupplierMap() {
                   </div>
                   <div className="flex items-center justify-between mt-1">
                     <span className="text-[10px] text-[#b09d84]">{pct}% מהמאגר</span>
-                    {list.length > 0 && <span className="text-[10px] text-[#b09d84]">{list.filter(s => s.verificationStatus === 'verified').length} מאומתים</span>}
+                    {list.length > 0 && <span className="text-[10px] text-[#b09d84]">{list.filter((s: any) => s.verificationStatus === 'verified').length} מאומתים</span>}
                   </div>
                   {isActive && list.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-[#f0ece6]">
-                      {list.map((s) => (
-                        <button key={s.id} onClick={(e) => { e.stopPropagation(); navigate(`/suppliers/${s.id}`); }} className="flex items-center gap-1 text-[10px] bg-white border border-[#e7e1da] rounded-md px-1.5 py-1 hover:border-[#ff8c00] hover:text-[#ff8c00] transition-colors" title={s.name}>
+                      {list.map((s: any) => (
+                        <button key={s._id} onClick={(e) => { e.stopPropagation(); navigate(`/suppliers/${s._id}`); }} className="flex items-center gap-1 text-[10px] bg-white border border-[#e7e1da] rounded-md px-1.5 py-1 hover:border-[#ff8c00] hover:text-[#ff8c00] transition-colors" title={s.name}>
                           <span>{s.icon}</span>
                           <span className="truncate max-w-[70px]" style={{ fontWeight: 500 }}>{s.name.split(' ')[0]}</span>
                         </button>
@@ -196,9 +195,9 @@ export function SupplierMap() {
               <span className="text-[14px] text-[#181510]" style={{ fontWeight: 700 }}>{suppliers.length} ספקים</span>
             </div>
             <div className="flex items-center gap-3 text-[10px] text-[#b09d84]">
-              <span className="flex items-center gap-0.5"><CheckCircle size={9} className="text-green-500" />{suppliers.filter(s => s.verificationStatus === 'verified').length} מאומתים</span>
-              <span className="flex items-center gap-0.5"><Clock size={9} className="text-yellow-500" />{suppliers.filter(s => s.verificationStatus === 'pending').length} ממתינים</span>
-              <span className="flex items-center gap-0.5"><AlertTriangle size={9} className="text-[#8d785e]" />{suppliers.filter(s => s.verificationStatus === 'unverified').length} לא מאומתים</span>
+              <span className="flex items-center gap-0.5"><CheckCircle size={9} className="text-green-500" />{suppliers.filter((s: any) => s.verificationStatus === 'verified').length} מאומתים</span>
+              <span className="flex items-center gap-0.5"><Clock size={9} className="text-yellow-500" />{suppliers.filter((s: any) => s.verificationStatus === 'pending').length} ממתינים</span>
+              <span className="flex items-center gap-0.5"><AlertTriangle size={9} className="text-[#8d785e]" />{suppliers.filter((s: any) => s.verificationStatus === 'unverified').length} לא מאומתים</span>
             </div>
           </div>
         </div>

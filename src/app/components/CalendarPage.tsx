@@ -1,5 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import {
   Calendar as CalendarIcon,
   Plus,
@@ -27,7 +29,6 @@ import {
 import { he } from 'date-fns/locale';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Project, CalendarEvent, CalendarEventType } from './data';
-import { projectsApi, calendarApi } from './api';
 import { appToast } from './AppToast';
 import { MonthlyView } from './calendar/MonthlyView';
 import { WeeklyView } from './calendar/WeeklyView';
@@ -81,10 +82,17 @@ export function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  // Data state
-  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Convex queries — auto-updating, no manual refetch needed
+  const calendarEvents = useQuery(api.calendarEvents.list);
+  const projects = useQuery(api.projects.list);
+
+  // Convex mutations
+  const createEvent = useMutation(api.calendarEvents.create);
+  const updateEvent = useMutation(api.calendarEvents.update);
+  const removeEvent = useMutation(api.calendarEvents.remove);
+
+  // Loading state: undefined means still loading
+  const loading = calendarEvents === undefined || projects === undefined;
 
   // Modal state
   const [showEventModal, setShowEventModal] = useState(false);
@@ -94,25 +102,10 @@ export function CalendarPage() {
   );
   const [saving, setSaving] = useState(false);
 
-  // ─── Data loading ─────────────────────────────
-
-  useEffect(() => {
-    setLoading(true);
-    Promise.all([
-      calendarApi.list().catch(() => [] as CalendarEvent[]),
-      projectsApi.list().catch(() => [] as Project[]),
-    ])
-      .then(([events, projs]) => {
-        setCalendarEvents(events);
-        setProjects(projs);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
   // ─── Merged display events ────────────────────
 
   const displayEvents = useMemo<DisplayEvent[]>(() => {
-    const fromCalendar: DisplayEvent[] = calendarEvents.map((ev) => ({
+    const fromCalendar: DisplayEvent[] = (calendarEvents ?? []).map((ev) => ({
       id: ev.id,
       title: ev.title,
       description: ev.description,
@@ -127,7 +120,7 @@ export function CalendarPage() {
       originalEvent: ev,
     }));
 
-    const fromProjects: DisplayEvent[] = projects
+    const fromProjects: DisplayEvent[] = (projects ?? [])
       .filter((p) => p.date)
       .map((p) => ({
         id: `project-${p.id}`,
@@ -198,15 +191,23 @@ export function CalendarPage() {
     try {
       setSaving(true);
       if (editingEvent) {
-        const updated = await calendarApi.update(editingEvent.id, data);
-        setCalendarEvents((prev) =>
-          prev.map((e) => (e.id === editingEvent.id ? updated : e))
-        );
-        appToast.success('אירוע עודכן', `"${updated.title}" עודכן בהצלחה`);
+        await updateEvent({
+          id: editingEvent.id,
+          ...data,
+        });
+        appToast.success('אירוע עודכן', `"${data.title || editingEvent.title}" עודכן בהצלחה`);
       } else {
-        const created = await calendarApi.create(data);
-        setCalendarEvents((prev) => [created, ...prev]);
-        appToast.success('אירוע חדש נוצר', `"${created.title}" נוסף ליומן`);
+        await createEvent({
+          title: data.title!,
+          description: data.description!,
+          date: data.date!,
+          startTime: data.startTime!,
+          endTime: data.endTime!,
+          type: data.type!,
+          color: data.color!,
+          projectId: data.projectId,
+        });
+        appToast.success('אירוע חדש נוצר', `"${data.title}" נוסף ליומן`);
       }
       setShowEventModal(false);
       setEditingEvent(null);
@@ -222,10 +223,7 @@ export function CalendarPage() {
     if (!deletingEvent) return;
     try {
       setSaving(true);
-      await calendarApi.delete(deletingEvent.id);
-      setCalendarEvents((prev) =>
-        prev.filter((e) => e.id !== deletingEvent.id)
-      );
+      await removeEvent({ id: deletingEvent.id });
       appToast.success(
         'אירוע נמחק',
         `"${deletingEvent.title}" הוסר מהיומן`
@@ -381,7 +379,7 @@ export function CalendarPage() {
           editingEvent={editingEvent}
           saving={saving}
           selectedDate={selectedDate}
-          projects={projects}
+          projects={projects ?? []}
         />
       )}
 

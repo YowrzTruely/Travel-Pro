@@ -8,7 +8,8 @@ import {
   Clock, Zap, LayoutList, X, RotateCcw, MapPin, Phone, Hash,
   FileText, Lightbulb, Microscope
 } from 'lucide-react';
-import { suppliersApi } from './api';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { appToast } from './AppToast';
 import type { Supplier } from './data';
 import { CategoryIcon } from './CategoryIcons';
@@ -84,6 +85,9 @@ function isUnclassified(s: Supplier): boolean {
 export function ClassificationWizard() {
   const navigate = useNavigate();
 
+  const suppliersData = useQuery(api.suppliers.list);
+  const updateSupplier = useMutation(api.suppliers.update);
+
   // Data
   const [allSuppliers, setAllSuppliers] = useState<Supplier[]>([]);
   const [queue, setQueue] = useState<Supplier[]>([]);
@@ -114,28 +118,21 @@ export function ClassificationWizard() {
   // Tags
   const TAGS = ['B2B', 'שנתי', 'דחוף', 'VIP', 'חדש', 'מומלץ'];
 
-  // ─── Load suppliers ──────────────────────────────
+  // ─── Load suppliers from Convex ──────────────────
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const suppliers = await suppliersApi.list();
-        setAllSuppliers(suppliers);
-        const unclassified = suppliers.filter(isUnclassified);
-        setQueue(unclassified);
-        if (unclassified.length > 0) {
-          applySuggestion(unclassified[0]);
-        }
-        if (unclassified.length === 0) {
-          setAllDone(true);
-        }
-      } catch (err) {
-        console.error('[ClassificationWizard] Load error:', err);
-        appToast.error('שגיאה בטעינת ספקים');
-      }
-      setLoading(false);
-    })();
-  }, []);
+    if (suppliersData === undefined) return; // still loading
+    const suppliers = suppliersData as any as Supplier[];
+    setAllSuppliers(suppliers);
+    const unclassified = suppliers.filter(isUnclassified);
+    setQueue(unclassified);
+    if (unclassified.length > 0) {
+      applySuggestion(unclassified[0]);
+    }
+    if (unclassified.length === 0) {
+      setAllDone(true);
+    }
+    setLoading(false);
+  }, [suppliersData]);
 
   // ─── Timer ───────────────────────────────────────
   useEffect(() => {
@@ -187,7 +184,8 @@ export function ClassificationWizard() {
     setSaving(true);
     try {
       const catDef = CATEGORIES.find(c => c.name === selectedCategory);
-      await suppliersApi.update(currentSupplier.id, {
+      await updateSupplier({
+        id: (currentSupplier as any)._id,
         category: selectedCategory,
         categoryColor: catDef?.color || '#8d785e',
         icon: catDef?.name || 'כללי',
@@ -203,7 +201,7 @@ export function ClassificationWizard() {
       appToast.error('שגיאה בשמירת הסיווג');
     }
     setSaving(false);
-  }, [currentSupplier, selectedCategory, selectedSub, selectedTags, moveToNext]);
+  }, [currentSupplier, selectedCategory, selectedSub, selectedTags, moveToNext, updateSupplier]);
 
   const handleSkip = useCallback(() => {
     setSkippedCount(s => s + 1);
@@ -215,7 +213,8 @@ export function ClassificationWizard() {
     if (!currentSupplier) return;
     setSaving(true);
     try {
-      await suppliersApi.update(currentSupplier.id, {
+      await updateSupplier({
+        id: (currentSupplier as any)._id,
         category: 'ארכיון',
         categoryColor: '#94a3b8',
         notes: `${currentSupplier.notes && currentSupplier.notes !== '-' ? currentSupplier.notes + ' | ' : ''}הועבר לארכיון`,
@@ -227,7 +226,7 @@ export function ClassificationWizard() {
       appToast.error('שגיאה בהעברה לארכיון');
     }
     setSaving(false);
-  }, [currentSupplier, moveToNext]);
+  }, [currentSupplier, moveToNext, updateSupplier]);
 
   // ─── Keyboard shortcuts ──────────────────────────
   useEffect(() => {
@@ -351,21 +350,15 @@ export function ClassificationWizard() {
               </button>
               {skippedCount > 0 && (
                 <button
-                  onClick={async () => {
-                    // Re-fetch suppliers to get only the still-unclassified ones
-                    setLoading(true);
-                    try {
-                      const fresh = await suppliersApi.list();
-                      const remaining = fresh.filter(isUnclassified);
-                      setQueue(remaining);
-                      setCurrentIdx(0);
-                      setSkippedCount(0);
-                      setAllDone(remaining.length === 0);
-                      if (remaining.length > 0) applySuggestion(remaining[0]);
-                    } catch (err) {
-                      appToast.error('שגיאה בטעינת ספקים');
-                    }
-                    setLoading(false);
+                  onClick={() => {
+                    // Re-read suppliers from Convex (already reactive)
+                    const fresh = (suppliersData ?? []) as any as Supplier[];
+                    const remaining = fresh.filter(isUnclassified);
+                    setQueue(remaining);
+                    setCurrentIdx(0);
+                    setSkippedCount(0);
+                    setAllDone(remaining.length === 0);
+                    if (remaining.length > 0) applySuggestion(remaining[0]);
                   }}
                   className="flex items-center gap-2 text-[15px] text-[#8d785e] border border-[#e7e1da] px-5 py-3 rounded-xl hover:bg-[#f5f3f0] transition-colors"
                   style={{ fontWeight: 600 }}

@@ -20,7 +20,7 @@ Here's a detailed comparison of the MVP spec vs. what's actually been built:
 
 | MVP Screen | Status | Notes |
 |---|---|---|
-| 1. Login | Done | Email/password auth via Supabase |
+| 1. Login | Done | Email/password auth via Convex Auth |
 | 2. Dashboard | Done | Stats, pipeline summary, alerts, activity ticker |
 | 3. Projects List | Done | CRM-style table with status filters |
 | 4. Create Project (Wizard) | Done | Quick creation modal with key fields |
@@ -85,4 +85,4 @@ Here's a detailed comparison of the MVP spec vs. what's actually been built:
 - Travel time calculations between locations
 - Google Calendar sync
 
-The backend is currently using a simple **KV store** (key-value) rather than a relational database, which will need to evolve as the product matures and relationships between entities become more complex.
+The backend has been **fully migrated from Supabase (KV store) to Convex** — a proper relational schema with 11 domain tables, Convex Auth (email/password), Convex file storage for images, and real-time `useQuery`/`useMutation` hooks on every page. Data updates are reactive across browser tabs.

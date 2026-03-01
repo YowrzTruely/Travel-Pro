@@ -1,18 +1,15 @@
 /**
  * Auth context — provides user session, login, signup, logout.
- * Uses Supabase Auth under the hood.
+ * Uses Convex Auth under the hood.
  */
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useCallback } from 'react';
 import type { ReactNode } from 'react';
-import type { Session, User } from '@supabase/supabase-js';
-import { supabase } from './supabaseClient';
-import { projectId, publicAnonKey } from '/utils/supabase/info';
+import { useConvexAuth } from "convex/react";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 interface AuthState {
-  user: User | null;
-  session: Session | null;
+  user: { email?: string } | null;
   loading: boolean;
-  accessToken: string | null;
 }
 
 interface AuthActions {
@@ -26,79 +23,37 @@ type AuthContextValue = AuthState & AuthActions;
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AuthState>({
-    user: null,
-    session: null,
-    loading: true,
-    accessToken: null,
-  });
-
-  // Listen for auth state changes
-  useEffect(() => {
-    // Try to restore existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setState({
-        user: session?.user ?? null,
-        session,
-        loading: false,
-        accessToken: session?.access_token ?? null,
-      });
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setState({
-        user: session?.user ?? null,
-        session,
-        loading: false,
-        accessToken: session?.access_token ?? null,
-      });
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const { isAuthenticated, isLoading } = useConvexAuth();
+  const { signIn, signOut } = useAuthActions();
 
   const login = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      console.error('[Auth] Login error:', error.message);
-      return { error: error.message };
+    try {
+      await signIn("password", { email, password, flow: "signIn" });
+      return { error: null };
+    } catch (err: any) {
+      console.error('[Auth] Login error:', err);
+      return { error: err?.message || String(err) };
     }
-    return { error: null };
-  }, []);
+  }, [signIn]);
 
   const signup = useCallback(async (email: string, password: string, name: string) => {
     try {
-      const BASE = `https://${projectId}.supabase.co/functions/v1/make-server-0045c7fc`;
-      const res = await fetch(`${BASE}/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${publicAnonKey}`,
-        },
-        body: JSON.stringify({ email, password, name }),
-      });
-      const json = await res.json();
-      if (!res.ok || json.error) {
-        const msg = json.error || `HTTP ${res.status}`;
-        console.error('[Auth] Signup error:', msg);
-        return { error: msg };
-      }
-
-      // After signup, automatically sign in
-      const loginResult = await login(email, password);
-      return loginResult;
-    } catch (err) {
-      console.error('[Auth] Signup exception:', err);
-      return { error: String(err) };
+      await signIn("password", { email, password, name, flow: "signUp" });
+      return { error: null };
+    } catch (err: any) {
+      console.error('[Auth] Signup error:', err);
+      return { error: err?.message || String(err) };
     }
-  }, [login]);
+  }, [signIn]);
 
   const logout = useCallback(async () => {
-    await supabase.auth.signOut();
-  }, []);
+    await signOut();
+  }, [signOut]);
+
+  const user = isAuthenticated ? { email: "" } : null;
 
   return (
-    <AuthContext.Provider value={{ ...state, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading: isLoading, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

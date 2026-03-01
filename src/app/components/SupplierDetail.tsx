@@ -1,6 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useForm } from 'react-hook-form';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import {
   ArrowRight, CheckCircle, Phone, Mail,
   MapPin, FileText, AlertTriangle, Plus, Loader2, Clock, Save, Trash2, X,
@@ -8,8 +11,6 @@ import {
 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import type { Supplier } from './data';
-import { suppliersApi, supplierContactsApi, supplierProductsApi, supplierDocumentsApi } from './api';
-import type { SupplierContact, SupplierProduct, SupplierDocument } from './api';
 import { FormField, rules } from './FormField';
 import { FormSelect, FormTextarea } from './FormField';
 import { appToast } from './AppToast';
@@ -19,6 +20,40 @@ import { computeAutoNotes, noteLevelStyles } from './supplierNotes';
 import type { AutoNote } from './supplierNotes';
 import { useConfirmDelete } from './ConfirmDeleteModal';
 import { CategoryIcon } from './CategoryIcons';
+
+// Re-export types that were previously imported from api.ts
+export interface SupplierContact {
+  id: string;
+  _id?: any;
+  supplierId: string;
+  name: string;
+  role: string;
+  phone: string;
+  email: string;
+  primary: boolean;
+}
+
+export interface SupplierProduct {
+  id: string;
+  _id?: any;
+  supplierId: string;
+  name: string;
+  price: number;
+  description: string;
+  unit: string;
+  images?: { id: string; url: string; name: string; path?: string }[];
+  notes?: string;
+}
+
+export interface SupplierDocument {
+  id: string;
+  _id?: any;
+  supplierId: string;
+  name: string;
+  expiry: string;
+  status: 'valid' | 'warning' | 'expired';
+  fileName?: string;
+}
 
 const VINEYARD_IMG = 'https://images.unsplash.com/photo-1762330465953-75478d918896?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aW5leWFyZCUyMGdyYXBlJTIwaGlsbHNpZGUlMjBncmVlbnxlbnwxfHx8fDE3NzE0NjgyNDJ8MA&ixlib=rb-4.1.0&q=80&w=1080';
 
@@ -59,11 +94,6 @@ export function SupplierDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('info');
-  const [supplier, setSupplier] = useState<Supplier | null>(null);
-  const [contacts, setContacts] = useState<SupplierContact[]>([]);
-  const [products, setProducts] = useState<SupplierProduct[]>([]);
-  const [documents, setDocuments] = useState<SupplierDocument[]>([]);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const [showAddContact, setShowAddContact] = useState(false);
@@ -90,39 +120,43 @@ export function SupplierDetail() {
   const productForm = useForm<AddProductForm>({ mode: 'onChange', defaultValues: { productName: '', productPrice: '', productDescription: '', productUnit: 'אדם' } });
   const editSupplierForm = useForm<EditSupplierForm>({ mode: 'onChange' });
 
-  // ─── Load all data ───
-  useEffect(() => {
-    if (!id) return;
-    setLoading(true);
-    Promise.all([
-      suppliersApi.get(id),
-      supplierContactsApi.list(id),
-      supplierProductsApi.list(id),
-      supplierDocumentsApi.list(id),
-    ])
-      .then(([s, c, p, d]) => {
-        setSupplier(s);
-        setContacts(c);
-        setProducts(p);
-        setDocuments(d);
-      })
-      .catch(err => {
-        console.error('[SupplierDetail] fetch failed:', err);
-        appToast.error('שגיאה בטעינת פרטי ספק');
-      })
-      .finally(() => setLoading(false));
-  }, [id]);
+  // ─── Convex Queries ───
+  const supplierId = id as Id<"suppliers"> | undefined;
+  const supplier = useQuery(api.suppliers.get, supplierId ? { id: supplierId as any } : "skip");
+  const contacts = useQuery(api.supplierContacts.listBySupplierId, supplierId ? { supplierId: supplierId as any } : "skip");
+  const products = useQuery(api.supplierProducts.listBySupplierId, supplierId ? { supplierId: supplierId as any } : "skip");
+  const documents = useQuery(api.supplierDocuments.listBySupplierId, supplierId ? { supplierId: supplierId as any } : "skip");
+
+  // ─── Convex Mutations ───
+  const updateSupplier = useMutation(api.suppliers.update);
+  const archiveSupplierMutation = useMutation(api.suppliers.archive);
+  const addContact = useMutation(api.supplierContacts.create);
+  const removeContact = useMutation(api.supplierContacts.remove);
+  const addProduct = useMutation(api.supplierProducts.create);
+  const removeProduct = useMutation(api.supplierProducts.remove);
+  const createDocument = useMutation(api.supplierDocuments.create);
+  const updateDocument = useMutation(api.supplierDocuments.update);
+
+  // Loading state: any query still undefined
+  const loading = supplier === undefined || contacts === undefined || products === undefined || documents === undefined;
+
+  // Normalize data for the UI (fallback to empty arrays when null/undefined)
+  const contactsList: SupplierContact[] = (contacts ?? []) as any;
+  const productsList: SupplierProduct[] = (products ?? []) as any;
+  const documentsList: SupplierDocument[] = (documents ?? []) as any;
 
   const onAddContact = async (data: AddContactForm) => {
-    if (!id) return;
+    if (!supplierId) return;
     try {
       setSaving(true);
-      const newContact = await supplierContactsApi.create(id, {
-        name: data.contactName.trim(), role: data.contactRole.trim(),
-        phone: data.contactPhone.trim(), email: data.contactEmail.trim(),
-        primary: contacts.length === 0,
+      await addContact({
+        supplierId: supplierId as any,
+        name: data.contactName.trim(),
+        role: data.contactRole.trim(),
+        phone: data.contactPhone.trim(),
+        email: data.contactEmail.trim(),
+        primary: contactsList.length === 0,
       });
-      setContacts(prev => [...prev, newContact]);
       setShowAddContact(false);
       contactForm.reset();
       appToast.success('איש קשר נוסף', `${data.contactName} נשמר בכרטיס הספק`);
@@ -131,23 +165,23 @@ export function SupplierDetail() {
   };
 
   const deleteContact = async (contactId: string) => {
-    if (!id) return;
     try {
-      await supplierContactsApi.delete(id, contactId);
-      setContacts(prev => prev.filter(c => c.id !== contactId));
+      await removeContact({ id: contactId as any });
       appToast.success('איש קשר הוסר');
     } catch (err) { appToast.error('שגיאה במחיקת איש קשר'); }
   };
 
   const onAddProduct = async (data: AddProductForm) => {
-    if (!id) return;
+    if (!supplierId) return;
     try {
       setSaving(true);
-      const newProduct = await supplierProductsApi.create(id, {
-        name: data.productName.trim(), price: parseFloat(data.productPrice) || 0,
-        description: data.productDescription.trim(), unit: data.productUnit.trim(),
+      await addProduct({
+        supplierId: supplierId as any,
+        name: data.productName.trim(),
+        price: parseFloat(data.productPrice) || 0,
+        description: data.productDescription.trim(),
+        unit: data.productUnit.trim(),
       });
-      setProducts(prev => [...prev, newProduct]);
       setShowAddProduct(false);
       productForm.reset({ productName: '', productPrice: '', productDescription: '', productUnit: 'אדם' });
       appToast.success('מוצר נוסף', `${data.productName} נשמר`);
@@ -156,25 +190,22 @@ export function SupplierDetail() {
   };
 
   const deleteProduct = async (productId: string) => {
-    if (!id) return;
     try {
-      await supplierProductsApi.delete(id, productId);
-      setProducts(prev => prev.filter(p => p.id !== productId));
+      await removeProduct({ id: productId as any });
       appToast.success('מוצר הוסר');
     } catch (err) { appToast.error('שגיאה במחיקת מוצר'); }
   };
 
   const handleProductUpdate = (updated: SupplierProduct) => {
-    setProducts(prev => prev.map(p => p.id === updated.id ? updated : p));
+    // With Convex, the useQuery auto-updates. We only update the local editingProduct state.
     if (editingProduct?.id === updated.id) setEditingProduct(updated);
   };
 
   const updateDocExpiry = async (docId: string) => {
-    if (!id || !docExpiryValue) return;
+    if (!docExpiryValue) return;
     try {
       setDocSaving(docId);
-      const updatedDoc = await supplierDocumentsApi.update(id, docId, { expiry: docExpiryValue });
-      setDocuments(prev => prev.map(d => d.id === docId ? updatedDoc : d));
+      await updateDocument({ id: docId as any, expiry: docExpiryValue });
       setDocExpiryEditing(null);
       setDocExpiryValue('');
       appToast.success('תאריך פג תוקף עודכן בהצלחה');
@@ -183,10 +214,10 @@ export function SupplierDetail() {
   };
 
   const archiveSupplier = async () => {
-    if (!id) return;
+    if (!supplierId) return;
     try {
       setArchiving(true);
-      await suppliersApi.archive(id);
+      await archiveSupplierMutation({ id: supplierId as any });
       appToast.success('הספק הועבר לארכיון', `${supplier?.name} הועבר לארכיון בהצלחה`);
       navigate('/suppliers');
     } catch (err) { appToast.error('שגיאה בהעברה לארכיון'); }
@@ -194,11 +225,10 @@ export function SupplierDetail() {
   };
 
   const restoreSupplier = async () => {
-    if (!id) return;
+    if (!supplierId) return;
     try {
       setArchiving(true);
-      const updated = await suppliersApi.update(id, { category: 'כללי', categoryColor: '#8d785e' });
-      setSupplier(updated);
+      await updateSupplier({ id: supplierId as any, category: 'כללי', categoryColor: '#8d785e' });
       appToast.success('הספק שוחזר בהצלחה', `${supplier?.name} חזר לבנק הספקים`);
     } catch (err) { appToast.error('שגיאה בשחזור ספק'); }
     finally { setArchiving(false); }
@@ -273,7 +303,7 @@ export function SupplierDetail() {
                     phone: supplier.phone || '',
                     category: supplier.category,
                     categoryColor: supplier.categoryColor,
-                    region: supplier.region,
+                    region: supplier.region || '',
                     rating: String(supplier.rating),
                     verificationStatus: supplier.verificationStatus,
                     notes: supplier.notes || '',
@@ -325,7 +355,7 @@ export function SupplierDetail() {
 
       {/* Auto-note badges + manual note — below supplier details */}
       {(() => {
-        const autoNotes = computeAutoNotes(supplier, documents, contacts, products);
+        const autoNotes = computeAutoNotes(supplier as any, documentsList, contactsList, productsList);
         const hasManual = supplier.notes && supplier.notes !== '-';
         if (autoNotes.length === 0 && !hasManual) return null;
 
@@ -376,11 +406,11 @@ export function SupplierDetail() {
             }`}
             style={{ fontWeight: activeTab === tab.id ? 600 : 400 }}
           >
-            {tab.id === 'docs' && documents.some(d => d.status === 'expired') && <span className="inline-block w-2 h-2 bg-red-500 rounded-full ml-1" />}
+            {tab.id === 'docs' && documentsList.some(d => d.status === 'expired') && <span className="inline-block w-2 h-2 bg-red-500 rounded-full ml-1" />}
             {tab.label}
-            {tab.id === 'contacts' && <span className="text-[10px] text-[#b8a990] mr-1">({contacts.length})</span>}
-            {tab.id === 'products' && <span className="text-[10px] text-[#b8a990] mr-1">({products.length})</span>}
-            {tab.id === 'docs' && <span className="text-[10px] text-[#b8a990] mr-1">({documents.length})</span>}
+            {tab.id === 'contacts' && <span className="text-[10px] text-[#b8a990] mr-1">({contactsList.length})</span>}
+            {tab.id === 'products' && <span className="text-[10px] text-[#b8a990] mr-1">({productsList.length})</span>}
+            {tab.id === 'docs' && <span className="text-[10px] text-[#b8a990] mr-1">({documentsList.length})</span>}
           </button>
         ))}
       </div>
@@ -392,14 +422,14 @@ export function SupplierDetail() {
             {/* Contacts preview */}
             <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>אנשי קשר ({contacts.length})</h3>
+                <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>אנשי קשר ({contactsList.length})</h3>
                 <button onClick={() => setActiveTab('contacts')} className="text-[12px] text-[#ff8c00]" style={{ fontWeight: 600 }}>צפה בכל →</button>
               </div>
-              {contacts.length === 0 ? (
+              {contactsList.length === 0 ? (
                 <p className="text-[13px] text-[#b8a990] text-center py-4">אין אנשי קשר</p>
               ) : (
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {contacts.slice(0, 2).map(contact => (
+                  {contactsList.slice(0, 2).map(contact => (
                     <div key={contact.id} className="border border-[#e7e1da] rounded-xl p-4">
                       <div className="flex items-center gap-3 mb-3">
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[14px] text-white ${contact.primary ? 'bg-green-500' : 'bg-[#ff8c00]'}`} style={{ fontWeight: 600 }}>{getInitials(contact.name)}</div>
@@ -422,14 +452,14 @@ export function SupplierDetail() {
             {/* Products preview */}
             <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>מוצרים ושירותים ({products.length})</h3>
+                <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>מוצרים ושירותים ({productsList.length})</h3>
                 <button onClick={() => setActiveTab('products')} className="text-[12px] text-[#ff8c00]" style={{ fontWeight: 600 }}>צפה בכל →</button>
               </div>
-              {products.length === 0 ? (
+              {productsList.length === 0 ? (
                 <p className="text-[13px] text-[#b8a990] text-center py-4">אין מוצרים</p>
               ) : (
                 <div className="grid sm:grid-cols-3 gap-3">
-                  {products.slice(0, 3).map(product => {
+                  {productsList.slice(0, 3).map(product => {
                     const heroImg = product.images?.length ? product.images[0].url : null;
                     return (
                       <div
@@ -485,8 +515,10 @@ export function SupplierDetail() {
 
             {/* Location */}
             <SupplierLocationMap
-              supplier={supplier}
-              onUpdate={(updated) => setSupplier(updated)}
+              supplier={supplier as any}
+              onUpdate={() => {
+                // Convex auto-updates via useQuery, no manual state update needed
+              }}
             />
 
             {/* Documents summary */}
@@ -509,7 +541,7 @@ export function SupplierDetail() {
                 return (
                   <div className="space-y-2">
                     {requiredNames.map(name => {
-                      const doc = documents.find(d => d.name === name);
+                      const doc = documentsList.find(d => d.name === name);
                       const status = doc ? getStatus(doc.expiry) : null;
                       return (
                         <div key={name} className={`flex items-center justify-between p-2.5 rounded-lg border ${
@@ -547,10 +579,10 @@ export function SupplierDetail() {
       {activeTab === 'contacts' && (
         <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>אנשי קשר ({contacts.length})</h3>
+            <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>אנשי קשר ({contactsList.length})</h3>
             <button onClick={() => setShowAddContact(true)} className="text-[13px] text-[#ff8c00] flex items-center gap-1" style={{ fontWeight: 600 }}><Plus size={14} /> הוספת איש קשר</button>
           </div>
-          {contacts.length === 0 ? (
+          {contactsList.length === 0 ? (
             <div className="text-center py-10">
               <div className="flex justify-center mb-2"><Users size={32} className="text-[#d0c8bb]" /></div>
               <p className="text-[14px] text-[#8d785e]">אין אנשי קשר</p>
@@ -558,7 +590,7 @@ export function SupplierDetail() {
             </div>
           ) : (
             <div className="space-y-3">
-              {contacts.map(contact => (
+              {contactsList.map(contact => (
                 <div key={contact.id} className="flex items-center justify-between p-4 border border-[#e7e1da] rounded-xl">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[14px] text-white ${contact.primary ? 'bg-green-500' : 'bg-[#ff8c00]'}`} style={{ fontWeight: 600 }}>{getInitials(contact.name)}</div>
@@ -588,10 +620,10 @@ export function SupplierDetail() {
       {activeTab === 'products' && (
         <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>מוצרים ושירותים ({products.length})</h3>
+            <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>מוצרים ושירותים ({productsList.length})</h3>
             <button onClick={() => setShowAddProduct(true)} className="text-[13px] text-[#ff8c00] flex items-center gap-1" style={{ fontWeight: 600 }}><Plus size={14} /> הוספת מוצר</button>
           </div>
-          {products.length === 0 ? (
+          {productsList.length === 0 ? (
             <div className="text-center py-10">
               <div className="flex justify-center mb-2"><Package size={32} className="text-[#d0c8bb]" /></div>
               <p className="text-[14px] text-[#8d785e]">אין מוצרים</p>
@@ -599,7 +631,7 @@ export function SupplierDetail() {
             </div>
           ) : (
             <div className="grid sm:grid-cols-3 gap-4">
-              {products.map(product => {
+              {productsList.map(product => {
                 const imageCount = product.images?.length || 0;
                 const heroImg = imageCount > 0 ? product.images![0].url : VINEYARD_IMG;
                 return (
@@ -674,17 +706,15 @@ export function SupplierDetail() {
         };
 
         const handleUploadDoc = async (docName: string, expiryDate: string, fileName: string) => {
-          if (!id || !expiryDate) return;
+          if (!supplierId || !expiryDate) return;
           try {
             setDocSaving(docName);
             const status = getDocStatus(expiryDate);
-            const existing = documents.find(d => d.name === docName);
+            const existing = documentsList.find(d => d.name === docName);
             if (existing) {
-              const updated = await supplierDocumentsApi.update(id, existing.id, { expiry: expiryDate, status, fileName });
-              setDocuments(prev => prev.map(d => d.id === existing.id ? updated : d));
+              await updateDocument({ id: existing.id as any, expiry: expiryDate, status, fileName });
             } else {
-              const newDoc = await supplierDocumentsApi.create(id, { name: docName, expiry: expiryDate, status, fileName });
-              setDocuments(prev => [...prev, newDoc]);
+              await createDocument({ supplierId: supplierId as any, name: docName, expiry: expiryDate, status, fileName });
             }
             appToast.success('מסמך הועלה בהצלחה', `${docName} נשמר עם תוקף ${formatExpiryDate(expiryDate)}`);
           } catch (err) {
@@ -704,7 +734,7 @@ export function SupplierDetail() {
 
             <div className="space-y-4">
               {REQUIRED_DOCS.map(({ key: docName, shieldIcon: ShieldIcon }) => {
-                const doc = documents.find(d => d.name === docName);
+                const doc = documentsList.find(d => d.name === docName);
                 const hasDoc = !!doc;
                 const status = hasDoc ? getDocStatus(doc.expiry) : null;
                 const isExpired = status === 'expired';
@@ -815,11 +845,11 @@ export function SupplierDetail() {
               })}
             </div>
 
-            {documents.filter(d => !['רישיון עסק', 'תעודת כשרות', "ביטוח צד ג'"].includes(d.name)).length > 0 && (
+            {documentsList.filter(d => !['רישיון עסק', 'תעודת כשרות', "ביטוח צד ג'"].includes(d.name)).length > 0 && (
               <div className="mt-6 pt-5 border-t border-[#e7e1da]">
                 <h4 className="text-[14px] text-[#181510] mb-3" style={{ fontWeight: 600 }}>מסמכים נוספים</h4>
                 <div className="space-y-2">
-                  {documents.filter(d => !['רישיון עסק', 'תעודת כשרות', "ביטוח צד ג'"].includes(d.name)).map(doc => (
+                  {documentsList.filter(d => !['רישיון עסק', 'תעודת כשרות', "ביטוח צד ג'"].includes(d.name)).map(doc => (
                     <div key={doc.id} className={`flex items-center justify-between p-3 rounded-xl border ${
                       doc.status === 'expired' ? 'bg-red-50 border-red-200' :
                       doc.status === 'warning' ? 'bg-yellow-50 border-yellow-200' :
@@ -948,23 +978,23 @@ export function SupplierDetail() {
             </div>
             <form
               onSubmit={editSupplierForm.handleSubmit(async (data: EditSupplierForm) => {
-                if (!id || selectedCategories.length === 0) return;
+                if (!supplierId || selectedCategories.length === 0) return;
                 try {
                   setSavingSupplier(true);
                   const categoryStr = selectedCategories.join(',');
                   const primaryCat = CATEGORY_OPTIONS.find(c => c.value === selectedCategories[0]);
-                  const updated = await suppliersApi.update(id, {
+                  await updateSupplier({
+                    id: supplierId as any,
                     name: data.name.trim(),
                     phone: data.phone.trim(),
                     category: categoryStr,
                     categoryColor: primaryCat?.color || data.categoryColor,
                     region: data.region,
                     rating: parseFloat(data.rating) || supplier!.rating,
-                    verificationStatus: data.verificationStatus as Supplier['verificationStatus'],
+                    verificationStatus: data.verificationStatus as 'verified' | 'pending' | 'unverified',
                     notes: data.notes.trim() || '-',
                     icon: selectedCategories[0] || data.icon,
                   });
-                  setSupplier(updated);
                   setShowEditSupplier(false);
                   appToast.success('פרטי ספק עודכנו', `${data.name} נשמר בהצלחה`);
                 } catch (err) {

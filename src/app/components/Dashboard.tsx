@@ -1,6 +1,5 @@
-import { dashboardApi, projectsApi } from './api';
-import type { DashboardStats } from './api';
-import type { Project } from './data';
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { useAuth } from './AuthContext';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'motion/react';
@@ -13,6 +12,28 @@ import {
   Calendar, ShieldAlert, MapPin, Briefcase,
   TrendingUp, Zap, Target, BookOpen, Loader2
 } from 'lucide-react';
+
+// ─── Types ───
+interface DashboardStats {
+  suppliers: { total: number; verified: number; pending: number; unverified: number };
+  projects: { total: number; leads: number; building: number; quotesSent: number; approved: number; pricing: number; inProgress: number };
+  revenue: { total: number; avgMargin: number };
+}
+
+interface Project {
+  id: string;
+  name: string;
+  client: string;
+  company: string;
+  participants: number;
+  region: string;
+  status: string;
+  statusColor: string;
+  totalPrice: number;
+  pricePerPerson: number;
+  profitMargin: number;
+  date: string;
+}
 
 // ─── useCountUp hook ───
 function useCountUp(target: number, duration = 1800) {
@@ -361,31 +382,13 @@ function buildUrgentTasks(projects: Project[]) {
 export function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const stats = useQuery(api.dashboard.stats) as DashboardStats | undefined;
+  const projects = useQuery(api.projects.list) as Project[] | undefined;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [statsData, projectsData] = await Promise.all([
-          dashboardApi.stats(),
-          projectsApi.list(),
-        ]);
-        setStats(statsData);
-        setProjects(projectsData);
-      } catch (err) {
-        console.error('[Dashboard] Failed to load data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const loading = stats === undefined || projects === undefined;
 
-  const statsCards = buildStatsCards(stats);
-  const pipelineStages = buildPipelineStages(stats);
+  const statsCards = buildStatsCards(stats ?? null);
+  const pipelineStages = buildPipelineStages(stats ?? null);
   const pipelineMax = Math.max(...pipelineStages.map(s => s.value), 1);
 
   // Revenue — calculate from live projects
@@ -401,7 +404,7 @@ export function Dashboard() {
   const percentCounter = useCountUp(revenuePercent, 3200);
 
   // Urgent tasks from real projects
-  const urgentTasks = buildUrgentTasks(projects);
+  const urgentTasks = buildUrgentTasks(projects ?? []);
 
   // Pipeline conversion
   const leadsCount = stats?.projects.leads ?? 0;
