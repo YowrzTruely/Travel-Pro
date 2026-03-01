@@ -41,18 +41,32 @@ export function LoginPage() {
     defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
   });
 
+  /** Map known English error strings to Hebrew. */
+  const translateError = (error: string): string => {
+    if (error.includes('Invalid login') || error.includes('Could not verify')) {
+      return 'אימייל או סיסמה שגויים';
+    }
+    if (error.includes('Invalid password')) {
+      return 'הסיסמה חייבת להכיל לפחות 8 תווים';
+    }
+    if (error.includes('already registered') || error.includes('already been registered')) {
+      return 'כתובת האימייל כבר רשומה במערכת';
+    }
+    if (error.includes('Account does not exist') || error.includes('no account')) {
+      return 'לא נמצא חשבון עם כתובת אימייל זו';
+    }
+    if (error.includes('Too many requests') || error.includes('rate limit')) {
+      return 'יותר מדי ניסיונות, נסה שוב מאוחר יותר';
+    }
+    return error;
+  };
+
   const onLogin = async (data: LoginForm) => {
     setServerError('');
     setSubmitting(true);
     const { error } = await login(data.email.trim(), data.password);
     setSubmitting(false);
-    if (error) {
-      if (error.includes('Invalid login')) {
-        setServerError('אימייל או סיסמה שגויים');
-      } else {
-        setServerError(error);
-      }
-    }
+    if (error) setServerError(translateError(error));
   };
 
   const onSignup = async (data: SignupForm) => {
@@ -64,13 +78,7 @@ export function LoginPage() {
     setSubmitting(true);
     const { error } = await signup(data.email.trim(), data.password, data.name.trim());
     setSubmitting(false);
-    if (error) {
-      if (error.includes('already registered') || error.includes('already been registered')) {
-        setServerError('כתובת האימייל כבר רשומה במערכת');
-      } else {
-        setServerError(error);
-      }
-    }
+    if (error) setServerError(translateError(error));
   };
 
   const switchMode = (newMode: 'login' | 'signup') => {
@@ -213,18 +221,21 @@ export function LoginPage() {
                   isDirty={signupForm.formState.dirtyFields.email}
                   {...signupForm.register('email', rules.email(true))}
                 />
-                <FormField
-                  label="סיסמה"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="לפחות 6 תווים"
-                  required
-                  error={signupForm.formState.errors.password}
-                  isDirty={signupForm.formState.dirtyFields.password}
-                  {...signupForm.register('password', {
-                    required: 'סיסמה היא שדה חובה',
-                    minLength: { value: 6, message: 'סיסמה חייבת להכיל לפחות 6 תווים' },
-                  })}
-                />
+                <div>
+                  <FormField
+                    label="סיסמה"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="לפחות 8 תווים"
+                    required
+                    error={signupForm.formState.errors.password}
+                    isDirty={signupForm.formState.dirtyFields.password}
+                    {...signupForm.register('password', {
+                      required: 'סיסמה היא שדה חובה',
+                      minLength: { value: 8, message: 'סיסמה חייבת להכיל לפחות 8 תווים' },
+                    })}
+                  />
+                  <p className="text-[11px] text-[#b8a990] mt-1">מינימום 8 תווים</p>
+                </div>
                 <div>
                   <FormField
                     label="אימות סיסמה"

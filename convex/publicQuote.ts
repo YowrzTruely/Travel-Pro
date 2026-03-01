@@ -1,21 +1,26 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import type { Id } from "./_generated/dataModel";
+
+/** Try to find a project by legacyId, then by _id. */
+async function findProject(ctx: any, id: string) {
+  let project = await ctx.db
+    .query("projects")
+    .withIndex("by_legacyId", (q: any) => q.eq("legacyId", id))
+    .first();
+  if (!project) {
+    const normalizedId = ctx.db.normalizeId("projects", id);
+    if (normalizedId) {
+      project = await ctx.db.get(normalizedId as Id<"projects">);
+    }
+  }
+  return project;
+}
 
 export const getQuote = query({
   args: { id: v.string() },
   handler: async (ctx, { id }) => {
-    // Find project by legacy ID
-    let project = await ctx.db
-      .query("projects")
-      .withIndex("by_legacyId", (q) => q.eq("legacyId", id))
-      .first();
-    if (!project) {
-      try {
-        project = await ctx.db.get(id as any);
-      } catch {
-        // invalid id format
-      }
-    }
+    const project = await findProject(ctx, id);
     if (!project) return null;
 
     const allItems = await ctx.db
@@ -61,17 +66,7 @@ export const getQuote = query({
 export const approveQuote = mutation({
   args: { id: v.string() },
   handler: async (ctx, { id }) => {
-    let project = await ctx.db
-      .query("projects")
-      .withIndex("by_legacyId", (q) => q.eq("legacyId", id))
-      .first();
-    if (!project) {
-      try {
-        project = await ctx.db.get(id as any);
-      } catch {
-        throw new Error("Project not found");
-      }
-    }
+    const project = await findProject(ctx, id);
     if (!project) throw new Error("Project not found");
 
     await ctx.db.patch(project._id, {

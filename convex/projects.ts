@@ -1,5 +1,21 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import type { Id } from "./_generated/dataModel";
+
+/** Try to find a project by legacyId, then by _id. */
+async function findProject(ctx: any, id: string) {
+  let project = await ctx.db
+    .query("projects")
+    .withIndex("by_legacyId", (q: any) => q.eq("legacyId", id))
+    .first();
+  if (!project) {
+    const normalizedId = ctx.db.normalizeId("projects", id);
+    if (normalizedId) {
+      project = await ctx.db.get(normalizedId as Id<"projects">);
+    }
+  }
+  return project;
+}
 
 const STATUS_COLORS: Record<string, string> = {
   "ליד חדש": "#3b82f6",
@@ -24,19 +40,7 @@ export const list = query({
 export const get = query({
   args: { id: v.string() },
   handler: async (ctx, { id }) => {
-    // Try legacy ID first
-    let project = await ctx.db
-      .query("projects")
-      .withIndex("by_legacyId", (q) => q.eq("legacyId", id))
-      .first();
-    // Try Convex _id
-    if (!project) {
-      try {
-        project = await ctx.db.get(id as any);
-      } catch {
-        // invalid id format
-      }
-    }
+    const project = await findProject(ctx, id);
     if (!project) return null;
     return { ...project, id: project.legacyId || project._id };
   },
@@ -109,18 +113,7 @@ export const update = mutation({
     date: v.optional(v.string()),
   },
   handler: async (ctx, { id, ...updates }) => {
-    // Find by legacy ID or _id
-    let project = await ctx.db
-      .query("projects")
-      .withIndex("by_legacyId", (q) => q.eq("legacyId", id))
-      .first();
-    if (!project) {
-      try {
-        project = await ctx.db.get(id as any);
-      } catch {
-        throw new Error("Project not found");
-      }
-    }
+    const project = await findProject(ctx, id);
     if (!project) throw new Error("Project not found");
 
     const patch: any = { ...updates };
@@ -128,8 +121,9 @@ export const update = mutation({
       patch.statusColor = STATUS_COLORS[updates.status] || project.statusColor;
     }
 
-    await ctx.db.patch(project._id, patch);
-    const updated = await ctx.db.get(project._id);
+    const projectId = project._id as Id<"projects">;
+    await ctx.db.patch(projectId, patch);
+    const updated = await ctx.db.get(projectId);
     return { ...updated!, id: updated!.legacyId || updated!._id };
   },
 });
@@ -137,17 +131,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.string() },
   handler: async (ctx, { id }) => {
-    let project = await ctx.db
-      .query("projects")
-      .withIndex("by_legacyId", (q) => q.eq("legacyId", id))
-      .first();
-    if (!project) {
-      try {
-        project = await ctx.db.get(id as any);
-      } catch {
-        throw new Error("Project not found");
-      }
-    }
+    const project = await findProject(ctx, id);
     if (!project) throw new Error("Project not found");
     await ctx.db.delete(project._id);
     return { success: true, id };

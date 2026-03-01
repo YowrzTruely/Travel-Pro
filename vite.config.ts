@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 
 // Resolve figma:asset imports (Figma Make protocol) to a placeholder for local Vite dev
 function figmaAssetPlugin() {
-  const placeholder = path.resolve(__dirname, 'public/figma-placeholder.svg')
+  const placeholder = path.resolve(__dirname, 'src/figma-placeholder.svg')
   return {
     name: 'figma-asset-resolver',
     resolveId(id: string) {

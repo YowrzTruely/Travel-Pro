@@ -81,15 +81,8 @@ export function DocumentsPage() {
   // ─── Convex queries ───
   const suppliers = useQuery(api.suppliers.list);
   const projects = useQuery(api.projects.list);
-  const allSupplierDocsRaw = useQuery(api.suppliers.summaries); // We need per-supplier docs
-  // For documents page we need all supplier & project documents
-  // We'll query all suppliers and build doc rows from their sub-resources
-  // Unfortunately we can't query "all supplier documents" in one call with the current schema
-  // So we use a different approach: query summaries for counts, and use inline data
-
-  // We need a dedicated approach - let's use the supplier documents directly
-  // Since we don't have a "list all supplier documents" query, we'll work with what we have
-  // The documents page needs to list ALL documents across all suppliers and projects
+  const allSupplierDocsRaw = useQuery(api.supplierDocuments.listAll);
+  const allProjectDocsRaw = useQuery(api.projectDocuments.listAll);
 
   // ─── Mutations ───
   const createProjectDoc = useMutation(api.projectDocuments.create);
@@ -119,29 +112,53 @@ export function DocumentsPage() {
   });
 
   // ─── Build document rows from live queries ───
-  // We need to query all supplier documents - for now we'll use individual queries per supplier
-  // This is a known limitation; a "listAll" query would be better but we work with what we have
-  const loading = suppliers === undefined || projects === undefined;
+  const loading = suppliers === undefined || projects === undefined || allSupplierDocsRaw === undefined || allProjectDocsRaw === undefined;
 
-  // For supplier docs, we need to fetch them. Since we can't call hooks conditionally,
-  // we'll compute them from the summaries + fetch per supplier
-  // Actually, let's just create inline supplier/project document row queries
-  // We'll need to handle this differently - use individual queries per supplier
+  const supplierMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    if (suppliers) {
+      for (const s of suppliers) map[s._id] = s.name;
+    }
+    return map;
+  }, [suppliers]);
 
-  // Since we can't dynamically call hooks, we'll use a "list all" approach
-  // Let me query all supplier documents and project documents via the supplier detail approach
-  // The simplest fix: add "listAll" queries or just get all docs
-  // For now, since each page uses its own query, let's just show the data we have
+  const projectMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    if (projects) {
+      for (const p of projects) map[p._id] = p.name;
+    }
+    return map;
+  }, [projects]);
 
-  const supplierDocs = useMemo(() => {
-    // We'll leave supplier docs empty for now if we can't fetch them all
-    // This requires a listAll query which doesn't exist yet
-    return [] as DocumentRow[];
-  }, []);
+  const supplierDocs = useMemo<DocumentRow[]>(() => {
+    if (!allSupplierDocsRaw) return [];
+    return allSupplierDocsRaw.map((d: any) => ({
+      id: d.id,
+      name: d.name,
+      type: d.name,
+      entityType: 'supplier' as const,
+      entityId: d.supplierId,
+      entityName: supplierMap[d.supplierId] || 'ספק',
+      expiry: d.expiry || '',
+      status: getDocStatus(d.expiry || ''),
+      fileName: d.fileName,
+    }));
+  }, [allSupplierDocsRaw, supplierMap]);
 
-  const projectDocs = useMemo(() => {
-    return [] as DocumentRow[];
-  }, []);
+  const projectDocs = useMemo<DocumentRow[]>(() => {
+    if (!allProjectDocsRaw) return [];
+    return allProjectDocsRaw.map((d: any) => ({
+      id: d.id,
+      name: d.name,
+      type: projectDocTypeLabels[d.type] || d.type || 'אחר',
+      entityType: 'project' as const,
+      entityId: d.projectId,
+      entityName: projectMap[d.projectId] || 'פרויקט',
+      expiry: d.expiry || '',
+      status: getDocStatus(d.expiry || ''),
+      fileName: d.fileName,
+    }));
+  }, [allProjectDocsRaw, projectMap]);
 
   // ─── Filtered data ───
   const activeDocs = activeTab === 'suppliers' ? supplierDocs : projectDocs;
