@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "bunx convex codegen && vite build",
     "dev": "vite"
   },
   "dependencies": {
@@ -79,17 +79,6 @@
     "vite": "6.3.5"
   },
   "engines": {
-    "node": ">=18"
-  },
-  "pnpm": {
-    "overrides": {
-      "vite": "6.3.5"
-    },
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "react": "18",
-        "react-dom": "18"
-      }
-    }
+    "node": "20"
   }
 }
