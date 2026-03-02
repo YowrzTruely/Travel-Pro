@@ -1,5 +1,5 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const listBySupplierId = query({
   args: { supplierId: v.id("suppliers") },
@@ -31,7 +31,10 @@ export const create = mutation({
       primary: args.primary ?? false,
     });
     const contact = await ctx.db.get(id);
-    return { ...contact!, id: contact!._id };
+    if (!contact) {
+      throw new Error("Supplier contact not found after creation");
+    }
+    return { ...contact, id: contact._id };
   },
 });
 

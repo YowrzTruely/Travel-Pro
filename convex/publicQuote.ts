@@ -1,6 +1,6 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
+import { mutation, query } from "./_generated/server";
 
 /** Try to find a project by legacyId, then by _id. */
 async function findProject(ctx: any, id: string) {
@@ -21,11 +21,13 @@ export const getQuote = query({
   args: { id: v.string() },
   handler: async (ctx, { id }) => {
     const project = await findProject(ctx, id);
-    if (!project) return null;
+    if (!project) {
+      return null;
+    }
 
     const allItems = await ctx.db
       .query("quoteItems")
-      .withIndex("by_projectId", (q) => q.eq("projectId", project!._id))
+      .withIndex("by_projectId", (q) => q.eq("projectId", project._id))
       .collect();
 
     // Only expose public fields (no cost data)
@@ -40,7 +42,7 @@ export const getQuote = query({
 
     const timeline = await ctx.db
       .query("timelineEvents")
-      .withIndex("by_projectId", (q) => q.eq("projectId", project!._id))
+      .withIndex("by_projectId", (q) => q.eq("projectId", project._id))
       .collect();
     timeline.sort((a, b) => (a.time || "").localeCompare(b.time || ""));
 
@@ -67,7 +69,9 @@ export const approveQuote = mutation({
   args: { id: v.string() },
   handler: async (ctx, { id }) => {
     const project = await findProject(ctx, id);
-    if (!project) throw new Error("Project not found");
+    if (!project) {
+      throw new Error("Project not found");
+    }
 
     await ctx.db.patch(project._id, {
       status: "אושר",

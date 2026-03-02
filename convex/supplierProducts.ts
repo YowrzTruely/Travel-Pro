@@ -1,5 +1,5 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const listBySupplierId = query({
   args: { supplierId: v.id("suppliers") },
@@ -38,7 +38,10 @@ export const create = mutation({
       notes: args.notes,
     });
     const product = await ctx.db.get(id);
-    return { ...product!, id: product!._id };
+    if (!product) {
+      throw new Error("Supplier product not found after creation");
+    }
+    return { ...product, id: product._id };
   },
 });
 
@@ -62,10 +65,15 @@ export const update = mutation({
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);
-    if (!existing) throw new Error("Product not found");
+    if (!existing) {
+      throw new Error("Product not found");
+    }
     await ctx.db.patch(id, updates);
     const product = await ctx.db.get(id);
-    return { ...product!, id: product!._id };
+    if (!product) {
+      throw new Error("Supplier product not found after update");
+    }
+    return { ...product, id: product._id };
   },
 });
 

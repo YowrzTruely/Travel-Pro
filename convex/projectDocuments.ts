@@ -1,5 +1,5 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const listAll = query({
   args: {},
@@ -40,7 +40,10 @@ export const create = mutation({
       createdAt: new Date().toISOString().split("T")[0],
     });
     const doc = await ctx.db.get(id);
-    return { ...doc!, id: doc!._id };
+    if (!doc) {
+      throw new Error("Project document not found after creation");
+    }
+    return { ...doc, id: doc._id };
   },
 });
 
@@ -55,10 +58,15 @@ export const update = mutation({
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);
-    if (!existing) throw new Error("Project document not found");
+    if (!existing) {
+      throw new Error("Project document not found");
+    }
     await ctx.db.patch(id, updates);
     const doc = await ctx.db.get(id);
-    return { ...doc!, id: doc!._id };
+    if (!doc) {
+      throw new Error("Project document not found after update");
+    }
+    return { ...doc, id: doc._id };
   },
 });
 

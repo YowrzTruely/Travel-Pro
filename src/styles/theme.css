@@ -129,13 +129,13 @@
   }
 
   /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
+   * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+   * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+   */
 
   html {
+    font-family: "Assistant", sans-serif;
     font-size: var(--font-size);
-    font-family: 'Assistant', sans-serif;
   }
 
   h1 {
@@ -183,9 +183,9 @@
 
 @media print {
   body {
-    background: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    background: white !important;
   }
   .print\:hidden {
     display: none !important;

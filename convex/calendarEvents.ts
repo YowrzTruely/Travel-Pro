@@ -1,5 +1,5 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const list = query({
   args: {},
@@ -13,7 +13,9 @@ export const get = query({
   args: { id: v.id("calendarEvents") },
   handler: async (ctx, { id }) => {
     const event = await ctx.db.get(id);
-    if (!event) return null;
+    if (!event) {
+      return null;
+    }
     return { ...event, id: event._id };
   },
 });
@@ -41,7 +43,10 @@ export const create = mutation({
       projectId: args.projectId,
     });
     const event = await ctx.db.get(id);
-    return { ...event!, id: event!._id };
+    if (!event) {
+      throw new Error("Calendar event not found after creation");
+    }
+    return { ...event, id: event._id };
   },
 });
 
@@ -59,10 +64,15 @@ export const update = mutation({
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);
-    if (!existing) throw new Error("Calendar event not found");
+    if (!existing) {
+      throw new Error("Calendar event not found");
+    }
     await ctx.db.patch(id, updates);
     const event = await ctx.db.get(id);
-    return { ...event!, id: event!._id };
+    if (!event) {
+      throw new Error("Calendar event not found after update");
+    }
+    return { ...event, id: event._id };
   },
 });
 

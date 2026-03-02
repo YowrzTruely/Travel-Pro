@@ -1,5 +1,5 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const listByProjectId = query({
   args: { projectId: v.id("projects") },
@@ -31,7 +31,10 @@ export const create = mutation({
       icon: args.icon || "📌",
     });
     const event = await ctx.db.get(id);
-    return { ...event!, id: event!._id };
+    if (!event) {
+      throw new Error("Timeline event not found after creation");
+    }
+    return { ...event, id: event._id };
   },
 });
 

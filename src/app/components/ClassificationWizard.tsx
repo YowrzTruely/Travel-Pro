@@ -1,71 +1,140 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router';
-import { motion, AnimatePresence } from 'motion/react';
+import { useMutation, useQuery } from "convex/react";
 import {
-  ArrowRight, ArrowLeft, Settings, HelpCircle, Archive,
-  SkipForward, Keyboard, CheckCircle, Loader2, Search,
-  Tag, FolderOpen, Sparkles, PartyPopper, ChevronDown,
-  Clock, Zap, LayoutList, X, RotateCcw, MapPin, Phone, Hash,
-  FileText, Lightbulb, Microscope
-} from 'lucide-react';
-import { useQuery, useMutation } from "convex/react";
+  Archive,
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle,
+  Clock,
+  FileText,
+  FolderOpen,
+  Hash,
+  Keyboard,
+  LayoutList,
+  Lightbulb,
+  Loader2,
+  MapPin,
+  Microscope,
+  PartyPopper,
+  Phone,
+  RotateCcw,
+  SkipForward,
+  Sparkles,
+  Tag,
+  X,
+  Zap,
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { api } from "../../../convex/_generated/api";
-import { appToast } from './AppToast';
-import type { Supplier } from './data';
-import { CategoryIcon } from './CategoryIcons';
+import { appToast } from "./AppToast";
+import { CategoryIcon } from "./CategoryIcons";
+import type { Supplier } from "./data";
 
 // ═══════════════════════════════════════════════════
 // CATEGORIES & SUBCATEGORIES
 // ═══════════════════════════════════════════════════
 
 interface CategoryDef {
-  name: string;
   color: string;
   icon: string;
+  name: string;
   subs: string[];
 }
 
 const CATEGORIES: CategoryDef[] = [
-  { name: 'תחבורה', color: '#3b82f6', icon: 'תחבורה', subs: ['אוטובוסים', 'הסעות מיניבוס', 'רכבים פרטיים', 'שאטלים', 'טיסות'] },
-  { name: 'מזון', color: '#22c55e', icon: 'מזון', subs: ['קייטרינג', 'מסעדות', 'בר', 'קפה ומאפים', 'אוכל רחוב'] },
-  { name: 'אטרקציות', color: '#a855f7', icon: 'אטרקציות', subs: ['ספורט אתגרי', 'סיורים', 'סדנאות', 'פארקי שעשועים', 'טבע ונוף'] },
-  { name: 'לינה', color: '#ec4899', icon: 'לינה', subs: ['מלונות', 'צימרים', 'אכסניות', 'קמפינג', 'ריזורט'] },
-  { name: 'בידור', color: '#f59e0b', icon: 'בידור', subs: ['DJ / מוזיקה', 'אומנים', 'מנחים', 'מופעים', 'גיבוש'] },
-  { name: 'צילום ווידאו', color: '#06b6d4', icon: 'צילום ווידאו', subs: ['צלם אירועים', 'צלם וידאו', 'דרון', 'עריכה', 'אלבומים'] },
-  { name: 'ציוד ולוגיסטיקה', color: '#64748b', icon: 'ציוד ולוגיסטיקה', subs: ['הגברה ותאורה', 'במות', 'ריהוט', 'אוהלים', 'שילוט'] },
-  { name: 'שיווק ופרסום', color: '#e11d48', icon: 'שיווק ופרסום', subs: ['רכש מדיה', 'ייעוץ שיווקי', 'עיצוב גרפי', 'דפוס', 'דיגיטל'] },
-  { name: 'ביטוח', color: '#0d9488', icon: 'ביטוח', subs: ['ביטוח אירועים', 'ביטוח נוסעים', 'ביטוח ציוד', 'אחריות מקצועית'] },
-  { name: 'הדרכה', color: '#7c3aed', icon: 'הדרכה', subs: ['מדריכי טיולים', 'מרצים', 'מנחי קבוצות', 'מתרגמים'] },
+  {
+    name: "תחבורה",
+    color: "#3b82f6",
+    icon: "תחבורה",
+    subs: ["אוטובוסים", "הסעות מיניבוס", "רכבים פרטיים", "שאטלים", "טיסות"],
+  },
+  {
+    name: "מזון",
+    color: "#22c55e",
+    icon: "מזון",
+    subs: ["קייטרינג", "מסעדות", "בר", "קפה ומאפים", "אוכל רחוב"],
+  },
+  {
+    name: "אטרקציות",
+    color: "#a855f7",
+    icon: "אטרקציות",
+    subs: ["ספורט אתגרי", "סיורים", "סדנאות", "פארקי שעשועים", "טבע ונוף"],
+  },
+  {
+    name: "לינה",
+    color: "#ec4899",
+    icon: "לינה",
+    subs: ["מלונות", "צימרים", "אכסניות", "קמפינג", "ריזורט"],
+  },
+  {
+    name: "בידור",
+    color: "#f59e0b",
+    icon: "בידור",
+    subs: ["DJ / מוזיקה", "אומנים", "מנחים", "מופעים", "גיבוש"],
+  },
+  {
+    name: "צילום ווידאו",
+    color: "#06b6d4",
+    icon: "צילום ווידאו",
+    subs: ["צלם אירועים", "צלם וידאו", "דרון", "עריכה", "אלבומים"],
+  },
+  {
+    name: "ציוד ולוגיסטיקה",
+    color: "#64748b",
+    icon: "ציוד ולוגיסטיקה",
+    subs: ["הגברה ותאורה", "במות", "ריהוט", "אוהלים", "שילוט"],
+  },
+  {
+    name: "שיווק ופרסום",
+    color: "#e11d48",
+    icon: "שיווק ופרסום",
+    subs: ["רכש מדיה", "ייעוץ שיווקי", "עיצוב גרפי", "דפוס", "דיגיטל"],
+  },
+  {
+    name: "ביטוח",
+    color: "#0d9488",
+    icon: "ביטוח",
+    subs: ["ביטוח אירועים", "ביטוח נוסעים", "ביטוח ציוד", "אחריות מקצועית"],
+  },
+  {
+    name: "הדרכה",
+    color: "#7c3aed",
+    icon: "הדרכה",
+    subs: ["מדריכי טיולים", "מרצים", "מנחי קבוצות", "מתרגמים"],
+  },
 ];
 
 // Keyword → category mapping for AI suggestions
 const KEYWORD_RULES: [RegExp, string][] = [
-  [/הסע|אוטובוס|רכב|נסיע|שאטל|טיס/i, 'תחבורה'],
-  [/קייטרינג|מזון|אוכל|מסעדה|בר|בשר|כשר|טעמ/i, 'מזון'],
-  [/ספורט|אתגר|רייז|קיאק|טיול|גלישה|שט|אופני|ג׳יפ/i, 'אטרקציות'],
-  [/מלון|צימר|לינה|אכסני|ריזורט|קמפינג/i, 'לינה'],
-  [/DJ|מוזיק|אומן|מופע|הופע|מנח|גיבוש|בידור|הנפש/i, 'בידור'],
-  [/צילום|וידאו|דרון|צלם|סרט/i, 'צילום ווידאו'],
-  [/ציוד|הגבר|תאור|במה|ריהוט|אוהל|שילוט|לוגיסט/i, 'ציוד ולוגיסטיקה'],
-  [/שיווק|פרסום|מדיה|עיצוב|גרפי|דפוס|דיגיטל/i, 'שיווק ופרסום'],
-  [/ביטוח/i, 'ביטוח'],
-  [/מדריך|הדרכ|מרצה|מנחה|תרגום/i, 'הדרכה'],
-  [/יקב|יין|טעימ/i, 'אטרקציות'],
+  [/הסע|אוטובוס|רכב|נסיע|שאטל|טיס/i, "תחבורה"],
+  [/קייטרינג|מזון|אוכל|מסעדה|בר|בשר|כשר|טעמ/i, "מזון"],
+  [/ספורט|אתגר|רייז|קיאק|טיול|גלישה|שט|אופני|ג׳יפ/i, "אטרקציות"],
+  [/מלון|צימר|לינה|אכסני|ריזורט|קמפינג/i, "לינה"],
+  [/DJ|מוזיק|אומן|מופע|הופע|מנח|גיבוש|בידור|הנפש/i, "בידור"],
+  [/צילום|וידאו|דרון|צלם|סרט/i, "צילום ווידאו"],
+  [/ציוד|הגבר|תאור|במה|ריהוט|אוהל|שילוט|לוגיסט/i, "ציוד ולוגיסטיקה"],
+  [/שיווק|פרסום|מדיה|עיצוב|גרפי|דפוס|דיגיטל/i, "שיווק ופרסום"],
+  [/ביטוח/i, "ביטוח"],
+  [/מדריך|הדרכ|מרצה|מנחה|תרגום/i, "הדרכה"],
+  [/יקב|יין|טעימ/i, "אטרקציות"],
 ];
 
-function suggestCategory(supplier: Supplier): { category: string; keywords: string[]; reason: string } | null {
-  const text = `${supplier.name} ${supplier.notes || ''} ${supplier.category || ''}`.toLowerCase();
+function suggestCategory(
+  supplier: Supplier
+): { category: string; keywords: string[]; reason: string } | null {
+  const text =
+    `${supplier.name} ${supplier.notes || ""} ${supplier.category || ""}`.toLowerCase();
   const foundKeywords: string[] = [];
 
   for (const [pattern, cat] of KEYWORD_RULES) {
     const match = text.match(pattern);
     if (match) {
       foundKeywords.push(match[0]);
-      const catDef = CATEGORIES.find(c => c.name === cat);
       return {
         category: cat,
         keywords: foundKeywords,
-        reason: `זיהוי מילות מפתח: "${foundKeywords.join(', ')}" — ייתכן שמדובר בספק ${cat.toLowerCase()}.`,
+        reason: `זיהוי מילות מפתח: "${foundKeywords.join(", ")}" — ייתכן שמדובר בספק ${cat.toLowerCase()}.`,
       };
     }
   }
@@ -73,9 +142,11 @@ function suggestCategory(supplier: Supplier): { category: string; keywords: stri
 }
 
 function isUnclassified(s: Supplier): boolean {
-  if (!s.category || s.category.trim() === '') return true;
+  if (!s.category || s.category.trim() === "") {
+    return true;
+  }
   const lower = s.category.trim().toLowerCase();
-  return ['כללי', 'general', 'אחר', 'other', '—', '-'].includes(lower);
+  return ["כללי", "general", "אחר", "other", "—", "-"].includes(lower);
 }
 
 // ═══════════════════════════════════════════════════
@@ -89,17 +160,19 @@ export function ClassificationWizard() {
   const updateSupplier = useMutation(api.suppliers.update);
 
   // Data
-  const [allSuppliers, setAllSuppliers] = useState<Supplier[]>([]);
+  const [_allSuppliers, setAllSuppliers] = useState<Supplier[]>([]);
   const [queue, setQueue] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Current supplier
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('left');
+  const [slideDirection, setSlideDirection] = useState<"left" | "right">(
+    "left"
+  );
 
   // Classification form
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedSub, setSelectedSub] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSub, setSelectedSub] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   // Progress
@@ -116,11 +189,27 @@ export function ClassificationWizard() {
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   // Tags
-  const TAGS = ['B2B', 'שנתי', 'דחוף', 'VIP', 'חדש', 'מומלץ'];
+  const TAGS = ["B2B", "שנתי", "דחוף", "VIP", "חדש", "מומלץ"];
+
+  // ─── AI suggestion ───────────────────────────────
+  const applySuggestion = useCallback((supplier: Supplier) => {
+    const suggestion = suggestCategory(supplier);
+    if (suggestion) {
+      setSelectedCategory(suggestion.category);
+      const catDef = CATEGORIES.find((c) => c.name === suggestion.category);
+      setSelectedSub(catDef?.subs[0] || "");
+    } else {
+      setSelectedCategory("");
+      setSelectedSub("");
+    }
+    setSelectedTags([]);
+  }, []);
 
   // ─── Load suppliers from Convex ──────────────────
   useEffect(() => {
-    if (suppliersData === undefined) return; // still loading
+    if (suppliersData === undefined) {
+      return; // still loading
+    }
     const suppliers = suppliersData as any as Supplier[];
     setAllSuppliers(suppliers);
     const unclassified = suppliers.filter(isUnclassified);
@@ -132,37 +221,33 @@ export function ClassificationWizard() {
       setAllDone(true);
     }
     setLoading(false);
-  }, [suppliersData]);
+  }, [suppliersData, applySuggestion]);
 
   // ─── Timer ───────────────────────────────────────
   useEffect(() => {
-    timerRef.current = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    timerRef.current = setInterval(() => setElapsedSeconds((s) => s + 1), 1000);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
   }, []);
 
   const formatTime = (secs: number) => {
-    const h = Math.floor(secs / 3600).toString().padStart(2, '0');
-    const m = Math.floor((secs % 3600) / 60).toString().padStart(2, '0');
-    const s = (secs % 60).toString().padStart(2, '0');
+    const h = Math.floor(secs / 3600)
+      .toString()
+      .padStart(2, "0");
+    const m = Math.floor((secs % 3600) / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (secs % 60).toString().padStart(2, "0");
     return `${h}:${m}:${s}`;
   };
 
-  // ─── AI suggestion ───────────────────────────────
-  const applySuggestion = useCallback((supplier: Supplier) => {
-    const suggestion = suggestCategory(supplier);
-    if (suggestion) {
-      setSelectedCategory(suggestion.category);
-      const catDef = CATEGORIES.find(c => c.name === suggestion.category);
-      setSelectedSub(catDef?.subs[0] || '');
-    } else {
-      setSelectedCategory('');
-      setSelectedSub('');
-    }
-    setSelectedTags([]);
-  }, []);
-
   const currentSupplier = queue[currentIdx] || null;
-  const aiSuggestion = currentSupplier ? suggestCategory(currentSupplier) : null;
+  const aiSuggestion = currentSupplier
+    ? suggestCategory(currentSupplier)
+    : null;
 
   // ─── Actions ─────────────────────────────────────
   const moveToNext = useCallback(() => {
@@ -170,60 +255,75 @@ export function ClassificationWizard() {
     if (nextIdx >= queue.length) {
       setAllDone(true);
     } else {
-      setSlideDirection('left');
+      setSlideDirection("left");
       setCurrentIdx(nextIdx);
       applySuggestion(queue[nextIdx]);
     }
   }, [currentIdx, queue, applySuggestion]);
 
   const handleApprove = useCallback(async () => {
-    if (!currentSupplier || !selectedCategory) {
-      appToast.warning('יש לבחור קטגוריה לפני אישור');
+    if (!(currentSupplier && selectedCategory)) {
+      appToast.warning("יש לבחור קטגוריה לפני אישור");
       return;
     }
     setSaving(true);
     try {
-      const catDef = CATEGORIES.find(c => c.name === selectedCategory);
+      const catDef = CATEGORIES.find((c) => c.name === selectedCategory);
       await updateSupplier({
         id: (currentSupplier as any)._id,
         category: selectedCategory,
-        categoryColor: catDef?.color || '#8d785e',
-        icon: catDef?.name || 'כללי',
-        notes: selectedTags.length > 0
-          ? `${currentSupplier.notes && currentSupplier.notes !== '-' ? currentSupplier.notes + ' | ' : ''}תגיות: ${selectedTags.join(', ')}${selectedSub ? ' | תת-קטגוריה: ' + selectedSub : ''}`
-          : (selectedSub ? `${currentSupplier.notes && currentSupplier.notes !== '-' ? currentSupplier.notes + ' | ' : ''}תת-קטגוריה: ${selectedSub}` : currentSupplier.notes),
+        categoryColor: catDef?.color || "#8d785e",
+        icon: catDef?.name || "כללי",
+        notes:
+          selectedTags.length > 0
+            ? `${currentSupplier.notes && currentSupplier.notes !== "-" ? `${currentSupplier.notes} | ` : ""}תגיות: ${selectedTags.join(", ")}${selectedSub ? ` | תת-קטגוריה: ${selectedSub}` : ""}`
+            : selectedSub
+              ? `${currentSupplier.notes && currentSupplier.notes !== "-" ? `${currentSupplier.notes} | ` : ""}תת-קטגוריה: ${selectedSub}`
+              : currentSupplier.notes,
       });
-      setClassifiedCount(c => c + 1);
-      appToast.success('הספק סווג בהצלחה!', `${currentSupplier.name} → ${selectedCategory}${selectedSub ? ' › ' + selectedSub : ''}`);
+      setClassifiedCount((c) => c + 1);
+      appToast.success(
+        "הספק סווג בהצלחה!",
+        `${currentSupplier.name} → ${selectedCategory}${selectedSub ? ` › ${selectedSub}` : ""}`
+      );
       moveToNext();
     } catch (err) {
-      console.error('[ClassificationWizard] Save error:', err);
-      appToast.error('שגיאה בשמירת הסיווג');
+      console.error("[ClassificationWizard] Save error:", err);
+      appToast.error("שגיאה בשמירת הסיווג");
     }
     setSaving(false);
-  }, [currentSupplier, selectedCategory, selectedSub, selectedTags, moveToNext, updateSupplier]);
+  }, [
+    currentSupplier,
+    selectedCategory,
+    selectedSub,
+    selectedTags,
+    moveToNext,
+    updateSupplier,
+  ]);
 
   const handleSkip = useCallback(() => {
-    setSkippedCount(s => s + 1);
-    setSlideDirection('left');
+    setSkippedCount((s) => s + 1);
+    setSlideDirection("left");
     moveToNext();
   }, [moveToNext]);
 
   const handleArchive = useCallback(async () => {
-    if (!currentSupplier) return;
+    if (!currentSupplier) {
+      return;
+    }
     setSaving(true);
     try {
       await updateSupplier({
         id: (currentSupplier as any)._id,
-        category: 'ארכיון',
-        categoryColor: '#94a3b8',
-        notes: `${currentSupplier.notes && currentSupplier.notes !== '-' ? currentSupplier.notes + ' | ' : ''}הועבר לארכיון`,
+        category: "ארכיון",
+        categoryColor: "#94a3b8",
+        notes: `${currentSupplier.notes && currentSupplier.notes !== "-" ? `${currentSupplier.notes} | ` : ""}הועבר לארכיון`,
       });
-      setClassifiedCount(c => c + 1);
-      appToast.info('הספק הועבר לארכיון', currentSupplier.name);
+      setClassifiedCount((c) => c + 1);
+      appToast.info("הספק הועבר לארכיון", currentSupplier.name);
       moveToNext();
-    } catch (err) {
-      appToast.error('שגיאה בהעברה לארכיון');
+    } catch (_err) {
+      appToast.error("שגיאה בהעברה לארכיון");
     }
     setSaving(false);
   }, [currentSupplier, moveToNext, updateSupplier]);
@@ -231,42 +331,62 @@ export function ClassificationWizard() {
   // ─── Keyboard shortcuts ──────────────────────────
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (allDone || loading || saving) return;
+      if (allDone || loading || saving) {
+        return;
+      }
       // Don't capture if user is in a select/input
       const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
+        return;
+      }
 
-      if (e.key === 'Enter') {
+      if (e.key === "Enter") {
         e.preventDefault();
         handleApprove();
-      } else if (e.key === 'Escape') {
+      } else if (e.key === "Escape") {
         e.preventDefault();
         handleSkip();
-      } else if (e.key === 'a' || e.key === 'A' || e.key === 'א') {
+      } else if (e.key === "a" || e.key === "A" || e.key === "א") {
         e.preventDefault();
         handleArchive();
       }
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
   }, [allDone, loading, saving, handleApprove, handleSkip, handleArchive]);
 
   // ─── Computed ────────────────────────────────────
   const totalInQueue = queue.length;
   const processedCount = classifiedCount + skippedCount;
-  const progressPct = totalInQueue > 0 ? Math.round((processedCount / totalInQueue) * 100) : 0;
-  const speedPerHour = elapsedSeconds > 60 ? Math.round((classifiedCount / elapsedSeconds) * 3600) : 0;
-  const currentCatDef = CATEGORIES.find(c => c.name === selectedCategory);
+  const progressPct =
+    totalInQueue > 0 ? Math.round((processedCount / totalInQueue) * 100) : 0;
+  const speedPerHour =
+    elapsedSeconds > 60
+      ? Math.round((classifiedCount / elapsedSeconds) * 3600)
+      : 0;
+  const currentCatDef = CATEGORIES.find((c) => c.name === selectedCategory);
 
   // ═══════════════════════════════════════════════════
   // LOADING STATE
   // ═══════════════════════════════════════════════════
   if (loading) {
     return (
-      <div className="min-h-full bg-[#f8f7f5] font-['Assistant',sans-serif] flex items-center justify-center" dir="rtl">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
-          <Loader2 size={40} className="animate-spin text-[#ff8c00] mx-auto mb-4" />
-          <p className="text-[16px] text-[#181510]" style={{ fontWeight: 600 }}>טוען ספקים...</p>
+      <div
+        className="flex min-h-full items-center justify-center bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        dir="rtl"
+      >
+        <motion.div
+          animate={{ opacity: 1 }}
+          className="text-center"
+          initial={{ opacity: 0 }}
+        >
+          <Loader2
+            className="mx-auto mb-4 animate-spin text-[#ff8c00]"
+            size={40}
+          />
+          <p className="text-[#181510] text-[16px]" style={{ fontWeight: 600 }}>
+            טוען ספקים...
+          </p>
         </motion.div>
       </div>
     );
@@ -277,64 +397,93 @@ export function ClassificationWizard() {
   // ═══════════════════════════════════════════════════
   if (allDone) {
     return (
-      <div className="min-h-full bg-[#f8f7f5] font-['Assistant',sans-serif]" dir="rtl">
-        <div className="bg-white border-b border-[#e7e1da] px-4 lg:px-6 py-4">
+      <div
+        className="min-h-full bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        dir="rtl"
+      >
+        <div className="border-[#e7e1da] border-b bg-white px-4 py-4 lg:px-6">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/suppliers')} className="text-[#8d785e] hover:text-[#181510] transition-colors">
+            <button
+              className="text-[#8d785e] transition-colors hover:text-[#181510]"
+              onClick={() => navigate("/suppliers")}
+              type="button"
+            >
               <ArrowRight size={20} />
             </button>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#ff8c00]/10 rounded-lg flex items-center justify-center">
-                <Microscope size={16} className="text-[#ff8c00]" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
+                <Microscope className="text-[#ff8c00]" size={16} />
               </div>
-              <h1 className="text-[22px] text-[#181510]" style={{ fontWeight: 700 }}>אשף סיווג ספקים מרוכז</h1>
+              <h1
+                className="text-[#181510] text-[22px]"
+                style={{ fontWeight: 700 }}
+              >
+                אשף סיווג ספקים מרוכז
+              </h1>
             </div>
           </div>
         </div>
 
-        <div className="max-w-lg mx-auto p-6">
+        <div className="mx-auto max-w-lg p-6">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-            className="bg-white rounded-2xl border border-[#e7e1da] p-8 text-center shadow-sm"
+            className="rounded-2xl border border-[#e7e1da] bg-white p-8 text-center shadow-sm"
+            initial={{ opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
           >
             <motion.div
-              initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring' }}
-              className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
+              className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-100"
+              initial={{ scale: 0 }}
+              transition={{ delay: 0.2, type: "spring" }}
             >
-              <PartyPopper size={48} className="text-green-600" />
+              <PartyPopper className="text-green-600" size={48} />
             </motion.div>
 
-            <h2 className="text-[24px] text-[#181510] mb-2" style={{ fontWeight: 800 }}>
-              {totalInQueue === 0 ? 'אין ספקים לסיווג' : 'כל הספקים סווגו!'}
+            <h2
+              className="mb-2 text-[#181510] text-[24px]"
+              style={{ fontWeight: 800 }}
+            >
+              {totalInQueue === 0 ? "אין ספקים לסיווג" : "כל הספקים סווגו!"}
             </h2>
-            <p className="text-[14px] text-[#8d785e] mb-6">
+            <p className="mb-6 text-[#8d785e] text-[14px]">
               {totalInQueue === 0
-                ? 'כל הספקים כבר מסווגים בבנק הספקים שלכם.'
-                : `סיימתם לסווג ${classifiedCount} ספקים ב-${formatTime(elapsedSeconds)}.`
-              }
+                ? "כל הספקים כבר מסווגים בבנק הספקים שלכם."
+                : `סיימתם לסווג ${classifiedCount} ספקים ב-${formatTime(elapsedSeconds)}.`}
             </p>
 
             {classifiedCount > 0 && (
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
+                className="mb-6 grid grid-cols-3 gap-3"
+                initial={{ opacity: 0, y: 10 }}
                 transition={{ delay: 0.4 }}
-                className="grid grid-cols-3 gap-3 mb-6"
               >
-                <div className="bg-green-50 border border-green-200 rounded-xl p-3">
-                  <div className="text-[24px] text-green-600" style={{ fontWeight: 800 }}>{classifiedCount}</div>
+                <div className="rounded-xl border border-green-200 bg-green-50 p-3">
+                  <div
+                    className="text-[24px] text-green-600"
+                    style={{ fontWeight: 800 }}
+                  >
+                    {classifiedCount}
+                  </div>
                   <div className="text-[11px] text-green-700">סווגו</div>
                 </div>
-                <div className="bg-[#f5f3f0] border border-[#e7e1da] rounded-xl p-3">
-                  <div className="text-[24px] text-[#8d785e]" style={{ fontWeight: 800 }}>{skippedCount}</div>
-                  <div className="text-[11px] text-[#8d785e]">דולגו</div>
+                <div className="rounded-xl border border-[#e7e1da] bg-[#f5f3f0] p-3">
+                  <div
+                    className="text-[#8d785e] text-[24px]"
+                    style={{ fontWeight: 800 }}
+                  >
+                    {skippedCount}
+                  </div>
+                  <div className="text-[#8d785e] text-[11px]">דולגו</div>
                 </div>
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-3">
-                  <div className="text-[24px] text-blue-600" style={{ fontWeight: 800 }}>{formatTime(elapsedSeconds)}</div>
+                <div className="rounded-xl border border-blue-200 bg-blue-50 p-3">
+                  <div
+                    className="text-[24px] text-blue-600"
+                    style={{ fontWeight: 800 }}
+                  >
+                    {formatTime(elapsedSeconds)}
+                  </div>
                   <div className="text-[11px] text-blue-700">זמן עבודה</div>
                 </div>
               </motion.div>
@@ -342,14 +491,16 @@ export function ClassificationWizard() {
 
             <div className="flex items-center justify-center gap-3">
               <button
-                onClick={() => navigate('/suppliers')}
-                className="flex items-center gap-2 text-[15px] text-white bg-[#ff8c00] hover:bg-[#e67e00] px-6 py-3 rounded-xl transition-colors"
+                className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-6 py-3 text-[15px] text-white transition-colors hover:bg-[#e67e00]"
+                onClick={() => navigate("/suppliers")}
                 style={{ fontWeight: 600 }}
+                type="button"
               >
                 <FolderOpen size={16} /> עבור לבנק ספקים
               </button>
               {skippedCount > 0 && (
                 <button
+                  className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-5 py-3 text-[#8d785e] text-[15px] transition-colors hover:bg-[#f5f3f0]"
                   onClick={() => {
                     // Re-read suppliers from Convex (already reactive)
                     const fresh = (suppliersData ?? []) as any as Supplier[];
@@ -358,10 +509,12 @@ export function ClassificationWizard() {
                     setCurrentIdx(0);
                     setSkippedCount(0);
                     setAllDone(remaining.length === 0);
-                    if (remaining.length > 0) applySuggestion(remaining[0]);
+                    if (remaining.length > 0) {
+                      applySuggestion(remaining[0]);
+                    }
                   }}
-                  className="flex items-center gap-2 text-[15px] text-[#8d785e] border border-[#e7e1da] px-5 py-3 rounded-xl hover:bg-[#f5f3f0] transition-colors"
                   style={{ fontWeight: 600 }}
+                  type="button"
                 >
                   <RotateCcw size={16} /> חזור לדילוגים ({skippedCount})
                 </button>
@@ -378,45 +531,69 @@ export function ClassificationWizard() {
   // ═══════════════════════════════════════════════════
 
   return (
-    <div className="min-h-full bg-[#f8f7f5] font-['Assistant',sans-serif]" dir="rtl">
+    <div
+      className="min-h-full bg-[#f8f7f5] font-['Assistant',sans-serif]"
+      dir="rtl"
+    >
       {/* Header */}
-      <div className="bg-white border-b border-[#e7e1da] px-4 lg:px-6 py-4">
+      <div className="border-[#e7e1da] border-b bg-white px-4 py-4 lg:px-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/suppliers')} className="text-[#8d785e] hover:text-[#181510] transition-colors">
+            <button
+              className="text-[#8d785e] transition-colors hover:text-[#181510]"
+              onClick={() => navigate("/suppliers")}
+              type="button"
+            >
               <ArrowRight size={20} />
             </button>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#ff8c00]/10 rounded-lg flex items-center justify-center">
-                <Microscope size={16} className="text-[#ff8c00]" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
+                <Microscope className="text-[#ff8c00]" size={16} />
               </div>
-              <h1 className="text-[22px] text-[#181510]" style={{ fontWeight: 700 }}>אשף סיווג ספקים מרוכז</h1>
+              <h1
+                className="text-[#181510] text-[22px]"
+                style={{ fontWeight: 700 }}
+              >
+                אשף סיווג ספקים מרוכז
+              </h1>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             {/* Progress info */}
-            <div className="text-left hidden md:block">
-              <span className="text-[12px] text-[#8d785e]">{processedCount} מתוך {totalInQueue}</span>
-              <span className="text-[12px] text-[#ff8c00] mr-2" style={{ fontWeight: 600 }}>{progressPct}%</span>
+            <div className="hidden text-left md:block">
+              <span className="text-[#8d785e] text-[12px]">
+                {processedCount} מתוך {totalInQueue}
+              </span>
+              <span
+                className="mr-2 text-[#ff8c00] text-[12px]"
+                style={{ fontWeight: 600 }}
+              >
+                {progressPct}%
+              </span>
             </div>
-            <div className="w-32 h-2 bg-[#ddd6cb] rounded-full overflow-hidden hidden md:block">
+            <div className="hidden h-2 w-32 overflow-hidden rounded-full bg-[#ddd6cb] md:block">
               <motion.div
-                className="h-full bg-gradient-to-l from-[#ff8c00] to-[#ffb347] rounded-full"
                 animate={{ width: `${progressPct}%` }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className="h-full rounded-full bg-gradient-to-l from-[#ff8c00] to-[#ffb347]"
+                transition={{ duration: 0.5, ease: "easeOut" }}
               />
             </div>
 
             {/* Timer */}
-            <div className="flex items-center gap-1 text-[12px] text-[#8d785e] bg-[#f5f3f0] px-2.5 py-1 rounded-full">
+            <div className="flex items-center gap-1 rounded-full bg-[#f5f3f0] px-2.5 py-1 text-[#8d785e] text-[12px]">
               <Clock size={12} />
-              <span style={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{formatTime(elapsedSeconds)}</span>
+              <span
+                style={{ fontWeight: 600, fontVariantNumeric: "tabular-nums" }}
+              >
+                {formatTime(elapsedSeconds)}
+              </span>
             </div>
 
             <button
+              className="relative p-2 text-[#8d785e] transition-colors hover:text-[#181510]"
               onClick={() => setShowShortcuts(!showShortcuts)}
-              className="p-2 text-[#8d785e] hover:text-[#181510] transition-colors relative"
+              type="button"
             >
               <Keyboard size={18} />
             </button>
@@ -428,74 +605,137 @@ export function ClassificationWizard() {
       <AnimatePresence>
         {showShortcuts && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
+            className="absolute top-16 left-4 z-50 min-w-[200px] rounded-xl bg-[#181510] p-4 text-[13px] text-white shadow-xl lg:left-6"
             exit={{ opacity: 0, y: -10 }}
-            className="absolute left-4 lg:left-6 top-16 z-50 bg-[#181510] text-white rounded-xl p-4 shadow-xl text-[13px] min-w-[200px]"
+            initial={{ opacity: 0, y: -10 }}
           >
-            <div className="flex items-center justify-between mb-3">
+            <div className="mb-3 flex items-center justify-between">
               <span style={{ fontWeight: 700 }}>קיצורי מקלדת</span>
-              <button onClick={() => setShowShortcuts(false)}><X size={14} /></button>
+              <button onClick={() => setShowShortcuts(false)} type="button">
+                <X size={14} />
+              </button>
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between"><span className="text-white/70">אשר והמשך</span><kbd className="bg-white/10 px-2 py-0.5 rounded text-[11px]">Enter</kbd></div>
-              <div className="flex justify-between"><span className="text-white/70">דלג</span><kbd className="bg-white/10 px-2 py-0.5 rounded text-[11px]">Esc</kbd></div>
-              <div className="flex justify-between"><span className="text-white/70">ארכיון</span><kbd className="bg-white/10 px-2 py-0.5 rounded text-[11px]">A</kbd></div>
+              <div className="flex justify-between">
+                <span className="text-white/70">אשר והמשך</span>
+                <kbd className="rounded bg-white/10 px-2 py-0.5 text-[11px]">
+                  Enter
+                </kbd>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-white/70">דלג</span>
+                <kbd className="rounded bg-white/10 px-2 py-0.5 text-[11px]">
+                  Esc
+                </kbd>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-white/70">ארכיון</span>
+                <kbd className="rounded bg-white/10 px-2 py-0.5 text-[11px]">
+                  A
+                </kbd>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       <div className="mx-auto p-4 lg:p-6">
-        <div className="grid lg:grid-cols-4 gap-6">
+        <div className="grid gap-6 lg:grid-cols-4">
           {/* ═══ MAIN CONTENT ═══ */}
-          <div className="lg:col-span-3 space-y-5">
+          <div className="space-y-5 lg:col-span-3">
             {/* Supplier card — animated */}
             <AnimatePresence mode="wait">
               {currentSupplier && (
                 <motion.div
-                  key={currentSupplier.id}
-                  initial={{ opacity: 0, x: slideDirection === 'left' ? 80 : -80, scale: 0.97 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: slideDirection === 'left' ? -80 : 80, scale: 0.97 }}
-                  transition={{ duration: 0.35, ease: 'easeInOut' }}
-                  className="bg-white rounded-2xl border border-[#e7e1da] shadow-sm overflow-hidden"
+                  className="overflow-hidden rounded-2xl border border-[#e7e1da] bg-white shadow-sm"
+                  exit={{
+                    opacity: 0,
+                    x: slideDirection === "left" ? -80 : 80,
+                    scale: 0.97,
+                  }}
+                  initial={{
+                    opacity: 0,
+                    x: slideDirection === "left" ? 80 : -80,
+                    scale: 0.97,
+                  }}
+                  key={currentSupplier.id}
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
                 >
                   {/* Card header */}
                   <div className="bg-gradient-to-l from-[#fff7ed] to-white p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-[12px] text-green-600 bg-green-50 px-2.5 py-1 rounded-full flex items-center gap-1" style={{ fontWeight: 600 }}>
-                        <Sparkles size={11} /> ספק {currentIdx + 1} מתוך {totalInQueue}
+                    <div className="mb-3 flex items-center justify-between">
+                      <span
+                        className="flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-[12px] text-green-600"
+                        style={{ fontWeight: 600 }}
+                      >
+                        <Sparkles size={11} /> ספק {currentIdx + 1} מתוך{" "}
+                        {totalInQueue}
                       </span>
-                      <span className="text-[12px] text-[#8d785e]">
-                        {currentSupplier.verificationStatus === 'verified' ? '✅ מאומת' :
-                         currentSupplier.verificationStatus === 'pending' ? '⏳ ממתין' : '❓ לא מאומת'}
+                      <span className="text-[#8d785e] text-[12px]">
+                        {currentSupplier.verificationStatus === "verified"
+                          ? "✅ מאומת"
+                          : currentSupplier.verificationStatus === "pending"
+                            ? "⏳ ממתין"
+                            : "❓ לא מאומת"}
                       </span>
                     </div>
 
-                    <h2 className="text-[24px] text-[#181510] mb-4" style={{ fontWeight: 700 }}>{currentSupplier.name}</h2>
+                    <h2
+                      className="mb-4 text-[#181510] text-[24px]"
+                      style={{ fontWeight: 700 }}
+                    >
+                      {currentSupplier.name}
+                    </h2>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                       <div>
-                        <div className="text-[11px] text-[#8d785e] mb-0.5 flex items-center gap-1"><Hash size={10} /> מזהה</div>
-                        <div className="text-[14px] text-[#181510]" style={{ fontWeight: 600 }}>{currentSupplier.id}</div>
+                        <div className="mb-0.5 flex items-center gap-1 text-[#8d785e] text-[11px]">
+                          <Hash size={10} /> מזהה
+                        </div>
+                        <div
+                          className="text-[#181510] text-[14px]"
+                          style={{ fontWeight: 600 }}
+                        >
+                          {currentSupplier.id}
+                        </div>
                       </div>
                       <div>
-                        <div className="text-[11px] text-[#8d785e] mb-0.5 flex items-center gap-1"><Phone size={10} /> טלפון</div>
-                        <div className="text-[14px] text-[#181510]" dir="ltr" style={{ fontWeight: 600 }}>{currentSupplier.phone || '—'}</div>
+                        <div className="mb-0.5 flex items-center gap-1 text-[#8d785e] text-[11px]">
+                          <Phone size={10} /> טלפון
+                        </div>
+                        <div
+                          className="text-[#181510] text-[14px]"
+                          dir="ltr"
+                          style={{ fontWeight: 600 }}
+                        >
+                          {currentSupplier.phone || "—"}
+                        </div>
                       </div>
                       <div>
-                        <div className="text-[11px] text-[#8d785e] mb-0.5 flex items-center gap-1"><MapPin size={10} /> אזור</div>
-                        <div className="text-[14px] text-[#181510]" style={{ fontWeight: 600 }}>{currentSupplier.region || '—'}</div>
+                        <div className="mb-0.5 flex items-center gap-1 text-[#8d785e] text-[11px]">
+                          <MapPin size={10} /> אזור
+                        </div>
+                        <div
+                          className="text-[#181510] text-[14px]"
+                          style={{ fontWeight: 600 }}
+                        >
+                          {currentSupplier.region || "—"}
+                        </div>
                       </div>
                       <div>
-                        <div className="text-[11px] text-[#8d785e] mb-0.5 flex items-center gap-1"><FolderOpen size={10} /> קטגוריה מקורית</div>
-                        <div className="text-[14px] text-[#8d785e]">{currentSupplier.category || '(ללא)'}</div>
+                        <div className="mb-0.5 flex items-center gap-1 text-[#8d785e] text-[11px]">
+                          <FolderOpen size={10} /> קטגוריה מקורית
+                        </div>
+                        <div className="text-[#8d785e] text-[14px]">
+                          {currentSupplier.category || "(ללא)"}
+                        </div>
                       </div>
                     </div>
 
-                    {currentSupplier.notes && currentSupplier.notes !== '-' && (
-                      <div className="mt-3 text-[12px] text-[#8d785e] flex items-center gap-1">
+                    {currentSupplier.notes && currentSupplier.notes !== "-" && (
+                      <div className="mt-3 flex items-center gap-1 text-[#8d785e] text-[12px]">
                         <FileText size={11} /> הערות: {currentSupplier.notes}
                       </div>
                     )}
@@ -504,13 +744,16 @@ export function ClassificationWizard() {
                   {/* AI suggestion */}
                   {aiSuggestion && (
                     <motion.div
+                      animate={{ opacity: 1, height: "auto" }}
+                      className="mx-5 my-4 rounded-xl border border-[#ff8c00]/30 bg-[#ff8c00]/5 p-3"
                       initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      className="mx-5 my-4 bg-[#ff8c00]/5 border border-[#ff8c00]/30 rounded-xl p-3"
                     >
                       <div className="flex items-center gap-2">
-                        <Lightbulb size={16} className="text-[#ff8c00] shrink-0" />
-                        <p className="text-[13px] text-[#6b5d45]">
+                        <Lightbulb
+                          className="shrink-0 text-[#ff8c00]"
+                          size={16}
+                        />
+                        <p className="text-[#6b5d45] text-[13px]">
                           {aiSuggestion.reason}
                         </p>
                       </div>
@@ -518,93 +761,138 @@ export function ClassificationWizard() {
                   )}
 
                   {/* Classification form */}
-                  <div className="p-5 pt-2 space-y-4">
+                  <div className="space-y-4 p-5 pt-2">
                     {/* Category grid */}
-                    <div>
-                      <label className="text-[13px] text-[#181510] mb-2 block" style={{ fontWeight: 600 }}>קטגוריה ראשית</label>
-                      <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                        {CATEGORIES.map(cat => (
+                    <fieldset>
+                      <legend
+                        className="mb-2 block text-[#181510] text-[13px]"
+                        style={{ fontWeight: 600 }}
+                      >
+                        קטגוריה ראשית
+                      </legend>
+                      <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
+                        {CATEGORIES.map((cat) => (
                           <button
+                            className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-[12px] transition-all ${
+                              selectedCategory === cat.name
+                                ? "border-2 shadow-md"
+                                : "border-[#e7e1da] hover:border-[#d4cdc3]"
+                            }`}
                             key={cat.name}
                             onClick={() => {
                               setSelectedCategory(cat.name);
-                              setSelectedSub(cat.subs[0] || '');
+                              setSelectedSub(cat.subs[0] || "");
                             }}
-                            className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-[12px] transition-all ${
-                              selectedCategory === cat.name
-                                ? 'border-2 shadow-md'
-                                : 'border-[#e7e1da] hover:border-[#d4cdc3]'
-                            }`}
                             style={{
-                              fontWeight: selectedCategory === cat.name ? 700 : 500,
-                              borderColor: selectedCategory === cat.name ? cat.color : undefined,
-                              backgroundColor: selectedCategory === cat.name ? `${cat.color}10` : undefined,
-                              color: selectedCategory === cat.name ? cat.color : '#181510',
+                              fontWeight:
+                                selectedCategory === cat.name ? 700 : 500,
+                              borderColor:
+                                selectedCategory === cat.name
+                                  ? cat.color
+                                  : undefined,
+                              backgroundColor:
+                                selectedCategory === cat.name
+                                  ? `${cat.color}10`
+                                  : undefined,
+                              color:
+                                selectedCategory === cat.name
+                                  ? cat.color
+                                  : "#181510",
                             }}
+                            type="button"
                           >
-                            <CategoryIcon category={cat.name} size={16} color={selectedCategory === cat.name ? cat.color : '#8d785e'} />
+                            <CategoryIcon
+                              category={cat.name}
+                              color={
+                                selectedCategory === cat.name
+                                  ? cat.color
+                                  : "#8d785e"
+                              }
+                              size={16}
+                            />
                             {cat.name}
                           </button>
                         ))}
                       </div>
-                    </div>
+                    </fieldset>
 
                     {/* Sub-category */}
                     <AnimatePresence mode="wait">
                       {currentCatDef && (
-                        <motion.div
-                          key={selectedCategory}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
+                        <motion.fieldset
+                          animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
+                          initial={{ opacity: 0, height: 0 }}
+                          key={selectedCategory}
                           transition={{ duration: 0.2 }}
                         >
-                          <label className="text-[13px] text-[#181510] mb-1.5 block" style={{ fontWeight: 600 }}>תת-קטגוריה</label>
+                          <legend
+                            className="mb-1.5 block text-[#181510] text-[13px]"
+                            style={{ fontWeight: 600 }}
+                          >
+                            תת-קטגוריה
+                          </legend>
                           <div className="flex flex-wrap gap-2">
-                            {currentCatDef.subs.map(sub => (
+                            {currentCatDef.subs.map((sub) => (
                               <button
+                                className={`rounded-lg border px-3 py-1.5 text-[12px] transition-all ${
+                                  selectedSub === sub
+                                    ? "border-transparent text-white"
+                                    : "border-[#e7e1da] text-[#8d785e] hover:border-[#d4cdc3]"
+                                }`}
                                 key={sub}
                                 onClick={() => setSelectedSub(sub)}
-                                className={`text-[12px] px-3 py-1.5 rounded-lg border transition-all ${
-                                  selectedSub === sub
-                                    ? 'text-white border-transparent'
-                                    : 'border-[#e7e1da] text-[#8d785e] hover:border-[#d4cdc3]'
-                                }`}
                                 style={{
                                   fontWeight: 600,
-                                  backgroundColor: selectedSub === sub ? currentCatDef.color : undefined,
+                                  backgroundColor:
+                                    selectedSub === sub
+                                      ? currentCatDef.color
+                                      : undefined,
                                 }}
+                                type="button"
                               >
                                 {sub}
                               </button>
                             ))}
                           </div>
-                        </motion.div>
+                        </motion.fieldset>
                       )}
                     </AnimatePresence>
 
                     {/* Tags */}
-                    <div>
-                      <label className="text-[13px] text-[#181510] mb-2 block" style={{ fontWeight: 600 }}>
-                        <Tag size={12} className="inline ml-1" /> תגיות (אופציונלי)
-                      </label>
+                    <fieldset>
+                      <legend
+                        className="mb-2 block text-[#181510] text-[13px]"
+                        style={{ fontWeight: 600 }}
+                      >
+                        <Tag className="ml-1 inline" size={12} /> תגיות
+                        (אופציונלי)
+                      </legend>
                       <div className="flex flex-wrap gap-2">
-                        {TAGS.map(tag => (
+                        {TAGS.map((tag) => (
                           <button
-                            key={tag}
-                            onClick={() => setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])}
-                            className={`text-[12px] px-3 py-1 rounded-full border transition-all ${
+                            className={`rounded-full border px-3 py-1 text-[12px] transition-all ${
                               selectedTags.includes(tag)
-                                ? 'bg-[#ff8c00] text-white border-[#ff8c00]'
-                                : 'border-[#e7e1da] text-[#8d785e] hover:border-[#ff8c00] hover:text-[#ff8c00]'
+                                ? "border-[#ff8c00] bg-[#ff8c00] text-white"
+                                : "border-[#e7e1da] text-[#8d785e] hover:border-[#ff8c00] hover:text-[#ff8c00]"
                             }`}
+                            key={tag}
+                            onClick={() =>
+                              setSelectedTags((prev) =>
+                                prev.includes(tag)
+                                  ? prev.filter((t) => t !== tag)
+                                  : [...prev, tag]
+                              )
+                            }
                             style={{ fontWeight: 600 }}
+                            type="button"
                           >
-                            {selectedTags.includes(tag) ? '✓ ' : '+ '}{tag}
+                            {selectedTags.includes(tag) ? "✓ " : "+ "}
+                            {tag}
                           </button>
                         ))}
                       </div>
-                    </div>
+                    </fieldset>
                   </div>
                 </motion.div>
               )}
@@ -612,51 +900,76 @@ export function ClassificationWizard() {
 
             {/* Actions bar */}
             <motion.div
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#e7e1da] bg-white p-4"
               layout
-              className="flex flex-wrap items-center justify-between gap-3 bg-white rounded-xl p-4 border border-[#e7e1da]"
             >
               <div className="flex gap-2">
                 <button
-                  onClick={handleArchive}
+                  className="flex items-center gap-1.5 text-[#8d785e] text-[13px] transition-colors hover:text-[#181510] disabled:opacity-50"
                   disabled={saving}
-                  className="flex items-center gap-1.5 text-[13px] text-[#8d785e] hover:text-[#181510] transition-colors disabled:opacity-50"
+                  onClick={handleArchive}
+                  type="button"
                 >
                   <Archive size={14} /> ארכיון
                 </button>
                 <button
-                  onClick={handleSkip}
+                  className="flex items-center gap-1.5 text-[#8d785e] text-[13px] transition-colors hover:text-[#181510] disabled:opacity-50"
                   disabled={saving}
-                  className="flex items-center gap-1.5 text-[13px] text-[#8d785e] hover:text-[#181510] transition-colors disabled:opacity-50"
+                  onClick={handleSkip}
+                  type="button"
                 >
                   <SkipForward size={14} /> דלג
                 </button>
               </div>
               <button
-                onClick={handleApprove}
+                className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-6 py-2.5 text-[14px] text-white shadow-sm transition-colors hover:bg-[#e67e00] disabled:opacity-50"
                 disabled={saving || !selectedCategory}
-                className="flex items-center gap-2 text-[14px] text-white bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 px-6 py-2.5 rounded-xl shadow-sm transition-colors"
+                onClick={handleApprove}
                 style={{ fontWeight: 600 }}
+                type="button"
               >
-                {saving ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle size={15} />}
-                {saving ? 'שומר...' : 'אשר והמשך לבא'}
+                {saving ? (
+                  <Loader2 className="animate-spin" size={15} />
+                ) : (
+                  <CheckCircle size={15} />
+                )}
+                {saving ? "שומר..." : "אשר והמשך לבא"}
                 {!saving && <ArrowLeft size={15} />}
               </button>
             </motion.div>
 
             {/* Keyboard tip */}
             <motion.div
-              initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              className="flex items-center justify-center gap-2 rounded-xl border border-[#ff8c00]/20 bg-[#fff7ed] p-3"
+              initial={{ opacity: 0 }}
               transition={{ delay: 0.5 }}
-              className="bg-[#fff7ed] border border-[#ff8c00]/20 rounded-xl p-3 flex items-center justify-center gap-2"
             >
-              <Keyboard size={14} className="text-[#ff8c00]" />
-              <span className="text-[12px] text-[#6b5d45]">
-                <kbd className="bg-white border border-[#e7e1da] px-1.5 py-0.5 rounded text-[11px] mx-0.5" style={{ fontWeight: 700 }}>Enter</kbd> אישור
+              <Keyboard className="text-[#ff8c00]" size={14} />
+              <span className="text-[#6b5d45] text-[12px]">
+                <kbd
+                  className="mx-0.5 rounded border border-[#e7e1da] bg-white px-1.5 py-0.5 text-[11px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  Enter
+                </kbd>{" "}
+                אישור
                 <span className="mx-2 text-[#d4cdc3]">|</span>
-                <kbd className="bg-white border border-[#e7e1da] px-1.5 py-0.5 rounded text-[11px] mx-0.5" style={{ fontWeight: 700 }}>Esc</kbd> דילוג
+                <kbd
+                  className="mx-0.5 rounded border border-[#e7e1da] bg-white px-1.5 py-0.5 text-[11px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  Esc
+                </kbd>{" "}
+                דילוג
                 <span className="mx-2 text-[#d4cdc3]">|</span>
-                <kbd className="bg-white border border-[#e7e1da] px-1.5 py-0.5 rounded text-[11px] mx-0.5" style={{ fontWeight: 700 }}>A</kbd> ארכיון
+                <kbd
+                  className="mx-0.5 rounded border border-[#e7e1da] bg-white px-1.5 py-0.5 text-[11px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  A
+                </kbd>{" "}
+                ארכיון
               </span>
             </motion.div>
           </div>
@@ -664,86 +977,134 @@ export function ClassificationWizard() {
           {/* ═══ SIDEBAR ═══ */}
           <div className="space-y-5">
             {/* Queue */}
-            <div className="bg-white rounded-2xl border border-[#e7e1da] p-5 shadow-sm">
-              <h3 className="text-[14px] text-[#181510] flex items-center gap-2 mb-3" style={{ fontWeight: 700 }}>
-                <LayoutList size={14} className="text-[#ff8c00]" /> תור ספקים ({totalInQueue - processedCount} נותרו)
+            <div className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm">
+              <h3
+                className="mb-3 flex items-center gap-2 text-[#181510] text-[14px]"
+                style={{ fontWeight: 700 }}
+              >
+                <LayoutList className="text-[#ff8c00]" size={14} /> תור ספקים (
+                {totalInQueue - processedCount} נותרו)
               </h3>
-              <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
-                {queue.slice(Math.max(0, currentIdx - 1), currentIdx + 6).map((item, i) => {
-                  const actualIdx = Math.max(0, currentIdx - 1) + i;
-                  const isCurrent = actualIdx === currentIdx;
-                  const isPast = actualIdx < currentIdx;
-                  return (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      className={`p-2.5 rounded-lg transition-all ${
-                        isCurrent
-                          ? 'bg-[#ff8c00] text-white shadow-sm'
-                          : isPast
-                          ? 'bg-green-50 border border-green-100'
-                          : 'hover:bg-[#f5f3f0]'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        {isPast && <CheckCircle size={12} className="text-green-500 shrink-0" />}
-                        <div className="min-w-0">
-                          <div className={`text-[13px] truncate ${isCurrent ? 'text-white' : isPast ? 'text-green-700' : 'text-[#181510]'}`} style={{ fontWeight: 600 }}>
-                            {item.name}
-                          </div>
-                          <div className={`text-[11px] ${isCurrent ? 'text-orange-100' : isPast ? 'text-green-500' : 'text-[#8d785e]'}`}>
-                            {isPast ? 'סווג' : `מזהה: ${item.id}`}
+              <div className="max-h-[300px] space-y-1.5 overflow-y-auto">
+                {queue
+                  .slice(Math.max(0, currentIdx - 1), currentIdx + 6)
+                  .map((item, i) => {
+                    const actualIdx = Math.max(0, currentIdx - 1) + i;
+                    const isCurrent = actualIdx === currentIdx;
+                    const isPast = actualIdx < currentIdx;
+                    return (
+                      <motion.div
+                        animate={{ opacity: 1, x: 0 }}
+                        className={`rounded-lg p-2.5 transition-all ${
+                          isCurrent
+                            ? "bg-[#ff8c00] text-white shadow-sm"
+                            : isPast
+                              ? "border border-green-100 bg-green-50"
+                              : "hover:bg-[#f5f3f0]"
+                        }`}
+                        initial={{ opacity: 0, x: 20 }}
+                        key={item.id}
+                        transition={{ delay: i * 0.05 }}
+                      >
+                        <div className="flex items-center gap-2">
+                          {isPast && (
+                            <CheckCircle
+                              className="shrink-0 text-green-500"
+                              size={12}
+                            />
+                          )}
+                          <div className="min-w-0">
+                            <div
+                              className={`truncate text-[13px] ${isCurrent ? "text-white" : isPast ? "text-green-700" : "text-[#181510]"}`}
+                              style={{ fontWeight: 600 }}
+                            >
+                              {item.name}
+                            </div>
+                            <div
+                              className={`text-[11px] ${isCurrent ? "text-orange-100" : isPast ? "text-green-500" : "text-[#8d785e]"}`}
+                            >
+                              {isPast ? "סווג" : `מזהה: ${item.id}`}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
+                      </motion.div>
+                    );
+                  })}
               </div>
               {totalInQueue - processedCount > 6 && (
-                <p className="text-[12px] text-[#ff8c00] mt-3 text-center" style={{ fontWeight: 600 }}>
+                <p
+                  className="mt-3 text-center text-[#ff8c00] text-[12px]"
+                  style={{ fontWeight: 600 }}
+                >
                   +{totalInQueue - processedCount - 6} ספקים נוספים
                 </p>
               )}
             </div>
 
             {/* Stats */}
-            <div className="bg-white rounded-2xl border border-[#e7e1da] p-5 shadow-sm">
-              <h3 className="text-[14px] text-[#181510] flex items-center gap-2 mb-3" style={{ fontWeight: 700 }}>
-                <Zap size={14} className="text-[#ff8c00]" /> סטטיסטיקת עבודה
+            <div className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm">
+              <h3
+                className="mb-3 flex items-center gap-2 text-[#181510] text-[14px]"
+                style={{ fontWeight: 700 }}
+              >
+                <Zap className="text-[#ff8c00]" size={14} /> סטטיסטיקת עבודה
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-[12px] text-[#8d785e]">סווגו</span>
-                  <span className="text-[13px] text-green-600" style={{ fontWeight: 700 }}>{classifiedCount}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[12px] text-[#8d785e]">דולגו</span>
-                  <span className="text-[13px] text-[#8d785e]" style={{ fontWeight: 600 }}>{skippedCount}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[12px] text-[#8d785e]">קצב (לשעה)</span>
-                  <span className="text-[13px] text-[#181510]" style={{ fontWeight: 600 }}>
-                    {speedPerHour > 0 ? `${speedPerHour} ספקים/שעה` : '—'}
+                  <span className="text-[#8d785e] text-[12px]">סווגו</span>
+                  <span
+                    className="text-[13px] text-green-600"
+                    style={{ fontWeight: 700 }}
+                  >
+                    {classifiedCount}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[12px] text-[#8d785e]">זמן עבודה</span>
-                  <span className="text-[13px] text-[#181510]" style={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{formatTime(elapsedSeconds)}</span>
+                  <span className="text-[#8d785e] text-[12px]">דולגו</span>
+                  <span
+                    className="text-[#8d785e] text-[13px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    {skippedCount}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#8d785e] text-[12px]">קצב (לשעה)</span>
+                  <span
+                    className="text-[#181510] text-[13px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    {speedPerHour > 0 ? `${speedPerHour} ספקים/שעה` : "—"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#8d785e] text-[12px]">זמן עבודה</span>
+                  <span
+                    className="text-[#181510] text-[13px]"
+                    style={{
+                      fontWeight: 600,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {formatTime(elapsedSeconds)}
+                  </span>
                 </div>
 
                 {/* Progress mini bar */}
-                <div className="pt-2 border-t border-[#ece8e3]">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-[11px] text-[#8d785e]">התקדמות</span>
-                    <span className="text-[11px] text-[#ff8c00]" style={{ fontWeight: 700 }}>{progressPct}%</span>
+                <div className="border-[#ece8e3] border-t pt-2">
+                  <div className="mb-1 flex justify-between">
+                    <span className="text-[#8d785e] text-[11px]">התקדמות</span>
+                    <span
+                      className="text-[#ff8c00] text-[11px]"
+                      style={{ fontWeight: 700 }}
+                    >
+                      {progressPct}%
+                    </span>
                   </div>
-                  <div className="w-full h-2 bg-[#ece8e3] rounded-full overflow-hidden">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-[#ece8e3]">
                     <motion.div
-                      className="h-full bg-gradient-to-l from-[#ff8c00] to-[#ffb347] rounded-full"
                       animate={{ width: `${progressPct}%` }}
+                      className="h-full rounded-full bg-gradient-to-l from-[#ff8c00] to-[#ffb347]"
                       transition={{ duration: 0.5 }}
                     />
                   </div>

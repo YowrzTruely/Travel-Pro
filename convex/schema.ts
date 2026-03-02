@@ -1,6 +1,6 @@
+import { authTables } from "@convex-dev/auth/server";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
   ...authTables,
@@ -22,9 +22,7 @@ export default defineSchema({
     notes: v.optional(v.string()),
     icon: v.optional(v.string()),
     address: v.optional(v.string()),
-    location: v.optional(
-      v.object({ lat: v.number(), lng: v.number() })
-    ),
+    location: v.optional(v.object({ lat: v.number(), lng: v.number() })),
   })
     .index("by_legacyId", ["legacyId"])
     .index("by_category", ["category"])

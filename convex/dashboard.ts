@@ -10,9 +10,13 @@ export const stats = query({
 
     const supplierStats = {
       total: suppliersList.length,
-      verified: suppliersList.filter((s) => s.verificationStatus === "verified").length,
-      pending: suppliersList.filter((s) => s.verificationStatus === "pending").length,
-      unverified: suppliersList.filter((s) => s.verificationStatus === "unverified").length,
+      verified: suppliersList.filter((s) => s.verificationStatus === "verified")
+        .length,
+      pending: suppliersList.filter((s) => s.verificationStatus === "pending")
+        .length,
+      unverified: suppliersList.filter(
+        (s) => s.verificationStatus === "unverified"
+      ).length,
     };
 
     const projectStats = {

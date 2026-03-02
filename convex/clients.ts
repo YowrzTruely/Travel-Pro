@@ -1,5 +1,5 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const list = query({
   args: {},
@@ -13,7 +13,9 @@ export const get = query({
   args: { id: v.id("clients") },
   handler: async (ctx, { id }) => {
     const client = await ctx.db.get(id);
-    if (!client) return null;
+    if (!client) {
+      return null;
+    }
     return { ...client, id: client._id };
   },
 });
@@ -44,7 +46,10 @@ export const create = mutation({
       createdAt: new Date().toISOString().split("T")[0],
     });
     const client = await ctx.db.get(id);
-    return { ...client!, id: client!._id };
+    if (!client) {
+      throw new Error("Client not found after creation");
+    }
+    return { ...client, id: client._id };
   },
 });
 
@@ -64,10 +69,15 @@ export const update = mutation({
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);
-    if (!existing) throw new Error("Client not found");
+    if (!existing) {
+      throw new Error("Client not found");
+    }
     await ctx.db.patch(id, updates);
     const client = await ctx.db.get(id);
-    return { ...client!, id: client!._id };
+    if (!client) {
+      throw new Error("Client not found after update");
+    }
+    return { ...client, id: client._id };
   },
 });
 

@@ -1,19 +1,19 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "תחבורה": "#3b82f6",
-  "מזון": "#22c55e",
-  "אטרקציות": "#a855f7",
-  "לינה": "#ec4899",
-  "בידור": "#f59e0b",
+  תחבורה: "#3b82f6",
+  מזון: "#22c55e",
+  אטרקציות: "#a855f7",
+  לינה: "#ec4899",
+  בידור: "#f59e0b",
 };
 const CATEGORY_ICONS: Record<string, string> = {
-  "תחבורה": "🚌",
-  "מזון": "🍽️",
-  "אטרקציות": "🏃",
-  "לינה": "🏨",
-  "בידור": "🎭",
+  תחבורה: "🚌",
+  מזון: "🍽️",
+  אטרקציות: "🏃",
+  לינה: "🏨",
+  בידור: "🎭",
 };
 
 export const list = query({
@@ -28,7 +28,9 @@ export const get = query({
   args: { id: v.id("suppliers") },
   handler: async (ctx, { id }) => {
     const supplier = await ctx.db.get(id);
-    if (!supplier) return null;
+    if (!supplier) {
+      return null;
+    }
     return { ...supplier, id: supplier._id };
   },
 });
@@ -40,7 +42,9 @@ export const getByLegacyId = query({
       .query("suppliers")
       .withIndex("by_legacyId", (q) => q.eq("legacyId", legacyId))
       .first();
-    if (!supplier) return null;
+    if (!supplier) {
+      return null;
+    }
     return { ...supplier, id: supplier._id };
   },
 });
@@ -78,10 +82,14 @@ export const summaries = query({
         const exp = new Date(doc.expiry);
         if (exp < now) {
           docsExpired++;
-          if (doc.name === "ביטוח צד ג'") insuranceExpired = true;
+          if (doc.name === "ביטוח צד ג'") {
+            insuranceExpired = true;
+          }
         } else {
           const diff = exp.getTime() - now.getTime();
-          if (diff / (1000 * 60 * 60 * 24) < 60) docsWarning++;
+          if (diff / (1000 * 60 * 60 * 24) < 60) {
+            docsWarning++;
+          }
         }
       }
 
@@ -110,7 +118,11 @@ export const create = mutation({
     region: v.optional(v.string()),
     rating: v.optional(v.number()),
     verificationStatus: v.optional(
-      v.union(v.literal("verified"), v.literal("pending"), v.literal("unverified"))
+      v.union(
+        v.literal("verified"),
+        v.literal("pending"),
+        v.literal("unverified")
+      )
     ),
     notes: v.optional(v.string()),
     icon: v.optional(v.string()),
@@ -124,7 +136,8 @@ export const create = mutation({
       phone: args.phone || "",
       email: args.email,
       category,
-      categoryColor: args.categoryColor || CATEGORY_COLORS[category] || "#8d785e",
+      categoryColor:
+        args.categoryColor || CATEGORY_COLORS[category] || "#8d785e",
       region: args.region || "",
       rating: args.rating ?? 0,
       verificationStatus: args.verificationStatus || "unverified",
@@ -134,7 +147,10 @@ export const create = mutation({
       location: args.location,
     });
     const supplier = await ctx.db.get(id);
-    return { ...supplier!, id: supplier!._id };
+    if (!supplier) {
+      throw new Error("Supplier not found after creation");
+    }
+    return { ...supplier, id: supplier._id };
   },
 });
 
@@ -149,7 +165,11 @@ export const update = mutation({
     region: v.optional(v.string()),
     rating: v.optional(v.number()),
     verificationStatus: v.optional(
-      v.union(v.literal("verified"), v.literal("pending"), v.literal("unverified"))
+      v.union(
+        v.literal("verified"),
+        v.literal("pending"),
+        v.literal("unverified")
+      )
     ),
     notes: v.optional(v.string()),
     icon: v.optional(v.string()),
@@ -158,18 +178,28 @@ export const update = mutation({
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);
-    if (!existing) throw new Error("Supplier not found");
+    if (!existing) {
+      throw new Error("Supplier not found");
+    }
 
     // Auto-set category color/icon if category changed
     const patch: any = { ...updates };
     if (updates.category && updates.category !== existing.category) {
-      if (!updates.categoryColor) patch.categoryColor = CATEGORY_COLORS[updates.category] || existing.categoryColor;
-      if (!updates.icon) patch.icon = CATEGORY_ICONS[updates.category] || existing.icon;
+      if (!updates.categoryColor) {
+        patch.categoryColor =
+          CATEGORY_COLORS[updates.category] || existing.categoryColor;
+      }
+      if (!updates.icon) {
+        patch.icon = CATEGORY_ICONS[updates.category] || existing.icon;
+      }
     }
 
     await ctx.db.patch(id, patch);
     const supplier = await ctx.db.get(id);
-    return { ...supplier!, id: supplier!._id };
+    if (!supplier) {
+      throw new Error("Supplier not found after update");
+    }
+    return { ...supplier, id: supplier._id };
   },
 });
 
@@ -186,7 +216,10 @@ export const archive = mutation({
   handler: async (ctx, { id }) => {
     await ctx.db.patch(id, { category: "ארכיון", categoryColor: "#94a3b8" });
     const supplier = await ctx.db.get(id);
-    return { ...supplier!, id: supplier!._id };
+    if (!supplier) {
+      throw new Error("Supplier not found after archive");
+    }
+    return { ...supplier, id: supplier._id };
   },
 });
 
@@ -205,11 +238,6 @@ export const bulkImport = mutation({
     ),
   },
   handler: async (ctx, { suppliers }) => {
-    const existing = await ctx.db.query("suppliers").collect();
-    const existingNames = new Set(
-      existing.map((s) => s.name.trim().toLowerCase())
-    );
-
     const imported: any[] = [];
     const skipped: string[] = [];
 
@@ -238,10 +266,17 @@ export const bulkImport = mutation({
         icon: CATEGORY_ICONS[category] || "📦",
       });
       const supplier = await ctx.db.get(id);
-      imported.push({ ...supplier!, id: supplier!._id });
+      if (!supplier) {
+        throw new Error(`Supplier not found after import: ${id}`);
+      }
+      imported.push({ ...supplier, id: supplier._id });
     }
 
-    return { imported: imported.length, skipped: skipped.length, suppliers: imported };
+    return {
+      imported: imported.length,
+      skipped: skipped.length,
+      suppliers: imported,
+    };
   },
 });
 
@@ -272,9 +307,15 @@ export const bulkRollback = mutation({
         .withIndex("by_supplierId", (q) => q.eq("supplierId", id))
         .collect();
 
-      for (const c of contacts) await ctx.db.delete(c._id);
-      for (const p of products) await ctx.db.delete(p._id);
-      for (const d of docs) await ctx.db.delete(d._id);
+      for (const c of contacts) {
+        await ctx.db.delete(c._id);
+      }
+      for (const p of products) {
+        await ctx.db.delete(p._id);
+      }
+      for (const d of docs) {
+        await ctx.db.delete(d._id);
+      }
 
       await ctx.db.delete(id);
       deleted++;

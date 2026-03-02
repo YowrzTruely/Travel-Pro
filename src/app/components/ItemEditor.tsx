@@ -1,60 +1,93 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import {
-  X, Save, Loader2, Star, Upload, ImagePlus, Trash2, ChevronLeft, ChevronRight,
-  Bus, BedDouble, Compass, UtensilsCrossed, Music, Package, Camera,
-  FileText, Banknote, StickyNote, CheckCircle2, AlertCircle
-} from 'lucide-react';
 import { useMutation } from "convex/react";
+import {
+  Banknote,
+  BedDouble,
+  Bus,
+  Camera,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Compass,
+  FileText,
+  ImagePlus,
+  Loader2,
+  Music,
+  Package,
+  Save,
+  Star,
+  StickyNote,
+  Trash2,
+  Upload,
+  UtensilsCrossed,
+  X,
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
-import { useImageUpload } from './hooks/useImageUpload';
-import { appToast } from './AppToast';
+import { appToast } from "./AppToast";
+import { useImageUpload } from "./hooks/useImageUpload";
 
 interface QuoteItem {
-  id: string;
-  projectId: string;
-  type: string;
-  icon: string;
-  name: string;
-  supplier: string;
-  description: string;
+  alternatives?: {
+    id: string;
+    name: string;
+    description: string;
+    costPerPerson: number;
+    selected: boolean;
+  }[];
   cost: number;
+  description: string;
   directPrice: number;
-  sellingPrice: number;
-  profitWeight: number;
-  status: string;
-  alternatives?: { id: string; name: string; description: string; costPerPerson: number; selected: boolean }[];
+  icon: string;
+  id: string;
   images?: { id: string; url: string; name: string }[];
+  name: string;
   notes?: string;
+  profitWeight: number;
+  projectId: string;
+  sellingPrice: number;
+  status: string;
+  supplier: string;
+  type: string;
 }
-import { useConfirmDelete } from './ConfirmDeleteModal';
+
+import { useConfirmDelete } from "./ConfirmDeleteModal";
 
 // ─── Type icon map (shared with QuoteEditor) ───
 const TYPE_ICONS: Record<string, React.ReactNode> = {
-  'תחבורה': <Bus size={18} />,
-  'לינה': <BedDouble size={18} />,
-  'פעילות': <Compass size={18} />,
-  'פעילות בוקר': <Compass size={18} />,
-  'ארוחה': <UtensilsCrossed size={18} />,
-  'בידור': <Music size={18} />,
-  'אחר': <Package size={18} />,
+  תחבורה: <Bus size={18} />,
+  לינה: <BedDouble size={18} />,
+  פעילות: <Compass size={18} />,
+  "פעילות בוקר": <Compass size={18} />,
+  ארוחה: <UtensilsCrossed size={18} />,
+  בידור: <Music size={18} />,
+  אחר: <Package size={18} />,
 };
 
 const STATUS_OPTIONS = [
-  { value: 'approved', label: 'מאושר', color: '#16a34a', bg: '#f0fdf4' },
-  { value: 'modified', label: 'שונה', color: '#ff8c00', bg: 'rgba(255,140,0,0.1)' },
-  { value: 'pending', label: 'ממתין', color: '#8b5cf6', bg: '#f5f3ff' },
+  { value: "approved", label: "מאושר", color: "#16a34a", bg: "#f0fdf4" },
+  {
+    value: "modified",
+    label: "שונה",
+    color: "#ff8c00",
+    bg: "rgba(255,140,0,0.1)",
+  },
+  { value: "pending", label: "ממתין", color: "#8b5cf6", bg: "#f5f3ff" },
 ];
 
 interface ItemEditorProps {
-  item: QuoteItem;
-  projectId: string;
   isOpen: boolean;
+  item: QuoteItem;
   onClose: () => void;
   onUpdate: (updated: QuoteItem) => void;
 }
 
-export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemEditorProps) {
+export function ItemEditor({
+  item,
+  isOpen,
+  onClose,
+  onUpdate,
+}: ItemEditorProps) {
   const updateItem = useMutation(api.quoteItems.update);
   const { upload } = useImageUpload();
 
@@ -67,8 +100,8 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
   const [sellingPrice, setSellingPrice] = useState(item.sellingPrice);
   const [profitWeight, setProfitWeight] = useState(item.profitWeight);
   const [status, setStatus] = useState(item.status);
-  const [notes, setNotes] = useState(item.notes || '');
-  const [images, setImages] = useState<QuoteItem['images']>(item.images || []);
+  const [notes, setNotes] = useState(item.notes || "");
+  const [images, setImages] = useState<QuoteItem["images"]>(item.images || []);
 
   // ─── UI state ───
   const [saving, setSaving] = useState(false);
@@ -90,62 +123,78 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
     setSellingPrice(item.sellingPrice);
     setProfitWeight(item.profitWeight);
     setStatus(item.status);
-    setNotes(item.notes || '');
+    setNotes(item.notes || "");
     setImages(item.images || []);
     setActiveImageIdx(0);
     setSaveSuccess(false);
   }, [item]);
 
   // ─── Image upload (Convex storage) ───
-  const handleImageUpload = useCallback(async (files: FileList | File[]) => {
-    if (!files.length) return;
-    setUploading(true);
-    try {
-      const currentImages = [...(images || [])];
-      for (const file of Array.from(files)) {
-        if (!file.type.startsWith('image/')) {
-          appToast.warning('קובץ לא תקין', `${file.name} אינו תמונה`);
-          continue;
-        }
-        if (file.size > 5 * 1024 * 1024) {
-          appToast.warning('קובץ גדול מדי', 'גודל מקסימלי 5MB');
-          continue;
-        }
-        const storageId = await upload(file);
-        const newImage = { id: storageId, storageId, name: file.name };
-        currentImages.push({ id: storageId, url: storageId, name: file.name });
-        await updateItem({
-          id: item.id as any,
-          images: currentImages.map(img => ({ id: img.id, storageId: img.url || img.id, name: img.name })),
-        });
+  const handleImageUpload = useCallback(
+    async (files: FileList | File[]) => {
+      if (!files.length) {
+        return;
       }
-      setImages(currentImages);
-      setActiveImageIdx(currentImages.length - 1);
-      onUpdate({ ...item, images: currentImages });
-      appToast.success('תמונה הועלתה', 'התמונה נוספה לרכיב');
-    } catch (err) {
-      console.error('[ItemEditor] Upload failed:', err);
-      appToast.error('שגיאה בהעלאה', 'לא ניתן להעלות את התמונה');
-    } finally {
-      setUploading(false);
-      setIsDragging(false);
-    }
-  }, [item, images, upload, updateItem, onUpdate]);
+      setUploading(true);
+      try {
+        const currentImages = [...(images || [])];
+        for (const file of Array.from(files)) {
+          if (!file.type.startsWith("image/")) {
+            appToast.warning("קובץ לא תקין", `${file.name} אינו תמונה`);
+            continue;
+          }
+          if (file.size > 5 * 1024 * 1024) {
+            appToast.warning("קובץ גדול מדי", "גודל מקסימלי 5MB");
+            continue;
+          }
+          const storageId = await upload(file);
+          currentImages.push({
+            id: storageId,
+            url: storageId,
+            name: file.name,
+          });
+          await updateItem({
+            id: item.id as any,
+            images: currentImages.map((img) => ({
+              id: img.id,
+              storageId: img.url || img.id,
+              name: img.name,
+            })),
+          });
+        }
+        setImages(currentImages);
+        setActiveImageIdx(currentImages.length - 1);
+        onUpdate({ ...item, images: currentImages });
+        appToast.success("תמונה הועלתה", "התמונה נוספה לרכיב");
+      } catch (err) {
+        console.error("[ItemEditor] Upload failed:", err);
+        appToast.error("שגיאה בהעלאה", "לא ניתן להעלות את התמונה");
+      } finally {
+        setUploading(false);
+        setIsDragging(false);
+      }
+    },
+    [item, images, upload, updateItem, onUpdate]
+  );
 
   const handleDeleteImage = async (imageId: string) => {
     try {
-      const newImages = (images || []).filter(img => img.id !== imageId);
+      const newImages = (images || []).filter((img) => img.id !== imageId);
       await updateItem({
         id: item.id as any,
-        images: newImages.map(img => ({ id: img.id, storageId: img.url || img.id, name: img.name })),
+        images: newImages.map((img) => ({
+          id: img.id,
+          storageId: img.url || img.id,
+          name: img.name,
+        })),
       });
       setImages(newImages);
       onUpdate({ ...item, images: newImages });
       setActiveImageIdx(Math.max(0, activeImageIdx - 1));
-      appToast.success('תמונה הוסרה', '');
+      appToast.success("תמונה הוסרה", "");
     } catch (err) {
-      console.error('[ItemEditor] Delete image failed:', err);
-      appToast.error('שגיאה', 'לא ניתן למחוק את התמונה');
+      console.error("[ItemEditor] Delete image failed:", err);
+      appToast.error("שגיאה", "לא ניתן למחוק את התמונה");
     }
   };
 
@@ -162,14 +211,17 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
     setIsDragging(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-    if (e.dataTransfer.files?.length) {
-      handleImageUpload(e.dataTransfer.files);
-    }
-  }, [handleImageUpload]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(false);
+      if (e.dataTransfer.files?.length) {
+        handleImageUpload(e.dataTransfer.files);
+      }
+    },
+    [handleImageUpload]
+  );
 
   // ─── Save ───
   const handleSave = async () => {
@@ -201,23 +253,30 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
       };
       onUpdate(updated);
       setSaveSuccess(true);
-      appToast.success('הרכיב עודכן', name);
+      appToast.success("הרכיב עודכן", name);
       setTimeout(() => setSaveSuccess(false), 2000);
     } catch (err) {
-      console.error('[ItemEditor] Save failed:', err);
-      appToast.error('שגיאה', 'לא ניתן לשמור את השינויים');
+      console.error("[ItemEditor] Save failed:", err);
+      appToast.error("שגיאה", "לא ניתן לשמור את השינויים");
     } finally {
       setSaving(false);
     }
   };
 
   const profit = sellingPrice - cost;
-  const profitPct = sellingPrice > 0 ? Math.round((profit / sellingPrice) * 100) : 0;
+  const profitPct =
+    sellingPrice > 0 ? Math.round((profit / sellingPrice) * 100) : 0;
   const typeIcon = TYPE_ICONS[item.type] || <Package size={18} />;
-  const currentStatus = STATUS_OPTIONS.find(s => s.value === status) || STATUS_OPTIONS[2];
-  const hasChanges = name !== item.name || supplier !== item.supplier || description !== item.description ||
-    cost !== item.cost || directPrice !== (item.directPrice || 0) || sellingPrice !== item.sellingPrice ||
-    profitWeight !== item.profitWeight || status !== item.status || notes !== (item.notes || '');
+  const hasChanges =
+    name !== item.name ||
+    supplier !== item.supplier ||
+    description !== item.description ||
+    cost !== item.cost ||
+    directPrice !== (item.directPrice || 0) ||
+    sellingPrice !== item.sellingPrice ||
+    profitWeight !== item.profitWeight ||
+    status !== item.status ||
+    notes !== (item.notes || "");
 
   return (
     <AnimatePresence>
@@ -225,40 +284,51 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
         <>
           {/* Backdrop */}
           <motion.div
-            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+            initial={{ opacity: 0 }}
             onClick={onClose}
+            transition={{ duration: 0.3 }}
           />
 
           {/* Drawer */}
           <motion.div
-            initial={{ x: '100%', opacity: 0.5 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed top-0 right-0 h-full w-full max-w-xl bg-[#f8f7f5] z-50 shadow-2xl overflow-hidden flex flex-col"
+            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-xl flex-col overflow-hidden bg-[#f8f7f5] shadow-2xl"
             dir="rtl"
+            exit={{ x: "100%", opacity: 0 }}
+            initial={{ x: "100%", opacity: 0.5 }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
           >
             {/* ─── Header ─── */}
             <motion.div
-              initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
+              className="flex items-center justify-between border-[#e7e1da] border-b bg-white px-5 py-4"
+              initial={{ y: -20, opacity: 0 }}
               transition={{ delay: 0.15 }}
-              className="flex items-center justify-between px-5 py-4 bg-white border-b border-[#e7e1da]"
             >
               <div className="flex items-center gap-3">
-                <span className="w-9 h-9 bg-[#ff8c00] rounded-full flex items-center justify-center text-white">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ff8c00] text-white">
                   {typeIcon}
                 </span>
                 <div>
-                  <h2 className="text-[17px] text-[#181510]" style={{ fontWeight: 700 }}>עריכת רכיב</h2>
-                  <p className="text-[12px] text-[#8d785e]">{item.type} &bull; {item.id}</p>
+                  <h2
+                    className="text-[#181510] text-[17px]"
+                    style={{ fontWeight: 700 }}
+                  >
+                    עריכת רכיב
+                  </h2>
+                  <p className="text-[#8d785e] text-[12px]">
+                    {item.type} &bull; {item.id}
+                  </p>
                 </div>
               </div>
-              <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-[#f5f3f0] flex items-center justify-center text-[#8d785e] hover:text-[#181510] transition-colors">
+              <button
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                onClick={onClose}
+                type="button"
+              >
                 <X size={18} />
               </button>
             </motion.div>
@@ -267,32 +337,34 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
             <div className="flex-1 overflow-y-auto">
               {/* ─── Image Gallery Section ─── */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
                 className="relative"
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ delay: 0.2 }}
               >
                 {images && images.length > 0 ? (
                   <div className="relative">
                     {/* Main image */}
-                    <div className="relative h-56 bg-[#181510] overflow-hidden">
+                    <div className="relative h-56 overflow-hidden bg-[#181510]">
                       <AnimatePresence mode="wait">
                         <motion.img
+                          alt={images[activeImageIdx]?.name}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="h-full w-full object-cover"
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          height={600}
+                          initial={{ opacity: 0, scale: 1.05 }}
                           key={images[activeImageIdx]?.id || activeImageIdx}
                           src={images[activeImageIdx]?.url}
-                          alt={images[activeImageIdx]?.name}
-                          className="w-full h-full object-cover"
-                          initial={{ opacity: 0, scale: 1.05 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.3 }}
+                          width={800}
                         />
                       </AnimatePresence>
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
                       {/* Image counter badge */}
-                      <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[11px] text-white backdrop-blur-md">
                         <Camera size={12} />
                         {activeImageIdx + 1}/{images.length}
                       </div>
@@ -301,14 +373,22 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
                       {images.length > 1 && (
                         <>
                           <button
-                            onClick={() => setActiveImageIdx(i => (i + 1) % images.length)}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-[#181510] hover:bg-white shadow-lg transition-all"
+                            className="absolute top-1/2 left-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#181510] shadow-lg transition-all hover:bg-white"
+                            onClick={() =>
+                              setActiveImageIdx((i) => (i + 1) % images.length)
+                            }
+                            type="button"
                           >
                             <ChevronLeft size={16} />
                           </button>
                           <button
-                            onClick={() => setActiveImageIdx(i => (i - 1 + images.length) % images.length)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-[#181510] hover:bg-white shadow-lg transition-all"
+                            className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#181510] shadow-lg transition-all hover:bg-white"
+                            onClick={() =>
+                              setActiveImageIdx(
+                                (i) => (i - 1 + images.length) % images.length
+                              )
+                            }
+                            type="button"
                           >
                             <ChevronRight size={16} />
                           </button>
@@ -317,8 +397,17 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
 
                       {/* Delete current image */}
                       <button
-                        onClick={() => images[activeImageIdx] && requestDelete({ title: 'מחיקת תמונה', itemName: images[activeImageIdx].name, onConfirm: () => handleDeleteImage(images[activeImageIdx].id) })}
-                        className="absolute bottom-3 left-3 bg-red-500/80 hover:bg-red-500 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1 transition-colors"
+                        className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-red-500/80 px-2.5 py-1 text-[11px] text-white backdrop-blur-md transition-colors hover:bg-red-500"
+                        onClick={() =>
+                          images[activeImageIdx] &&
+                          requestDelete({
+                            title: "מחיקת תמונה",
+                            itemName: images[activeImageIdx].name,
+                            onConfirm: () =>
+                              handleDeleteImage(images[activeImageIdx].id),
+                          })
+                        }
+                        type="button"
                       >
                         <Trash2 size={11} />
                         מחק
@@ -327,24 +416,32 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
 
                     {/* Thumbnail strip */}
                     {images.length > 1 && (
-                      <div className="flex gap-2 p-3 bg-white border-b border-[#e7e1da] overflow-x-auto">
+                      <div className="flex gap-2 overflow-x-auto border-[#e7e1da] border-b bg-white p-3">
                         {images.map((img, idx) => (
                           <button
+                            className={`h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
+                              idx === activeImageIdx
+                                ? "scale-105 border-[#ff8c00] shadow-md"
+                                : "border-transparent opacity-60 hover:opacity-100"
+                            }`}
                             key={img.id}
                             onClick={() => setActiveImageIdx(idx)}
-                            className={`w-14 h-14 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
-                              idx === activeImageIdx
-                                ? 'border-[#ff8c00] shadow-md scale-105'
-                                : 'border-transparent opacity-60 hover:opacity-100'
-                            }`}
+                            type="button"
                           >
-                            <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                            <img
+                              alt={img.name}
+                              className="h-full w-full object-cover"
+                              height="600"
+                              src={img.url}
+                              width="800"
+                            />
                           </button>
                         ))}
                         {/* Add more button */}
                         <button
+                          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border-2 border-[#e7e1da] border-dashed text-[#b8a990] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00]"
                           onClick={() => fileInputRef.current?.click()}
-                          className="w-14 h-14 rounded-lg border-2 border-dashed border-[#e7e1da] flex items-center justify-center text-[#b8a990] hover:border-[#ff8c00] hover:text-[#ff8c00] transition-colors shrink-0"
+                          type="button"
                         >
                           <ImagePlus size={16} />
                         </button>
@@ -354,49 +451,71 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
                 ) : (
                   /* Empty state — Drag & Drop Zone */
                   <div
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`relative m-4 rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 overflow-hidden ${
+                    className={`relative m-4 cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300 ${
                       isDragging
-                        ? 'border-[#ff8c00] bg-[#ff8c00]/5 scale-[1.02]'
-                        : 'border-[#e7e1da] hover:border-[#ff8c00]/50 bg-white'
+                        ? "scale-[1.02] border-[#ff8c00] bg-[#ff8c00]/5"
+                        : "border-[#e7e1da] bg-white hover:border-[#ff8c00]/50"
                     }`}
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragLeave={handleDragLeave}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
                   >
                     {/* Animated glow ring when dragging */}
                     {isDragging && (
                       <motion.div
-                        className="absolute inset-0 rounded-2xl"
                         animate={{
                           boxShadow: [
-                            'inset 0 0 0 0 rgba(255,140,0,0)',
-                            'inset 0 0 30px 0 rgba(255,140,0,0.15)',
-                            'inset 0 0 0 0 rgba(255,140,0,0)',
+                            "inset 0 0 0 0 rgba(255,140,0,0)",
+                            "inset 0 0 30px 0 rgba(255,140,0,0.15)",
+                            "inset 0 0 0 0 rgba(255,140,0,0)",
                           ],
                         }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
+                        className="absolute inset-0 rounded-2xl"
+                        transition={{
+                          duration: 1.5,
+                          repeat: Number.POSITIVE_INFINITY,
+                        }}
                       />
                     )}
 
-                    <div className="flex flex-col items-center justify-center py-12 px-6">
+                    <div className="flex flex-col items-center justify-center px-6 py-12">
                       <motion.div
-                        animate={isDragging ? { scale: [1, 1.15, 1], y: [0, -5, 0] } : {}}
-                        transition={{ duration: 0.8, repeat: isDragging ? Infinity : 0 }}
-                        className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-colors duration-300 ${
-                          isDragging ? 'bg-[#ff8c00]/15 text-[#ff8c00]' : 'bg-[#f5f3f0] text-[#b8a990]'
+                        animate={
+                          isDragging
+                            ? { scale: [1, 1.15, 1], y: [0, -5, 0] }
+                            : {}
+                        }
+                        className={`mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors duration-300 ${
+                          isDragging
+                            ? "bg-[#ff8c00]/15 text-[#ff8c00]"
+                            : "bg-[#f5f3f0] text-[#b8a990]"
                         }`}
+                        transition={{
+                          duration: 0.8,
+                          repeat: isDragging ? Number.POSITIVE_INFINITY : 0,
+                        }}
                       >
                         {uploading ? (
-                          <Loader2 size={28} className="animate-spin text-[#ff8c00]" />
+                          <Loader2
+                            className="animate-spin text-[#ff8c00]"
+                            size={28}
+                          />
                         ) : (
                           <Upload size={28} />
                         )}
                       </motion.div>
-                      <p className="text-[15px] text-[#181510] mb-1" style={{ fontWeight: 600 }}>
-                        {isDragging ? 'שחרר כדי להעלות' : uploading ? 'מעלה תמונה...' : 'גרור תמונה לכאן'}
+                      <p
+                        className="mb-1 text-[#181510] text-[15px]"
+                        style={{ fontWeight: 600 }}
+                      >
+                        {isDragging
+                          ? "שחרר כדי להעלות"
+                          : uploading
+                            ? "מעלה תמונה..."
+                            : "גרור תמונה לכאן"}
                       </p>
-                      <p className="text-[12px] text-[#b8a990]">
+                      <p className="text-[#b8a990] text-[12px]">
                         או לחץ לבחירת קובץ &bull; JPG, PNG עד 5MB
                       </p>
                     </div>
@@ -405,223 +524,323 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
 
                 {/* Hidden file input */}
                 <input
+                  accept="image/*"
+                  className="hidden"
+                  multiple
+                  onChange={(e) =>
+                    e.target.files && handleImageUpload(e.target.files)
+                  }
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={e => e.target.files && handleImageUpload(e.target.files)}
                 />
 
                 {/* Upload button if there are images already */}
                 {images && images.length > 0 && (
                   <div className="px-4 pb-2">
                     <button
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#e7e1da] border-dashed p-3 text-[#8d785e] text-[13px] transition-all hover:border-[#ff8c00] hover:text-[#ff8c00]"
                       onClick={() => fileInputRef.current?.click()}
-                      className="w-full border-2 border-dashed border-[#e7e1da] rounded-xl p-3 text-[#8d785e] hover:border-[#ff8c00] hover:text-[#ff8c00] transition-all flex items-center justify-center gap-2 text-[13px]"
+                      onDragLeave={handleDragLeave}
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                      type="button"
                     >
-                      {uploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
-                      {uploading ? 'מעלה...' : 'הוסף תמונה נוספת'}
+                      {uploading ? (
+                        <Loader2 className="animate-spin" size={14} />
+                      ) : (
+                        <ImagePlus size={14} />
+                      )}
+                      {uploading ? "מעלה..." : "הוסף תמונה נוספת"}
                     </button>
                   </div>
                 )}
               </motion.div>
 
               {/* ─── Details Section ─── */}
-              <div className="px-4 py-3 space-y-4">
+              <div className="space-y-4 px-4 py-3">
                 {/* Section: Basic Info */}
                 <motion.div
-                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
+                  className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+                  initial={{ opacity: 0, y: 15 }}
                   transition={{ delay: 0.25 }}
-                  className="bg-white rounded-xl border border-[#e7e1da] p-4 space-y-3"
                 >
-                  <div className="flex items-center gap-2 text-[13px] text-[#8d785e] mb-1" style={{ fontWeight: 600 }}>
-                    <FileText size={14} className="text-[#ff8c00]" />
+                  <div
+                    className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    <FileText className="text-[#ff8c00]" size={14} />
                     פרטי הרכיב
                   </div>
 
                   <div>
-                    <label className="text-[11px] text-[#8d785e] block mb-1">שם הרכיב</label>
+                    <label
+                      className="mb-1 block text-[#8d785e] text-[11px]"
+                      htmlFor="item-name"
+                    >
+                      שם הרכיב
+                    </label>
                     <input
-                      value={name}
-                      onChange={e => setName(e.target.value)}
-                      className="w-full px-3 py-2 text-[14px] border border-[#e7e1da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-[#fafaf8] transition-all"
-                      style={{ fontWeight: 500 }}
+                      className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                      id="item-name"
+                      onChange={(e) => setName(e.target.value)}
                       placeholder="שם הרכיב..."
+                      style={{ fontWeight: 500 }}
+                      value={name}
                     />
                   </div>
 
                   <div>
-                    <label className="text-[11px] text-[#8d785e] block mb-1">ספק</label>
+                    <label
+                      className="mb-1 block text-[#8d785e] text-[11px]"
+                      htmlFor="item-supplier"
+                    >
+                      ספק
+                    </label>
                     <input
-                      value={supplier}
-                      onChange={e => setSupplier(e.target.value)}
-                      className="w-full px-3 py-2 text-[14px] border border-[#e7e1da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-[#fafaf8] transition-all"
+                      className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                      id="item-supplier"
+                      onChange={(e) => setSupplier(e.target.value)}
                       placeholder="שם הספק..."
+                      value={supplier}
                     />
                   </div>
 
                   <div>
-                    <label className="text-[11px] text-[#8d785e] block mb-1">תיאור</label>
+                    <label
+                      className="mb-1 block text-[#8d785e] text-[11px]"
+                      htmlFor="item-description"
+                    >
+                      תיאור
+                    </label>
                     <textarea
-                      value={description}
-                      onChange={e => setDescription(e.target.value)}
-                      rows={3}
-                      className="w-full px-3 py-2 text-[14px] border border-[#e7e1da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-[#fafaf8] resize-none transition-all"
+                      className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                      onChange={(e) => setDescription(e.target.value)}
                       placeholder="תיאור הרכיב..."
+                      rows={3}
+                      value={description}
                     />
                   </div>
 
                   {/* Status selector */}
-                  <div>
-                    <label className="text-[11px] text-[#8d785e] block mb-1.5">סטטוס</label>
+                  <fieldset>
+                    <legend className="mb-1.5 block text-[#8d785e] text-[11px]">
+                      סטטוס
+                    </legend>
                     <div className="flex gap-2">
-                      {STATUS_OPTIONS.map(opt => (
+                      {STATUS_OPTIONS.map((opt) => (
                         <button
+                          className={`flex-1 rounded-lg border-2 px-3 py-2 text-[12px] transition-all ${
+                            status === opt.value
+                              ? "shadow-sm"
+                              : "border-transparent bg-[#f5f3f0] text-[#8d785e] hover:bg-[#ece8e3]"
+                          }`}
                           key={opt.value}
                           onClick={() => setStatus(opt.value)}
-                          className={`flex-1 py-2 px-3 rounded-lg text-[12px] border-2 transition-all ${
+                          style={
                             status === opt.value
-                              ? 'shadow-sm'
-                              : 'border-transparent bg-[#f5f3f0] text-[#8d785e] hover:bg-[#ece8e3]'
-                          }`}
-                          style={status === opt.value ? {
-                            borderColor: opt.color,
-                            backgroundColor: opt.bg,
-                            color: opt.color,
-                            fontWeight: 600,
-                          } : { fontWeight: 500 }}
+                              ? {
+                                  borderColor: opt.color,
+                                  backgroundColor: opt.bg,
+                                  color: opt.color,
+                                  fontWeight: 600,
+                                }
+                              : { fontWeight: 500 }
+                          }
+                          type="button"
                         >
                           {opt.label}
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </fieldset>
                 </motion.div>
 
                 {/* Section: Pricing */}
                 <motion.div
-                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
+                  className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+                  initial={{ opacity: 0, y: 15 }}
                   transition={{ delay: 0.35 }}
-                  className="bg-white rounded-xl border border-[#e7e1da] p-4 space-y-3"
                 >
-                  <div className="flex items-center gap-2 text-[13px] text-[#8d785e] mb-1" style={{ fontWeight: 600 }}>
-                    <Banknote size={14} className="text-[#ff8c00]" />
+                  <div
+                    className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    <Banknote className="text-[#ff8c00]" size={14} />
                     תמחור
                   </div>
 
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="text-[11px] text-[#8d785e] block mb-1">עלות (ספק)</label>
+                      <label
+                        className="mb-1 block text-[#8d785e] text-[11px]"
+                        htmlFor="item-cost"
+                      >
+                        עלות (ספק)
+                      </label>
                       <div className="relative">
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[#b8a990]">₪</span>
+                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990] text-[12px]">
+                          ₪
+                        </span>
                         <input
-                          type="number"
-                          value={cost || ''}
-                          onChange={e => setCost(parseFloat(e.target.value) || 0)}
-                          className="w-full pr-7 pl-2 py-2 text-[14px] border border-[#e7e1da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-[#fafaf8] transition-all"
+                          className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] py-2 pr-7 pl-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                          id="item-cost"
+                          onChange={(e) =>
+                            setCost(Number.parseFloat(e.target.value) || 0)
+                          }
                           style={{ fontWeight: 600 }}
+                          type="number"
+                          value={cost || ""}
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="text-[11px] text-[#8d785e] block mb-1">תמחור ישיר</label>
+                      <label
+                        className="mb-1 block text-[#8d785e] text-[11px]"
+                        htmlFor="item-direct-price"
+                      >
+                        תמחור ישיר
+                      </label>
                       <div className="relative">
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[#b8a990]">₪</span>
+                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990] text-[12px]">
+                          ₪
+                        </span>
                         <input
-                          type="number"
-                          value={directPrice || ''}
-                          onChange={e => setDirectPrice(parseFloat(e.target.value) || 0)}
-                          className="w-full pr-7 pl-2 py-2 text-[14px] border border-[#e7e1da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-[#fafaf8] transition-all"
+                          className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] py-2 pr-7 pl-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                          id="item-direct-price"
+                          onChange={(e) =>
+                            setDirectPrice(
+                              Number.parseFloat(e.target.value) || 0
+                            )
+                          }
                           style={{ fontWeight: 500 }}
+                          type="number"
+                          value={directPrice || ""}
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="text-[11px] text-[#8d785e] block mb-1">מחיר מכירה</label>
+                      <label
+                        className="mb-1 block text-[#8d785e] text-[11px]"
+                        htmlFor="item-selling-price"
+                      >
+                        מחיר מכירה
+                      </label>
                       <div className="relative">
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[#b8a990]">₪</span>
+                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990] text-[12px]">
+                          ₪
+                        </span>
                         <input
-                          type="number"
-                          value={sellingPrice || ''}
-                          onChange={e => setSellingPrice(parseFloat(e.target.value) || 0)}
-                          className="w-full pr-7 pl-2 py-2 text-[14px] border border-[#e7e1da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-[#fafaf8] transition-all"
+                          className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] py-2 pr-7 pl-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                          id="item-selling-price"
+                          onChange={(e) =>
+                            setSellingPrice(
+                              Number.parseFloat(e.target.value) || 0
+                            )
+                          }
                           style={{ fontWeight: 600 }}
+                          type="number"
+                          value={sellingPrice || ""}
                         />
                       </div>
                     </div>
                   </div>
 
                   {/* Profit indicator bar */}
-                  <div className="bg-[#f5f3f0] rounded-xl p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[12px] text-[#8d785e]">רווח</span>
-                      <span className={`text-[14px] ${profit >= 0 ? 'text-green-600' : 'text-red-500'}`} style={{ fontWeight: 700 }}>
+                  <div className="rounded-xl bg-[#f5f3f0] p-3">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-[#8d785e] text-[12px]">רווח</span>
+                      <span
+                        className={`text-[14px] ${profit >= 0 ? "text-green-600" : "text-red-500"}`}
+                        style={{ fontWeight: 700 }}
+                      >
                         ₪{profit.toLocaleString()} ({profitPct}%)
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-[#e7e1da] rounded-full overflow-hidden">
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-[#e7e1da]">
                       <motion.div
+                        animate={{
+                          width: `${Math.min(Math.max(profitPct, 0), 100)}%`,
+                        }}
                         className="h-full rounded-full"
                         initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(Math.max(profitPct, 0), 100)}%` }}
-                        transition={{ duration: 0.5, ease: 'easeOut' }}
                         style={{
-                          background: profitPct >= 20 ? 'linear-gradient(90deg, #22c55e, #16a34a)' :
-                            profitPct >= 14 ? 'linear-gradient(90deg, #84cc16, #65a30d)' :
-                            profitPct >= 10 ? 'linear-gradient(90deg, #ff8c00, #e67e00)' :
-                            'linear-gradient(90deg, #ef4444, #dc2626)',
+                          background:
+                            profitPct >= 20
+                              ? "linear-gradient(90deg, #22c55e, #16a34a)"
+                              : profitPct >= 14
+                                ? "linear-gradient(90deg, #84cc16, #65a30d)"
+                                : profitPct >= 10
+                                  ? "linear-gradient(90deg, #ff8c00, #e67e00)"
+                                  : "linear-gradient(90deg, #ef4444, #dc2626)",
                         }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
                       />
                     </div>
                   </div>
 
                   {/* Profit weight (stars) */}
                   <div>
-                    <label className="text-[11px] text-[#8d785e] block mb-1.5">משקל רווח</label>
-                    <div className="flex items-center gap-1.5">
-                      {[1, 2, 3, 4, 5].map(w => (
-                        <button
-                          key={w}
-                          onClick={() => setProfitWeight(w)}
-                          className="transition-all hover:scale-110"
-                        >
-                          <Star
-                            size={22}
-                            fill={w <= profitWeight ? '#ff8c00' : 'none'}
-                            className={w <= profitWeight ? 'text-[#ff8c00]' : 'text-[#ddd6cb]'}
-                          />
-                        </button>
-                      ))}
-                      <span className="text-[12px] text-[#8d785e] mr-2">
-                        {profitWeight === 1 ? 'מינימלי' : profitWeight === 2 ? 'נמוך' : profitWeight === 3 ? 'בינוני' : profitWeight === 4 ? 'גבוה' : 'מקסימלי'}
-                      </span>
-                    </div>
+                    <fieldset>
+                      <legend className="mb-1.5 block text-[#8d785e] text-[11px]">
+                        משקל רווח
+                      </legend>
+                      <div className="flex items-center gap-1.5">
+                        {[1, 2, 3, 4, 5].map((w) => (
+                          <button
+                            className="transition-all hover:scale-110"
+                            key={w}
+                            onClick={() => setProfitWeight(w)}
+                            type="button"
+                          >
+                            <Star
+                              className={
+                                w <= profitWeight
+                                  ? "text-[#ff8c00]"
+                                  : "text-[#ddd6cb]"
+                              }
+                              fill={w <= profitWeight ? "#ff8c00" : "none"}
+                              size={22}
+                            />
+                          </button>
+                        ))}
+                        <span className="mr-2 text-[#8d785e] text-[12px]">
+                          {profitWeight === 1
+                            ? "מינימלי"
+                            : profitWeight === 2
+                              ? "נמוך"
+                              : profitWeight === 3
+                                ? "בינוני"
+                                : profitWeight === 4
+                                  ? "גבוה"
+                                  : "מקסימלי"}
+                        </span>
+                      </div>
+                    </fieldset>
                   </div>
                 </motion.div>
 
                 {/* Section: Notes */}
                 <motion.div
-                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
+                  className="rounded-xl border border-[#e7e1da] bg-white p-4"
+                  initial={{ opacity: 0, y: 15 }}
                   transition={{ delay: 0.45 }}
-                  className="bg-white rounded-xl border border-[#e7e1da] p-4"
                 >
-                  <div className="flex items-center gap-2 text-[13px] text-[#8d785e] mb-2" style={{ fontWeight: 600 }}>
-                    <StickyNote size={14} className="text-[#ff8c00]" />
+                  <div
+                    className="mb-2 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    <StickyNote className="text-[#ff8c00]" size={14} />
                     הערות פנימיות
                   </div>
                   <textarea
-                    value={notes}
-                    onChange={e => setNotes(e.target.value)}
-                    rows={3}
-                    className="w-full px-3 py-2 text-[13px] border border-[#e7e1da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-[#fafaf8] resize-none transition-all"
+                    className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                    onChange={(e) => setNotes(e.target.value)}
                     placeholder="הערות שלא יוצגו ללקוח..."
+                    rows={3}
+                    value={notes}
                   />
                 </motion.div>
 
@@ -632,35 +851,42 @@ export function ItemEditor({ item, projectId, isOpen, onClose, onUpdate }: ItemE
 
             {/* ─── Bottom Save Bar ─── */}
             <motion.div
-              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
+              className="sticky bottom-0 flex items-center gap-3 border-[#e7e1da] border-t bg-white/95 px-4 py-3 backdrop-blur-md"
+              initial={{ y: 20, opacity: 0 }}
               transition={{ delay: 0.4 }}
-              className="sticky bottom-0 px-4 py-3 bg-white/95 backdrop-blur-md border-t border-[#e7e1da] flex items-center gap-3"
             >
               <motion.button
-                onClick={handleSave}
-                disabled={saving || (!hasChanges && !saveSuccess)}
-                whileTap={{ scale: 0.97 }}
-                className={`flex-1 py-3 rounded-xl text-[14px] flex items-center justify-center gap-2 transition-all ${
+                className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-[14px] transition-all ${
                   saveSuccess
-                    ? 'bg-green-500 text-white'
+                    ? "bg-green-500 text-white"
                     : hasChanges
-                      ? 'bg-[#ff8c00] hover:bg-[#e67e00] text-white shadow-lg shadow-[#ff8c00]/25'
-                      : 'bg-[#e7e1da] text-[#b8a990] cursor-not-allowed'
+                      ? "bg-[#ff8c00] text-white shadow-[#ff8c00]/25 shadow-lg hover:bg-[#e67e00]"
+                      : "cursor-not-allowed bg-[#e7e1da] text-[#b8a990]"
                 }`}
+                disabled={saving || !(hasChanges || saveSuccess)}
+                onClick={handleSave}
                 style={{ fontWeight: 600 }}
+                whileTap={{ scale: 0.97 }}
               >
                 {saving ? (
-                  <><Loader2 size={16} className="animate-spin" /> שומר...</>
+                  <>
+                    <Loader2 className="animate-spin" size={16} /> שומר...
+                  </>
                 ) : saveSuccess ? (
-                  <><CheckCircle2 size={16} /> נשמר בהצלחה!</>
+                  <>
+                    <CheckCircle2 size={16} /> נשמר בהצלחה!
+                  </>
                 ) : (
-                  <><Save size={16} /> שמור שינויים</>
+                  <>
+                    <Save size={16} /> שמור שינויים
+                  </>
                 )}
               </motion.button>
               <button
+                className="rounded-xl border border-[#e7e1da] px-5 py-3 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
                 onClick={onClose}
-                className="px-5 py-3 border border-[#e7e1da] rounded-xl text-[14px] text-[#8d785e] hover:bg-[#f5f3f0] transition-colors"
+                type="button"
               >
                 סגור
               </button>

@@ -1,75 +1,126 @@
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router';
-import { useForm } from 'react-hook-form';
-import { useQuery, useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { useMutation, useQuery } from "convex/react";
 import {
-  Search, Plus, FileText, Eye, Edit2, Trash2,
-  AlertTriangle, CheckCircle, Clock, X, ChevronLeft, ChevronRight,
-  Loader2, Shield, ShieldCheck, ShieldAlert, CalendarDays, Upload, Save, Filter,
-} from 'lucide-react';
-import type { Supplier, Project } from './data';
-import { appToast } from './AppToast';
-import { FormField, FormSelect, rules } from './FormField';
+  AlertTriangle,
+  CalendarDays,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Edit2,
+  Eye,
+  FileText,
+  Loader2,
+  Plus,
+  Save,
+  Search,
+  Shield,
+  Trash2,
+  X,
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { api } from "../../../convex/_generated/api";
+import { appToast } from "./AppToast";
+import { FormField, FormSelect, rules } from "./FormField";
 
 // ─── Types ───────────────────────────────────────
 
 interface DocumentRow {
-  id: string;
-  name: string;
-  type: string;
-  entityType: 'supplier' | 'project';
   entityId: string;
   entityName: string;
+  entityType: "supplier" | "project";
   expiry: string;
-  status: 'valid' | 'warning' | 'expired';
   fileName?: string;
+  id: string;
+  name: string;
+  status: "valid" | "warning" | "expired";
+  type: string;
 }
 
 interface AddProjectDocForm {
-  projectId: string;
-  name: string;
-  type: 'contract' | 'proposal' | 'agreement' | 'invoice' | 'other';
   expiry: string;
   fileName: string;
+  name: string;
+  projectId: string;
+  type: "contract" | "proposal" | "agreement" | "invoice" | "other";
 }
 
-type TabType = 'suppliers' | 'projects';
-type StatusFilter = 'all' | 'valid' | 'warning' | 'expired';
+type TabType = "suppliers" | "projects";
+type StatusFilter = "all" | "valid" | "warning" | "expired";
 
 // ─── Helpers ─────────────────────────────────────
 
-const getDocStatus = (expiry: string): 'valid' | 'warning' | 'expired' => {
-  if (!expiry) return 'expired';
+const getDocStatus = (expiry: string): "valid" | "warning" | "expired" => {
+  if (!expiry) {
+    return "expired";
+  }
   const exp = new Date(expiry);
   const now = new Date();
-  if (exp < now) return 'expired';
+  if (exp < now) {
+    return "expired";
+  }
   const diff = exp.getTime() - now.getTime();
-  if (diff / (1000 * 60 * 60 * 24) < 60) return 'warning';
-  return 'valid';
+  if (diff / (1000 * 60 * 60 * 24) < 60) {
+    return "warning";
+  }
+  return "valid";
 };
 
 const formatDate = (dateStr: string) => {
-  if (!dateStr) return '—';
+  if (!dateStr) {
+    return "—";
+  }
   const d = new Date(dateStr);
-  return d.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return d.toLocaleDateString("he-IL", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 };
 
 const statusConfig = {
-  valid: { label: 'בתוקף', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200', icon: CheckCircle, iconColor: 'text-green-500' },
-  warning: { label: 'פג בקרוב', color: 'text-yellow-600', bg: 'bg-yellow-50', border: 'border-yellow-200', icon: Clock, iconColor: 'text-yellow-500' },
-  expired: { label: 'פג תוקף', color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200', icon: AlertTriangle, iconColor: 'text-red-500' },
+  valid: {
+    label: "בתוקף",
+    color: "text-green-600",
+    bg: "bg-green-50",
+    border: "border-green-200",
+    icon: CheckCircle,
+    iconColor: "text-green-500",
+  },
+  warning: {
+    label: "פג בקרוב",
+    color: "text-yellow-600",
+    bg: "bg-yellow-50",
+    border: "border-yellow-200",
+    icon: Clock,
+    iconColor: "text-yellow-500",
+  },
+  expired: {
+    label: "פג תוקף",
+    color: "text-red-500",
+    bg: "bg-red-50",
+    border: "border-red-200",
+    icon: AlertTriangle,
+    iconColor: "text-red-500",
+  },
 };
 
-const supplierDocTypes = ['הכל', 'רישיון עסק', 'תעודת כשרות', "ביטוח צד ג'", 'אחר'];
+const supplierDocTypes = [
+  "הכל",
+  "רישיון עסק",
+  "תעודת כשרות",
+  "ביטוח צד ג'",
+  "אחר",
+];
 const projectDocTypeLabels: Record<string, string> = {
-  contract: 'חוזה',
-  proposal: 'הצעת מחיר',
-  agreement: 'הסכם',
-  invoice: 'חשבונית',
-  other: 'אחר',
+  contract: "חוזה",
+  proposal: "הצעת מחיר",
+  agreement: "הסכם",
+  invoice: "חשבונית",
+  other: "אחר",
 };
-const projectDocTypes = ['הכל', ...Object.values(projectDocTypeLabels)];
+const projectDocTypes = ["הכל", ...Object.values(projectDocTypeLabels)];
 
 const ITEMS_PER_PAGE = 10;
 
@@ -92,32 +143,49 @@ export function DocumentsPage() {
   const removeProjectDoc = useMutation(api.projectDocuments.remove);
 
   // ─── UI state ───
-  const [activeTab, setActiveTab] = useState<TabType>('suppliers');
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [typeFilter, setTypeFilter] = useState('הכל');
+  const [activeTab, setActiveTab] = useState<TabType>("suppliers");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [typeFilter, setTypeFilter] = useState("הכל");
   const [currentPage, setCurrentPage] = useState(1);
 
   // ─── Modal state ───
   const [showAddDoc, setShowAddDoc] = useState(false);
   const [editingDoc, setEditingDoc] = useState<DocumentRow | null>(null);
-  const [editExpiryValue, setEditExpiryValue] = useState('');
+  const [editExpiryValue, setEditExpiryValue] = useState("");
   const [deletingDoc, setDeletingDoc] = useState<DocumentRow | null>(null);
   const [saving, setSaving] = useState(false);
 
   // ─── Form ───
-  const { register, handleSubmit, formState: { errors, dirtyFields, isValid }, reset: resetForm, watch } = useForm<AddProjectDocForm>({
-    mode: 'onChange',
-    defaultValues: { projectId: '', name: '', type: 'contract', expiry: '', fileName: '' },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, dirtyFields, isValid },
+    reset: resetForm,
+  } = useForm<AddProjectDocForm>({
+    mode: "onChange",
+    defaultValues: {
+      projectId: "",
+      name: "",
+      type: "contract",
+      expiry: "",
+      fileName: "",
+    },
   });
 
   // ─── Build document rows from live queries ───
-  const loading = suppliers === undefined || projects === undefined || allSupplierDocsRaw === undefined || allProjectDocsRaw === undefined;
+  const loading =
+    suppliers === undefined ||
+    projects === undefined ||
+    allSupplierDocsRaw === undefined ||
+    allProjectDocsRaw === undefined;
 
   const supplierMap = useMemo(() => {
     const map: Record<string, string> = {};
     if (suppliers) {
-      for (const s of suppliers) map[s._id] = s.name;
+      for (const s of suppliers) {
+        map[s._id] = s.name;
+      }
     }
     return map;
   }, [suppliers]);
@@ -125,60 +193,82 @@ export function DocumentsPage() {
   const projectMap = useMemo(() => {
     const map: Record<string, string> = {};
     if (projects) {
-      for (const p of projects) map[p._id] = p.name;
+      for (const p of projects) {
+        map[p._id] = p.name;
+      }
     }
     return map;
   }, [projects]);
 
   const supplierDocs = useMemo<DocumentRow[]>(() => {
-    if (!allSupplierDocsRaw) return [];
+    if (!allSupplierDocsRaw) {
+      return [];
+    }
     return allSupplierDocsRaw.map((d: any) => ({
       id: d.id,
       name: d.name,
       type: d.name,
-      entityType: 'supplier' as const,
+      entityType: "supplier" as const,
       entityId: d.supplierId,
-      entityName: supplierMap[d.supplierId] || 'ספק',
-      expiry: d.expiry || '',
-      status: getDocStatus(d.expiry || ''),
+      entityName: supplierMap[d.supplierId] || "ספק",
+      expiry: d.expiry || "",
+      status: getDocStatus(d.expiry || ""),
       fileName: d.fileName,
     }));
   }, [allSupplierDocsRaw, supplierMap]);
 
   const projectDocs = useMemo<DocumentRow[]>(() => {
-    if (!allProjectDocsRaw) return [];
+    if (!allProjectDocsRaw) {
+      return [];
+    }
     return allProjectDocsRaw.map((d: any) => ({
       id: d.id,
       name: d.name,
-      type: projectDocTypeLabels[d.type] || d.type || 'אחר',
-      entityType: 'project' as const,
+      type: projectDocTypeLabels[d.type] || d.type || "אחר",
+      entityType: "project" as const,
       entityId: d.projectId,
-      entityName: projectMap[d.projectId] || 'פרויקט',
-      expiry: d.expiry || '',
-      status: getDocStatus(d.expiry || ''),
+      entityName: projectMap[d.projectId] || "פרויקט",
+      expiry: d.expiry || "",
+      status: getDocStatus(d.expiry || ""),
       fileName: d.fileName,
     }));
   }, [allProjectDocsRaw, projectMap]);
 
   // ─── Filtered data ───
-  const activeDocs = activeTab === 'suppliers' ? supplierDocs : projectDocs;
-  const allDocs = [...supplierDocs, ...projectDocs];
+  const activeDocs = activeTab === "suppliers" ? supplierDocs : projectDocs;
+  const allDocs = useMemo(
+    () => [...supplierDocs, ...projectDocs],
+    [supplierDocs, projectDocs]
+  );
 
   const filtered = useMemo(() => {
     return activeDocs.filter((doc) => {
       if (search) {
         const q = search.toLowerCase();
-        if (!doc.name.toLowerCase().includes(q) && !doc.entityName.toLowerCase().includes(q)) return false;
+        if (
+          !(
+            doc.name.toLowerCase().includes(q) ||
+            doc.entityName.toLowerCase().includes(q)
+          )
+        ) {
+          return false;
+        }
       }
-      if (statusFilter !== 'all' && doc.status !== statusFilter) return false;
-      if (typeFilter !== 'הכל') {
-        if (activeTab === 'suppliers') {
-          if (typeFilter === 'אחר') {
-            const requiredNames = ['רישיון עסק', 'תעודת כשרות', "ביטוח צד ג'"];
-            if (requiredNames.includes(doc.name)) return false;
-          } else if (doc.name !== typeFilter) return false;
-        } else {
-          if (doc.type !== typeFilter) return false;
+      if (statusFilter !== "all" && doc.status !== statusFilter) {
+        return false;
+      }
+      if (typeFilter !== "הכל") {
+        if (activeTab === "suppliers") {
+          if (typeFilter === "אחר") {
+            const requiredNames = ["רישיון עסק", "תעודת כשרות", "ביטוח צד ג'"];
+            if (requiredNames.includes(doc.name)) {
+              return false;
+            }
+          } else if (doc.name !== typeFilter) {
+            return false;
+          }
+        } else if (doc.type !== typeFilter) {
+          return false;
         }
       }
       return true;
@@ -187,14 +277,17 @@ export function DocumentsPage() {
 
   // ─── Pagination ───
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
-  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const paginated = filtered.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   // ─── Stats ───
   const stats = useMemo(() => {
     const total = allDocs.length;
-    const valid = allDocs.filter(d => d.status === 'valid').length;
-    const warning = allDocs.filter(d => d.status === 'warning').length;
-    const expired = allDocs.filter(d => d.status === 'expired').length;
+    const valid = allDocs.filter((d) => d.status === "valid").length;
+    const warning = allDocs.filter((d) => d.status === "warning").length;
+    const expired = allDocs.filter((d) => d.status === "expired").length;
     return { total, valid, warning, expired };
   }, [allDocs]);
 
@@ -202,11 +295,13 @@ export function DocumentsPage() {
   const onAddProjectDoc = async (data: AddProjectDocForm) => {
     try {
       setSaving(true);
-      const status = data.expiry ? getDocStatus(data.expiry) : 'active';
+      const status = data.expiry ? getDocStatus(data.expiry) : "active";
       // Find the project's Convex _id from legacyId
-      const project = (projects || []).find((p: any) => p.id === data.projectId || p._id === data.projectId);
+      const project = (projects || []).find(
+        (p: any) => p.id === data.projectId || p._id === data.projectId
+      );
       if (!project) {
-        appToast.error('פרויקט לא נמצא');
+        appToast.error("פרויקט לא נמצא");
         return;
       }
       await createProjectDoc({
@@ -217,52 +312,64 @@ export function DocumentsPage() {
         status,
         fileName: data.fileName.trim() || undefined,
       });
-      appToast.success('מסמך נוסף בהצלחה');
+      appToast.success("מסמך נוסף בהצלחה");
       setShowAddDoc(false);
       resetForm();
     } catch (err) {
-      console.error('[DocumentsPage] Failed to add document:', err);
-      appToast.error('שגיאה בהוספת מסמך');
+      console.error("[DocumentsPage] Failed to add document:", err);
+      appToast.error("שגיאה בהוספת מסמך");
     } finally {
       setSaving(false);
     }
   };
 
   const onUpdateExpiry = async () => {
-    if (!editingDoc || !editExpiryValue) return;
+    if (!(editingDoc && editExpiryValue)) {
+      return;
+    }
     try {
       setSaving(true);
       const newStatus = getDocStatus(editExpiryValue);
-      if (editingDoc.entityType === 'supplier') {
-        await updateSupplierDoc({ id: editingDoc.id as any, expiry: editExpiryValue, status: newStatus });
+      if (editingDoc.entityType === "supplier") {
+        await updateSupplierDoc({
+          id: editingDoc.id as any,
+          expiry: editExpiryValue,
+          status: newStatus,
+        });
       } else {
-        await updateProjectDoc({ id: editingDoc.id as any, expiry: editExpiryValue, status: newStatus as any });
+        await updateProjectDoc({
+          id: editingDoc.id as any,
+          expiry: editExpiryValue,
+          status: newStatus as any,
+        });
       }
-      appToast.success('תוקף המסמך עודכן בהצלחה');
+      appToast.success("תוקף המסמך עודכן בהצלחה");
       setEditingDoc(null);
-      setEditExpiryValue('');
+      setEditExpiryValue("");
     } catch (err) {
-      console.error('[DocumentsPage] Failed to update expiry:', err);
-      appToast.error('שגיאה בעדכון תוקף');
+      console.error("[DocumentsPage] Failed to update expiry:", err);
+      appToast.error("שגיאה בעדכון תוקף");
     } finally {
       setSaving(false);
     }
   };
 
   const onDeleteDoc = async () => {
-    if (!deletingDoc) return;
+    if (!deletingDoc) {
+      return;
+    }
     try {
       setSaving(true);
-      if (deletingDoc.entityType === 'supplier') {
+      if (deletingDoc.entityType === "supplier") {
         await removeSupplierDoc({ id: deletingDoc.id as any });
       } else {
         await removeProjectDoc({ id: deletingDoc.id as any });
       }
-      appToast.success('המסמך נמחק בהצלחה');
+      appToast.success("המסמך נמחק בהצלחה");
       setDeletingDoc(null);
     } catch (err) {
-      console.error('[DocumentsPage] Failed to delete document:', err);
-      appToast.error('שגיאה במחיקת מסמך');
+      console.error("[DocumentsPage] Failed to delete document:", err);
+      appToast.error("שגיאה במחיקת מסמך");
     } finally {
       setSaving(false);
     }
@@ -271,33 +378,51 @@ export function DocumentsPage() {
   // ─── Loading state ───
   if (loading) {
     return (
-      <div className="p-4 lg:p-6 max-w-[1200px] mx-auto font-['Assistant',sans-serif] flex items-center justify-center min-h-[60vh]" dir="rtl">
+      <div
+        className="mx-auto flex min-h-[60vh] max-w-[1200px] items-center justify-center p-4 font-['Assistant',sans-serif] lg:p-6"
+        dir="rtl"
+      >
         <div className="flex flex-col items-center gap-3">
-          <Loader2 size={32} className="animate-spin text-[#ff8c00]" />
-          <span className="text-[15px] text-[#8d785e]" style={{ fontWeight: 500 }}>טוען מסמכים...</span>
+          <Loader2 className="animate-spin text-[#ff8c00]" size={32} />
+          <span
+            className="text-[#8d785e] text-[15px]"
+            style={{ fontWeight: 500 }}
+          >
+            טוען מסמכים...
+          </span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 lg:p-6 max-w-[1200px] mx-auto font-['Assistant',sans-serif]" dir="rtl">
-
+    <div
+      className="mx-auto max-w-[1200px] p-4 font-['Assistant',sans-serif] lg:p-6"
+      dir="rtl"
+    >
       {/* ═══ Header ═══ */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 bg-[#ff8c00]/10 rounded-xl flex items-center justify-center">
-            <FileText size={22} className="text-[#ff8c00]" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ff8c00]/10">
+            <FileText className="text-[#ff8c00]" size={22} />
           </div>
           <div>
-            <h1 className="text-[24px] text-[#181510]" style={{ fontWeight: 700 }}>ניהול מסמכים</h1>
-            <p className="text-[13px] text-[#8d785e]">מסמכים, חוזים והסכמים עם ספקים ולקוחות</p>
+            <h1
+              className="text-[#181510] text-[24px]"
+              style={{ fontWeight: 700 }}
+            >
+              ניהול מסמכים
+            </h1>
+            <p className="text-[#8d785e] text-[13px]">
+              מסמכים, חוזים והסכמים עם ספקים ולקוחות
+            </p>
           </div>
         </div>
         <button
+          className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
           onClick={() => setShowAddDoc(true)}
-          className="flex items-center gap-2 bg-[#ff8c00] hover:bg-[#e67e00] text-white px-4 py-2.5 rounded-xl transition-colors text-[14px]"
           style={{ fontWeight: 600 }}
+          type="button"
         >
           <Plus size={16} />
           הוסף מסמך
@@ -305,65 +430,117 @@ export function DocumentsPage() {
       </div>
 
       {/* ═══ Summary Cards ═══ */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+      <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
-          { label: 'סה״כ מסמכים', value: stats.total, color: '#8d785e', bg: '#f5f3f0' },
-          { label: 'בתוקף', value: stats.valid, color: '#22c55e', bg: '#f0fdf4' },
-          { label: 'פג בקרוב', value: stats.warning, color: '#eab308', bg: '#fefce8' },
-          { label: 'פג תוקף', value: stats.expired, color: '#ef4444', bg: '#fef2f2' },
+          {
+            label: "סה״כ מסמכים",
+            value: stats.total,
+            color: "#8d785e",
+            bg: "#f5f3f0",
+          },
+          {
+            label: "בתוקף",
+            value: stats.valid,
+            color: "#22c55e",
+            bg: "#f0fdf4",
+          },
+          {
+            label: "פג בקרוב",
+            value: stats.warning,
+            color: "#eab308",
+            bg: "#fefce8",
+          },
+          {
+            label: "פג תוקף",
+            value: stats.expired,
+            color: "#ef4444",
+            bg: "#fef2f2",
+          },
         ].map((card) => (
-          <div key={card.label} className="rounded-xl border border-[#e7e1da] p-4" style={{ backgroundColor: card.bg }}>
-            <div className="text-[12px] text-[#8d785e] mb-1" style={{ fontWeight: 600 }}>{card.label}</div>
-            <div className="text-[28px]" style={{ fontWeight: 700, color: card.color }}>{card.value}</div>
+          <div
+            className="rounded-xl border border-[#e7e1da] p-4"
+            key={card.label}
+            style={{ backgroundColor: card.bg }}
+          >
+            <div
+              className="mb-1 text-[#8d785e] text-[12px]"
+              style={{ fontWeight: 600 }}
+            >
+              {card.label}
+            </div>
+            <div
+              className="text-[28px]"
+              style={{ fontWeight: 700, color: card.color }}
+            >
+              {card.value}
+            </div>
           </div>
         ))}
       </div>
 
       {/* ═══ Tabs ═══ */}
-      <div className="flex items-center gap-1 mb-4 bg-[#f5f3f0] rounded-xl p-1 w-fit">
-        {([
-          { key: 'suppliers' as TabType, label: 'מסמכי ספקים', icon: Shield },
-          { key: 'projects' as TabType, label: 'מסמכי פרויקטים', icon: FileText },
-        ]).map((tab) => (
+      <div className="mb-4 flex w-fit items-center gap-1 rounded-xl bg-[#f5f3f0] p-1">
+        {[
+          { key: "suppliers" as TabType, label: "מסמכי ספקים", icon: Shield },
+          {
+            key: "projects" as TabType,
+            label: "מסמכי פרויקטים",
+            icon: FileText,
+          },
+        ].map((tab) => (
           <button
-            key={tab.key}
-            onClick={() => { setActiveTab(tab.key); setTypeFilter('הכל'); }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] transition-all ${
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-[13px] transition-all ${
               activeTab === tab.key
-                ? 'bg-white text-[#181510] shadow-sm'
-                : 'text-[#8d785e] hover:text-[#181510]'
+                ? "bg-white text-[#181510] shadow-sm"
+                : "text-[#8d785e] hover:text-[#181510]"
             }`}
+            key={tab.key}
+            onClick={() => {
+              setActiveTab(tab.key);
+              setTypeFilter("הכל");
+            }}
             style={{ fontWeight: activeTab === tab.key ? 700 : 500 }}
+            type="button"
           >
             <tab.icon size={15} />
             {tab.label}
-            <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${
-              activeTab === tab.key ? 'bg-[#ff8c00]/10 text-[#ff8c00]' : 'bg-[#e7e1da] text-[#8d785e]'
-            }`} style={{ fontWeight: 700 }}>
-              {tab.key === 'suppliers' ? supplierDocs.length : projectDocs.length}
+            <span
+              className={`rounded-full px-1.5 py-0.5 text-[11px] ${
+                activeTab === tab.key
+                  ? "bg-[#ff8c00]/10 text-[#ff8c00]"
+                  : "bg-[#e7e1da] text-[#8d785e]"
+              }`}
+              style={{ fontWeight: 700 }}
+            >
+              {tab.key === "suppliers"
+                ? supplierDocs.length
+                : projectDocs.length}
             </span>
           </button>
         ))}
       </div>
 
       {/* ═══ Filter Bar ═══ */}
-      <div className="flex flex-wrap items-center gap-3 mb-4">
+      <div className="mb-4 flex flex-wrap items-center gap-3">
         {/* Search */}
-        <div className="relative flex-1 min-w-[200px]">
-          <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8d785e]" />
+        <div className="relative min-w-[200px] flex-1">
+          <Search
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-[#8d785e]"
+            size={16}
+          />
           <input
-            value={search}
+            className="w-full rounded-xl border border-[#e7e1da] bg-white py-2.5 pr-9 pl-4 text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white border border-[#e7e1da] rounded-xl pr-9 pl-4 py-2.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] transition-all"
             placeholder="חיפוש לפי שם מסמך או שם ספק/פרויקט..."
+            value={search}
           />
         </div>
 
         {/* Status filter */}
         <select
-          value={statusFilter}
+          className="rounded-xl border border-[#e7e1da] bg-white px-3 py-2.5 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
           onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-          className="bg-white border border-[#e7e1da] rounded-xl px-3 py-2.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00]"
+          value={statusFilter}
         >
           <option value="all">כל הסטטוסים</option>
           <option value="valid">בתוקף</option>
@@ -373,28 +550,41 @@ export function DocumentsPage() {
 
         {/* Type filter */}
         <select
-          value={typeFilter}
+          className="rounded-xl border border-[#e7e1da] bg-white px-3 py-2.5 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="bg-white border border-[#e7e1da] rounded-xl px-3 py-2.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00]"
+          value={typeFilter}
         >
-          {(activeTab === 'suppliers' ? supplierDocTypes : projectDocTypes).map((t) => (
-            <option key={t} value={t}>{t}</option>
-          ))}
+          {(activeTab === "suppliers" ? supplierDocTypes : projectDocTypes).map(
+            (t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            )
+          )}
         </select>
       </div>
 
       {/* ═══ Documents Table ═══ */}
-      <div className="bg-white rounded-xl border border-[#e7e1da] overflow-hidden">
+      <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="w-14 h-14 bg-[#f5f3f0] rounded-full flex items-center justify-center mb-3">
-              <FileText size={24} className="text-[#b8a990]" />
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#f5f3f0]">
+              <FileText className="text-[#b8a990]" size={24} />
             </div>
-            <div className="text-[15px] text-[#181510] mb-1" style={{ fontWeight: 600 }}>
-              {search || statusFilter !== 'all' || typeFilter !== 'הכל' ? 'לא נמצאו מסמכים תואמים' : 'אין מסמכים עדיין'}
+            <div
+              className="mb-1 text-[#181510] text-[15px]"
+              style={{ fontWeight: 600 }}
+            >
+              {search || statusFilter !== "all" || typeFilter !== "הכל"
+                ? "לא נמצאו מסמכים תואמים"
+                : "אין מסמכים עדיין"}
             </div>
-            <div className="text-[13px] text-[#8d785e]">
-              {search || statusFilter !== 'all' || typeFilter !== 'הכל' ? 'נסה לשנות את הסינון' : activeTab === 'projects' ? 'הוסף מסמך פרויקט חדש' : 'מסמכי ספקים יופיעו כאן'}
+            <div className="text-[#8d785e] text-[13px]">
+              {search || statusFilter !== "all" || typeFilter !== "הכל"
+                ? "נסה לשנות את הסינון"
+                : activeTab === "projects"
+                  ? "הוסף מסמך פרויקט חדש"
+                  : "מסמכי ספקים יופיעו כאן"}
             </div>
           </div>
         ) : (
@@ -402,16 +592,49 @@ export function DocumentsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-[13px]">
                 <thead>
-                  <tr className="bg-[#faf9f7] border-b border-[#e7e1da]">
-                    <th className="text-right py-3 px-4 text-[#8d785e] text-[12px]" style={{ fontWeight: 600 }}>סטטוס</th>
-                    <th className="text-right py-3 px-4 text-[#8d785e] text-[12px]" style={{ fontWeight: 600 }}>שם מסמך</th>
-                    <th className="text-right py-3 px-4 text-[#8d785e] text-[12px]" style={{ fontWeight: 600 }}>
-                      {activeTab === 'suppliers' ? 'ספק' : 'פרויקט'}
+                  <tr className="border-[#e7e1da] border-b bg-[#faf9f7]">
+                    <th
+                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      style={{ fontWeight: 600 }}
+                    >
+                      סטטוס
                     </th>
-                    <th className="text-right py-3 px-4 text-[#8d785e] text-[12px]" style={{ fontWeight: 600 }}>סוג</th>
-                    <th className="text-right py-3 px-4 text-[#8d785e] text-[12px]" style={{ fontWeight: 600 }}>תוקף</th>
-                    <th className="text-right py-3 px-4 text-[#8d785e] text-[12px]" style={{ fontWeight: 600 }}>קובץ</th>
-                    <th className="text-right py-3 px-4 text-[#8d785e] text-[12px]" style={{ fontWeight: 600 }}>פעולות</th>
+                    <th
+                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      style={{ fontWeight: 600 }}
+                    >
+                      שם מסמך
+                    </th>
+                    <th
+                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      style={{ fontWeight: 600 }}
+                    >
+                      {activeTab === "suppliers" ? "ספק" : "פרויקט"}
+                    </th>
+                    <th
+                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      style={{ fontWeight: 600 }}
+                    >
+                      סוג
+                    </th>
+                    <th
+                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      style={{ fontWeight: 600 }}
+                    >
+                      תוקף
+                    </th>
+                    <th
+                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      style={{ fontWeight: 600 }}
+                    >
+                      קובץ
+                    </th>
+                    <th
+                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      style={{ fontWeight: 600 }}
+                    >
+                      פעולות
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -419,78 +642,118 @@ export function DocumentsPage() {
                     const sc = statusConfig[doc.status];
                     const StatusIcon = sc.icon;
                     return (
-                      <tr key={`${doc.entityType}-${doc.id}`} className="border-b border-[#f0ede8] hover:bg-[#faf9f7] transition-colors">
+                      <tr
+                        className="border-[#f0ede8] border-b transition-colors hover:bg-[#faf9f7]"
+                        key={`${doc.entityType}-${doc.id}`}
+                      >
                         {/* Status */}
-                        <td className="py-3 px-4">
-                          <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] ${sc.bg} ${sc.border} border`} style={{ fontWeight: 600 }}>
-                            <StatusIcon size={12} className={sc.iconColor} />
+                        <td className="px-4 py-3">
+                          <div
+                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] ${sc.bg} ${sc.border} border`}
+                            style={{ fontWeight: 600 }}
+                          >
+                            <StatusIcon className={sc.iconColor} size={12} />
                             <span className={sc.color}>{sc.label}</span>
                           </div>
                         </td>
 
                         {/* Document name */}
-                        <td className="py-3 px-4">
-                          <div className="text-[#181510]" style={{ fontWeight: 600 }}>{doc.name}</div>
+                        <td className="px-4 py-3">
+                          <div
+                            className="text-[#181510]"
+                            style={{ fontWeight: 600 }}
+                          >
+                            {doc.name}
+                          </div>
                         </td>
 
                         {/* Entity name (clickable) */}
-                        <td className="py-3 px-4">
+                        <td className="px-4 py-3">
                           <button
-                            onClick={() => navigate(doc.entityType === 'supplier' ? `/suppliers/${doc.entityId}` : `/projects/${doc.entityId}`)}
-                            className="text-[#ff8c00] hover:text-[#e67e00] hover:underline transition-colors"
+                            className="text-[#ff8c00] transition-colors hover:text-[#e67e00] hover:underline"
+                            onClick={() =>
+                              navigate(
+                                doc.entityType === "supplier"
+                                  ? `/suppliers/${doc.entityId}`
+                                  : `/projects/${doc.entityId}`
+                              )
+                            }
                             style={{ fontWeight: 500 }}
+                            type="button"
                           >
                             {doc.entityName}
                           </button>
                         </td>
 
                         {/* Type badge */}
-                        <td className="py-3 px-4">
-                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#f5f3f0] text-[#8d785e]" style={{ fontWeight: 600 }}>
+                        <td className="px-4 py-3">
+                          <span
+                            className="rounded-full bg-[#f5f3f0] px-2 py-0.5 text-[#8d785e] text-[11px]"
+                            style={{ fontWeight: 600 }}
+                          >
                             {doc.type}
                           </span>
                         </td>
 
                         {/* Expiry */}
-                        <td className="py-3 px-4">
-                          <span className={`text-[12px] ${sc.color}`} style={{ fontWeight: 500 }}>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`text-[12px] ${sc.color}`}
+                            style={{ fontWeight: 500 }}
+                          >
                             {formatDate(doc.expiry)}
                           </span>
                         </td>
 
                         {/* File name */}
-                        <td className="py-3 px-4">
+                        <td className="px-4 py-3">
                           {doc.fileName ? (
-                            <div className="flex items-center gap-1 text-[12px] text-[#8d785e]">
+                            <div className="flex items-center gap-1 text-[#8d785e] text-[12px]">
                               <FileText size={12} />
-                              <span className="max-w-[120px] truncate">{doc.fileName}</span>
+                              <span className="max-w-[120px] truncate">
+                                {doc.fileName}
+                              </span>
                             </div>
                           ) : (
-                            <span className="text-[12px] text-[#b8a990]">—</span>
+                            <span className="text-[#b8a990] text-[12px]">
+                              —
+                            </span>
                           )}
                         </td>
 
                         {/* Actions */}
-                        <td className="py-3 px-4">
+                        <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
                             <button
-                              onClick={() => navigate(doc.entityType === 'supplier' ? `/suppliers/${doc.entityId}` : `/projects/${doc.entityId}`)}
-                              className="p-1.5 text-[#8d785e] hover:text-[#ff8c00] hover:bg-[#ff8c00]/10 rounded-lg transition-all"
+                              className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ff8c00]/10 hover:text-[#ff8c00]"
+                              onClick={() =>
+                                navigate(
+                                  doc.entityType === "supplier"
+                                    ? `/suppliers/${doc.entityId}`
+                                    : `/projects/${doc.entityId}`
+                                )
+                              }
                               title="צפייה"
+                              type="button"
                             >
                               <Eye size={14} />
                             </button>
                             <button
-                              onClick={() => { setEditingDoc(doc); setEditExpiryValue(doc.expiry); }}
-                              className="p-1.5 text-[#8d785e] hover:text-[#ff8c00] hover:bg-[#ff8c00]/10 rounded-lg transition-all"
+                              className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ff8c00]/10 hover:text-[#ff8c00]"
+                              onClick={() => {
+                                setEditingDoc(doc);
+                                setEditExpiryValue(doc.expiry);
+                              }}
                               title="עדכון תוקף"
+                              type="button"
                             >
                               <Edit2 size={14} />
                             </button>
                             <button
+                              className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-red-50 hover:text-red-500"
                               onClick={() => setDeletingDoc(doc)}
-                              className="p-1.5 text-[#8d785e] hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                               title="מחיקה"
+                              type="button"
                             >
                               <Trash2 size={14} />
                             </button>
@@ -505,33 +768,44 @@ export function DocumentsPage() {
 
             {/* ═══ Pagination ═══ */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between px-4 py-3 border-t border-[#f0ede8]">
-                <div className="text-[12px] text-[#8d785e]">
-                  מציג {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} מתוך {filtered.length}
+              <div className="flex items-center justify-between border-[#f0ede8] border-t px-4 py-3">
+                <div className="text-[#8d785e] text-[12px]">
+                  מציג {(currentPage - 1) * ITEMS_PER_PAGE + 1}–
+                  {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} מתוך{" "}
+                  {filtered.length}
                 </div>
                 <div className="flex items-center gap-1">
                   <button
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-[#f5f3f0] disabled:opacity-30"
                     disabled={currentPage <= 1}
-                    className="w-7 h-7 rounded-md flex items-center justify-center text-[#8d785e] hover:bg-[#f5f3f0] transition-colors disabled:opacity-30"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    type="button"
                   >
                     <ChevronRight size={14} />
                   </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`w-7 h-7 rounded-md flex items-center justify-center text-[12px] transition-colors ${
-                        currentPage === page ? 'bg-[#ff8c00] text-white' : 'text-[#8d785e] hover:bg-[#f5f3f0]'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (page) => (
+                      <button
+                        className={`flex h-7 w-7 items-center justify-center rounded-md text-[12px] transition-colors ${
+                          currentPage === page
+                            ? "bg-[#ff8c00] text-white"
+                            : "text-[#8d785e] hover:bg-[#f5f3f0]"
+                        }`}
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        type="button"
+                      >
+                        {page}
+                      </button>
+                    )
+                  )}
                   <button
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-[#f5f3f0] disabled:opacity-30"
                     disabled={currentPage >= totalPages}
-                    className="w-7 h-7 rounded-md flex items-center justify-center text-[#8d785e] hover:bg-[#f5f3f0] transition-colors disabled:opacity-30"
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    type="button"
                   >
                     <ChevronLeft size={14} />
                   </button>
@@ -544,49 +818,78 @@ export function DocumentsPage() {
 
       {/* ═══ Add Document Modal ═══ */}
       {showAddDoc && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setShowAddDoc(false); resetForm(); }}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-5">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => {
+            setShowAddDoc(false);
+            resetForm();
+          }}
+          role="presentation"
+        >
+          <div
+            aria-modal="true"
+            className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+            dir="rtl"
+            role="dialog"
+          >
+            <div className="mb-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-[#ff8c00]/10 rounded-lg flex items-center justify-center">
-                  <Plus size={18} className="text-[#ff8c00]" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff8c00]/10">
+                  <Plus className="text-[#ff8c00]" size={18} />
                 </div>
-                <h3 className="text-[18px] text-[#181510]" style={{ fontWeight: 700 }}>הוספת מסמך פרויקט</h3>
+                <h3
+                  className="text-[#181510] text-[18px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  הוספת מסמך פרויקט
+                </h3>
               </div>
-              <button onClick={() => { setShowAddDoc(false); resetForm(); }} className="text-[#8d785e] hover:text-[#181510] transition-colors">
+              <button
+                className="text-[#8d785e] transition-colors hover:text-[#181510]"
+                onClick={() => {
+                  setShowAddDoc(false);
+                  resetForm();
+                }}
+                type="button"
+              >
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit(onAddProjectDoc)} className="space-y-3">
+            <form
+              className="space-y-3"
+              onSubmit={handleSubmit(onAddProjectDoc)}
+            >
               <FormSelect
-                label="פרויקט"
-                required
                 error={errors.projectId}
                 isDirty={dirtyFields.projectId}
-                {...register('projectId', rules.required('פרויקט'))}
+                label="פרויקט"
+                required
+                {...register("projectId", rules.required("פרויקט"))}
               >
                 <option value="">בחר פרויקט...</option>
                 {(projects || []).map((p: any) => (
-                  <option key={p._id} value={p._id}>{p.name}</option>
+                  <option key={p._id} value={p._id}>
+                    {p.name}
+                  </option>
                 ))}
               </FormSelect>
 
               <FormField
+                error={errors.name}
+                isDirty={dirtyFields.name}
                 label="שם המסמך"
                 placeholder="לדוגמה: חוזה התקשרות"
                 required
-                error={errors.name}
-                isDirty={dirtyFields.name}
-                {...register('name', rules.requiredMin('שם המסמך', 2))}
+                {...register("name", rules.requiredMin("שם המסמך", 2))}
               />
 
               <FormSelect
-                label="סוג מסמך"
-                required
                 error={errors.type}
                 isDirty={dirtyFields.type}
-                {...register('type', rules.required('סוג מסמך'))}
+                label="סוג מסמך"
+                required
+                {...register("type", rules.required("סוג מסמך"))}
               >
                 <option value="contract">חוזה</option>
                 <option value="proposal">הצעת מחיר</option>
@@ -596,36 +899,43 @@ export function DocumentsPage() {
               </FormSelect>
 
               <FormField
-                label="תאריך תוקף"
-                type="date"
                 error={errors.expiry}
                 isDirty={dirtyFields.expiry}
-                {...register('expiry')}
+                label="תאריך תוקף"
+                type="date"
+                {...register("expiry")}
               />
 
               <FormField
-                label="שם קובץ"
-                placeholder="לדוגמה: contract_2024.pdf"
                 error={errors.fileName}
                 isDirty={dirtyFields.fileName}
-                {...register('fileName')}
+                label="שם קובץ"
+                placeholder="לדוגמה: contract_2024.pdf"
+                {...register("fileName")}
               />
 
               <div className="flex gap-3 pt-3">
                 <button
-                  type="submit"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
                   disabled={saving || !isValid}
-                  className="flex-1 bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 text-white py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 text-[14px]"
                   style={{ fontWeight: 600 }}
+                  type="submit"
                 >
-                  {saving ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
-                  {saving ? 'שומר...' : 'הוסף מסמך'}
+                  {saving ? (
+                    <Loader2 className="animate-spin" size={16} />
+                  ) : (
+                    <Plus size={16} />
+                  )}
+                  {saving ? "שומר..." : "הוסף מסמך"}
                 </button>
                 <button
-                  type="button"
-                  onClick={() => { setShowAddDoc(false); resetForm(); }}
-                  className="px-4 py-2.5 text-[#8d785e] hover:text-[#181510] hover:bg-[#f5f3f0] rounded-xl transition-colors text-[14px]"
+                  className="rounded-xl px-4 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                  onClick={() => {
+                    setShowAddDoc(false);
+                    resetForm();
+                  }}
                   style={{ fontWeight: 600 }}
+                  type="button"
                 >
                   ביטול
                 </button>
@@ -637,50 +947,102 @@ export function DocumentsPage() {
 
       {/* ═══ Edit Expiry Modal ═══ */}
       {editingDoc && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setEditingDoc(null); setEditExpiryValue(''); }}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-5">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => {
+            setEditingDoc(null);
+            setEditExpiryValue("");
+          }}
+          role="presentation"
+        >
+          <div
+            aria-modal="true"
+            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+            dir="rtl"
+            role="dialog"
+          >
+            <div className="mb-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-[#ff8c00]/10 rounded-lg flex items-center justify-center">
-                  <CalendarDays size={18} className="text-[#ff8c00]" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff8c00]/10">
+                  <CalendarDays className="text-[#ff8c00]" size={18} />
                 </div>
-                <h3 className="text-[18px] text-[#181510]" style={{ fontWeight: 700 }}>עדכון תוקף</h3>
+                <h3
+                  className="text-[#181510] text-[18px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  עדכון תוקף
+                </h3>
               </div>
-              <button onClick={() => { setEditingDoc(null); setEditExpiryValue(''); }} className="text-[#8d785e] hover:text-[#181510] transition-colors">
+              <button
+                className="text-[#8d785e] transition-colors hover:text-[#181510]"
+                onClick={() => {
+                  setEditingDoc(null);
+                  setEditExpiryValue("");
+                }}
+                type="button"
+              >
                 <X size={20} />
               </button>
             </div>
 
             <div className="mb-4">
-              <div className="text-[13px] text-[#8d785e] mb-1" style={{ fontWeight: 600 }}>מסמך</div>
-              <div className="text-[15px] text-[#181510]" style={{ fontWeight: 600 }}>{editingDoc.name}</div>
-              <div className="text-[12px] text-[#8d785e] mt-0.5">{editingDoc.entityName}</div>
+              <div
+                className="mb-1 text-[#8d785e] text-[13px]"
+                style={{ fontWeight: 600 }}
+              >
+                מסמך
+              </div>
+              <div
+                className="text-[#181510] text-[15px]"
+                style={{ fontWeight: 600 }}
+              >
+                {editingDoc.name}
+              </div>
+              <div className="mt-0.5 text-[#8d785e] text-[12px]">
+                {editingDoc.entityName}
+              </div>
             </div>
 
             <div className="mb-4">
-              <label className="text-[13px] text-[#8d785e] mb-1 block" style={{ fontWeight: 600 }}>תאריך תוקף חדש</label>
+              <label
+                className="mb-1 block text-[#8d785e] text-[13px]"
+                htmlFor="doc-expiry-date"
+                style={{ fontWeight: 600 }}
+              >
+                תאריך תוקף חדש
+              </label>
               <input
+                className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 text-[#181510] text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/10"
+                id="doc-expiry-date"
+                onChange={(e) => setEditExpiryValue(e.target.value)}
                 type="date"
                 value={editExpiryValue}
-                onChange={(e) => setEditExpiryValue(e.target.value)}
-                className="w-full bg-white border border-[#e7e1da] rounded-lg px-3 py-2.5 text-[13px] text-[#181510] focus:outline-none focus:border-[#ff8c00] focus:ring-2 focus:ring-[#ff8c00]/10 transition-all"
               />
             </div>
 
             <div className="flex gap-3">
               <button
-                onClick={onUpdateExpiry}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
                 disabled={!editExpiryValue || saving}
-                className="flex-1 bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 text-white py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 text-[14px]"
+                onClick={onUpdateExpiry}
                 style={{ fontWeight: 600 }}
+                type="button"
               >
-                {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                {saving ? 'שומר...' : 'שמור'}
+                {saving ? (
+                  <Loader2 className="animate-spin" size={16} />
+                ) : (
+                  <Save size={16} />
+                )}
+                {saving ? "שומר..." : "שמור"}
               </button>
               <button
-                onClick={() => { setEditingDoc(null); setEditExpiryValue(''); }}
-                className="px-4 py-2.5 text-[#8d785e] hover:text-[#181510] hover:bg-[#f5f3f0] rounded-xl transition-colors text-[14px]"
+                className="rounded-xl px-4 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                onClick={() => {
+                  setEditingDoc(null);
+                  setEditExpiryValue("");
+                }}
                 style={{ fontWeight: 600 }}
+                type="button"
               >
                 ביטול
               </button>
@@ -691,37 +1053,67 @@ export function DocumentsPage() {
 
       {/* ═══ Delete Confirmation Modal ═══ */}
       {deletingDoc && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setDeletingDoc(null)}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center">
-                <Trash2 size={20} className="text-red-500" />
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => setDeletingDoc(null)}
+          onKeyDown={(e) => e.key === "Escape" && e.currentTarget.click()}
+          role="presentation"
+        >
+          <div
+            aria-modal="true"
+            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+            dir="rtl"
+            role="dialog"
+          >
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-50">
+                <Trash2 className="text-red-500" size={20} />
               </div>
               <div>
-                <h3 className="text-[18px] text-[#181510]" style={{ fontWeight: 700 }}>מחיקת מסמך</h3>
-                <p className="text-[13px] text-[#8d785e]">פעולה זו אינה ניתנת לביטול</p>
+                <h3
+                  className="text-[#181510] text-[18px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  מחיקת מסמך
+                </h3>
+                <p className="text-[#8d785e] text-[13px]">
+                  פעולה זו אינה ניתנת לביטול
+                </p>
               </div>
             </div>
 
-            <div className="bg-[#faf9f7] rounded-xl p-3 mb-4">
-              <div className="text-[14px] text-[#181510]" style={{ fontWeight: 600 }}>{deletingDoc.name}</div>
-              <div className="text-[12px] text-[#8d785e] mt-0.5">{deletingDoc.entityName}</div>
+            <div className="mb-4 rounded-xl bg-[#faf9f7] p-3">
+              <div
+                className="text-[#181510] text-[14px]"
+                style={{ fontWeight: 600 }}
+              >
+                {deletingDoc.name}
+              </div>
+              <div className="mt-0.5 text-[#8d785e] text-[12px]">
+                {deletingDoc.entityName}
+              </div>
             </div>
 
             <div className="flex gap-3">
               <button
-                onClick={onDeleteDoc}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-[14px] text-white transition-colors hover:bg-red-600 disabled:opacity-50"
                 disabled={saving}
-                className="flex-1 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 text-[14px]"
+                onClick={onDeleteDoc}
                 style={{ fontWeight: 600 }}
+                type="button"
               >
-                {saving ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
-                {saving ? 'מוחק...' : 'מחק'}
+                {saving ? (
+                  <Loader2 className="animate-spin" size={16} />
+                ) : (
+                  <Trash2 size={16} />
+                )}
+                {saving ? "מוחק..." : "מחק"}
               </button>
               <button
+                className="rounded-xl px-4 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
                 onClick={() => setDeletingDoc(null)}
-                className="px-4 py-2.5 text-[#8d785e] hover:text-[#181510] hover:bg-[#f5f3f0] rounded-xl transition-colors text-[14px]"
                 style={{ fontWeight: 600 }}
+                type="button"
               >
                 ביטול
               </button>

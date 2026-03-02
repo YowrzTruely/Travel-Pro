@@ -1,23 +1,24 @@
-import { useMemo } from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router';
-import { Toaster } from 'sonner';
-import { router } from './routes';
-import { ConvexProvider } from './components/ConvexProvider';
-import { AuthProvider, useAuth } from './components/AuthContext';
-import { LoginPage } from './components/LoginPage';
-import { ClientQuote } from './components/ClientQuote';
+import { useMemo } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { Toaster } from "sonner";
+import { AuthProvider, useAuth } from "./components/AuthContext";
+import { ClientQuote } from "./components/ClientQuote";
+import { ConvexProvider } from "./components/ConvexProvider";
+import { LoginPage } from "./components/LoginPage";
+import { router } from "./routes";
 
 /**
  * Check if the current URL is a public client quote page.
  */
+const PUBLIC_QUOTE_REGEX = /^\/quote\/.+$/;
 function isPublicQuotePage(): boolean {
-  return /^\/quote\/.+$/.test(window.location.pathname);
+  return PUBLIC_QUOTE_REGEX.test(window.location.pathname);
 }
 
 /** Minimal public router for the client quote page (no auth required) */
 const publicRouter = createBrowserRouter([
-  { path: '/quote/:id', Component: ClientQuote },
-  { path: '*', Component: () => null },
+  { path: "/quote/:id", Component: ClientQuote },
+  { path: "*", Component: () => null },
 ]);
 
 function AppInner() {
@@ -32,10 +33,15 @@ function AppInner() {
   // Auth loading
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[#f8f7f5]" dir="rtl">
+      <div
+        className="flex h-screen items-center justify-center bg-[#f8f7f5]"
+        dir="rtl"
+      >
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-3 border-[#ff8c00] border-t-transparent rounded-full animate-spin" />
-          <p className="text-[15px] text-[#8d785e] font-['Assistant',sans-serif]">בודק הרשאות...</p>
+          <div className="h-10 w-10 animate-spin rounded-full border-3 border-[#ff8c00] border-t-transparent" />
+          <p className="font-['Assistant',sans-serif] text-[#8d785e] text-[15px]">
+            בודק הרשאות...
+          </p>
         </div>
       </div>
     );
@@ -55,12 +61,12 @@ export default function App() {
       <AuthProvider>
         <AppInner />
         <Toaster
-          position="bottom-left"
           dir="rtl"
           gap={10}
+          position="bottom-left"
           toastOptions={{
             unstyled: true,
-            style: { background: 'transparent', boxShadow: 'none', padding: 0 },
+            style: { background: "transparent", boxShadow: "none", padding: 0 },
           }}
         />
       </AuthProvider>

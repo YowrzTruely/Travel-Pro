@@ -1,5 +1,5 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const list = query({
   args: {},
@@ -45,7 +45,10 @@ export const create = mutation({
       attachments: args.attachments,
     });
     const task = await ctx.db.get(id);
-    return { ...task!, id: task!._id };
+    if (!task) {
+      throw new Error("Kanban task not found after creation");
+    }
+    return { ...task, id: task._id };
   },
 });
 
@@ -73,10 +76,15 @@ export const update = mutation({
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);
-    if (!existing) throw new Error("Kanban task not found");
+    if (!existing) {
+      throw new Error("Kanban task not found");
+    }
     await ctx.db.patch(id, updates);
     const task = await ctx.db.get(id);
-    return { ...task!, id: task!._id };
+    if (!task) {
+      throw new Error("Kanban task not found after update");
+    }
+    return { ...task, id: task._id };
   },
 });
 
@@ -112,7 +120,9 @@ export const seed = mutation({
       .query("metadata")
       .withIndex("by_key", (q) => q.eq("key", `kanban_seeded_${version}`))
       .first();
-    if (meta) return { skipped: true };
+    if (meta) {
+      return { skipped: true };
+    }
 
     for (const t of tasks) {
       await ctx.db.insert("kanbanTasks", {

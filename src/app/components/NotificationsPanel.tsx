@@ -1,89 +1,98 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { useNavigate } from 'react-router';
-import { Bell, X, CheckCircle, AlertTriangle, FileText, Users, FolderOpen } from 'lucide-react';
 import { useQuery } from "convex/react";
+import {
+  Bell,
+  CheckCircle,
+  FileText,
+  FolderOpen,
+  Users,
+  X,
+} from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { api } from "../../../convex/_generated/api";
-import type { Project } from './data';
+import type { Project } from "./data";
 
 interface Notification {
+  icon: "project" | "supplier" | "document" | "client";
   id: string;
-  type: 'success' | 'warning' | 'info' | 'alert';
-  title: string;
   message: string;
-  time: string;
-  read: boolean;
   path?: string;
-  icon: 'project' | 'supplier' | 'document' | 'client';
+  read: boolean;
+  time: string;
+  title: string;
+  type: "success" | "warning" | "info" | "alert";
 }
 
-function buildNotifications(projects: Project[], suppliers: any[]): Notification[] {
+function buildNotifications(
+  projects: Project[],
+  suppliers: any[]
+): Notification[] {
   const notifs: Notification[] = [];
-  const now = new Date();
 
   // Projects needing attention
   for (const p of projects) {
-    if (p.status === 'מחיר בהערכה') {
+    if (p.status === "מחיר בהערכה") {
       notifs.push({
         id: `proj-pricing-${p.id}`,
-        type: 'warning',
-        title: 'ממתין לתמחור',
+        type: "warning",
+        title: "ממתין לתמחור",
         message: `"${p.name}" — הפרויקט ממתין לתמחור כבר מספר ימים`,
-        time: 'היום',
+        time: "היום",
         read: false,
         path: `/projects/${p.id}`,
-        icon: 'project',
+        icon: "project",
       });
     }
-    if (p.status === 'אושר') {
+    if (p.status === "אושר") {
       notifs.push({
         id: `proj-approved-${p.id}`,
-        type: 'success',
-        title: 'פרויקט אושר!',
+        type: "success",
+        title: "פרויקט אושר!",
         message: `"${p.name}" אושר על ידי ${p.company}`,
-        time: 'היום',
+        time: "היום",
         read: false,
         path: `/projects/${p.id}`,
-        icon: 'client',
+        icon: "client",
       });
     }
-    if (p.status === 'הצעה נשלחה') {
+    if (p.status === "הצעה נשלחה") {
       notifs.push({
         id: `proj-sent-${p.id}`,
-        type: 'info',
-        title: 'הצעה נשלחה',
+        type: "info",
+        title: "הצעה נשלחה",
         message: `ההצעה עבור "${p.name}" נשלחה ללקוח — ממתין לתשובה`,
-        time: 'אתמול',
+        time: "אתמול",
         read: true,
         path: `/projects/${p.id}`,
-        icon: 'project',
+        icon: "project",
       });
     }
   }
 
   // Supplier warnings
   for (const s of suppliers) {
-    if (s.verificationStatus === 'pending') {
+    if (s.verificationStatus === "pending") {
       notifs.push({
         id: `sup-pending-${s._id || s.id}`,
-        type: 'alert',
-        title: 'ספק ממתין לאימות',
-        message: `${s.name} — חסרים מסמכים לאימות. ${s.notes !== '-' ? s.notes : ''}`,
-        time: 'היום',
+        type: "alert",
+        title: "ספק ממתין לאימות",
+        message: `${s.name} — חסרים מסמכים לאימות. ${s.notes !== "-" ? s.notes : ""}`,
+        time: "היום",
         read: false,
         path: `/suppliers/${s._id || s.id}`,
-        icon: 'supplier',
+        icon: "supplier",
       });
     }
-    if (s.verificationStatus === 'unverified') {
+    if (s.verificationStatus === "unverified") {
       notifs.push({
         id: `sup-unverified-${s._id || s.id}`,
-        type: 'warning',
-        title: 'ספק לא מאומת',
-        message: `${s.name} — ${s.notes !== '-' ? s.notes : 'נדרש אימות'}`,
-        time: 'אתמול',
+        type: "warning",
+        title: "ספק לא מאומת",
+        message: `${s.name} — ${s.notes !== "-" ? s.notes : "נדרש אימות"}`,
+        time: "אתמול",
         read: true,
         path: `/suppliers/${s._id || s.id}`,
-        icon: 'document',
+        icon: "document",
       });
     }
   }
@@ -99,10 +108,18 @@ const iconMap = {
 };
 
 const typeColors = {
-  success: { bg: 'bg-green-50', border: 'border-green-200', dot: 'bg-green-500' },
-  warning: { bg: 'bg-yellow-50', border: 'border-yellow-200', dot: 'bg-yellow-500' },
-  info: { bg: 'bg-blue-50', border: 'border-blue-200', dot: 'bg-blue-500' },
-  alert: { bg: 'bg-red-50', border: 'border-red-200', dot: 'bg-red-500' },
+  success: {
+    bg: "bg-green-50",
+    border: "border-green-200",
+    dot: "bg-green-500",
+  },
+  warning: {
+    bg: "bg-yellow-50",
+    border: "border-yellow-200",
+    dot: "bg-yellow-500",
+  },
+  info: { bg: "bg-blue-50", border: "border-blue-200", dot: "bg-blue-500" },
+  alert: { bg: "bg-red-50", border: "border-red-200", dot: "bg-red-500" },
 };
 
 export function NotificationsPanel() {
@@ -122,17 +139,19 @@ export function NotificationsPanel() {
         setOpen(false);
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   const notifications = useMemo(() => {
-    if (!projects || !suppliers) return [];
+    if (!(projects && suppliers)) {
+      return [];
+    }
     const notifs = buildNotifications(projects as any, suppliers);
     if (allMarkedRead) {
-      return notifs.map(n => ({ ...n, read: true }));
+      return notifs.map((n) => ({ ...n, read: true }));
     }
-    return notifs.map(n => readIds.has(n.id) ? { ...n, read: true } : n);
+    return notifs.map((n) => (readIds.has(n.id) ? { ...n, read: true } : n));
   }, [projects, suppliers, readIds, allMarkedRead]);
 
   const toggleOpen = () => {
@@ -144,41 +163,64 @@ export function NotificationsPanel() {
   };
 
   const handleClick = (notif: Notification) => {
-    setReadIds(prev => new Set(prev).add(notif.id));
+    setReadIds((prev) => new Set(prev).add(notif.id));
     if (notif.path) {
       navigate(notif.path);
       setOpen(false);
     }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
-    <div ref={panelRef} className="relative">
+    <div className="relative" ref={panelRef}>
       <button
+        className={`relative flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-[#f5f3f0] ${open ? "bg-[#f5f3f0] text-[#ff8c00]" : "text-[#181510]"}`}
         onClick={toggleOpen}
-        className={`relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#f5f3f0] transition-colors ${open ? 'bg-[#f5f3f0] text-[#ff8c00]' : 'text-[#181510]'}`}
+        type="button"
       >
         <Bell size={20} />
         {unreadCount > 0 && (
-          <span className="absolute top-1.5 left-1.5 min-w-[18px] h-[18px] bg-[#ef4444] rounded-full border-2 border-white flex items-center justify-center text-[10px] text-white" style={{ fontWeight: 700 }}>
-            {unreadCount > 9 ? '9+' : unreadCount}
+          <span
+            className="absolute top-1.5 left-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-white bg-[#ef4444] text-[10px] text-white"
+            style={{ fontWeight: 700 }}
+          >
+            {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute left-0 top-12 w-96 bg-white rounded-xl border border-[#e7e1da] shadow-2xl z-50 overflow-hidden" dir="rtl">
+        <div
+          className="absolute top-12 left-0 z-50 w-96 overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-2xl"
+          dir="rtl"
+        >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[#e7e1da] bg-[#fcfbf9]">
-            <h3 className="text-[15px] text-[#181510]" style={{ fontWeight: 700 }}>התראות</h3>
+          <div className="flex items-center justify-between border-[#e7e1da] border-b bg-[#fcfbf9] px-4 py-3">
+            <h3
+              className="text-[#181510] text-[15px]"
+              style={{ fontWeight: 700 }}
+            >
+              התראות
+            </h3>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
-                <button onClick={markAllRead} className="text-[11px] text-[#ff8c00]" style={{ fontWeight: 600 }}>
+                <button
+                  className="text-[#ff8c00] text-[11px]"
+                  onClick={markAllRead}
+                  style={{ fontWeight: 600 }}
+                  type="button"
+                >
                   סמן הכל כנקרא
                 </button>
               )}
-              <button onClick={() => setOpen(false)} className="text-[#8d785e] hover:text-[#181510]"><X size={16} /></button>
+              <button
+                className="text-[#8d785e] hover:text-[#181510]"
+                onClick={() => setOpen(false)}
+                type="button"
+              >
+                <X size={16} />
+              </button>
             </div>
           </div>
 
@@ -186,29 +228,48 @@ export function NotificationsPanel() {
           <div className="max-h-[400px] overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="py-10 text-center">
-                <Bell size={28} className="mx-auto text-[#ddd6cb] mb-2" />
-                <p className="text-[14px] text-[#8d785e]">אין התראות חדשות</p>
+                <Bell className="mx-auto mb-2 text-[#ddd6cb]" size={28} />
+                <p className="text-[#8d785e] text-[14px]">אין התראות חדשות</p>
               </div>
             ) : (
-              notifications.map(notif => {
+              notifications.map((notif) => {
                 const Icon = iconMap[notif.icon];
                 const colors = typeColors[notif.type];
                 return (
                   <button
+                    className={`flex w-full items-start gap-3 border-[#f5f3f0] border-b px-4 py-3.5 text-right transition-colors last:border-b-0 hover:bg-[#f5f3f0] ${notif.read ? "" : "bg-[#fffaf3]"}`}
                     key={notif.id}
                     onClick={() => handleClick(notif)}
-                    className={`w-full text-right flex items-start gap-3 px-4 py-3.5 hover:bg-[#f5f3f0] transition-colors border-b border-[#f5f3f0] last:border-b-0 ${!notif.read ? 'bg-[#fffaf3]' : ''}`}
+                    type="button"
                   >
-                    <div className={`w-9 h-9 rounded-lg ${colors.bg} flex items-center justify-center shrink-0 mt-0.5`}>
-                      <Icon size={16} className={`${notif.type === 'success' ? 'text-green-600' : notif.type === 'warning' ? 'text-yellow-600' : notif.type === 'info' ? 'text-blue-600' : 'text-red-600'}`} />
+                    <div
+                      className={`h-9 w-9 rounded-lg ${colors.bg} mt-0.5 flex shrink-0 items-center justify-center`}
+                    >
+                      <Icon
+                        className={`${notif.type === "success" ? "text-green-600" : notif.type === "warning" ? "text-yellow-600" : notif.type === "info" ? "text-blue-600" : "text-red-600"}`}
+                        size={16}
+                      />
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        {!notif.read && <span className={`w-2 h-2 rounded-full ${colors.dot} shrink-0`} />}
-                        <span className="text-[13px] text-[#181510] truncate" style={{ fontWeight: notif.read ? 400 : 600 }}>{notif.title}</span>
+                        {!notif.read && (
+                          <span
+                            className={`h-2 w-2 rounded-full ${colors.dot} shrink-0`}
+                          />
+                        )}
+                        <span
+                          className="truncate text-[#181510] text-[13px]"
+                          style={{ fontWeight: notif.read ? 400 : 600 }}
+                        >
+                          {notif.title}
+                        </span>
                       </div>
-                      <p className="text-[12px] text-[#8d785e] mt-0.5 line-clamp-2">{notif.message}</p>
-                      <span className="text-[10px] text-[#c4b89a] mt-1 block">{notif.time}</span>
+                      <p className="mt-0.5 line-clamp-2 text-[#8d785e] text-[12px]">
+                        {notif.message}
+                      </p>
+                      <span className="mt-1 block text-[#c4b89a] text-[10px]">
+                        {notif.time}
+                      </span>
                     </div>
                   </button>
                 );

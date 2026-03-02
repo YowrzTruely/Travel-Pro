@@ -1,109 +1,169 @@
-import { useState, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { useForm } from 'react-hook-form';
-import { useQuery, useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
+import {
+  AlertTriangle,
+  Archive,
+  ArchiveRestore,
+  ArrowRight,
+  CalendarDays,
+  Camera,
+  CheckCircle,
+  Clock,
+  FileText,
+  Loader2,
+  Mail,
+  Package,
+  Pencil,
+  Phone,
+  Plus,
+  Save,
+  Shield,
+  ShieldAlert,
+  ShieldCheck,
+  Trash2,
+  Upload,
+  Users,
+  X,
+} from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import {
-  ArrowRight, CheckCircle, Phone, Mail,
-  MapPin, FileText, AlertTriangle, Plus, Loader2, Clock, Save, Trash2, X,
-  Upload, Shield, ShieldCheck, ShieldAlert, CalendarDays, Pencil, Camera, Package, Users, Archive, ArchiveRestore
-} from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import type { Supplier } from './data';
-import { FormField, rules } from './FormField';
-import { FormSelect, FormTextarea } from './FormField';
-import { appToast } from './AppToast';
-import { ProductEditor } from './ProductEditor';
-import { SupplierLocationMap } from './SupplierLocationMap';
-import { computeAutoNotes, noteLevelStyles } from './supplierNotes';
-import type { AutoNote } from './supplierNotes';
-import { useConfirmDelete } from './ConfirmDeleteModal';
-import { CategoryIcon } from './CategoryIcons';
+import { appToast } from "./AppToast";
+import { CategoryIcon } from "./CategoryIcons";
+import { useConfirmDelete } from "./ConfirmDeleteModal";
+import { FormField, FormSelect, FormTextarea, rules } from "./FormField";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ProductEditor } from "./ProductEditor";
+import { SupplierLocationMap } from "./SupplierLocationMap";
+import { computeAutoNotes, noteLevelStyles } from "./supplierNotes";
 
 // Re-export types that were previously imported from api.ts
 export interface SupplierContact {
-  id: string;
   _id?: any;
-  supplierId: string;
-  name: string;
-  role: string;
-  phone: string;
   email: string;
+  id: string;
+  name: string;
+  phone: string;
   primary: boolean;
+  role: string;
+  supplierId: string;
 }
 
 export interface SupplierProduct {
-  id: string;
   _id?: any;
-  supplierId: string;
-  name: string;
-  price: number;
   description: string;
-  unit: string;
+  id: string;
   images?: { id: string; url: string; name: string; path?: string }[];
+  name: string;
   notes?: string;
+  price: number;
+  supplierId: string;
+  unit: string;
 }
 
 export interface SupplierDocument {
-  id: string;
   _id?: any;
-  supplierId: string;
-  name: string;
   expiry: string;
-  status: 'valid' | 'warning' | 'expired';
   fileName?: string;
+  id: string;
+  name: string;
+  status: "valid" | "warning" | "expired";
+  supplierId: string;
 }
 
-const VINEYARD_IMG = 'https://images.unsplash.com/photo-1762330465953-75478d918896?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aW5leWFyZCUyMGdyYXBlJTIwaGlsbHNpZGUlMjBncmVlbnxlbnwxfHx8fDE3NzE0NjgyNDJ8MA&ixlib=rb-4.1.0&q=80&w=1080';
+const VINEYARD_IMG =
+  "https://images.unsplash.com/photo-1762330465953-75478d918896?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aW5leWFyZCUyMGdyYXBlJTIwaGlsbHNpZGUlMjBncmVlbnxlbnwxfHx8fDE3NzE0NjgyNDJ8MA&ixlib=rb-4.1.0&q=80&w=1080";
 
 const tabItems = [
-  { id: 'info', label: 'מידע כללי' },
-  { id: 'products', label: 'מוצרים ושירותים' },
-  { id: 'docs', label: 'מסמכים' },
-  { id: 'contacts', label: 'אנשי קשר' },
+  { id: "info", label: "מידע כללי" },
+  { id: "products", label: "מוצרים ושירותים" },
+  { id: "docs", label: "מסמכים" },
+  { id: "contacts", label: "אנשי קשר" },
 ];
 
-const statusLabel: Record<string, string> = { verified: 'מאומת', pending: 'ממתין לאימות', unverified: 'לא מאומת' };
+const statusLabel: Record<string, string> = {
+  verified: "מאומת",
+  pending: "ממתין לאימות",
+  unverified: "לא מאומת",
+};
 
-interface AddContactForm { contactName: string; contactRole: string; contactPhone: string; contactEmail: string; }
-interface AddProductForm { productName: string; productPrice: string; productDescription: string; productUnit: string; }
-interface EditSupplierForm { name: string; phone: string; category: string; categoryColor: string; region: string; rating: string; verificationStatus: string; notes: string; icon: string; }
+interface AddContactForm {
+  contactEmail: string;
+  contactName: string;
+  contactPhone: string;
+  contactRole: string;
+}
+interface AddProductForm {
+  productDescription: string;
+  productName: string;
+  productPrice: string;
+  productUnit: string;
+}
+interface EditSupplierForm {
+  category: string;
+  categoryColor: string;
+  icon: string;
+  name: string;
+  notes: string;
+  phone: string;
+  rating: string;
+  region: string;
+  verificationStatus: string;
+}
 
 // Helper: parse comma-separated categories
 function parseCategories(cat: string | undefined): string[] {
-  if (!cat) return [];
-  return cat.split(',').map(c => c.trim()).filter(Boolean);
+  if (!cat) {
+    return [];
+  }
+  return cat
+    .split(",")
+    .map((c) => c.trim())
+    .filter(Boolean);
 }
 
 const CATEGORY_OPTIONS = [
-  { value: 'תחבורה', color: '#3b82f6' },
-  { value: 'מזון', color: '#22c55e' },
-  { value: 'אטרקציות', color: '#a855f7' },
-  { value: 'לינה', color: '#ec4899' },
-  { value: 'אולמות וגנים', color: '#f97316' },
-  { value: 'צילום', color: '#06b6d4' },
-  { value: 'מוזיקה', color: '#8b5cf6' },
-  { value: 'ציוד', color: '#64748b' },
-  { value: 'כללי', color: '#8d785e' },
+  { value: "תחבורה", color: "#3b82f6" },
+  { value: "מזון", color: "#22c55e" },
+  { value: "אטרקציות", color: "#a855f7" },
+  { value: "לינה", color: "#ec4899" },
+  { value: "אולמות וגנים", color: "#f97316" },
+  { value: "צילום", color: "#06b6d4" },
+  { value: "מוזיקה", color: "#8b5cf6" },
+  { value: "ציוד", color: "#64748b" },
+  { value: "כללי", color: "#8d785e" },
 ];
 
-const REGION_OPTIONS = ['צפון', 'מרכז', 'דרום', 'ירושלים', 'גולן', 'שפלה', 'שרון', 'נגב', 'אילת', 'יהודה ושומרון'];
+const REGION_OPTIONS = [
+  "צפון",
+  "מרכז",
+  "דרום",
+  "ירושלים",
+  "גולן",
+  "שפלה",
+  "שרון",
+  "נגב",
+  "אילת",
+  "יהודה ושומרון",
+];
 
 export function SupplierDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [activeTab, setActiveTab] = useState('info');
+  const [activeTab, setActiveTab] = useState("info");
   const [saving, setSaving] = useState(false);
 
   const [showAddContact, setShowAddContact] = useState(false);
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [docExpiryEditing, setDocExpiryEditing] = useState<string | null>(null);
-  const [docExpiryValue, setDocExpiryValue] = useState('');
+  const [docExpiryValue, setDocExpiryValue] = useState("");
   const [docSaving, setDocSaving] = useState<string | null>(null);
 
   // Product editor
-  const [editingProduct, setEditingProduct] = useState<SupplierProduct | null>(null);
+  const [editingProduct, setEditingProduct] = useState<SupplierProduct | null>(
+    null
+  );
 
   const { requestDelete, modal: deleteModal } = useConfirmDelete();
 
@@ -116,16 +176,44 @@ export function SupplierDetail() {
   const [savingSupplier, setSavingSupplier] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-  const contactForm = useForm<AddContactForm>({ mode: 'onChange', defaultValues: { contactName: '', contactRole: '', contactPhone: '', contactEmail: '' } });
-  const productForm = useForm<AddProductForm>({ mode: 'onChange', defaultValues: { productName: '', productPrice: '', productDescription: '', productUnit: 'אדם' } });
-  const editSupplierForm = useForm<EditSupplierForm>({ mode: 'onChange' });
+  const contactForm = useForm<AddContactForm>({
+    mode: "onChange",
+    defaultValues: {
+      contactName: "",
+      contactRole: "",
+      contactPhone: "",
+      contactEmail: "",
+    },
+  });
+  const productForm = useForm<AddProductForm>({
+    mode: "onChange",
+    defaultValues: {
+      productName: "",
+      productPrice: "",
+      productDescription: "",
+      productUnit: "אדם",
+    },
+  });
+  const editSupplierForm = useForm<EditSupplierForm>({ mode: "onChange" });
 
   // ─── Convex Queries ───
   const supplierId = id as Id<"suppliers"> | undefined;
-  const supplier = useQuery(api.suppliers.get, supplierId ? { id: supplierId as any } : "skip");
-  const contacts = useQuery(api.supplierContacts.listBySupplierId, supplierId ? { supplierId: supplierId as any } : "skip");
-  const products = useQuery(api.supplierProducts.listBySupplierId, supplierId ? { supplierId: supplierId as any } : "skip");
-  const documents = useQuery(api.supplierDocuments.listBySupplierId, supplierId ? { supplierId: supplierId as any } : "skip");
+  const supplier = useQuery(
+    api.suppliers.get,
+    supplierId ? { id: supplierId as any } : "skip"
+  );
+  const contacts = useQuery(
+    api.supplierContacts.listBySupplierId,
+    supplierId ? { supplierId: supplierId as any } : "skip"
+  );
+  const products = useQuery(
+    api.supplierProducts.listBySupplierId,
+    supplierId ? { supplierId: supplierId as any } : "skip"
+  );
+  const documents = useQuery(
+    api.supplierDocuments.listBySupplierId,
+    supplierId ? { supplierId: supplierId as any } : "skip"
+  );
 
   // ─── Convex Mutations ───
   const updateSupplier = useMutation(api.suppliers.update);
@@ -138,7 +226,11 @@ export function SupplierDetail() {
   const updateDocument = useMutation(api.supplierDocuments.update);
 
   // Loading state: any query still undefined
-  const loading = supplier === undefined || contacts === undefined || products === undefined || documents === undefined;
+  const loading =
+    supplier === undefined ||
+    contacts === undefined ||
+    products === undefined ||
+    documents === undefined;
 
   // Normalize data for the UI (fallback to empty arrays when null/undefined)
   const contactsList: SupplierContact[] = (contacts ?? []) as any;
@@ -146,7 +238,9 @@ export function SupplierDetail() {
   const documentsList: SupplierDocument[] = (documents ?? []) as any;
 
   const onAddContact = async (data: AddContactForm) => {
-    if (!supplierId) return;
+    if (!supplierId) {
+      return;
+    }
     try {
       setSaving(true);
       await addContact({
@@ -159,88 +253,115 @@ export function SupplierDetail() {
       });
       setShowAddContact(false);
       contactForm.reset();
-      appToast.success('איש קשר נוסף', `${data.contactName} נשמר בכרטיס הספק`);
-    } catch (err) { appToast.error('שגיאה בהוספת איש קשר'); }
-    finally { setSaving(false); }
+      appToast.success("איש קשר נוסף", `${data.contactName} נשמר בכרטיס הספק`);
+    } catch (_err) {
+      appToast.error("שגיאה בהוספת איש קשר");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const deleteContact = async (contactId: string) => {
     try {
       await removeContact({ id: contactId as any });
-      appToast.success('איש קשר הוסר');
-    } catch (err) { appToast.error('שגיאה במחיקת איש קשר'); }
+      appToast.success("איש קשר הוסר");
+    } catch (_err) {
+      appToast.error("שגיאה במחיקת איש קשר");
+    }
   };
 
   const onAddProduct = async (data: AddProductForm) => {
-    if (!supplierId) return;
+    if (!supplierId) {
+      return;
+    }
     try {
       setSaving(true);
       await addProduct({
         supplierId: supplierId as any,
         name: data.productName.trim(),
-        price: parseFloat(data.productPrice) || 0,
+        price: Number.parseFloat(data.productPrice) || 0,
         description: data.productDescription.trim(),
         unit: data.productUnit.trim(),
       });
       setShowAddProduct(false);
-      productForm.reset({ productName: '', productPrice: '', productDescription: '', productUnit: 'אדם' });
-      appToast.success('מוצר נוסף', `${data.productName} נשמר`);
-    } catch (err) { appToast.error('שגיאה בהוספת מוצר'); }
-    finally { setSaving(false); }
+      productForm.reset({
+        productName: "",
+        productPrice: "",
+        productDescription: "",
+        productUnit: "אדם",
+      });
+      appToast.success("מוצר נוסף", `${data.productName} נשמר`);
+    } catch (_err) {
+      appToast.error("שגיאה בהוספת מוצר");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const deleteProduct = async (productId: string) => {
     try {
       await removeProduct({ id: productId as any });
-      appToast.success('מוצר הוסר');
-    } catch (err) { appToast.error('שגיאה במחיקת מוצר'); }
+      appToast.success("מוצר הוסר");
+    } catch (_err) {
+      appToast.error("שגיאה במחיקת מוצר");
+    }
   };
 
   const handleProductUpdate = (updated: SupplierProduct) => {
     // With Convex, the useQuery auto-updates. We only update the local editingProduct state.
-    if (editingProduct?.id === updated.id) setEditingProduct(updated);
-  };
-
-  const updateDocExpiry = async (docId: string) => {
-    if (!docExpiryValue) return;
-    try {
-      setDocSaving(docId);
-      await updateDocument({ id: docId as any, expiry: docExpiryValue });
-      setDocExpiryEditing(null);
-      setDocExpiryValue('');
-      appToast.success('תאריך פג תוקף עודכן בהצלחה');
-    } catch (err) { appToast.error('שגיאה בעדכון תאריך פג תוקף'); }
-    finally { setDocSaving(null); }
+    if (editingProduct?.id === updated.id) {
+      setEditingProduct(updated);
+    }
   };
 
   const archiveSupplier = async () => {
-    if (!supplierId) return;
+    if (!supplierId) {
+      return;
+    }
     try {
       setArchiving(true);
       await archiveSupplierMutation({ id: supplierId as any });
-      appToast.success('הספק הועבר לארכיון', `${supplier?.name} הועבר לארכיון בהצלחה`);
-      navigate('/suppliers');
-    } catch (err) { appToast.error('שגיאה בהעברה לארכיון'); }
-    finally { setArchiving(false); }
+      appToast.success(
+        "הספק הועבר לארכיון",
+        `${supplier?.name} הועבר לארכיון בהצלחה`
+      );
+      navigate("/suppliers");
+    } catch (_err) {
+      appToast.error("שגיאה בהעברה לארכיון");
+    } finally {
+      setArchiving(false);
+    }
   };
 
   const restoreSupplier = async () => {
-    if (!supplierId) return;
+    if (!supplierId) {
+      return;
+    }
     try {
       setArchiving(true);
-      await updateSupplier({ id: supplierId as any, category: 'כללי', categoryColor: '#8d785e' });
-      appToast.success('הספק שוחזר בהצלחה', `${supplier?.name} חזר לבנק הספקים`);
-    } catch (err) { appToast.error('שגיאה בשחזור ספק'); }
-    finally { setArchiving(false); }
+      await updateSupplier({
+        id: supplierId as any,
+        category: "כללי",
+        categoryColor: "#8d785e",
+      });
+      appToast.success(
+        "הספק שוחזר בהצלחה",
+        `${supplier?.name} חזר לבנק הספקים`
+      );
+    } catch (_err) {
+      appToast.error("שגיאה בשחזור ספק");
+    } finally {
+      setArchiving(false);
+    }
   };
 
-  const isArchived = supplier?.category === 'ארכיון';
+  const isArchived = supplier?.category === "ארכיון";
 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <Loader2 size={32} className="animate-spin text-[#ff8c00] mb-3" />
-        <p className="text-[14px] text-[#8d785e]">טוען פרטי ספק...</p>
+        <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
+        <p className="text-[#8d785e] text-[14px]">טוען פרטי ספק...</p>
       </div>
     );
   }
@@ -248,104 +369,171 @@ export function SupplierDetail() {
   if (!supplier) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <AlertTriangle size={32} className="text-[#ef4444] mb-3" />
-        <p className="text-[16px] text-[#181510]" style={{ fontWeight: 600 }}>ספק לא נמצא</p>
-        <button onClick={() => navigate('/suppliers')} className="mt-3 text-[13px] text-[#ff8c00]" style={{ fontWeight: 600 }}>חזור לבנק ספקים</button>
+        <AlertTriangle className="mb-3 text-[#ef4444]" size={32} />
+        <p className="text-[#181510] text-[16px]" style={{ fontWeight: 600 }}>
+          ספק לא נמצא
+        </p>
+        <button
+          className="mt-3 text-[#ff8c00] text-[13px]"
+          onClick={() => navigate("/suppliers")}
+          style={{ fontWeight: 600 }}
+          type="button"
+        >
+          חזור לבנק ספקים
+        </button>
       </div>
     );
   }
 
-  const verifBg = supplier.verificationStatus === 'verified' ? 'bg-green-50 text-green-600' :
-                  supplier.verificationStatus === 'pending' ? 'bg-yellow-50 text-yellow-600' :
-                  'bg-[#f5f3f0] text-[#8d785e]';
-  const VerifIcon = supplier.verificationStatus === 'verified' ? CheckCircle :
-                    supplier.verificationStatus === 'pending' ? Clock : AlertTriangle;
+  const verifBg =
+    supplier.verificationStatus === "verified"
+      ? "bg-green-50 text-green-600"
+      : supplier.verificationStatus === "pending"
+        ? "bg-yellow-50 text-yellow-600"
+        : "bg-[#f5f3f0] text-[#8d785e]";
+  const VerifIcon =
+    supplier.verificationStatus === "verified"
+      ? CheckCircle
+      : supplier.verificationStatus === "pending"
+        ? Clock
+        : AlertTriangle;
 
-  const getInitials = (name: string) => name.split(' ').map(w => w[0]).join('').slice(0, 2);
+  const getInitials = (name: string) =>
+    name
+      .split(" ")
+      .map((w) => w[0])
+      .join("")
+      .slice(0, 2);
 
   return (
-    <div className="p-4 lg:p-6 mx-auto font-['Assistant',sans-serif]" dir="rtl">
+    <div className="mx-auto p-4 font-['Assistant',sans-serif] lg:p-6" dir="rtl">
       {/* Archived banner */}
       {isArchived && (
-        <div className="flex items-center justify-between bg-[#94a3b8]/10 border border-[#94a3b8]/30 rounded-xl px-4 py-3 mb-5">
+        <div className="mb-5 flex items-center justify-between rounded-xl border border-[#94a3b8]/30 bg-[#94a3b8]/10 px-4 py-3">
           <div className="flex items-center gap-2">
-            <Archive size={16} className="text-[#64748b]" />
-            <span className="text-[14px] text-[#475569]" style={{ fontWeight: 600 }}>ספק זה נמצא בארכיון</span>
+            <Archive className="text-[#64748b]" size={16} />
+            <span
+              className="text-[#475569] text-[14px]"
+              style={{ fontWeight: 600 }}
+            >
+              ספק זה נמצא בארכיון
+            </span>
           </div>
           <button
-            onClick={restoreSupplier}
+            className="flex items-center gap-1.5 rounded-lg bg-green-50 px-3 py-1.5 text-[13px] text-green-600 transition-all hover:bg-green-100 hover:text-green-700 disabled:opacity-50"
             disabled={archiving}
-            className="flex items-center gap-1.5 text-[13px] text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-all"
+            onClick={restoreSupplier}
             style={{ fontWeight: 600 }}
+            type="button"
           >
-            {archiving ? <Loader2 size={14} className="animate-spin" /> : <ArchiveRestore size={14} />}
-            {archiving ? 'משחזר...' : 'שחזור לבנק ספקים'}
+            {archiving ? (
+              <Loader2 className="animate-spin" size={14} />
+            ) : (
+              <ArchiveRestore size={14} />
+            )}
+            {archiving ? "משחזר..." : "שחזור לבנק ספקים"}
           </button>
         </div>
       )}
 
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(isArchived ? '/suppliers/archive' : '/suppliers')} className="text-[#8d785e] hover:text-[#181510] transition-colors">
+          <button
+            className="text-[#8d785e] transition-colors hover:text-[#181510]"
+            onClick={() =>
+              navigate(isArchived ? "/suppliers/archive" : "/suppliers")
+            }
+            type="button"
+          >
             <ArrowRight size={20} />
           </button>
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: supplier.categoryColor + '15' }}>
-            <CategoryIcon category={parseCategories(supplier.category)[0] || supplier.category} size={24} color={supplier.categoryColor} />
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-xl"
+            style={{ backgroundColor: `${supplier.categoryColor}15` }}
+          >
+            <CategoryIcon
+              category={
+                parseCategories(supplier.category)[0] || supplier.category
+              }
+              color={supplier.categoryColor}
+              size={24}
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-[24px] text-[#181510]" style={{ fontWeight: 700 }}>{supplier.name}</h1>
+              <h1
+                className="text-[#181510] text-[24px]"
+                style={{ fontWeight: 700 }}
+              >
+                {supplier.name}
+              </h1>
               <button
+                className="flex items-center gap-1 rounded-lg bg-[#ff8c00]/10 px-2.5 py-1 text-[#ff8c00] text-[12px] transition-all hover:bg-[#ff8c00]/20 hover:text-[#e67e00]"
                 onClick={() => {
                   editSupplierForm.reset({
                     name: supplier.name,
-                    phone: supplier.phone || '',
+                    phone: supplier.phone || "",
                     category: supplier.category,
                     categoryColor: supplier.categoryColor,
-                    region: supplier.region || '',
+                    region: supplier.region || "",
                     rating: String(supplier.rating),
                     verificationStatus: supplier.verificationStatus,
-                    notes: supplier.notes || '',
-                    icon: supplier.icon || '',
+                    notes: supplier.notes || "",
+                    icon: supplier.icon || "",
                   });
                   setSelectedCategories(parseCategories(supplier.category));
                   setShowEditSupplier(true);
                 }}
-                className="flex items-center gap-1 text-[12px] text-[#ff8c00] hover:text-[#e67e00] bg-[#ff8c00]/10 hover:bg-[#ff8c00]/20 px-2.5 py-1 rounded-lg transition-all"
                 style={{ fontWeight: 600 }}
+                type="button"
               >
                 <Pencil size={12} /> עריכה
               </button>
-              <span className={`flex items-center gap-1 text-[12px] px-2 py-0.5 rounded-full ${verifBg}`} style={{ fontWeight: 600 }}>
-                <VerifIcon size={12} /> {statusLabel[supplier.verificationStatus]}
+              <span
+                className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] ${verifBg}`}
+                style={{ fontWeight: 600 }}
+              >
+                <VerifIcon size={12} />{" "}
+                {statusLabel[supplier.verificationStatus]}
               </span>
             </div>
-            <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
-              {parseCategories(supplier.category).map(cat => {
-                const opt = CATEGORY_OPTIONS.find(o => o.value === cat);
-                const catColor = opt?.color || '#8d785e';
+            <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+              {parseCategories(supplier.category).map((cat) => {
+                const opt = CATEGORY_OPTIONS.find((o) => o.value === cat);
+                const catColor = opt?.color || "#8d785e";
                 return (
                   <span
+                    className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px]"
                     key={cat}
-                    className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full"
-                    style={{ backgroundColor: catColor + '15', color: catColor, fontWeight: 600 }}
+                    style={{
+                      backgroundColor: `${catColor}15`,
+                      color: catColor,
+                      fontWeight: 600,
+                    }}
                   >
-                    <CategoryIcon category={cat} size={12} color={catColor} />
+                    <CategoryIcon category={cat} color={catColor} size={12} />
                     {cat}
                   </span>
                 );
               })}
-              <span className="text-[13px] text-[#8d785e]">&bull; {supplier.region}</span>
-              {supplier.phone && <span className="text-[13px] text-[#8d785e]">&bull; {supplier.phone}</span>}
+              <span className="text-[#8d785e] text-[13px]">
+                &bull; {supplier.region}
+              </span>
+              {supplier.phone && (
+                <span className="text-[#8d785e] text-[13px]">
+                  &bull; {supplier.phone}
+                </span>
+              )}
             </div>
           </div>
         </div>
         {!isArchived && (
           <button
+            className="flex items-center gap-1.5 rounded-xl border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[13px] transition-all hover:border-[#b8a990] hover:text-[#181510]"
             onClick={() => setShowArchiveConfirm(true)}
-            className="flex items-center gap-1.5 text-[13px] text-[#8d785e] hover:text-[#181510] border border-[#e7e1da] hover:border-[#b8a990] px-3 py-2 rounded-xl transition-all"
             style={{ fontWeight: 500 }}
+            type="button"
           >
             <Archive size={15} />
             העבר לארכיון
@@ -355,40 +543,57 @@ export function SupplierDetail() {
 
       {/* Auto-note badges + manual note — below supplier details */}
       {(() => {
-        const autoNotes = computeAutoNotes(supplier as any, documentsList, contactsList, productsList);
-        const hasManual = supplier.notes && supplier.notes !== '-';
-        if (autoNotes.length === 0 && !hasManual) return null;
+        const autoNotes = computeAutoNotes(
+          supplier as any,
+          documentsList,
+          contactsList,
+          productsList
+        );
+        const hasManual = supplier.notes && supplier.notes !== "-";
+        if (autoNotes.length === 0 && !hasManual) {
+          return null;
+        }
 
         const NOTE_ICONS: Record<string, React.ElementType> = {
-          'shield-alert': AlertTriangle,
-          'file-warning': FileText,
-          'alert-triangle': AlertTriangle,
-          'clock': Clock,
-          'file-x': FileText,
-          'user-x': Users,
-          'phone-off': Phone,
-          'package-x': Package,
+          "shield-alert": AlertTriangle,
+          "file-warning": FileText,
+          "alert-triangle": AlertTriangle,
+          clock: Clock,
+          "file-x": FileText,
+          "user-x": Users,
+          "phone-off": Phone,
+          "package-x": Package,
         };
 
         return (
-          <div className="flex flex-col items-start gap-1.5 mb-5">
-            {autoNotes.map(note => {
+          <div className="mb-5 flex flex-col items-start gap-1.5">
+            {autoNotes.map((note) => {
               const styles = noteLevelStyles(note.level);
               const NoteIcon = NOTE_ICONS[note.icon] || AlertTriangle;
               return (
                 <span
-                  key={note.id}
                   className={`inline-flex items-center gap-1.5 ${styles.bg} border ${styles.border} rounded-full px-2.5 py-1`}
+                  key={note.id}
                 >
-                  <NoteIcon size={12} className={styles.icon} />
-                  <span className={`text-[11px] ${styles.text} whitespace-nowrap`} style={{ fontWeight: 500 }}>{note.text}</span>
+                  <NoteIcon className={styles.icon} size={12} />
+                  <span
+                    className={`text-[11px] ${styles.text} whitespace-nowrap`}
+                    style={{ fontWeight: 500 }}
+                  >
+                    {note.text}
+                  </span>
                 </span>
               );
             })}
             {hasManual && (
-              <span className="inline-flex items-center gap-1.5 bg-yellow-50 border border-yellow-200 rounded-full px-2.5 py-1">
-                <AlertTriangle size={12} className="text-yellow-600" />
-                <span className="text-[11px] text-yellow-800 whitespace-nowrap" style={{ fontWeight: 500 }}>הערה: {supplier.notes}</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-yellow-200 bg-yellow-50 px-2.5 py-1">
+                <AlertTriangle className="text-yellow-600" size={12} />
+                <span
+                  className="whitespace-nowrap text-[11px] text-yellow-800"
+                  style={{ fontWeight: 500 }}
+                >
+                  הערה: {supplier.notes}
+                </span>
               </span>
             )}
           </div>
@@ -396,52 +601,110 @@ export function SupplierDetail() {
       })()}
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-5 bg-[#ece8e3] rounded-lg p-1 overflow-x-auto">
+      <div className="mb-5 flex gap-1 overflow-x-auto rounded-lg bg-[#ece8e3] p-1">
         {tabItems.map((tab) => (
           <button
+            className={`whitespace-nowrap rounded-md px-4 py-2 text-[13px] transition-all ${
+              activeTab === tab.id
+                ? "bg-white text-[#181510] shadow-sm"
+                : "text-[#8d785e] hover:text-[#181510]"
+            }`}
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`whitespace-nowrap py-2 px-4 rounded-md text-[13px] transition-all ${
-              activeTab === tab.id ? 'bg-white text-[#181510] shadow-sm' : 'text-[#8d785e] hover:text-[#181510]'
-            }`}
             style={{ fontWeight: activeTab === tab.id ? 600 : 400 }}
+            type="button"
           >
-            {tab.id === 'docs' && documentsList.some(d => d.status === 'expired') && <span className="inline-block w-2 h-2 bg-red-500 rounded-full ml-1" />}
+            {tab.id === "docs" &&
+              documentsList.some((d) => d.status === "expired") && (
+                <span className="ml-1 inline-block h-2 w-2 rounded-full bg-red-500" />
+              )}
             {tab.label}
-            {tab.id === 'contacts' && <span className="text-[10px] text-[#b8a990] mr-1">({contactsList.length})</span>}
-            {tab.id === 'products' && <span className="text-[10px] text-[#b8a990] mr-1">({productsList.length})</span>}
-            {tab.id === 'docs' && <span className="text-[10px] text-[#b8a990] mr-1">({documentsList.length})</span>}
+            {tab.id === "contacts" && (
+              <span className="mr-1 text-[#b8a990] text-[10px]">
+                ({contactsList.length})
+              </span>
+            )}
+            {tab.id === "products" && (
+              <span className="mr-1 text-[#b8a990] text-[10px]">
+                ({productsList.length})
+              </span>
+            )}
+            {tab.id === "docs" && (
+              <span className="mr-1 text-[#b8a990] text-[10px]">
+                ({documentsList.length})
+              </span>
+            )}
           </button>
         ))}
       </div>
 
       {/* ═══ Info Tab ═══ */}
-      {activeTab === 'info' && (
-        <div className="grid lg:grid-cols-3 gap-5">
-          <div className="lg:col-span-2 space-y-5">
+      {activeTab === "info" && (
+        <div className="grid gap-5 lg:grid-cols-3">
+          <div className="space-y-5 lg:col-span-2">
             {/* Contacts preview */}
-            <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>אנשי קשר ({contactsList.length})</h3>
-                <button onClick={() => setActiveTab('contacts')} className="text-[12px] text-[#ff8c00]" style={{ fontWeight: 600 }}>צפה בכל →</button>
+            <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+              <div className="mb-4 flex items-center justify-between">
+                <h3
+                  className="text-[#181510] text-[16px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  אנשי קשר ({contactsList.length})
+                </h3>
+                <button
+                  className="text-[#ff8c00] text-[12px]"
+                  onClick={() => setActiveTab("contacts")}
+                  style={{ fontWeight: 600 }}
+                  type="button"
+                >
+                  צפה בכל →
+                </button>
               </div>
               {contactsList.length === 0 ? (
-                <p className="text-[13px] text-[#b8a990] text-center py-4">אין אנשי קשר</p>
+                <p className="py-4 text-center text-[#b8a990] text-[13px]">
+                  אין אנשי קשר
+                </p>
               ) : (
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {contactsList.slice(0, 2).map(contact => (
-                    <div key={contact.id} className="border border-[#e7e1da] rounded-xl p-4">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[14px] text-white ${contact.primary ? 'bg-green-500' : 'bg-[#ff8c00]'}`} style={{ fontWeight: 600 }}>{getInitials(contact.name)}</div>
-                        <div>
-                          <div className="text-[14px] text-[#181510]" style={{ fontWeight: 600 }}>{contact.name}</div>
-                          <div className="text-[11px] text-[#8d785e]">{contact.role}</div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {contactsList.slice(0, 2).map((contact) => (
+                    <div
+                      className="rounded-xl border border-[#e7e1da] p-4"
+                      key={contact.id}
+                    >
+                      <div className="mb-3 flex items-center gap-3">
+                        <div
+                          className={`flex h-10 w-10 items-center justify-center rounded-full text-[14px] text-white ${contact.primary ? "bg-green-500" : "bg-[#ff8c00]"}`}
+                          style={{ fontWeight: 600 }}
+                        >
+                          {getInitials(contact.name)}
                         </div>
-                        {contact.primary && <span className="text-[10px] text-green-600 bg-green-50 px-2 py-0.5 rounded-full mr-auto" style={{ fontWeight: 600 }}>ראשי</span>}
+                        <div>
+                          <div
+                            className="text-[#181510] text-[14px]"
+                            style={{ fontWeight: 600 }}
+                          >
+                            {contact.name}
+                          </div>
+                          <div className="text-[#8d785e] text-[11px]">
+                            {contact.role}
+                          </div>
+                        </div>
+                        {contact.primary && (
+                          <span
+                            className="mr-auto rounded-full bg-green-50 px-2 py-0.5 text-[10px] text-green-600"
+                            style={{ fontWeight: 600 }}
+                          >
+                            ראשי
+                          </span>
+                        )}
                       </div>
                       <div className="space-y-1.5">
-                        <div className="flex items-center gap-2 text-[12px] text-[#8d785e]"><Phone size={12} /> {contact.phone}</div>
-                        <div className="flex items-center gap-2 text-[12px] text-[#8d785e]"><Mail size={12} /> {contact.email}</div>
+                        <div className="flex items-center gap-2 text-[#8d785e] text-[12px]">
+                          <Phone size={12} /> {contact.phone}
+                        </div>
+                        <div className="flex items-center gap-2 text-[#8d785e] text-[12px]">
+                          <Mail size={12} /> {contact.email}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -450,45 +713,94 @@ export function SupplierDetail() {
             </div>
 
             {/* Products preview */}
-            <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>מוצרים ושירותים ({productsList.length})</h3>
-                <button onClick={() => setActiveTab('products')} className="text-[12px] text-[#ff8c00]" style={{ fontWeight: 600 }}>צפה בכל →</button>
+            <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+              <div className="mb-4 flex items-center justify-between">
+                <h3
+                  className="text-[#181510] text-[16px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  מוצרים ושירותים ({productsList.length})
+                </h3>
+                <button
+                  className="text-[#ff8c00] text-[12px]"
+                  onClick={() => setActiveTab("products")}
+                  style={{ fontWeight: 600 }}
+                  type="button"
+                >
+                  צפה בכל →
+                </button>
               </div>
               {productsList.length === 0 ? (
-                <p className="text-[13px] text-[#b8a990] text-center py-4">אין מוצרים</p>
+                <p className="py-4 text-center text-[#b8a990] text-[13px]">
+                  אין מוצרים
+                </p>
               ) : (
-                <div className="grid sm:grid-cols-3 gap-3">
-                  {productsList.slice(0, 3).map(product => {
-                    const heroImg = product.images?.length ? product.images[0].url : null;
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {productsList.slice(0, 3).map((product) => {
+                    const heroImg = product.images?.length
+                      ? product.images[0].url
+                      : null;
                     return (
+                      // biome-ignore lint/a11y/useSemanticElements: Complex card component with images - using div with role="button" is appropriate
                       <div
+                        className="group cursor-pointer overflow-hidden rounded-xl border border-[#e7e1da] transition-all hover:border-[#ff8c00]/40 hover:shadow-sm"
                         key={product.id}
                         onClick={() => setEditingProduct(product)}
-                        className="border border-[#e7e1da] rounded-xl overflow-hidden hover:shadow-sm hover:border-[#ff8c00]/40 transition-all cursor-pointer group"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setEditingProduct(product);
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
                       >
                         {/* Product image */}
                         {heroImg ? (
-                          <div className="h-24 bg-[#f5f3f0] overflow-hidden relative">
-                            <ImageWithFallback src={heroImg} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                          <div className="relative h-24 overflow-hidden bg-[#f5f3f0]">
+                            <ImageWithFallback
+                              alt={product.name}
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                              src={heroImg}
+                            />
                             {(product.images?.length || 0) > 1 && (
-                              <span className="absolute top-1.5 left-1.5 bg-black/60 backdrop-blur-md text-white text-[9px] px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                                <Camera size={9} /> {product.images!.length}
+                              <span className="absolute top-1.5 left-1.5 flex items-center gap-0.5 rounded-full bg-black/60 px-1.5 py-0.5 text-[9px] text-white backdrop-blur-md">
+                                <Camera size={9} />{" "}
+                                {product.images?.length || 0}
                               </span>
                             )}
                           </div>
                         ) : (
-                          <div className="h-16 bg-[#f5f3f0] flex items-center justify-center">
-                            <Package size={20} className="text-[#d0c8bb]" />
+                          <div className="flex h-16 items-center justify-center bg-[#f5f3f0]">
+                            <Package className="text-[#d0c8bb]" size={20} />
                           </div>
                         )}
                         <div className="p-3">
-                          <div className="text-[13px] text-[#181510] group-hover:text-[#ff8c00] transition-colors flex items-center gap-1" style={{ fontWeight: 600 }}>
+                          <div
+                            className="flex items-center gap-1 text-[#181510] text-[13px] transition-colors group-hover:text-[#ff8c00]"
+                            style={{ fontWeight: 600 }}
+                          >
                             {product.name}
-                            <Pencil size={10} className="text-[#b8a990] group-hover:text-[#ff8c00] transition-colors" />
+                            <Pencil
+                              className="text-[#b8a990] transition-colors group-hover:text-[#ff8c00]"
+                              size={10}
+                            />
                           </div>
-                          <div className="text-[11px] text-[#8d785e] mt-1 line-clamp-2">{product.description}</div>
-                          <div className="mt-2 text-[14px] text-[#181510]" style={{ fontWeight: 700 }}>₪{product.price.toLocaleString()}<span className="text-[11px] text-[#8d785e]" style={{ fontWeight: 400 }}>/{product.unit}</span></div>
+                          <div className="mt-1 line-clamp-2 text-[#8d785e] text-[11px]">
+                            {product.description}
+                          </div>
+                          <div
+                            className="mt-2 text-[#181510] text-[14px]"
+                            style={{ fontWeight: 700 }}
+                          >
+                            ₪{product.price.toLocaleString()}
+                            <span
+                              className="text-[#8d785e] text-[11px]"
+                              style={{ fontWeight: 400 }}
+                            >
+                              /{product.unit}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     );
@@ -501,13 +813,28 @@ export function SupplierDetail() {
           {/* Side panel */}
           <div className="space-y-5">
             {/* Rating */}
-            <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
-              <h3 className="text-[14px] text-[#181510] mb-3" style={{ fontWeight: 700 }}>דירוג</h3>
+            <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+              <h3
+                className="mb-3 text-[#181510] text-[14px]"
+                style={{ fontWeight: 700 }}
+              >
+                דירוג
+              </h3>
               <div className="flex items-center gap-2">
-                <span className="text-[28px] text-[#181510]" style={{ fontWeight: 800 }}>{supplier.rating}</span>
+                <span
+                  className="text-[#181510] text-[28px]"
+                  style={{ fontWeight: 800 }}
+                >
+                  {supplier.rating}
+                </span>
                 <div className="flex">
-                  {[1, 2, 3, 4, 5].map(s => (
-                    <span key={s} className={`text-[18px] ${s <= supplier.rating ? 'text-[#ff8c00]' : 'text-[#ddd6cb]'}`}>★</span>
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <span
+                      className={`text-[18px] ${s <= supplier.rating ? "text-[#ff8c00]" : "text-[#ddd6cb]"}`}
+                      key={s}
+                    >
+                      ★
+                    </span>
                   ))}
                 </div>
               </div>
@@ -515,54 +842,118 @@ export function SupplierDetail() {
 
             {/* Location */}
             <SupplierLocationMap
-              supplier={supplier as any}
               onUpdate={() => {
                 // Convex auto-updates via useQuery, no manual state update needed
               }}
+              supplier={supplier as any}
             />
 
             {/* Documents summary */}
-            <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-[14px] text-[#181510]" style={{ fontWeight: 700 }}>מסמכים ותקינות</h3>
-                <button onClick={() => setActiveTab('docs')} className="text-[11px] text-[#ff8c00]" style={{ fontWeight: 600 }}>ניהול →</button>
+            <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+              <div className="mb-3 flex items-center justify-between">
+                <h3
+                  className="text-[#181510] text-[14px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  מסמכים ותקינות
+                </h3>
+                <button
+                  className="text-[#ff8c00] text-[11px]"
+                  onClick={() => setActiveTab("docs")}
+                  style={{ fontWeight: 600 }}
+                  type="button"
+                >
+                  ניהול →
+                </button>
               </div>
               {(() => {
-                const requiredNames = ['רישיון עסק', 'תעודת כשרות', "ביטוח צד ג'"];
+                const requiredNames = [
+                  "רישיון עסק",
+                  "תעודת כשרות",
+                  "ביטוח צד ג'",
+                ];
                 const getStatus = (expiry: string) => {
-                  if (!expiry) return 'expired';
+                  if (!expiry) {
+                    return "expired";
+                  }
                   const exp = new Date(expiry);
                   const now = new Date();
-                  if (exp < now) return 'expired';
+                  if (exp < now) {
+                    return "expired";
+                  }
                   const diff = exp.getTime() - now.getTime();
-                  if (diff / (1000 * 60 * 60 * 24) < 60) return 'warning';
-                  return 'valid';
+                  if (diff / (1000 * 60 * 60 * 24) < 60) {
+                    return "warning";
+                  }
+                  return "valid";
                 };
                 return (
                   <div className="space-y-2">
-                    {requiredNames.map(name => {
-                      const doc = documentsList.find(d => d.name === name);
+                    {requiredNames.map((name) => {
+                      const doc = documentsList.find((d) => d.name === name);
                       const status = doc ? getStatus(doc.expiry) : null;
                       return (
-                        <div key={name} className={`flex items-center justify-between p-2.5 rounded-lg border ${
-                          !doc ? 'bg-[#f8f7f5] border-dashed border-[#d4cdc3]' :
-                          status === 'expired' ? 'bg-red-50 border-red-200' :
-                          status === 'warning' ? 'bg-yellow-50 border-yellow-200' :
-                          'bg-green-50 border-green-200'
-                        }`}>
+                        <div
+                          className={`flex items-center justify-between rounded-lg border p-2.5 ${
+                            doc
+                              ? status === "expired"
+                                ? "border-red-200 bg-red-50"
+                                : status === "warning"
+                                  ? "border-yellow-200 bg-yellow-50"
+                                  : "border-green-200 bg-green-50"
+                              : "border-[#d4cdc3] border-dashed bg-[#f8f7f5]"
+                          }`}
+                          key={name}
+                        >
                           <div className="flex items-center gap-2">
-                            {!doc ? <Upload size={13} className="text-[#b8a990]" /> :
-                             status === 'valid' ? <CheckCircle size={13} className="text-green-500" /> :
-                             status === 'warning' ? <AlertTriangle size={13} className="text-yellow-500" /> :
-                             <AlertTriangle size={13} className="text-red-500" />}
-                            <span className="text-[12px] text-[#181510]" style={{ fontWeight: 500 }}>{name}</span>
+                            {doc ? (
+                              status === "valid" ? (
+                                <CheckCircle
+                                  className="text-green-500"
+                                  size={13}
+                                />
+                              ) : status === "warning" ? (
+                                <AlertTriangle
+                                  className="text-yellow-500"
+                                  size={13}
+                                />
+                              ) : (
+                                <AlertTriangle
+                                  className="text-red-500"
+                                  size={13}
+                                />
+                              )
+                            ) : (
+                              <Upload className="text-[#b8a990]" size={13} />
+                            )}
+                            <span
+                              className="text-[#181510] text-[12px]"
+                              style={{ fontWeight: 500 }}
+                            >
+                              {name}
+                            </span>
                           </div>
                           {doc ? (
-                            <span className={`text-[10px] ${status === 'expired' ? 'text-red-500' : status === 'warning' ? 'text-yellow-600' : 'text-green-600'}`} style={{ fontWeight: 600 }}>
-                              {new Date(doc.expiry).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                            <span
+                              className={`text-[10px] ${status === "expired" ? "text-red-500" : status === "warning" ? "text-yellow-600" : "text-green-600"}`}
+                              style={{ fontWeight: 600 }}
+                            >
+                              {new Date(doc.expiry).toLocaleDateString(
+                                "he-IL",
+                                {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                }
+                              )}
                             </span>
                           ) : (
-                            <span className="text-[10px] text-[#b8a990]" style={{ fontWeight: 600 }}>חסר</span>
+                            <span
+                              className="text-[#b8a990] text-[10px]"
+                              style={{ fontWeight: 600 }}
+                            >
+                              חסר
+                            </span>
                           )}
                         </div>
                       );
@@ -576,38 +967,97 @@ export function SupplierDetail() {
       )}
 
       {/* ═══ Contacts Tab ═══ */}
-      {activeTab === 'contacts' && (
-        <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>אנשי קשר ({contactsList.length})</h3>
-            <button onClick={() => setShowAddContact(true)} className="text-[13px] text-[#ff8c00] flex items-center gap-1" style={{ fontWeight: 600 }}><Plus size={14} /> הוספת איש קשר</button>
+      {activeTab === "contacts" && (
+        <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <h3
+              className="text-[#181510] text-[16px]"
+              style={{ fontWeight: 700 }}
+            >
+              אנשי קשר ({contactsList.length})
+            </h3>
+            <button
+              className="flex items-center gap-1 text-[#ff8c00] text-[13px]"
+              onClick={() => setShowAddContact(true)}
+              style={{ fontWeight: 600 }}
+              type="button"
+            >
+              <Plus size={14} /> הוספת איש קשר
+            </button>
           </div>
           {contactsList.length === 0 ? (
-            <div className="text-center py-10">
-              <div className="flex justify-center mb-2"><Users size={32} className="text-[#d0c8bb]" /></div>
-              <p className="text-[14px] text-[#8d785e]">אין אנשי קשר</p>
-              <button onClick={() => setShowAddContact(true)} className="mt-2 text-[13px] text-[#ff8c00]" style={{ fontWeight: 600 }}>הוסף איש קשר ראשון</button>
+            <div className="py-10 text-center">
+              <div className="mb-2 flex justify-center">
+                <Users className="text-[#d0c8bb]" size={32} />
+              </div>
+              <p className="text-[#8d785e] text-[14px]">אין אנשי קשר</p>
+              <button
+                className="mt-2 text-[#ff8c00] text-[13px]"
+                onClick={() => setShowAddContact(true)}
+                style={{ fontWeight: 600 }}
+                type="button"
+              >
+                הוסף איש קשר ראשון
+              </button>
             </div>
           ) : (
             <div className="space-y-3">
-              {contactsList.map(contact => (
-                <div key={contact.id} className="flex items-center justify-between p-4 border border-[#e7e1da] rounded-xl">
+              {contactsList.map((contact) => (
+                <div
+                  className="flex items-center justify-between rounded-xl border border-[#e7e1da] p-4"
+                  key={contact.id}
+                >
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[14px] text-white ${contact.primary ? 'bg-green-500' : 'bg-[#ff8c00]'}`} style={{ fontWeight: 600 }}>{getInitials(contact.name)}</div>
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-full text-[14px] text-white ${contact.primary ? "bg-green-500" : "bg-[#ff8c00]"}`}
+                      style={{ fontWeight: 600 }}
+                    >
+                      {getInitials(contact.name)}
+                    </div>
                     <div>
-                      <div className="text-[14px] text-[#181510]" style={{ fontWeight: 600 }}>
+                      <div
+                        className="text-[#181510] text-[14px]"
+                        style={{ fontWeight: 600 }}
+                      >
                         {contact.name}
-                        {contact.primary && <span className="text-[10px] text-green-600 bg-green-50 px-2 py-0.5 rounded-full mr-2" style={{ fontWeight: 600 }}>ראשי</span>}
+                        {contact.primary && (
+                          <span
+                            className="mr-2 rounded-full bg-green-50 px-2 py-0.5 text-[10px] text-green-600"
+                            style={{ fontWeight: 600 }}
+                          >
+                            ראשי
+                          </span>
+                        )}
                       </div>
-                      <div className="text-[12px] text-[#8d785e]">{contact.role}</div>
+                      <div className="text-[#8d785e] text-[12px]">
+                        {contact.role}
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3 text-[12px] text-[#8d785e]">
-                      <span className="flex items-center gap-1"><Phone size={12} />{contact.phone}</span>
-                      <span className="flex items-center gap-1"><Mail size={12} />{contact.email}</span>
+                    <div className="flex items-center gap-3 text-[#8d785e] text-[12px]">
+                      <span className="flex items-center gap-1">
+                        <Phone size={12} />
+                        {contact.phone}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Mail size={12} />
+                        {contact.email}
+                      </span>
                     </div>
-                    <button onClick={() => requestDelete({ title: 'מחיקת איש קשר', itemName: contact.name, onConfirm: () => deleteContact(contact.id) })} className="text-[#c4b89a] hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
+                    <button
+                      className="text-[#c4b89a] transition-colors hover:text-red-500"
+                      onClick={() =>
+                        requestDelete({
+                          title: "מחיקת איש קשר",
+                          itemName: contact.name,
+                          onConfirm: () => deleteContact(contact.id),
+                        })
+                      }
+                      type="button"
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </div>
                 </div>
               ))}
@@ -617,61 +1067,119 @@ export function SupplierDetail() {
       )}
 
       {/* ═══ Products Tab ═══ */}
-      {activeTab === 'products' && (
-        <div className="bg-white rounded-xl border border-[#e7e1da] p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>מוצרים ושירותים ({productsList.length})</h3>
-            <button onClick={() => setShowAddProduct(true)} className="text-[13px] text-[#ff8c00] flex items-center gap-1" style={{ fontWeight: 600 }}><Plus size={14} /> הוספת מוצר</button>
+      {activeTab === "products" && (
+        <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <h3
+              className="text-[#181510] text-[16px]"
+              style={{ fontWeight: 700 }}
+            >
+              מוצרים ושירותים ({productsList.length})
+            </h3>
+            <button
+              className="flex items-center gap-1 text-[#ff8c00] text-[13px]"
+              onClick={() => setShowAddProduct(true)}
+              style={{ fontWeight: 600 }}
+              type="button"
+            >
+              <Plus size={14} /> הוספת מוצר
+            </button>
           </div>
           {productsList.length === 0 ? (
-            <div className="text-center py-10">
-              <div className="flex justify-center mb-2"><Package size={32} className="text-[#d0c8bb]" /></div>
-              <p className="text-[14px] text-[#8d785e]">אין מוצרים</p>
-              <button onClick={() => setShowAddProduct(true)} className="mt-2 text-[13px] text-[#ff8c00]" style={{ fontWeight: 600 }}>הוסף מוצר ראשון</button>
+            <div className="py-10 text-center">
+              <div className="mb-2 flex justify-center">
+                <Package className="text-[#d0c8bb]" size={32} />
+              </div>
+              <p className="text-[#8d785e] text-[14px]">אין מוצרים</p>
+              <button
+                className="mt-2 text-[#ff8c00] text-[13px]"
+                onClick={() => setShowAddProduct(true)}
+                style={{ fontWeight: 600 }}
+                type="button"
+              >
+                הוסף מוצר ראשון
+              </button>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-3 gap-4">
-              {productsList.map(product => {
+            <div className="grid gap-4 sm:grid-cols-3">
+              {productsList.map((product) => {
                 const imageCount = product.images?.length || 0;
-                const heroImg = imageCount > 0 ? product.images![0].url : VINEYARD_IMG;
+                const heroImg =
+                  imageCount > 0 && product.images?.[0]
+                    ? product.images[0].url
+                    : VINEYARD_IMG;
                 return (
+                  // biome-ignore lint/a11y/useSemanticElements: Complex card component with images - using div with role="button" is appropriate
                   <div
+                    className="group relative cursor-pointer overflow-hidden rounded-xl border border-[#e7e1da] transition-all hover:border-[#ff8c00]/40 hover:shadow-lg"
                     key={product.id}
                     onClick={() => setEditingProduct(product)}
-                    className="border border-[#e7e1da] rounded-xl overflow-hidden hover:shadow-lg hover:border-[#ff8c00]/40 transition-all group relative cursor-pointer"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setEditingProduct(product);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
                   >
                     {/* Delete button */}
                     <button
-                      onClick={(e) => { e.stopPropagation(); requestDelete({ title: 'מחיקת מוצר', itemName: product.name, onConfirm: () => deleteProduct(product.id) }); }}
-                      className="absolute top-2 left-2 z-10 w-7 h-7 bg-white/90 rounded-full flex items-center justify-center text-[#c4b89a] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                      className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-[#c4b89a] opacity-0 shadow-sm transition-all hover:text-red-500 group-hover:opacity-100"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        requestDelete({
+                          title: "מחיקת מוצר",
+                          itemName: product.name,
+                          onConfirm: () => deleteProduct(product.id),
+                        });
+                      }}
+                      type="button"
                     >
                       <Trash2 size={12} />
                     </button>
 
                     {/* Edit badge */}
-                    <div className="absolute top-2 right-2 z-10 bg-[#ff8c00] text-white text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all shadow-sm" style={{ fontWeight: 600 }}>
+                    <div
+                      className="absolute top-2 right-2 z-10 flex items-center gap-1 rounded-full bg-[#ff8c00] px-2 py-0.5 text-[10px] text-white opacity-0 shadow-sm transition-all group-hover:opacity-100"
+                      style={{ fontWeight: 600 }}
+                    >
                       <Pencil size={10} /> עריכה
                     </div>
 
                     {/* Image */}
-                    <div className="h-32 bg-[#f5f3f0] flex items-center justify-center relative overflow-hidden">
-                      <ImageWithFallback src={heroImg} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div className="relative flex h-32 items-center justify-center overflow-hidden bg-[#f5f3f0]">
+                      <ImageWithFallback
+                        alt={product.name}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        src={heroImg}
+                      />
                       {/* Image count */}
                       {imageCount > 1 && (
-                        <span className="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-white backdrop-blur-md">
                           <Camera size={10} /> {imageCount}
                         </span>
                       )}
                       {/* Price tag */}
-                      <span className="absolute bottom-2 left-2 text-[12px] bg-white/90 backdrop-blur-sm text-[#181510] px-2 py-0.5 rounded-md shadow-sm" style={{ fontWeight: 700 }}>
+                      <span
+                        className="absolute bottom-2 left-2 rounded-md bg-white/90 px-2 py-0.5 text-[#181510] text-[12px] shadow-sm backdrop-blur-sm"
+                        style={{ fontWeight: 700 }}
+                      >
                         ₪{product.price.toLocaleString()}/{product.unit}
                       </span>
                     </div>
 
                     {/* Info */}
                     <div className="p-4">
-                      <div className="text-[14px] text-[#181510] group-hover:text-[#ff8c00] transition-colors" style={{ fontWeight: 600 }}>{product.name}</div>
-                      <div className="text-[12px] text-[#8d785e] mt-1 line-clamp-2">{product.description}</div>
+                      <div
+                        className="text-[#181510] text-[14px] transition-colors group-hover:text-[#ff8c00]"
+                        style={{ fontWeight: 600 }}
+                      >
+                        {product.name}
+                      </div>
+                      <div className="mt-1 line-clamp-2 text-[#8d785e] text-[12px]">
+                        {product.description}
+                      </div>
                     </div>
                   </div>
                 );
@@ -682,214 +1190,563 @@ export function SupplierDetail() {
       )}
 
       {/* ═══ Docs Tab ═══ */}
-      {activeTab === 'docs' && (() => {
-        const REQUIRED_DOCS = [
-          { key: 'רישיון עסק', shieldIcon: ShieldCheck },
-          { key: 'תעודת כשרות', shieldIcon: ShieldCheck },
-          { key: "ביטוח צד ג'", shieldIcon: Shield },
-        ] as const;
+      {activeTab === "docs" &&
+        (() => {
+          const REQUIRED_DOCS = [
+            { key: "רישיון עסק", shieldIcon: ShieldCheck },
+            { key: "תעודת כשרות", shieldIcon: ShieldCheck },
+            { key: "ביטוח צד ג'", shieldIcon: Shield },
+          ] as const;
 
-        const getDocStatus = (expiry: string): 'valid' | 'warning' | 'expired' => {
-          if (!expiry) return 'expired';
-          const exp = new Date(expiry);
-          const now = new Date();
-          if (exp < now) return 'expired';
-          const diff = exp.getTime() - now.getTime();
-          if (diff / (1000 * 60 * 60 * 24) < 60) return 'warning';
-          return 'valid';
-        };
-
-        const formatExpiryDate = (dateStr: string) => {
-          if (!dateStr) return '';
-          const d = new Date(dateStr);
-          return d.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        };
-
-        const handleUploadDoc = async (docName: string, expiryDate: string, fileName: string) => {
-          if (!supplierId || !expiryDate) return;
-          try {
-            setDocSaving(docName);
-            const status = getDocStatus(expiryDate);
-            const existing = documentsList.find(d => d.name === docName);
-            if (existing) {
-              await updateDocument({ id: existing.id as any, expiry: expiryDate, status, fileName });
-            } else {
-              await createDocument({ supplierId: supplierId as any, name: docName, expiry: expiryDate, status, fileName });
+          const getDocStatus = (
+            expiry: string
+          ): "valid" | "warning" | "expired" => {
+            if (!expiry) {
+              return "expired";
             }
-            appToast.success('מסמך הועלה בהצלחה', `${docName} נשמר עם תוקף ${formatExpiryDate(expiryDate)}`);
-          } catch (err) {
-            console.error('[SupplierDetail] doc upload error:', err);
-            appToast.error('שגיאה בשמירת מסמך');
-          } finally { setDocSaving(null); }
-        };
+            const exp = new Date(expiry);
+            const now = new Date();
+            if (exp < now) {
+              return "expired";
+            }
+            const diff = exp.getTime() - now.getTime();
+            if (diff / (1000 * 60 * 60 * 24) < 60) {
+              return "warning";
+            }
+            return "valid";
+          };
 
-        return (
-          <div className="bg-white rounded-xl border border-[#e7e1da] p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-[20px] text-[#181510]" style={{ fontWeight: 700 }}>מסמכים ותקינות</h3>
-              <button onClick={() => setActiveTab('docs')} className="w-9 h-9 rounded-lg bg-[#f5f3f0] hover:bg-[#ece8e3] flex items-center justify-center transition-colors" title="העלאה">
-                <Upload size={16} className="text-[#8d785e]" />
-              </button>
-            </div>
+          const formatExpiryDate = (dateStr: string) => {
+            if (!dateStr) {
+              return "";
+            }
+            const d = new Date(dateStr);
+            return d.toLocaleDateString("he-IL", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            });
+          };
 
-            <div className="space-y-4">
-              {REQUIRED_DOCS.map(({ key: docName, shieldIcon: ShieldIcon }) => {
-                const doc = documentsList.find(d => d.name === docName);
-                const hasDoc = !!doc;
-                const status = hasDoc ? getDocStatus(doc.expiry) : null;
-                const isExpired = status === 'expired';
-                const isWarning = status === 'warning';
-                const isValid = status === 'valid';
-                const isEditing = docExpiryEditing === docName;
-                const isSaving = docSaving === docName;
+          const handleUploadDoc = async (
+            docName: string,
+            expiryDate: string,
+            fileName: string
+          ) => {
+            if (!(supplierId && expiryDate)) {
+              return;
+            }
+            try {
+              setDocSaving(docName);
+              const status = getDocStatus(expiryDate);
+              const existing = documentsList.find((d) => d.name === docName);
+              if (existing) {
+                await updateDocument({
+                  id: existing.id as any,
+                  expiry: expiryDate,
+                  status,
+                  fileName,
+                });
+              } else {
+                await createDocument({
+                  supplierId: supplierId as any,
+                  name: docName,
+                  expiry: expiryDate,
+                  status,
+                  fileName,
+                });
+              }
+              appToast.success(
+                "מסמך הועלה בהצלחה",
+                `${docName} נשמר עם תוקף ${formatExpiryDate(expiryDate)}`
+              );
+            } catch (err) {
+              console.error("[SupplierDetail] doc upload error:", err);
+              appToast.error("שגיאה בשמירת מסמך");
+            } finally {
+              setDocSaving(null);
+            }
+          };
 
-                return (
-                  <div key={docName}>
-                    <div
-                      className={`relative rounded-2xl border-2 p-5 transition-all ${
-                        !hasDoc ? 'border-dashed border-[#d4cdc3] bg-[#faf9f7] hover:border-[#ff8c00]/40 hover:bg-[#fffaf3] cursor-pointer' :
-                        isExpired ? 'border-red-200 bg-gradient-to-l from-red-50 to-red-50/30' :
-                        isWarning ? 'border-yellow-200 bg-gradient-to-l from-yellow-50 to-yellow-50/30' :
-                        'border-green-200 bg-gradient-to-l from-green-50 to-green-50/30'
-                      }`}
-                      onClick={() => { if (!hasDoc && !isEditing) { setDocExpiryEditing(docName); setDocExpiryValue(''); } }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                            !hasDoc ? 'bg-[#ece8e3]' : isExpired ? 'bg-red-100' : isWarning ? 'bg-yellow-100' : 'bg-green-100'
-                          }`}>
-                            {!hasDoc ? <Upload size={18} className="text-[#8d785e]" /> :
-                             isExpired ? <AlertTriangle size={18} className="text-red-500" /> :
-                             <CheckCircle size={18} className={isWarning ? 'text-yellow-500' : 'text-green-600'} />}
-                          </div>
-                          <div>
-                            <div className="text-[16px] text-[#181510]" style={{ fontWeight: 700 }}>{docName}</div>
-                            {hasDoc ? (
-                              <div className={`text-[13px] mt-0.5 ${isExpired ? 'text-red-500' : isWarning ? 'text-yellow-600' : 'text-green-600'}`} style={{ fontWeight: 500 }}>
-                                {isExpired ? `פג תוקף ב-${formatExpiryDate(doc.expiry)}` : `בתוקף עד: ${formatExpiryDate(doc.expiry)}`}
+          return (
+            <div className="rounded-xl border border-[#e7e1da] bg-white p-6">
+              <div className="mb-6 flex items-center justify-between">
+                <h3
+                  className="text-[#181510] text-[20px]"
+                  style={{ fontWeight: 700 }}
+                >
+                  מסמכים ותקינות
+                </h3>
+                <button
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#f5f3f0] transition-colors hover:bg-[#ece8e3]"
+                  onClick={() => setActiveTab("docs")}
+                  title="העלאה"
+                  type="button"
+                >
+                  <Upload className="text-[#8d785e]" size={16} />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {REQUIRED_DOCS.map(
+                  ({ key: docName, shieldIcon: ShieldIcon }) => {
+                    const doc = documentsList.find((d) => d.name === docName);
+                    const hasDoc = !!doc;
+                    const status = hasDoc ? getDocStatus(doc.expiry) : null;
+                    const isExpired = status === "expired";
+                    const isWarning = status === "warning";
+                    const isEditing = docExpiryEditing === docName;
+                    const isSaving = docSaving === docName;
+
+                    return (
+                      <div key={docName}>
+                        <div
+                          className={`relative rounded-2xl border-2 p-5 transition-all ${
+                            hasDoc
+                              ? isExpired
+                                ? "border-red-200 bg-gradient-to-l from-red-50 to-red-50/30"
+                                : isWarning
+                                  ? "border-yellow-200 bg-gradient-to-l from-yellow-50 to-yellow-50/30"
+                                  : "border-green-200 bg-gradient-to-l from-green-50 to-green-50/30"
+                              : "cursor-pointer border-[#d4cdc3] border-dashed bg-[#faf9f7] hover:border-[#ff8c00]/40 hover:bg-[#fffaf3]"
+                          }`}
+                          onClick={() => {
+                            if (!(hasDoc || isEditing)) {
+                              setDocExpiryEditing(docName);
+                              setDocExpiryValue("");
+                            }
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div
+                                className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${
+                                  hasDoc
+                                    ? isExpired
+                                      ? "bg-red-100"
+                                      : isWarning
+                                        ? "bg-yellow-100"
+                                        : "bg-green-100"
+                                    : "bg-[#ece8e3]"
+                                }`}
+                              >
+                                {hasDoc ? (
+                                  isExpired ? (
+                                    <AlertTriangle
+                                      className="text-red-500"
+                                      size={18}
+                                    />
+                                  ) : (
+                                    <CheckCircle
+                                      className={
+                                        isWarning
+                                          ? "text-yellow-500"
+                                          : "text-green-600"
+                                      }
+                                      size={18}
+                                    />
+                                  )
+                                ) : (
+                                  <Upload
+                                    className="text-[#8d785e]"
+                                    size={18}
+                                  />
+                                )}
                               </div>
-                            ) : (
-                              <div className="text-[13px] text-[#b8a990] mt-0.5">לא הועלה — לחץ להעלאה</div>
-                            )}
+                              <div>
+                                <div
+                                  className="text-[#181510] text-[16px]"
+                                  style={{ fontWeight: 700 }}
+                                >
+                                  {docName}
+                                </div>
+                                {hasDoc ? (
+                                  <div
+                                    className={`mt-0.5 text-[13px] ${isExpired ? "text-red-500" : isWarning ? "text-yellow-600" : "text-green-600"}`}
+                                    style={{ fontWeight: 500 }}
+                                  >
+                                    {isExpired
+                                      ? `פג תוקף ב-${formatExpiryDate(doc.expiry)}`
+                                      : `בתוקף עד: ${formatExpiryDate(doc.expiry)}`}
+                                  </div>
+                                ) : (
+                                  <div className="mt-0.5 text-[#b8a990] text-[13px]">
+                                    לא הועלה — לחץ להעלאה
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div
+                              className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${
+                                hasDoc
+                                  ? isExpired
+                                    ? "bg-red-100"
+                                    : isWarning
+                                      ? "bg-yellow-100"
+                                      : "bg-green-100"
+                                  : "bg-[#ece8e3]"
+                              }`}
+                            >
+                              {hasDoc ? (
+                                isExpired ? (
+                                  <ShieldAlert
+                                    className="text-red-500"
+                                    size={22}
+                                  />
+                                ) : (
+                                  <ShieldIcon
+                                    className={
+                                      isWarning
+                                        ? "text-yellow-500"
+                                        : "text-green-600"
+                                    }
+                                    size={22}
+                                  />
+                                )
+                              ) : (
+                                <Shield className="text-[#b8a990]" size={22} />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                          !hasDoc ? 'bg-[#ece8e3]' : isExpired ? 'bg-red-100' : isWarning ? 'bg-yellow-100' : 'bg-green-100'
-                        }`}>
-                          {!hasDoc ? <Shield size={22} className="text-[#b8a990]" /> :
-                           isExpired ? <ShieldAlert size={22} className="text-red-500" /> :
-                           <ShieldIcon size={22} className={isWarning ? 'text-yellow-500' : 'text-green-600'} />}
-                        </div>
-                      </div>
-                      {hasDoc && doc.fileName && (
-                        <div className="flex items-center gap-2 mt-3 mr-14">
-                          <FileText size={12} className="text-[#8d785e]" />
-                          <span className="text-[11px] text-[#8d785e]">{doc.fileName}</span>
-                        </div>
-                      )}
-                      {hasDoc && !isEditing && (
-                        <div className="flex items-center gap-2 mt-3 mr-14">
-                          <button onClick={(e) => { e.stopPropagation(); setDocExpiryEditing(docName); setDocExpiryValue(doc.expiry); }} className="text-[11px] text-[#ff8c00] hover:text-[#e67e00] transition-colors flex items-center gap-1" style={{ fontWeight: 600 }}>
-                            <CalendarDays size={12} /> עדכן תוקף
-                          </button>
-                          <span className="text-[#e7e1da]">|</span>
-                          <label className="text-[11px] text-[#ff8c00] hover:text-[#e67e00] transition-colors flex items-center gap-1 cursor-pointer" style={{ fontWeight: 600 }}>
-                            <Upload size={12} /> החלף קובץ
-                            <input type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) handleUploadDoc(docName, doc.expiry, file.name); e.target.value = ''; }} />
-                          </label>
-                        </div>
-                      )}
-                    </div>
-                    {isEditing && (
-                      <div className="mt-3 bg-[#f8f7f5] border border-[#e7e1da] rounded-xl p-4 space-y-3">
-                        <div className="text-[13px] text-[#181510]" style={{ fontWeight: 600 }}>
-                          {hasDoc ? `עדכון תוקף — ${docName}` : `העלאת ${docName}`}
-                        </div>
-                        <div className="grid sm:grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-[12px] text-[#8d785e] mb-1" style={{ fontWeight: 600 }}>תאריך תוקף</label>
-                            <input type="date" value={docExpiryValue} onChange={(e) => setDocExpiryValue(e.target.value)} className="w-full bg-white border border-[#e7e1da] rounded-lg px-3 py-2.5 text-[13px] text-[#181510] focus:outline-none focus:border-[#ff8c00] focus:ring-2 focus:ring-[#ff8c00]/10 transition-all" />
-                          </div>
-                          {!hasDoc && (
-                            <div>
-                              <label className="block text-[12px] text-[#8d785e] mb-1" style={{ fontWeight: 600 }}>קובץ מסמך</label>
-                              <label className="flex items-center gap-2 bg-white border border-[#e7e1da] hover:border-[#ff8c00]/40 rounded-lg px-3 py-2.5 cursor-pointer transition-colors">
-                                <Upload size={14} className="text-[#8d785e]" />
-                                <span className="text-[13px] text-[#8d785e]">בחר קובץ...</span>
-                                <input type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file && docExpiryValue) { handleUploadDoc(docName, docExpiryValue, file.name); setDocExpiryEditing(null); setDocExpiryValue(''); } else if (file && !docExpiryValue) { appToast.warning('נא לבחור תאריך תוקף לפני העלאה'); } e.target.value = ''; }} />
+                          {hasDoc && doc.fileName && (
+                            <div className="mt-3 mr-14 flex items-center gap-2">
+                              <FileText className="text-[#8d785e]" size={12} />
+                              <span className="text-[#8d785e] text-[11px]">
+                                {doc.fileName}
+                              </span>
+                            </div>
+                          )}
+                          {hasDoc && !isEditing && (
+                            <div className="mt-3 mr-14 flex items-center gap-2">
+                              <button
+                                className="flex items-center gap-1 text-[#ff8c00] text-[11px] transition-colors hover:text-[#e67e00]"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setDocExpiryEditing(docName);
+                                  setDocExpiryValue(doc.expiry);
+                                }}
+                                style={{ fontWeight: 600 }}
+                                type="button"
+                              >
+                                <CalendarDays size={12} /> עדכן תוקף
+                              </button>
+                              <span className="text-[#e7e1da]">|</span>
+                              <label
+                                className="flex cursor-pointer items-center gap-1 text-[#ff8c00] text-[11px] transition-colors hover:text-[#e67e00]"
+                                style={{ fontWeight: 600 }}
+                              >
+                                <Upload size={12} /> החלף קובץ
+                                <input
+                                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      handleUploadDoc(
+                                        docName,
+                                        doc.expiry,
+                                        file.name
+                                      );
+                                    }
+                                    e.target.value = "";
+                                  }}
+                                  type="file"
+                                />
                               </label>
                             </div>
                           )}
                         </div>
-                        <div className="flex items-center gap-2">
-                          {hasDoc && (
-                            <button
-                              onClick={() => { if (docExpiryValue) { handleUploadDoc(docName, docExpiryValue, doc.fileName || ''); setDocExpiryEditing(null); setDocExpiryValue(''); } }}
-                              disabled={!docExpiryValue || isSaving}
-                              className="text-[12px] text-white bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5"
+                        {isEditing && (
+                          <div className="mt-3 space-y-3 rounded-xl border border-[#e7e1da] bg-[#f8f7f5] p-4">
+                            <div
+                              className="text-[#181510] text-[13px]"
                               style={{ fontWeight: 600 }}
                             >
-                              {isSaving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
-                              {isSaving ? 'שומר...' : 'שמור'}
-                            </button>
-                          )}
-                          <button onClick={() => { setDocExpiryEditing(null); setDocExpiryValue(''); }} className="text-[12px] text-[#8d785e] hover:text-[#181510] px-3 py-2 rounded-lg transition-colors" style={{ fontWeight: 600 }}>
-                            ביטול
-                          </button>
-                        </div>
+                              {hasDoc
+                                ? `עדכון תוקף — ${docName}`
+                                : `העלאת ${docName}`}
+                            </div>
+                            <div className="grid gap-3 sm:grid-cols-2">
+                              <div>
+                                <label
+                                  className="mb-1 block text-[#8d785e] text-[12px]"
+                                  htmlFor="doc-expiry"
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  תאריך תוקף
+                                </label>
+                                <input
+                                  className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 text-[#181510] text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/10"
+                                  id="doc-expiry"
+                                  onChange={(e) =>
+                                    setDocExpiryValue(e.target.value)
+                                  }
+                                  type="date"
+                                  value={docExpiryValue}
+                                />
+                              </div>
+                              {!hasDoc && (
+                                <div>
+                                  <label
+                                    className="mb-1 block text-[#8d785e] text-[12px]"
+                                    htmlFor="doc-file-upload"
+                                    style={{ fontWeight: 600 }}
+                                  >
+                                    קובץ מסמך
+                                  </label>
+                                  <label
+                                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 transition-colors hover:border-[#ff8c00]/40"
+                                    htmlFor="doc-file-upload"
+                                  >
+                                    <Upload
+                                      className="text-[#8d785e]"
+                                      size={14}
+                                    />
+                                    <span className="text-[#8d785e] text-[13px]">
+                                      בחר קובץ...
+                                    </span>
+                                    <input
+                                      accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                      className="hidden"
+                                      id="doc-file-upload"
+                                      onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file && docExpiryValue) {
+                                          handleUploadDoc(
+                                            docName,
+                                            docExpiryValue,
+                                            file.name
+                                          );
+                                          setDocExpiryEditing(null);
+                                          setDocExpiryValue("");
+                                        } else if (file && !docExpiryValue) {
+                                          appToast.warning(
+                                            "נא לבחור תאריך תוקף לפני העלאה"
+                                          );
+                                        }
+                                        e.target.value = "";
+                                      }}
+                                      type="file"
+                                    />
+                                  </label>
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {hasDoc && (
+                                <button
+                                  className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00] px-4 py-2 text-[12px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                                  disabled={!docExpiryValue || isSaving}
+                                  onClick={() => {
+                                    if (docExpiryValue) {
+                                      handleUploadDoc(
+                                        docName,
+                                        docExpiryValue,
+                                        doc.fileName || ""
+                                      );
+                                      setDocExpiryEditing(null);
+                                      setDocExpiryValue("");
+                                    }
+                                  }}
+                                  style={{ fontWeight: 600 }}
+                                  type="button"
+                                >
+                                  {isSaving ? (
+                                    <Loader2
+                                      className="animate-spin"
+                                      size={13}
+                                    />
+                                  ) : (
+                                    <Save size={13} />
+                                  )}
+                                  {isSaving ? "שומר..." : "שמור"}
+                                </button>
+                              )}
+                              <button
+                                className="rounded-lg px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:text-[#181510]"
+                                onClick={() => {
+                                  setDocExpiryEditing(null);
+                                  setDocExpiryValue("");
+                                }}
+                                style={{ fontWeight: 600 }}
+                                type="button"
+                              >
+                                ביטול
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {documentsList.filter(d => !['רישיון עסק', 'תעודת כשרות', "ביטוח צד ג'"].includes(d.name)).length > 0 && (
-              <div className="mt-6 pt-5 border-t border-[#e7e1da]">
-                <h4 className="text-[14px] text-[#181510] mb-3" style={{ fontWeight: 600 }}>מסמכים נוספים</h4>
-                <div className="space-y-2">
-                  {documentsList.filter(d => !['רישיון עסק', 'תעודת כשרות', "ביטוח צד ג'"].includes(d.name)).map(doc => (
-                    <div key={doc.id} className={`flex items-center justify-between p-3 rounded-xl border ${
-                      doc.status === 'expired' ? 'bg-red-50 border-red-200' :
-                      doc.status === 'warning' ? 'bg-yellow-50 border-yellow-200' :
-                      'bg-green-50 border-green-200'
-                    }`}>
-                      <div className="flex items-center gap-2">
-                        <FileText size={15} className={doc.status === 'expired' ? 'text-red-500' : doc.status === 'warning' ? 'text-yellow-500' : 'text-green-500'} />
-                        <span className="text-[13px] text-[#181510]" style={{ fontWeight: 500 }}>{doc.name}</span>
-                      </div>
-                      <span className={`text-[12px] ${doc.status === 'expired' ? 'text-red-500' : doc.status === 'warning' ? 'text-yellow-600' : 'text-green-600'}`} style={{ fontWeight: 600 }}>
-                        {formatExpiryDate(doc.expiry)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                    );
+                  }
+                )}
               </div>
-            )}
-          </div>
-        );
-      })()}
+
+              {documentsList.filter(
+                (d) =>
+                  !["רישיון עסק", "תעודת כשרות", "ביטוח צד ג'"].includes(d.name)
+              ).length > 0 && (
+                <div className="mt-6 border-[#e7e1da] border-t pt-5">
+                  <h4
+                    className="mb-3 text-[#181510] text-[14px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    מסמכים נוספים
+                  </h4>
+                  <div className="space-y-2">
+                    {documentsList
+                      .filter(
+                        (d) =>
+                          ![
+                            "רישיון עסק",
+                            "תעודת כשרות",
+                            "ביטוח צד ג'",
+                          ].includes(d.name)
+                      )
+                      .map((doc) => (
+                        <div
+                          className={`flex items-center justify-between rounded-xl border p-3 ${
+                            doc.status === "expired"
+                              ? "border-red-200 bg-red-50"
+                              : doc.status === "warning"
+                                ? "border-yellow-200 bg-yellow-50"
+                                : "border-green-200 bg-green-50"
+                          }`}
+                          key={doc.id}
+                        >
+                          <div className="flex items-center gap-2">
+                            <FileText
+                              className={
+                                doc.status === "expired"
+                                  ? "text-red-500"
+                                  : doc.status === "warning"
+                                    ? "text-yellow-500"
+                                    : "text-green-500"
+                              }
+                              size={15}
+                            />
+                            <span
+                              className="text-[#181510] text-[13px]"
+                              style={{ fontWeight: 500 }}
+                            >
+                              {doc.name}
+                            </span>
+                          </div>
+                          <span
+                            className={`text-[12px] ${doc.status === "expired" ? "text-red-500" : doc.status === "warning" ? "text-yellow-600" : "text-green-600"}`}
+                            style={{ fontWeight: 600 }}
+                          >
+                            {formatExpiryDate(doc.expiry)}
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
       {/* ═══ Add Contact Modal ═══ */}
       {showAddContact && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setShowAddContact(false); contactForm.reset(); }}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[20px] text-[#181510]" style={{ fontWeight: 700 }}>הוספת איש קשר</h3>
-              <button onClick={() => { setShowAddContact(false); contactForm.reset(); }} className="text-[#8d785e] hover:text-[#181510]"><X size={20} /></button>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => {
+            setShowAddContact(false);
+            contactForm.reset();
+          }}
+          role="presentation"
+        >
+          <div
+            aria-modal="true"
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            role="dialog"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3
+                className="text-[#181510] text-[20px]"
+                style={{ fontWeight: 700 }}
+              >
+                הוספת איש קשר
+              </h3>
+              <button
+                className="text-[#8d785e] hover:text-[#181510]"
+                onClick={() => {
+                  setShowAddContact(false);
+                  contactForm.reset();
+                }}
+                type="button"
+              >
+                <X size={20} />
+              </button>
             </div>
-            <form onSubmit={contactForm.handleSubmit(onAddContact)} className="space-y-3">
-              <FormField label="שם מלא" placeholder="שם מלא" required error={contactForm.formState.errors.contactName} isDirty={contactForm.formState.dirtyFields.contactName} {...contactForm.register('contactName', rules.requiredMin('שם', 2))} />
-              <FormField label="תפקיד" placeholder="תפקיד" required error={contactForm.formState.errors.contactRole} isDirty={contactForm.formState.dirtyFields.contactRole} {...contactForm.register('contactRole', rules.required('תפקיד'))} />
-              <FormField label="טלפון" placeholder="05X-XXXXXXX" error={contactForm.formState.errors.contactPhone} isDirty={contactForm.formState.dirtyFields.contactPhone} {...contactForm.register('contactPhone', rules.israeliPhone(true))} />
-              <FormField label="אימייל" placeholder="email@example.com" error={contactForm.formState.errors.contactEmail} isDirty={contactForm.formState.dirtyFields.contactEmail} {...contactForm.register('contactEmail', rules.email(true))} />
+            <form
+              className="space-y-3"
+              onSubmit={contactForm.handleSubmit(onAddContact)}
+            >
+              <FormField
+                error={contactForm.formState.errors.contactName}
+                isDirty={contactForm.formState.dirtyFields.contactName}
+                label="שם מלא"
+                placeholder="שם מלא"
+                required
+                {...contactForm.register(
+                  "contactName",
+                  rules.requiredMin("שם", 2)
+                )}
+              />
+              <FormField
+                error={contactForm.formState.errors.contactRole}
+                isDirty={contactForm.formState.dirtyFields.contactRole}
+                label="תפקיד"
+                placeholder="תפקיד"
+                required
+                {...contactForm.register(
+                  "contactRole",
+                  rules.required("תפקיד")
+                )}
+              />
+              <FormField
+                error={contactForm.formState.errors.contactPhone}
+                isDirty={contactForm.formState.dirtyFields.contactPhone}
+                label="טלפון"
+                placeholder="05X-XXXXXXX"
+                {...contactForm.register(
+                  "contactPhone",
+                  rules.israeliPhone(true)
+                )}
+              />
+              <FormField
+                error={contactForm.formState.errors.contactEmail}
+                isDirty={contactForm.formState.dirtyFields.contactEmail}
+                label="אימייל"
+                placeholder="email@example.com"
+                {...contactForm.register("contactEmail", rules.email(true))}
+              />
               <div className="flex gap-3 pt-2">
-                <button type="submit" disabled={saving || !contactForm.formState.isValid} className="flex-1 bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 text-white py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2" style={{ fontWeight: 600 }}>
-                  {saving ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
-                  {saving ? 'שומר...' : 'הוסף'}
+                <button
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  disabled={saving || !contactForm.formState.isValid}
+                  style={{ fontWeight: 600 }}
+                  type="submit"
+                >
+                  {saving ? (
+                    <Loader2 className="animate-spin" size={16} />
+                  ) : (
+                    <Plus size={16} />
+                  )}
+                  {saving ? "שומר..." : "הוסף"}
                 </button>
-                <button type="button" onClick={() => { setShowAddContact(false); contactForm.reset(); }} className="px-5 border border-[#e7e1da] rounded-xl hover:bg-[#f5f3f0] transition-colors">ביטול</button>
+                <button
+                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  onClick={() => {
+                    setShowAddContact(false);
+                    contactForm.reset();
+                  }}
+                  type="button"
+                >
+                  ביטול
+                </button>
               </div>
             </form>
           </div>
@@ -898,25 +1755,104 @@ export function SupplierDetail() {
 
       {/* ═══ Add Product Modal ═══ */}
       {showAddProduct && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setShowAddProduct(false); productForm.reset(); }}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[20px] text-[#181510]" style={{ fontWeight: 700 }}>הוספת מוצר / שירות</h3>
-              <button onClick={() => { setShowAddProduct(false); productForm.reset(); }} className="text-[#8d785e] hover:text-[#181510]"><X size={20} /></button>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => {
+            setShowAddProduct(false);
+            productForm.reset();
+          }}
+          role="presentation"
+        >
+          <div
+            aria-modal="true"
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            role="dialog"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3
+                className="text-[#181510] text-[20px]"
+                style={{ fontWeight: 700 }}
+              >
+                הוספת מוצר / שירות
+              </h3>
+              <button
+                className="text-[#8d785e] hover:text-[#181510]"
+                onClick={() => {
+                  setShowAddProduct(false);
+                  productForm.reset();
+                }}
+                type="button"
+              >
+                <X size={20} />
+              </button>
             </div>
-            <form onSubmit={productForm.handleSubmit(onAddProduct)} className="space-y-3">
-              <FormField label="שם מוצר" placeholder="למשל: סיור מודרך" required error={productForm.formState.errors.productName} isDirty={productForm.formState.dirtyFields.productName} {...productForm.register('productName', rules.requiredMin('שם מוצר', 2))} />
+            <form
+              className="space-y-3"
+              onSubmit={productForm.handleSubmit(onAddProduct)}
+            >
+              <FormField
+                error={productForm.formState.errors.productName}
+                isDirty={productForm.formState.dirtyFields.productName}
+                label="שם מוצר"
+                placeholder="למשל: סיור מודרך"
+                required
+                {...productForm.register(
+                  "productName",
+                  rules.requiredMin("שם מוצר", 2)
+                )}
+              />
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="מחיר" type="number" placeholder="₪" required error={productForm.formState.errors.productPrice} isDirty={productForm.formState.dirtyFields.productPrice} {...productForm.register('productPrice', rules.positivePrice('מחיר'))} />
-                <FormField label="יחידה" placeholder="אדם / אירוע / יום" error={productForm.formState.errors.productUnit} isDirty={productForm.formState.dirtyFields.productUnit} {...productForm.register('productUnit')} />
+                <FormField
+                  error={productForm.formState.errors.productPrice}
+                  isDirty={productForm.formState.dirtyFields.productPrice}
+                  label="מחיר"
+                  placeholder="₪"
+                  required
+                  type="number"
+                  {...productForm.register(
+                    "productPrice",
+                    rules.positivePrice("מחיר")
+                  )}
+                />
+                <FormField
+                  error={productForm.formState.errors.productUnit}
+                  isDirty={productForm.formState.dirtyFields.productUnit}
+                  label="יחידה"
+                  placeholder="אדם / אירוע / יום"
+                  {...productForm.register("productUnit")}
+                />
               </div>
-              <FormField label="תיאור" placeholder="פרטים נוספים..." error={productForm.formState.errors.productDescription} isDirty={productForm.formState.dirtyFields.productDescription} {...productForm.register('productDescription')} />
+              <FormField
+                error={productForm.formState.errors.productDescription}
+                isDirty={productForm.formState.dirtyFields.productDescription}
+                label="תיאור"
+                placeholder="פרטים נוספים..."
+                {...productForm.register("productDescription")}
+              />
               <div className="flex gap-3 pt-2">
-                <button type="submit" disabled={saving || !productForm.formState.isValid} className="flex-1 bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 text-white py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2" style={{ fontWeight: 600 }}>
-                  {saving ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
-                  {saving ? 'שומר...' : 'הוסף מוצר'}
+                <button
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  disabled={saving || !productForm.formState.isValid}
+                  style={{ fontWeight: 600 }}
+                  type="submit"
+                >
+                  {saving ? (
+                    <Loader2 className="animate-spin" size={16} />
+                  ) : (
+                    <Plus size={16} />
+                  )}
+                  {saving ? "שומר..." : "הוסף מוצר"}
                 </button>
-                <button type="button" onClick={() => { setShowAddProduct(false); productForm.reset(); }} className="px-5 border border-[#e7e1da] rounded-xl hover:bg-[#f5f3f0] transition-colors">ביטול</button>
+                <button
+                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  onClick={() => {
+                    setShowAddProduct(false);
+                    productForm.reset();
+                  }}
+                  type="button"
+                >
+                  ביטול
+                </button>
               </div>
             </form>
           </div>
@@ -926,34 +1862,75 @@ export function SupplierDetail() {
       {/* ═══ Product Editor Drawer ═══ */}
       {editingProduct && id && (
         <ProductEditor
-          product={editingProduct}
-          supplierId={id}
           isOpen={!!editingProduct}
           onClose={() => setEditingProduct(null)}
           onUpdate={handleProductUpdate}
+          product={editingProduct}
         />
       )}
 
       {/* ═══ Archive Confirm Modal ═══ */}
       {showArchiveConfirm && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setShowArchiveConfirm(false); }}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[20px] text-[#181510]" style={{ fontWeight: 700 }}>העברה לארכיון</h3>
-              <button onClick={() => { setShowArchiveConfirm(false); }} className="text-[#8d785e] hover:text-[#181510]"><X size={20} /></button>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => {
+            setShowArchiveConfirm(false);
+          }}
+          role="presentation"
+        >
+          <div
+            aria-modal="true"
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            role="dialog"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3
+                className="text-[#181510] text-[20px]"
+                style={{ fontWeight: 700 }}
+              >
+                העברה לארכיון
+              </h3>
+              <button
+                className="text-[#8d785e] hover:text-[#181510]"
+                onClick={() => {
+                  setShowArchiveConfirm(false);
+                }}
+                type="button"
+              >
+                <X size={20} />
+              </button>
             </div>
             <div className="space-y-4">
-              <p className="text-[14px] text-[#8d785e]">האם אתה בטוח שברצונך להעביר את הספק <strong className="text-[#181510]">{supplier?.name}</strong> לארכיון? הספק לא יופיע יותר בבנק הספקים, אך ניתן יהיה לשחזר אותו מעמוד הארכיון.</p>
+              <p className="text-[#8d785e] text-[14px]">
+                האם אתה בטוח שברצונך להעביר את הספק{" "}
+                <strong className="text-[#181510]">{supplier?.name}</strong>{" "}
+                לארכיון? הספק לא יופיע יותר בבנק הספקים, אך ניתן יהיה לשחזר אותו
+                מעמוד הארכיון.
+              </p>
               <div className="flex items-center gap-3">
                 <button
-                  onClick={archiveSupplier}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
                   disabled={archiving}
-                  className="flex-1 bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 text-white py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2" style={{ fontWeight: 600 }}
+                  onClick={archiveSupplier}
+                  style={{ fontWeight: 600 }}
+                  type="button"
                 >
-                  {archiving ? <Loader2 size={16} className="animate-spin" /> : <Archive size={16} />}
-                  {archiving ? 'מעביר...' : 'העבר לארכיון'}
+                  {archiving ? (
+                    <Loader2 className="animate-spin" size={16} />
+                  ) : (
+                    <Archive size={16} />
+                  )}
+                  {archiving ? "מעביר..." : "העבר לארכיון"}
                 </button>
-                <button type="button" onClick={() => { setShowArchiveConfirm(false); }} className="px-5 border border-[#e7e1da] rounded-xl hover:bg-[#f5f3f0] transition-colors">ביטול</button>
+                <button
+                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  onClick={() => {
+                    setShowArchiveConfirm(false);
+                  }}
+                  type="button"
+                >
+                  ביטול
+                </button>
               </div>
             </div>
           </div>
@@ -962,154 +1939,247 @@ export function SupplierDetail() {
 
       {/* ═══ Edit Supplier Modal ═══ */}
       {showEditSupplier && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setShowEditSupplier(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto" dir="rtl" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-5">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => setShowEditSupplier(false)}
+          onKeyDown={(e) => e.key === "Escape" && e.currentTarget.click()}
+          role="presentation"
+        >
+          <div
+            aria-modal="true"
+            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl"
+            dir="rtl"
+            role="dialog"
+          >
+            <div className="mb-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#ff8c00]/10 flex items-center justify-center">
-                  <Pencil size={18} className="text-[#ff8c00]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff8c00]/10">
+                  <Pencil className="text-[#ff8c00]" size={18} />
                 </div>
                 <div>
-                  <h3 className="text-[20px] text-[#181510]" style={{ fontWeight: 700 }}>עריכת פרטי ספק</h3>
-                  <p className="text-[12px] text-[#8d785e]">עדכון פרטים בסיסיים של הספק</p>
+                  <h3
+                    className="text-[#181510] text-[20px]"
+                    style={{ fontWeight: 700 }}
+                  >
+                    עריכת פרטי ספק
+                  </h3>
+                  <p className="text-[#8d785e] text-[12px]">
+                    עדכון פרטים בסיסיים של הספק
+                  </p>
                 </div>
               </div>
-              <button onClick={() => setShowEditSupplier(false)} className="text-[#8d785e] hover:text-[#181510] transition-colors"><X size={20} /></button>
+              <button
+                className="text-[#8d785e] transition-colors hover:text-[#181510]"
+                onClick={() => setShowEditSupplier(false)}
+                type="button"
+              >
+                <X size={20} />
+              </button>
             </div>
             <form
-              onSubmit={editSupplierForm.handleSubmit(async (data: EditSupplierForm) => {
-                if (!supplierId || selectedCategories.length === 0) return;
-                try {
-                  setSavingSupplier(true);
-                  const categoryStr = selectedCategories.join(',');
-                  const primaryCat = CATEGORY_OPTIONS.find(c => c.value === selectedCategories[0]);
-                  await updateSupplier({
-                    id: supplierId as any,
-                    name: data.name.trim(),
-                    phone: data.phone.trim(),
-                    category: categoryStr,
-                    categoryColor: primaryCat?.color || data.categoryColor,
-                    region: data.region,
-                    rating: parseFloat(data.rating) || supplier!.rating,
-                    verificationStatus: data.verificationStatus as 'verified' | 'pending' | 'unverified',
-                    notes: data.notes.trim() || '-',
-                    icon: selectedCategories[0] || data.icon,
-                  });
-                  setShowEditSupplier(false);
-                  appToast.success('פרטי ספק עודכנו', `${data.name} נשמר בהצלחה`);
-                } catch (err) {
-                  console.error('[SupplierDetail] update supplier error:', err);
-                  appToast.error('שגיאה בעדכון פרטי ספק');
-                } finally { setSavingSupplier(false); }
-              })}
               className="space-y-4"
+              onSubmit={editSupplierForm.handleSubmit(
+                async (data: EditSupplierForm) => {
+                  if (!supplierId || selectedCategories.length === 0) {
+                    return;
+                  }
+                  try {
+                    setSavingSupplier(true);
+                    const categoryStr = selectedCategories.join(",");
+                    const primaryCat = CATEGORY_OPTIONS.find(
+                      (c) => c.value === selectedCategories[0]
+                    );
+                    await updateSupplier({
+                      id: supplierId as any,
+                      name: data.name.trim(),
+                      phone: data.phone.trim(),
+                      category: categoryStr,
+                      categoryColor: primaryCat?.color || data.categoryColor,
+                      region: data.region,
+                      rating:
+                        Number.parseFloat(data.rating) || supplier?.rating || 0,
+                      verificationStatus: data.verificationStatus as
+                        | "verified"
+                        | "pending"
+                        | "unverified",
+                      notes: data.notes.trim() || "-",
+                      icon: selectedCategories[0] || data.icon,
+                    });
+                    setShowEditSupplier(false);
+                    appToast.success(
+                      "פרטי ספק עודכנו",
+                      `${data.name} נשמר בהצלחה`
+                    );
+                  } catch (err) {
+                    console.error(
+                      "[SupplierDetail] update supplier error:",
+                      err
+                    );
+                    appToast.error("שגיאה בעדכון פרטי ספק");
+                  } finally {
+                    setSavingSupplier(false);
+                  }
+                }
+              )}
             >
               <FormField
+                error={editSupplierForm.formState.errors.name}
+                isDirty={editSupplierForm.formState.dirtyFields.name}
                 label="שם הספק"
                 placeholder="שם הספק"
                 required
-                error={editSupplierForm.formState.errors.name}
-                isDirty={editSupplierForm.formState.dirtyFields.name}
-                {...editSupplierForm.register('name', rules.requiredMin('שם ספק', 2))}
+                {...editSupplierForm.register(
+                  "name",
+                  rules.requiredMin("שם ספק", 2)
+                )}
               />
 
               <FormField
-                label="טלפון"
-                placeholder="מספר טלפון"
                 error={editSupplierForm.formState.errors.phone}
                 isDirty={editSupplierForm.formState.dirtyFields.phone}
-                {...editSupplierForm.register('phone')}
+                label="טלפון"
+                placeholder="מספר טלפון"
+                {...editSupplierForm.register("phone")}
               />
 
               {/* קטגוריות — multi-select */}
-              <div>
-                <label className="text-[13px] text-[#8d785e] mb-2 block" style={{ fontWeight: 600 }}>
+              <fieldset>
+                <legend
+                  className="mb-2 block text-[#8d785e] text-[13px]"
+                  style={{ fontWeight: 600 }}
+                >
                   קטגוריות <span className="text-[#ff8c00]">*</span>
                   {selectedCategories.length > 0 && (
-                    <span className="text-[11px] text-[#b5a48b] mr-1" style={{ fontWeight: 400 }}>({selectedCategories.length} נבחרו)</span>
+                    <span
+                      className="mr-1 text-[#b5a48b] text-[11px]"
+                      style={{ fontWeight: 400 }}
+                    >
+                      ({selectedCategories.length} נבחרו)
+                    </span>
                   )}
-                </label>
+                </legend>
                 <div className="grid grid-cols-3 gap-2">
-                  {CATEGORY_OPTIONS.map(opt => {
+                  {CATEGORY_OPTIONS.map((opt) => {
                     const isSelected = selectedCategories.includes(opt.value);
                     return (
                       <button
+                        className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-2 text-[12px] transition-all ${
+                          isSelected
+                            ? "border-[#ff8c00] bg-[#ff8c00]/10 shadow-sm"
+                            : "border-[#e7e1da] bg-white hover:border-[#d5cdc0] hover:bg-[#faf9f7]"
+                        }`}
                         key={opt.value}
-                        type="button"
                         onClick={() => {
-                          setSelectedCategories(prev =>
+                          setSelectedCategories((prev) =>
                             prev.includes(opt.value)
-                              ? prev.filter(c => c !== opt.value)
+                              ? prev.filter((c) => c !== opt.value)
                               : [...prev, opt.value]
                           );
                         }}
-                        className={`flex items-center gap-1.5 px-2.5 py-2 rounded-lg border text-[12px] transition-all ${
-                          isSelected
-                            ? 'border-[#ff8c00] bg-[#ff8c00]/10 shadow-sm'
-                            : 'border-[#e7e1da] bg-white hover:border-[#d5cdc0] hover:bg-[#faf9f7]'
-                        }`}
                         style={{ fontWeight: isSelected ? 600 : 400 }}
+                        type="button"
                       >
                         <div
-                          className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 border transition-all ${
+                          className={`flex h-4 w-4 flex-shrink-0 items-center justify-center rounded border transition-all ${
                             isSelected
-                              ? 'bg-[#ff8c00] border-[#ff8c00]'
-                              : 'border-[#d5cdc0] bg-white'
+                              ? "border-[#ff8c00] bg-[#ff8c00]"
+                              : "border-[#d5cdc0] bg-white"
                           }`}
                         >
                           {isSelected && (
-                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                              <path d="M2 5L4.2 7.5L8 2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg
+                              fill="none"
+                              height="10"
+                              viewBox="0 0 10 10"
+                              width="10"
+                            >
+                              <title>Decorative icon</title>
+                              <path
+                                d="M2 5L4.2 7.5L8 2.5"
+                                stroke="white"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="1.5"
+                              />
                             </svg>
                           )}
                         </div>
-                        <CategoryIcon category={opt.value} size={16} color={isSelected ? opt.color : '#8d785e'} />
-                        <span className={isSelected ? 'text-[#181510]' : 'text-[#6b5d45]'}>{opt.value}</span>
+                        <CategoryIcon
+                          category={opt.value}
+                          color={isSelected ? opt.color : "#8d785e"}
+                          size={16}
+                        />
+                        <span
+                          className={
+                            isSelected ? "text-[#181510]" : "text-[#6b5d45]"
+                          }
+                        >
+                          {opt.value}
+                        </span>
                       </button>
                     );
                   })}
                 </div>
                 {selectedCategories.length === 0 && (
-                  <p className="text-[11px] text-red-500 mt-1">יש לבחור לפחות קטגוריה אחת</p>
+                  <p className="mt-1 text-[11px] text-red-500">
+                    יש לבחור לפחות קטגוריה אחת
+                  </p>
                 )}
-              </div>
+              </fieldset>
 
               <FormSelect
-                label="אזור"
                 error={editSupplierForm.formState.errors.region}
                 isDirty={editSupplierForm.formState.dirtyFields.region}
-                {...editSupplierForm.register('region', { required: 'אזור הוא שדה חובה' })}
+                label="אזור"
+                {...editSupplierForm.register("region", {
+                  required: "אזור הוא שדה חובה",
+                })}
               >
-                {REGION_OPTIONS.map(r => (
-                  <option key={r} value={r}>{r}</option>
+                {REGION_OPTIONS.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
                 ))}
               </FormSelect>
 
               <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[13px] text-[#8d785e] mb-1 block" style={{ fontWeight: 600 }}>דירוג</label>
-                  <div className="flex items-center gap-1 bg-white border border-[#e7e1da] rounded-lg px-3 py-2.5">
-                    {[1, 2, 3, 4, 5].map(star => {
-                      const currentRating = parseFloat(editSupplierForm.watch('rating') || '0');
+                <fieldset>
+                  <legend
+                    className="mb-1 block text-[#8d785e] text-[13px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    דירוג
+                  </legend>
+                  <div className="flex items-center gap-1 rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5">
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const currentRating = Number.parseFloat(
+                        editSupplierForm.watch("rating") || "0"
+                      );
                       return (
                         <button
+                          className={`text-[22px] transition-colors ${star <= currentRating ? "text-[#ff8c00]" : "text-[#ddd6cb] hover:text-[#ff8c00]/50"}`}
                           key={star}
+                          onClick={() =>
+                            editSupplierForm.setValue("rating", String(star), {
+                              shouldDirty: true,
+                            })
+                          }
                           type="button"
-                          onClick={() => editSupplierForm.setValue('rating', String(star), { shouldDirty: true })}
-                          className={`text-[22px] transition-colors ${star <= currentRating ? 'text-[#ff8c00]' : 'text-[#ddd6cb] hover:text-[#ff8c00]/50'}`}
                         >
                           ★
                         </button>
                       );
                     })}
                   </div>
-                </div>
+                </fieldset>
 
                 <FormSelect
-                  label="סטטוס אימות"
                   error={editSupplierForm.formState.errors.verificationStatus}
-                  isDirty={editSupplierForm.formState.dirtyFields.verificationStatus}
-                  {...editSupplierForm.register('verificationStatus')}
+                  isDirty={
+                    editSupplierForm.formState.dirtyFields.verificationStatus
+                  }
+                  label="סטטוס אימות"
+                  {...editSupplierForm.register("verificationStatus")}
                 >
                   <option value="verified">מאומת</option>
                   <option value="pending">ממתין לאימות</option>
@@ -1118,29 +2188,37 @@ export function SupplierDetail() {
               </div>
 
               <FormTextarea
+                error={editSupplierForm.formState.errors.notes}
+                isDirty={editSupplierForm.formState.dirtyFields.notes}
                 label="הערות"
                 placeholder="הערות נוספות..."
                 rows={3}
-                error={editSupplierForm.formState.errors.notes}
-                isDirty={editSupplierForm.formState.dirtyFields.notes}
-                {...editSupplierForm.register('notes')}
+                {...editSupplierForm.register("notes")}
               />
 
               <div className="flex gap-3 pt-2">
                 <button
-                  type="submit"
-                  disabled={savingSupplier || !editSupplierForm.formState.isValid || selectedCategories.length === 0}
-                  className="flex-1 bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 text-white py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  disabled={
+                    savingSupplier ||
+                    !editSupplierForm.formState.isValid ||
+                    selectedCategories.length === 0
+                  }
                   style={{ fontWeight: 600 }}
+                  type="submit"
                 >
-                  {savingSupplier ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                  {savingSupplier ? 'שומר...' : 'שמור שינויים'}
+                  {savingSupplier ? (
+                    <Loader2 className="animate-spin" size={16} />
+                  ) : (
+                    <Save size={16} />
+                  )}
+                  {savingSupplier ? "שומר..." : "שמור שינויים"}
                 </button>
                 <button
-                  type="button"
+                  className="rounded-xl border border-[#e7e1da] px-5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
                   onClick={() => setShowEditSupplier(false)}
-                  className="px-5 border border-[#e7e1da] rounded-xl hover:bg-[#f5f3f0] transition-colors text-[14px] text-[#8d785e]"
                   style={{ fontWeight: 500 }}
+                  type="button"
                 >
                   ביטול
                 </button>

@@ -2,13 +2,14 @@
  * LoginPage — combined login + signup with tab toggle.
  * Hebrew RTL, warm palette matching TravelPro design.
  */
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Loader2, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+
 import imgLogo from "figma:asset/b655d2164f14a54b258c6a8a069f10a88a1c4640.png";
-import { useAuth } from './AuthContext';
-import { FormField, rules } from './FormField';
+import { Eye, EyeOff, Loader2, LogIn, UserPlus } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useAuth } from "./AuthContext";
+import { FormField, rules } from "./FormField";
 
 interface LoginForm {
   email: string;
@@ -16,117 +17,149 @@ interface LoginForm {
 }
 
 interface SignupForm {
-  name: string;
-  email: string;
-  password: string;
   confirmPassword: string;
+  email: string;
+  name: string;
+  password: string;
 }
 
 export function LoginPage() {
   const { login, signup } = useAuth();
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [mode, setMode] = useState<"login" | "signup">("login");
   const [submitting, setSubmitting] = useState(false);
-  const [serverError, setServerError] = useState('');
+  const [serverError, setServerError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   // Login form
   const loginForm = useForm<LoginForm>({
-    mode: 'onChange',
-    defaultValues: { email: '', password: '' },
+    mode: "onChange",
+    defaultValues: { email: "", password: "" },
   });
 
   // Signup form
   const signupForm = useForm<SignupForm>({
-    mode: 'onChange',
-    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
+    mode: "onChange",
+    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
   });
 
   /** Map known English error strings to Hebrew. */
   const translateError = (error: string): string => {
-    if (error.includes('Invalid login') || error.includes('Could not verify')) {
-      return 'אימייל או סיסמה שגויים';
+    if (error.includes("Invalid login") || error.includes("Could not verify")) {
+      return "אימייל או סיסמה שגויים";
     }
-    if (error.includes('Invalid password')) {
-      return 'הסיסמה חייבת להכיל לפחות 8 תווים';
+    if (error.includes("Invalid password")) {
+      return "הסיסמה חייבת להכיל לפחות 8 תווים";
     }
-    if (error.includes('already registered') || error.includes('already been registered')) {
-      return 'כתובת האימייל כבר רשומה במערכת';
+    if (
+      error.includes("already registered") ||
+      error.includes("already been registered")
+    ) {
+      return "כתובת האימייל כבר רשומה במערכת";
     }
-    if (error.includes('Account does not exist') || error.includes('no account')) {
-      return 'לא נמצא חשבון עם כתובת אימייל זו';
+    if (
+      error.includes("Account does not exist") ||
+      error.includes("no account")
+    ) {
+      return "לא נמצא חשבון עם כתובת אימייל זו";
     }
-    if (error.includes('Too many requests') || error.includes('rate limit')) {
-      return 'יותר מדי ניסיונות, נסה שוב מאוחר יותר';
+    if (error.includes("Too many requests") || error.includes("rate limit")) {
+      return "יותר מדי ניסיונות, נסה שוב מאוחר יותר";
     }
     return error;
   };
 
   const onLogin = async (data: LoginForm) => {
-    setServerError('');
+    setServerError("");
     setSubmitting(true);
     const { error } = await login(data.email.trim(), data.password);
     setSubmitting(false);
-    if (error) setServerError(translateError(error));
+    if (error) {
+      setServerError(translateError(error));
+    }
   };
 
   const onSignup = async (data: SignupForm) => {
-    setServerError('');
+    setServerError("");
     if (data.password !== data.confirmPassword) {
-      signupForm.setError('confirmPassword', { message: 'הסיסמאות לא תואמות' });
+      signupForm.setError("confirmPassword", { message: "הסיסמאות לא תואמות" });
       return;
     }
     setSubmitting(true);
-    const { error } = await signup(data.email.trim(), data.password, data.name.trim());
+    const { error } = await signup(
+      data.email.trim(),
+      data.password,
+      data.name.trim()
+    );
     setSubmitting(false);
-    if (error) setServerError(translateError(error));
+    if (error) {
+      setServerError(translateError(error));
+    }
   };
 
-  const switchMode = (newMode: 'login' | 'signup') => {
+  const switchMode = (newMode: "login" | "signup") => {
     setMode(newMode);
-    setServerError('');
+    setServerError("");
     loginForm.reset();
     signupForm.reset();
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f7f5] flex items-center justify-center p-4 font-['Assistant',sans-serif]" dir="rtl">
+    <div
+      className="flex min-h-screen items-center justify-center bg-[#f8f7f5] p-4 font-['Assistant',sans-serif]"
+      dir="rtl"
+    >
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
         className="w-full max-w-[420px]"
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5 }}
       >
         {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
-          <img src={imgLogo} alt="TravelPro" className="w-16 h-16 rounded-2xl object-contain mb-3 shadow-lg" />
-          <h1 className="text-[28px] text-[#181510]" style={{ fontWeight: 700 }}>TravelPro</h1>
-          <p className="text-[14px] text-[#8d785e] mt-1">ניהול פרויקטים למפיקי טיולים</p>
+        <div className="mb-8 flex flex-col items-center">
+          <img
+            alt="TravelPro"
+            className="mb-3 h-16 w-16 rounded-2xl object-contain shadow-lg"
+            height="600"
+            src={imgLogo}
+            width="800"
+          />
+          <h1
+            className="text-[#181510] text-[28px]"
+            style={{ fontWeight: 700 }}
+          >
+            TravelPro
+          </h1>
+          <p className="mt-1 text-[#8d785e] text-[14px]">
+            ניהול פרויקטים למפיקי טיולים
+          </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl border border-[#e7e1da] shadow-xl p-6">
+        <div className="rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-xl">
           {/* Tab toggle */}
-          <div className="flex bg-[#f5f3f0] rounded-xl p-1 mb-6">
+          <div className="mb-6 flex rounded-xl bg-[#f5f3f0] p-1">
             <button
-              onClick={() => switchMode('login')}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[14px] transition-all ${
-                mode === 'login'
-                  ? 'bg-white text-[#181510] shadow-sm'
-                  : 'text-[#8d785e] hover:text-[#181510]'
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2.5 text-[14px] transition-all ${
+                mode === "login"
+                  ? "bg-white text-[#181510] shadow-sm"
+                  : "text-[#8d785e] hover:text-[#181510]"
               }`}
-              style={{ fontWeight: mode === 'login' ? 600 : 400 }}
+              onClick={() => switchMode("login")}
+              style={{ fontWeight: mode === "login" ? 600 : 400 }}
+              type="button"
             >
               <LogIn size={15} />
               התחברות
             </button>
             <button
-              onClick={() => switchMode('signup')}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[14px] transition-all ${
-                mode === 'signup'
-                  ? 'bg-white text-[#181510] shadow-sm'
-                  : 'text-[#8d785e] hover:text-[#181510]'
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2.5 text-[14px] transition-all ${
+                mode === "signup"
+                  ? "bg-white text-[#181510] shadow-sm"
+                  : "text-[#8d785e] hover:text-[#181510]"
               }`}
-              style={{ fontWeight: mode === 'signup' ? 600 : 400 }}
+              onClick={() => switchMode("signup")}
+              style={{ fontWeight: mode === "signup" ? 600 : 400 }}
+              type="button"
             >
               <UserPlus size={15} />
               הרשמה
@@ -136,9 +169,9 @@ export function LoginPage() {
           {/* Server error */}
           {serverError && (
             <motion.div
+              animate={{ opacity: 1, height: "auto" }}
+              className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-600"
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              className="bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-3 mb-4 text-[13px]"
               style={{ fontWeight: 500 }}
             >
               {serverError}
@@ -146,133 +179,150 @@ export function LoginPage() {
           )}
 
           <AnimatePresence mode="wait">
-            {mode === 'login' ? (
+            {mode === "login" ? (
               <motion.form
-                key="login"
-                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.25 }}
-                onSubmit={loginForm.handleSubmit(onLogin)}
                 className="space-y-4"
+                exit={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: -20 }}
+                key="login"
+                onSubmit={loginForm.handleSubmit(onLogin)}
+                transition={{ duration: 0.25 }}
               >
                 <FormField
-                  label="אימייל"
-                  type="email"
-                  placeholder="name@company.com"
-                  required
                   error={loginForm.formState.errors.email}
                   isDirty={loginForm.formState.dirtyFields.email}
-                  {...loginForm.register('email', rules.email(true))}
+                  label="אימייל"
+                  placeholder="name@company.com"
+                  required
+                  type="email"
+                  {...loginForm.register("email", rules.email(true))}
                 />
                 <div>
                   <FormField
-                    label="סיסמה"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="הזן סיסמה"
-                    required
                     error={loginForm.formState.errors.password}
                     isDirty={loginForm.formState.dirtyFields.password}
-                    {...loginForm.register('password', { required: 'סיסמה היא שדה חובה' })}
+                    label="סיסמה"
+                    placeholder="הזן סיסמה"
+                    required
+                    type={showPassword ? "text" : "password"}
+                    {...loginForm.register("password", {
+                      required: "סיסמה היא שדה חובה",
+                    })}
                   />
                   <button
-                    type="button"
+                    className="mt-1 flex items-center gap-1 text-[#8d785e] text-[12px] hover:text-[#ff8c00]"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-[12px] text-[#8d785e] hover:text-[#ff8c00] mt-1 flex items-center gap-1"
+                    type="button"
                   >
                     {showPassword ? <EyeOff size={12} /> : <Eye size={12} />}
-                    {showPassword ? 'הסתר סיסמה' : 'הצג סיסמה'}
+                    {showPassword ? "הסתר סיסמה" : "הצג סיסמה"}
                   </button>
                 </div>
                 <button
-                  type="submit"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-3 text-white shadow-[#ff8c00]/20 shadow-lg transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={submitting || !loginForm.formState.isValid}
-                  className="w-full bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#ff8c00]/20"
                   style={{ fontWeight: 600 }}
+                  type="submit"
                 >
-                  {submitting ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
-                  {submitting ? 'מתחבר...' : 'התחבר'}
+                  {submitting ? (
+                    <Loader2 className="animate-spin" size={18} />
+                  ) : (
+                    <LogIn size={18} />
+                  )}
+                  {submitting ? "מתחבר..." : "התחבר"}
                 </button>
               </motion.form>
             ) : (
               <motion.form
-                key="signup"
-                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.25 }}
-                onSubmit={signupForm.handleSubmit(onSignup)}
                 className="space-y-4"
+                exit={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: 20 }}
+                key="signup"
+                onSubmit={signupForm.handleSubmit(onSignup)}
+                transition={{ duration: 0.25 }}
               >
                 <FormField
+                  error={signupForm.formState.errors.name}
+                  isDirty={signupForm.formState.dirtyFields.name}
                   label="שם מלא"
                   placeholder="ערן לוי"
                   required
-                  error={signupForm.formState.errors.name}
-                  isDirty={signupForm.formState.dirtyFields.name}
-                  {...signupForm.register('name', rules.requiredMin('שם', 2))}
+                  {...signupForm.register("name", rules.requiredMin("שם", 2))}
                 />
                 <FormField
-                  label="אימייל"
-                  type="email"
-                  placeholder="name@company.com"
-                  required
                   error={signupForm.formState.errors.email}
                   isDirty={signupForm.formState.dirtyFields.email}
-                  {...signupForm.register('email', rules.email(true))}
+                  label="אימייל"
+                  placeholder="name@company.com"
+                  required
+                  type="email"
+                  {...signupForm.register("email", rules.email(true))}
                 />
                 <div>
                   <FormField
-                    label="סיסמה"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="לפחות 8 תווים"
-                    required
                     error={signupForm.formState.errors.password}
                     isDirty={signupForm.formState.dirtyFields.password}
-                    {...signupForm.register('password', {
-                      required: 'סיסמה היא שדה חובה',
-                      minLength: { value: 8, message: 'סיסמה חייבת להכיל לפחות 8 תווים' },
+                    label="סיסמה"
+                    placeholder="לפחות 8 תווים"
+                    required
+                    type={showPassword ? "text" : "password"}
+                    {...signupForm.register("password", {
+                      required: "סיסמה היא שדה חובה",
+                      minLength: {
+                        value: 8,
+                        message: "סיסמה חייבת להכיל לפחות 8 תווים",
+                      },
                     })}
                   />
-                  <p className="text-[11px] text-[#b8a990] mt-1">מינימום 8 תווים</p>
+                  <p className="mt-1 text-[#b8a990] text-[11px]">
+                    מינימום 8 תווים
+                  </p>
                 </div>
                 <div>
                   <FormField
-                    label="אימות סיסמה"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="הזן שוב את הסיסמה"
-                    required
                     error={signupForm.formState.errors.confirmPassword}
                     isDirty={signupForm.formState.dirtyFields.confirmPassword}
-                    {...signupForm.register('confirmPassword', {
-                      required: 'אימות סיסמה הוא שדה חובה',
-                      validate: (v) => v === signupForm.getValues('password') || 'הסיסמאות לא תואמות',
+                    label="אימות סיסמה"
+                    placeholder="הזן שוב את הסיסמה"
+                    required
+                    type={showPassword ? "text" : "password"}
+                    {...signupForm.register("confirmPassword", {
+                      required: "אימות סיסמה הוא שדה חובה",
+                      validate: (v) =>
+                        v === signupForm.getValues("password") ||
+                        "הסיסמאות לא תואמות",
                     })}
                   />
                   <button
-                    type="button"
+                    className="mt-1 flex items-center gap-1 text-[#8d785e] text-[12px] hover:text-[#ff8c00]"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-[12px] text-[#8d785e] hover:text-[#ff8c00] mt-1 flex items-center gap-1"
+                    type="button"
                   >
                     {showPassword ? <EyeOff size={12} /> : <Eye size={12} />}
-                    {showPassword ? 'הסתר סיסמה' : 'הצג סיסמה'}
+                    {showPassword ? "הסתר סיסמה" : "הצג סיסמה"}
                   </button>
                 </div>
                 <button
-                  type="submit"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-3 text-white shadow-[#ff8c00]/20 shadow-lg transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={submitting || !signupForm.formState.isValid}
-                  className="w-full bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#ff8c00]/20"
                   style={{ fontWeight: 600 }}
+                  type="submit"
                 >
-                  {submitting ? <Loader2 size={18} className="animate-spin" /> : <UserPlus size={18} />}
-                  {submitting ? 'נרשם...' : 'צור חשבון'}
+                  {submitting ? (
+                    <Loader2 className="animate-spin" size={18} />
+                  ) : (
+                    <UserPlus size={18} />
+                  )}
+                  {submitting ? "נרשם..." : "צור חשבון"}
                 </button>
               </motion.form>
             )}
           </AnimatePresence>
         </div>
 
-        <p className="text-center text-[12px] text-[#b8a990] mt-6">
+        <p className="mt-6 text-center text-[#b8a990] text-[12px]">
           TravelPro &copy; 2026 — כל הזכויות שמורות
         </p>
       </motion.div>

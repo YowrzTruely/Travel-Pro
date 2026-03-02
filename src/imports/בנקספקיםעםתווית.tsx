@@ -1,12 +1,20 @@
-import svgPaths from "./svg-jsmavi0fl3";
 import imgAb6AXuB0E7Va1JaYk5RkTar38VtT7QPeaT0I64PrjXshugdNpoeVwtD1VhFfIy8APoIkwFmJ3Uq3ObA81SMtk0GZFcNv5Mss9J1OZc9IhldwCdNrZdJCqLsYwzeUvRBrPyPmO7Tp144KCfiLz5J19T4IgQncVj4UgQaXjzCs5K8OUnaJge2WCn67ZzLh5SZnZHody9EBpLdFlFhWkzB6VixQyLs3SAslMz5EvFcZwdGNcGscc1LFqmT8JxWauE1QcgGeAGaA3V5S from "figma:asset/de020ba3e95c71b3242b46b74f43b24203a1729b.png";
+import svgPaths from "./svg-jsmavi0fl3";
 
 function BackgroundHorizontalBorder() {
   return (
-    <div className="bg-[#dc2626] content-stretch flex flex-col items-center pb-[10px] pt-[8px] relative shrink-0 w-full z-[3]" data-name="Background+HorizontalBorder">
-      <div aria-hidden="true" className="absolute border-b-2 border-solid border-white inset-0 pointer-events-none" />
-      <div className="flex flex-col font-['Public_Sans:Bold','Arimo:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[18px] text-center text-white tracking-[1.8px] uppercase w-[266.67px]">
-        <p className="leading-[28px] whitespace-pre-wrap">SCREEN LABEL: בנק ספקים</p>
+    <div
+      className="relative z-[3] flex w-full shrink-0 flex-col content-stretch items-center bg-[#dc2626] pt-[8px] pb-[10px]"
+      data-name="Background+HorizontalBorder"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-white border-b-2 border-solid"
+      />
+      <div className="relative flex h-[28px] w-[266.67px] shrink-0 flex-col justify-center text-center font-['Public_Sans:Bold','Arimo:Bold',sans-serif] font-bold text-[18px] text-white uppercase leading-[0] tracking-[1.8px]">
+        <p className="whitespace-pre-wrap leading-[28px]">
+          SCREEN LABEL: בנק ספקים
+        </p>
       </div>
     </div>
   );
@@ -14,9 +22,20 @@ function BackgroundHorizontalBorder() {
 
 function Ab6AXuB0E7Va1JaYk5RkTar38VtT7QPeaT0I64PrjXshugdNpoeVwtD1VhFfIy8APoIkwFmJ3Uq3ObA81SMtk0GZFcNv5Mss9J1OZc9IhldwCdNrZdJCqLsYwzeUvRBrPyPmO7Tp144KCfiLz5J19T4IgQncVj4UgQaXjzCs5K8OUnaJge2WCn67ZzLh5SZnZHody9EBpLdFlFhWkzB6VixQyLs3SAslMz5EvFcZwdGNcGscc1LFqmT8JxWauE1QcgGeAGaA3V5S() {
   return (
-    <div className="flex-[1_0_0] min-h-px min-w-px relative w-full" data-name="AB6AXuB0e7va1JaYK5RKTar38vtT7QPeaT0I64prjXSHUGDNpoeVwtD1vhFfIy8APoIkwFmJ3Uq3ObA81sMtk_0g_zFcNv5Mss9J1OZc9ihldwCd-NrZdJCqLSYwzeUvRBrPYPm_o7TP144k-CFILz5j19T4igQncVj4UgQaXjzCS5k8oUNAJge2WCn67ZzLh5sZnZHody9EBpLdFlFhWkzB6VIXQyLS3SAslMz5evFcZWD-gNCGscc1lFqmT8JXWauE1QcgGe_aGaA3V5s">
-      <div className="absolute bg-clip-padding border-0 border-[transparent] border-solid inset-0 overflow-hidden pointer-events-none">
-        <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgAb6AXuB0E7Va1JaYk5RkTar38VtT7QPeaT0I64PrjXshugdNpoeVwtD1VhFfIy8APoIkwFmJ3Uq3ObA81SMtk0GZFcNv5Mss9J1OZc9IhldwCdNrZdJCqLsYwzeUvRBrPyPmO7Tp144KCfiLz5J19T4IgQncVj4UgQaXjzCs5K8OUnaJge2WCn67ZzLh5SZnZHody9EBpLdFlFhWkzB6VixQyLs3SAslMz5EvFcZwdGNcGscc1LFqmT8JxWauE1QcgGeAGaA3V5S} />
+    <div
+      className="relative min-h-px w-full min-w-px flex-[1_0_0]"
+      data-name="AB6AXuB0e7va1JaYK5RKTar38vtT7QPeaT0I64prjXSHUGDNpoeVwtD1vhFfIy8APoIkwFmJ3Uq3ObA81sMtk_0g_zFcNv5Mss9J1OZc9ihldwCd-NrZdJCqLSYwzeUvRBrPYPm_o7TP144k-CFILz5j19T4igQncVj4UgQaXjzCS5k8oUNAJge2WCn67ZzLh5sZnZHody9EBpLdFlFhWkzB6VIXQyLS3SAslMz5evFcZWD-gNCGscc1lFqmT8JXWauE1QcgGe_aGaA3V5s"
+    >
+      <div className="pointer-events-none absolute inset-0 overflow-hidden border-0 border-[transparent] border-solid bg-clip-padding">
+        <img
+          alt=""
+          className="absolute top-0 left-0 size-full max-w-none"
+          height="600"
+          src={
+            imgAb6AXuB0E7Va1JaYk5RkTar38VtT7QPeaT0I64PrjXshugdNpoeVwtD1VhFfIy8APoIkwFmJ3Uq3ObA81SMtk0GZFcNv5Mss9J1OZc9IhldwCdNrZdJCqLsYwzeUvRBrPyPmO7Tp144KCfiLz5J19T4IgQncVj4UgQaXjzCs5K8OUnaJge2WCn67ZzLh5SZnZHody9EBpLdFlFhWkzB6VixQyLs3SAslMz5EvFcZwdGNcGscc1LFqmT8JxWauE1QcgGeAGaA3V5S
+          }
+          width="800"
+        />
       </div>
     </div>
   );
@@ -24,21 +43,37 @@ function Ab6AXuB0E7Va1JaYk5RkTar38VtT7QPeaT0I64PrjXshugdNpoeVwtD1VhFfIy8APoIkwFm
 
 function Border() {
   return (
-    <div className="relative rounded-[9999px] shrink-0 size-[40px]" data-name="Border">
-      <div className="content-stretch flex flex-col items-start justify-center overflow-clip p-[2px] relative rounded-[inherit] size-full">
+    <div
+      className="relative size-[40px] shrink-0 rounded-[9999px]"
+      data-name="Border"
+    >
+      <div className="relative flex size-full flex-col content-stretch items-start justify-center overflow-clip rounded-[inherit] p-[2px]">
         <Ab6AXuB0E7Va1JaYk5RkTar38VtT7QPeaT0I64PrjXshugdNpoeVwtD1VhFfIy8APoIkwFmJ3Uq3ObA81SMtk0GZFcNv5Mss9J1OZc9IhldwCdNrZdJCqLsYwzeUvRBrPyPmO7Tp144KCfiLz5J19T4IgQncVj4UgQaXjzCs5K8OUnaJge2WCn67ZzLh5SZnZHody9EBpLdFlFhWkzB6VixQyLs3SAslMz5EvFcZwdGNcGscc1LFqmT8JxWauE1QcgGeAGaA3V5S />
       </div>
-      <div aria-hidden="true" className="absolute border-2 border-[#ec5b13] border-solid inset-0 pointer-events-none rounded-[9999px]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[9999px] border-2 border-[#ec5b13] border-solid"
+      />
     </div>
   );
 }
 
 function Container1() {
   return (
-    <div className="h-[20px] relative shrink-0 w-[16px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 16 20">
+    <div className="relative h-[20px] w-[16px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 16 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p164b49c0} fill="var(--fill-0, #64748B)" id="Icon" />
+          <path
+            d={svgPaths.p164b49c0}
+            fill="var(--fill-0, #64748B)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -47,7 +82,10 @@ function Container1() {
 
 function Button() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[8px] relative shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center p-[8px]"
+      data-name="Button"
+    >
       <Container1 />
     </div>
   );
@@ -55,17 +93,26 @@ function Button() {
 
 function Margin() {
   return (
-    <div className="content-stretch flex flex-col h-[32px] items-start px-[4px] relative shrink-0 w-[9px]" data-name="Margin">
-      <div className="bg-[#e2e8f0] h-[32px] shrink-0 w-px" data-name="Vertical Divider" />
+    <div
+      className="relative flex h-[32px] w-[9px] shrink-0 flex-col content-stretch items-start px-[4px]"
+      data-name="Margin"
+    >
+      <div
+        className="h-[32px] w-px shrink-0 bg-[#e2e8f0]"
+        data-name="Vertical Divider"
+      />
     </div>
   );
 }
 
 function Container2() {
   return (
-    <div className="content-stretch flex flex-col items-center relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-center text-white w-[96.95px]">
-        <p className="leading-[20px] whitespace-pre-wrap">הוספת ספק חדש</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[96.95px] shrink-0 flex-col justify-center text-center font-['FreeSans:Semi_Bold',sans-serif] text-[14px] text-white not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">הוספת ספק חדש</p>
       </div>
     </div>
   );
@@ -73,8 +120,14 @@ function Container2() {
 
 function Container3() {
   return (
-    <div className="relative shrink-0 size-[11.667px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.6667">
+    <div className="relative size-[11.667px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.6667"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p20803d40} fill="var(--fill-0, white)" id="Icon" />
         </g>
@@ -85,8 +138,14 @@ function Container3() {
 
 function Button1() {
   return (
-    <div className="bg-[#ec5b13] content-stretch flex gap-[8px] items-center px-[16px] py-[8px] relative rounded-[12px] shrink-0" data-name="Button">
-      <div className="absolute bg-[rgba(255,255,255,0)] inset-[0_-0.33px_0_0] rounded-[12px] shadow-[0px_10px_15px_-3px_rgba(236,91,19,0.2),0px_4px_6px_-4px_rgba(236,91,19,0.2)]" data-name="Button:shadow" />
+    <div
+      className="relative flex shrink-0 content-stretch items-center gap-[8px] rounded-[12px] bg-[#ec5b13] px-[16px] py-[8px]"
+      data-name="Button"
+    >
+      <div
+        className="absolute inset-[0_-0.33px_0_0] rounded-[12px] bg-[rgba(255,255,255,0)] shadow-[0px_10px_15px_-3px_rgba(236,91,19,0.2),0px_4px_6px_-4px_rgba(236,91,19,0.2)]"
+        data-name="Button:shadow"
+      />
       <Container2 />
       <Container3 />
     </div>
@@ -95,7 +154,10 @@ function Button1() {
 
 function ActionButtons() {
   return (
-    <div className="content-stretch flex gap-[12px] items-center relative shrink-0 z-[3]" data-name="Action Buttons">
+    <div
+      className="relative z-[3] flex shrink-0 content-stretch items-center gap-[12px]"
+      data-name="Action Buttons"
+    >
       <Border />
       <Button />
       <Margin />
@@ -106,9 +168,14 @@ function ActionButtons() {
 
 function Container5() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col items-end min-h-px min-w-px overflow-clip pb-px relative" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#6b7280] text-[14px] text-right w-[193.69px]">
-        <p className="leading-[normal] whitespace-pre-wrap">חיפוש ספקים, קטגוריות או אזורים...</p>
+    <div
+      className="relative flex min-h-px min-w-px flex-[1_0_0] flex-col content-stretch items-end overflow-clip pb-px"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[193.69px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#6b7280] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[normal]">
+          חיפוש ספקים, קטגוריות או אזורים...
+        </p>
       </div>
     </div>
   );
@@ -116,9 +183,12 @@ function Container5() {
 
 function Input() {
   return (
-    <div className="bg-[#f1f5f9] relative rounded-[12px] shrink-0 w-full" data-name="Input">
-      <div className="flex flex-row justify-center overflow-clip rounded-[inherit] size-full">
-        <div className="content-stretch flex items-start justify-center pb-[9px] pl-[16px] pr-[44px] pt-[10px] relative w-full">
+    <div
+      className="relative w-full shrink-0 rounded-[12px] bg-[#f1f5f9]"
+      data-name="Input"
+    >
+      <div className="flex size-full flex-row justify-center overflow-clip rounded-[inherit]">
+        <div className="relative flex w-full content-stretch items-start justify-center pt-[10px] pr-[44px] pb-[9px] pl-[16px]">
           <Container5 />
         </div>
       </div>
@@ -128,10 +198,24 @@ function Input() {
 
 function Container6() {
   return (
-    <div className="absolute bottom-[16.67%] content-stretch flex flex-col items-start right-[12px] top-[16.67%]" data-name="Container">
-      <div className="relative shrink-0 size-[18px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
-          <path d={svgPaths.p8a35e00} fill="var(--fill-0, #EC5B13)" fillOpacity="0.6" id="Icon" />
+    <div
+      className="absolute top-[16.67%] right-[12px] bottom-[16.67%] flex flex-col content-stretch items-start"
+      data-name="Container"
+    >
+      <div className="relative size-[18px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 18 18"
+        >
+          <title>Interface icon</title>
+          <path
+            d={svgPaths.p8a35e00}
+            fill="var(--fill-0, #EC5B13)"
+            fillOpacity="0.6"
+            id="Icon"
+          />
         </svg>
       </div>
     </div>
@@ -140,7 +224,10 @@ function Container6() {
 
 function Container4() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Container">
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Input />
       <Container6 />
     </div>
@@ -149,7 +236,10 @@ function Container4() {
 
 function SearchBar() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col items-start max-w-[576px] min-h-px min-w-px relative z-[2]" data-name="Search Bar">
+    <div
+      className="relative z-[2] flex min-h-px min-w-px max-w-[576px] flex-[1_0_0] flex-col content-stretch items-start"
+      data-name="Search Bar"
+    >
       <Container4 />
     </div>
   );
@@ -157,9 +247,12 @@ function SearchBar() {
 
 function Heading() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Heading 1">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[28px] justify-center leading-[0] not-italic relative shrink-0 text-[#ec5b13] text-[20px] text-right tracking-[-0.5px] w-[83.59px]">
-        <p className="leading-[28px] whitespace-pre-wrap">בנק ספקים</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Heading 1"
+    >
+      <div className="relative flex h-[28px] w-[83.59px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#ec5b13] text-[20px] not-italic leading-[0] tracking-[-0.5px]">
+        <p className="whitespace-pre-wrap leading-[28px]">בנק ספקים</p>
       </div>
     </div>
   );
@@ -167,8 +260,14 @@ function Heading() {
 
 function Container7() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+    <div className="relative size-[20px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p5df7b00} fill="var(--fill-0, white)" id="Icon" />
         </g>
@@ -179,7 +278,10 @@ function Container7() {
 
 function Background() {
   return (
-    <div className="bg-[#ec5b13] content-stretch flex flex-col items-end p-[6px] relative rounded-[8px] shrink-0" data-name="Background">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end rounded-[8px] bg-[#ec5b13] p-[6px]"
+      data-name="Background"
+    >
       <Container7 />
     </div>
   );
@@ -187,7 +289,10 @@ function Background() {
 
 function LogoTitle() {
   return (
-    <div className="content-stretch flex gap-[12px] items-center relative shrink-0 z-[1]" data-name="Logo & Title">
+    <div
+      className="relative z-[1] flex shrink-0 content-stretch items-center gap-[12px]"
+      data-name="Logo & Title"
+    >
       <Heading />
       <Background />
     </div>
@@ -196,9 +301,9 @@ function LogoTitle() {
 
 function Container() {
   return (
-    <div className="h-[64px] relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex isolate items-center justify-between pl-[0.02px] relative size-full">
+    <div className="relative h-[64px] w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative isolate flex size-full content-stretch items-center justify-between border-0 border-[transparent] border-solid bg-clip-padding pl-[0.02px]">
           <ActionButtons />
           <SearchBar />
           <LogoTitle />
@@ -210,9 +315,15 @@ function Container() {
 
 function HeaderTopNavigationBar() {
   return (
-    <div className="bg-white relative shrink-0 w-full z-[2]" data-name="Header - Top Navigation Bar">
-      <div aria-hidden="true" className="absolute border-[rgba(236,91,19,0.2)] border-b border-solid inset-0 pointer-events-none" />
-      <div className="content-stretch flex flex-col items-start pb-px px-[32px] relative w-full">
+    <div
+      className="relative z-[2] w-full shrink-0 bg-white"
+      data-name="Header - Top Navigation Bar"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[rgba(236,91,19,0.2)] border-b border-solid"
+      />
+      <div className="relative flex w-full flex-col content-stretch items-start px-[32px] pb-px">
         <Container />
       </div>
     </div>
@@ -221,9 +332,12 @@ function HeaderTopNavigationBar() {
 
 function Container8() {
   return (
-    <div className="content-stretch flex flex-col items-center relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-center w-[64.92px]">
-        <p className="leading-[20px] whitespace-pre-wrap">ניקוי מסננים</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[64.92px] shrink-0 flex-col justify-center text-center font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">ניקוי מסננים</p>
       </div>
     </div>
   );
@@ -231,10 +345,20 @@ function Container8() {
 
 function Container9() {
   return (
-    <div className="h-[9px] relative shrink-0 w-[13.5px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 13.5 9">
+    <div className="relative h-[9px] w-[13.5px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 13.5 9"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p1b72c490} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p1b72c490}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -243,7 +367,10 @@ function Container9() {
 
 function Button2() {
   return (
-    <div className="bg-[#e2e8f0] content-stretch flex gap-[8px] items-center px-[16px] py-[10px] relative rounded-[12px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 content-stretch items-center gap-[8px] rounded-[12px] bg-[#e2e8f0] px-[16px] py-[10px]"
+      data-name="Button"
+    >
       <Container8 />
       <Container9 />
     </div>
@@ -252,9 +379,12 @@ function Button2() {
 
 function Label() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Label">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right w-[62.73px]">
-        <p className="leading-[16px] whitespace-pre-wrap">סטטוס אימות</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Label"
+    >
+      <div className="relative flex h-[16px] w-[62.73px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">סטטוס אימות</p>
       </div>
     </div>
   );
@@ -262,8 +392,8 @@ function Label() {
 
 function LabelMargin() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Label:margin">
-      <div className="content-stretch flex flex-col items-start pr-[4px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Label:margin">
+      <div className="relative flex w-full flex-col content-stretch items-start pr-[4px]">
         <Label />
       </div>
     </div>
@@ -272,10 +402,23 @@ function LabelMargin() {
 
 function Svg() {
   return (
-    <div className="relative shrink-0 size-[21px]" data-name="SVG">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 21 21">
+    <div className="relative size-[21px] shrink-0" data-name="SVG">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 21 21"
+      >
+        <title>Interface icon</title>
         <g id="SVG">
-          <path d="M6.3 8.4L10.5 12.6L14.7 8.4" id="Vector" stroke="var(--stroke-0, #6B7280)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.575" />
+          <path
+            d="M6.3 8.4L10.5 12.6L14.7 8.4"
+            id="Vector"
+            stroke="var(--stroke-0, #6B7280)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.575"
+          />
         </g>
       </svg>
     </div>
@@ -284,7 +427,10 @@ function Svg() {
 
 function ImageFill() {
   return (
-    <div className="absolute content-stretch flex flex-col h-[42px] items-end justify-center left-0 overflow-clip pl-[318.36px] pr-[9px] py-[10.5px] top-0 w-[348.36px]" data-name="image fill">
+    <div
+      className="absolute top-0 left-0 flex h-[42px] w-[348.36px] flex-col content-stretch items-end justify-center overflow-clip py-[10.5px] pr-[9px] pl-[318.36px]"
+      data-name="image fill"
+    >
       <Svg />
     </div>
   );
@@ -292,9 +438,12 @@ function ImageFill() {
 
 function Container11() {
   return (
-    <div className="-translate-y-1/2 absolute content-stretch flex flex-col items-end left-[13px] overflow-clip right-[12.5px] top-1/2" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[24.81px]">
-        <p className="leading-[20px] whitespace-pre-wrap">הכל</p>
+    <div
+      className="absolute top-1/2 right-[12.5px] left-[13px] flex -translate-y-1/2 flex-col content-stretch items-end overflow-clip"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[24.81px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">הכל</p>
       </div>
     </div>
   );
@@ -302,8 +451,14 @@ function Container11() {
 
 function Options() {
   return (
-    <div className="bg-white h-[42px] relative rounded-[12px] shrink-0 w-full" data-name="Options">
-      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+    <div
+      className="relative h-[42px] w-full shrink-0 rounded-[12px] bg-white"
+      data-name="Options"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e2e8f0] border-solid"
+      />
       <ImageFill />
       <Container11 />
     </div>
@@ -312,7 +467,10 @@ function Options() {
 
 function StatusFilter() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[6px] items-start min-h-px min-w-px relative self-stretch" data-name="Status Filter">
+    <div
+      className="relative flex min-h-px min-w-px flex-[1_0_0] flex-col content-stretch items-start gap-[6px] self-stretch"
+      data-name="Status Filter"
+    >
       <LabelMargin />
       <Options />
     </div>
@@ -321,9 +479,12 @@ function StatusFilter() {
 
 function Label1() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Label">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right w-[57.97px]">
-        <p className="leading-[16px] whitespace-pre-wrap">אזור פעילות</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Label"
+    >
+      <div className="relative flex h-[16px] w-[57.97px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">אזור פעילות</p>
       </div>
     </div>
   );
@@ -331,8 +492,8 @@ function Label1() {
 
 function LabelMargin1() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Label:margin">
-      <div className="content-stretch flex flex-col items-start pr-[4px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Label:margin">
+      <div className="relative flex w-full flex-col content-stretch items-start pr-[4px]">
         <Label1 />
       </div>
     </div>
@@ -341,10 +502,23 @@ function LabelMargin1() {
 
 function Svg1() {
   return (
-    <div className="relative shrink-0 size-[21px]" data-name="SVG">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 21 21">
+    <div className="relative size-[21px] shrink-0" data-name="SVG">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 21 21"
+      >
+        <title>Interface icon</title>
         <g id="SVG">
-          <path d="M6.3 8.4L10.5 12.6L14.7 8.4" id="Vector" stroke="var(--stroke-0, #6B7280)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.575" />
+          <path
+            d="M6.3 8.4L10.5 12.6L14.7 8.4"
+            id="Vector"
+            stroke="var(--stroke-0, #6B7280)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.575"
+          />
         </g>
       </svg>
     </div>
@@ -353,7 +527,10 @@ function Svg1() {
 
 function ImageFill1() {
   return (
-    <div className="absolute content-stretch flex flex-col h-[42px] items-end justify-center left-0 overflow-clip pl-[318.36px] pr-[9px] py-[10.5px] top-0 w-[348.36px]" data-name="image fill">
+    <div
+      className="absolute top-0 left-0 flex h-[42px] w-[348.36px] flex-col content-stretch items-end justify-center overflow-clip py-[10.5px] pr-[9px] pl-[318.36px]"
+      data-name="image fill"
+    >
       <Svg1 />
     </div>
   );
@@ -361,9 +538,12 @@ function ImageFill1() {
 
 function Container12() {
   return (
-    <div className="-translate-y-1/2 absolute content-stretch flex flex-col items-end left-[13px] overflow-clip right-[12.5px] top-1/2" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[52.39px]">
-        <p className="leading-[20px] whitespace-pre-wrap">כל הארץ</p>
+    <div
+      className="absolute top-1/2 right-[12.5px] left-[13px] flex -translate-y-1/2 flex-col content-stretch items-end overflow-clip"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[52.39px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">כל הארץ</p>
       </div>
     </div>
   );
@@ -371,8 +551,14 @@ function Container12() {
 
 function Options1() {
   return (
-    <div className="bg-white h-[42px] relative rounded-[12px] shrink-0 w-full" data-name="Options">
-      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+    <div
+      className="relative h-[42px] w-full shrink-0 rounded-[12px] bg-white"
+      data-name="Options"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e2e8f0] border-solid"
+      />
       <ImageFill1 />
       <Container12 />
     </div>
@@ -381,7 +567,10 @@ function Options1() {
 
 function RegionFilter() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[6px] items-start min-h-px min-w-px relative self-stretch" data-name="Region Filter">
+    <div
+      className="relative flex min-h-px min-w-px flex-[1_0_0] flex-col content-stretch items-start gap-[6px] self-stretch"
+      data-name="Region Filter"
+    >
       <LabelMargin1 />
       <Options1 />
     </div>
@@ -390,9 +579,12 @@ function RegionFilter() {
 
 function Label2() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Label">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right w-[39.14px]">
-        <p className="leading-[16px] whitespace-pre-wrap">קטגוריה</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Label"
+    >
+      <div className="relative flex h-[16px] w-[39.14px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">קטגוריה</p>
       </div>
     </div>
   );
@@ -400,8 +592,8 @@ function Label2() {
 
 function LabelMargin2() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Label:margin">
-      <div className="content-stretch flex flex-col items-start pr-[4px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Label:margin">
+      <div className="relative flex w-full flex-col content-stretch items-start pr-[4px]">
         <Label2 />
       </div>
     </div>
@@ -410,10 +602,23 @@ function LabelMargin2() {
 
 function Svg2() {
   return (
-    <div className="relative shrink-0 size-[21px]" data-name="SVG">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 21 21">
+    <div className="relative size-[21px] shrink-0" data-name="SVG">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 21 21"
+      >
+        <title>Interface icon</title>
         <g id="SVG">
-          <path d="M6.3 8.4L10.5 12.6L14.7 8.4" id="Vector" stroke="var(--stroke-0, #6B7280)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.575" />
+          <path
+            d="M6.3 8.4L10.5 12.6L14.7 8.4"
+            id="Vector"
+            stroke="var(--stroke-0, #6B7280)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.575"
+          />
         </g>
       </svg>
     </div>
@@ -422,7 +627,10 @@ function Svg2() {
 
 function ImageFill2() {
   return (
-    <div className="absolute content-stretch flex flex-col h-[42px] items-end justify-center left-0 overflow-clip pl-[318.36px] pr-[9px] py-[10.5px] top-0 w-[348.36px]" data-name="image fill">
+    <div
+      className="absolute top-0 left-0 flex h-[42px] w-[348.36px] flex-col content-stretch items-end justify-center overflow-clip py-[10.5px] pr-[9px] pl-[318.36px]"
+      data-name="image fill"
+    >
       <Svg2 />
     </div>
   );
@@ -430,9 +638,12 @@ function ImageFill2() {
 
 function Container13() {
   return (
-    <div className="-translate-y-1/2 absolute content-stretch flex flex-col items-end left-[13px] overflow-clip right-[12.5px] top-1/2" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[77.75px]">
-        <p className="leading-[20px] whitespace-pre-wrap">כל הקטגוריות</p>
+    <div
+      className="absolute top-1/2 right-[12.5px] left-[13px] flex -translate-y-1/2 flex-col content-stretch items-end overflow-clip"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[77.75px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">כל הקטגוריות</p>
       </div>
     </div>
   );
@@ -440,8 +651,14 @@ function Container13() {
 
 function Options2() {
   return (
-    <div className="bg-white h-[42px] relative rounded-[12px] shrink-0 w-full" data-name="Options">
-      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+    <div
+      className="relative h-[42px] w-full shrink-0 rounded-[12px] bg-white"
+      data-name="Options"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e2e8f0] border-solid"
+      />
       <ImageFill2 />
       <Container13 />
     </div>
@@ -450,7 +667,10 @@ function Options2() {
 
 function CategoryFilter() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[6px] items-start min-h-px min-w-px relative self-stretch" data-name="Category Filter">
+    <div
+      className="relative flex min-h-px min-w-px flex-[1_0_0] flex-col content-stretch items-start gap-[6px] self-stretch"
+      data-name="Category Filter"
+    >
       <LabelMargin2 />
       <Options2 />
     </div>
@@ -459,7 +679,10 @@ function CategoryFilter() {
 
 function Container10() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] gap-[16px] items-start justify-center min-h-px min-w-px relative" data-name="Container">
+    <div
+      className="relative flex min-h-px min-w-px flex-[1_0_0] content-stretch items-start justify-center gap-[16px]"
+      data-name="Container"
+    >
       <StatusFilter />
       <RegionFilter />
       <CategoryFilter />
@@ -469,7 +692,10 @@ function Container10() {
 
 function FiltersToolbar() {
   return (
-    <div className="content-stretch flex gap-[16px] items-end relative shrink-0 w-full" data-name="Filters Toolbar">
+    <div
+      className="relative flex w-full shrink-0 content-stretch items-end gap-[16px]"
+      data-name="Filters Toolbar"
+    >
       <Button2 />
       <Container10 />
     </div>
@@ -478,9 +704,12 @@ function FiltersToolbar() {
 
 function Cell() {
   return (
-    <div className="content-stretch flex flex-col items-start px-[24px] py-[16px] relative shrink-0 w-[191.89px] z-[7]" data-name="Cell">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] tracking-[0.6px] uppercase w-[38px]">
-        <p className="leading-[16px] whitespace-pre-wrap">פעולות</p>
+    <div
+      className="relative z-[7] flex w-[191.89px] shrink-0 flex-col content-stretch items-start px-[24px] py-[16px]"
+      data-name="Cell"
+    >
+      <div className="relative flex h-[16px] w-[38px] shrink-0 flex-col justify-center font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] uppercase not-italic leading-[0] tracking-[0.6px]">
+        <p className="whitespace-pre-wrap leading-[16px]">פעולות</p>
       </div>
     </div>
   );
@@ -488,9 +717,12 @@ function Cell() {
 
 function Cell1() {
   return (
-    <div className="content-stretch flex flex-col items-end px-[24px] py-[16px] relative shrink-0 w-[173.47px] z-[6]" data-name="Cell">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right tracking-[0.6px] uppercase w-[34.88px]">
-        <p className="leading-[16px] whitespace-pre-wrap">הערות</p>
+    <div
+      className="relative z-[6] flex w-[173.47px] shrink-0 flex-col content-stretch items-end px-[24px] py-[16px]"
+      data-name="Cell"
+    >
+      <div className="relative flex h-[16px] w-[34.88px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] uppercase not-italic leading-[0] tracking-[0.6px]">
+        <p className="whitespace-pre-wrap leading-[16px]">הערות</p>
       </div>
     </div>
   );
@@ -498,9 +730,12 @@ function Cell1() {
 
 function Cell2() {
   return (
-    <div className="content-stretch flex flex-col items-center px-[24px] py-[16px] relative shrink-0 w-[173.83px] z-[5]" data-name="Cell">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-center tracking-[0.6px] uppercase w-[69.34px]">
-        <p className="leading-[16px] whitespace-pre-wrap">סטטוס אימות</p>
+    <div
+      className="relative z-[5] flex w-[173.83px] shrink-0 flex-col content-stretch items-center px-[24px] py-[16px]"
+      data-name="Cell"
+    >
+      <div className="relative flex h-[16px] w-[69.34px] shrink-0 flex-col justify-center text-center font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] uppercase not-italic leading-[0] tracking-[0.6px]">
+        <p className="whitespace-pre-wrap leading-[16px]">סטטוס אימות</p>
       </div>
     </div>
   );
@@ -508,9 +743,12 @@ function Cell2() {
 
 function Cell3() {
   return (
-    <div className="content-stretch flex flex-col items-end px-[24px] py-[16px] relative shrink-0 w-[168.3px] z-[4]" data-name="Cell">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right tracking-[0.6px] uppercase w-[27.28px]">
-        <p className="leading-[16px] whitespace-pre-wrap">דירוג</p>
+    <div
+      className="relative z-[4] flex w-[168.3px] shrink-0 flex-col content-stretch items-end px-[24px] py-[16px]"
+      data-name="Cell"
+    >
+      <div className="relative flex h-[16px] w-[27.28px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] uppercase not-italic leading-[0] tracking-[0.6px]">
+        <p className="whitespace-pre-wrap leading-[16px]">דירוג</p>
       </div>
     </div>
   );
@@ -518,9 +756,12 @@ function Cell3() {
 
 function Cell4() {
   return (
-    <div className="content-stretch flex flex-col items-end px-[24px] py-[16px] relative shrink-0 w-[110.58px] z-[3]" data-name="Cell">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right tracking-[0.6px] uppercase w-[23.41px]">
-        <p className="leading-[16px] whitespace-pre-wrap">אזור</p>
+    <div
+      className="relative z-[3] flex w-[110.58px] shrink-0 flex-col content-stretch items-end px-[24px] py-[16px]"
+      data-name="Cell"
+    >
+      <div className="relative flex h-[16px] w-[23.41px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] uppercase not-italic leading-[0] tracking-[0.6px]">
+        <p className="whitespace-pre-wrap leading-[16px]">אזור</p>
       </div>
     </div>
   );
@@ -528,9 +769,12 @@ function Cell4() {
 
 function Cell5() {
   return (
-    <div className="content-stretch flex flex-col items-end px-[24px] py-[16px] relative shrink-0 w-[125.78px] z-[2]" data-name="Cell">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right tracking-[0.6px] uppercase w-[43.34px]">
-        <p className="leading-[16px] whitespace-pre-wrap">קטגוריה</p>
+    <div
+      className="relative z-[2] flex w-[125.78px] shrink-0 flex-col content-stretch items-end px-[24px] py-[16px]"
+      data-name="Cell"
+    >
+      <div className="relative flex h-[16px] w-[43.34px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] uppercase not-italic leading-[0] tracking-[0.6px]">
+        <p className="whitespace-pre-wrap leading-[16px]">קטגוריה</p>
       </div>
     </div>
   );
@@ -538,9 +782,12 @@ function Cell5() {
 
 function Cell6() {
   return (
-    <div className="content-stretch flex flex-col items-end px-[24px] py-[16px] relative shrink-0 w-[270.16px] z-[1]" data-name="Cell">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right tracking-[0.6px] uppercase w-[23.19px]">
-        <p className="leading-[16px] whitespace-pre-wrap">ספק</p>
+    <div
+      className="relative z-[1] flex w-[270.16px] shrink-0 flex-col content-stretch items-end px-[24px] py-[16px]"
+      data-name="Cell"
+    >
+      <div className="relative flex h-[16px] w-[23.19px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#64748b] text-[12px] uppercase not-italic leading-[0] tracking-[0.6px]">
+        <p className="whitespace-pre-wrap leading-[16px]">ספק</p>
       </div>
     </div>
   );
@@ -548,7 +795,10 @@ function Cell6() {
 
 function HeaderRow() {
   return (
-    <div className="bg-[#f8fafc] content-stretch flex isolate items-start justify-center relative shrink-0 w-full" data-name="Header → Row">
+    <div
+      className="relative isolate flex w-full shrink-0 content-stretch items-start justify-center bg-[#f8fafc]"
+      data-name="Header → Row"
+    >
       <Cell />
       <Cell1 />
       <Cell2 />
@@ -562,10 +812,20 @@ function HeaderRow() {
 
 function Container14() {
   return (
-    <div className="relative shrink-0 size-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+    <div className="relative size-[15px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p212e1900} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p212e1900}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -574,7 +834,10 @@ function Container14() {
 
 function Button3() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container14 />
     </div>
   );
@@ -582,10 +845,20 @@ function Button3() {
 
 function Container15() {
   return (
-    <div className="relative shrink-0 size-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+    <div className="relative size-[15px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p112afa00} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p112afa00}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -594,7 +867,10 @@ function Container15() {
 
 function Button4() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container15 />
     </div>
   );
@@ -602,10 +878,23 @@ function Button4() {
 
 function Container16() {
   return (
-    <div className="h-[12.5px] relative shrink-0 w-[18.333px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 18.3333 12.5">
+    <div
+      className="relative h-[12.5px] w-[18.333px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 18.3333 12.5"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p2e870a60} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p2e870a60}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -614,7 +903,10 @@ function Container16() {
 
 function Button5() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container16 />
     </div>
   );
@@ -622,7 +914,10 @@ function Button5() {
 
 function Data() {
   return (
-    <div className="content-stretch flex gap-[8px] items-center pl-[31.89px] relative shrink-0 w-[143.89px] z-[7]" data-name="Data">
+    <div
+      className="relative z-[7] flex w-[143.89px] shrink-0 content-stretch items-center gap-[8px] pl-[31.89px]"
+      data-name="Data"
+    >
       <Button3 />
       <Button4 />
       <Button5 />
@@ -632,9 +927,12 @@ function Data() {
 
 function Data1() {
   return (
-    <div className="content-stretch flex flex-col items-end pb-[28.5px] pt-[28px] px-[24px] relative shrink-0 w-[173.47px] z-[6]" data-name="Data">
-      <div className="flex flex-col font-['Public_Sans:Regular',sans-serif] font-normal h-[16px] justify-center leading-[0] relative shrink-0 text-[#94a3b8] text-[12px] text-right w-[4.53px]">
-        <p className="leading-[16px] whitespace-pre-wrap">-</p>
+    <div
+      className="relative z-[6] flex w-[173.47px] shrink-0 flex-col content-stretch items-end px-[24px] pt-[28px] pb-[28.5px]"
+      data-name="Data"
+    >
+      <div className="relative flex h-[16px] w-[4.53px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Regular',sans-serif] font-normal text-[#94a3b8] text-[12px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">-</p>
       </div>
     </div>
   );
@@ -642,8 +940,17 @@ function Data1() {
 
 function Container17() {
   return (
-    <div className="h-[14px] relative shrink-0 w-[14.667px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 14.6667 14">
+    <div
+      className="relative h-[14px] w-[14.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14.6667 14"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.pcb8380} fill="var(--fill-0, #059669)" id="Icon" />
         </g>
@@ -654,9 +961,12 @@ function Container17() {
 
 function Background1() {
   return (
-    <div className="bg-[#d1fae5] content-stretch flex gap-[6px] items-center px-[12px] py-[4px] relative rounded-[9999px] self-stretch shrink-0" data-name="Background">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#059669] text-[12px] text-right w-[33.38px]">
-        <p className="leading-[16px] whitespace-pre-wrap">מאומת</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-center gap-[6px] self-stretch rounded-[9999px] bg-[#d1fae5] px-[12px] py-[4px]"
+      data-name="Background"
+    >
+      <div className="relative flex h-[16px] w-[33.38px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#059669] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">מאומת</p>
       </div>
       <Container17 />
     </div>
@@ -665,7 +975,10 @@ function Background1() {
 
 function Data2() {
   return (
-    <div className="content-stretch flex items-start justify-center relative shrink-0 w-[125.83px] z-[5]" data-name="Data">
+    <div
+      className="relative z-[5] flex w-[125.83px] shrink-0 content-stretch items-start justify-center"
+      data-name="Data"
+    >
       <Background1 />
     </div>
   );
@@ -673,9 +986,12 @@ function Data2() {
 
 function Container18() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Public_Sans:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[#ec5b13] text-[12px] text-right w-[18.28px]">
-        <p className="leading-[16px] whitespace-pre-wrap">4.5</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[18.28px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Medium',sans-serif] font-medium text-[#ec5b13] text-[12px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">4.5</p>
       </div>
     </div>
   );
@@ -683,7 +999,10 @@ function Container18() {
 
 function Margin1() {
   return (
-    <div className="content-stretch flex flex-col items-start pr-[4px] relative shrink-0 z-[6]" data-name="Margin">
+    <div
+      className="relative z-[6] flex shrink-0 flex-col content-stretch items-start pr-[4px]"
+      data-name="Margin"
+    >
       <Container18 />
     </div>
   );
@@ -691,10 +1010,23 @@ function Margin1() {
 
 function Container19() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[5]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[5] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p2d7d0100} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p2d7d0100}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -703,10 +1035,23 @@ function Container19() {
 
 function Container20() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[4]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[4] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -715,10 +1060,23 @@ function Container20() {
 
 function Container21() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[3]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[3] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -727,10 +1085,23 @@ function Container21() {
 
 function Container22() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[2]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[2] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -739,10 +1110,23 @@ function Container22() {
 
 function Container23() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[1]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[1] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -751,7 +1135,10 @@ function Container23() {
 
 function Data3() {
   return (
-    <div className="content-stretch flex isolate items-center pl-[51.94px] relative shrink-0 w-[144.3px] z-[4]" data-name="Data">
+    <div
+      className="relative isolate z-[4] flex w-[144.3px] shrink-0 content-stretch items-center pl-[51.94px]"
+      data-name="Data"
+    >
       <Margin1 />
       <Container19 />
       <Container20 />
@@ -764,9 +1151,12 @@ function Data3() {
 
 function Data4() {
   return (
-    <div className="content-stretch flex flex-col items-end pb-[26.5px] pt-[26px] px-[24px] relative shrink-0 w-[110.58px] z-[3]" data-name="Data">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[22.16px]">
-        <p className="leading-[20px] whitespace-pre-wrap">צפון</p>
+    <div
+      className="relative z-[3] flex w-[110.58px] shrink-0 flex-col content-stretch items-end px-[24px] pt-[26px] pb-[26.5px]"
+      data-name="Data"
+    >
+      <div className="relative flex h-[20px] w-[22.16px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">צפון</p>
       </div>
     </div>
   );
@@ -774,9 +1164,12 @@ function Data4() {
 
 function Background2() {
   return (
-    <div className="bg-[#dbeafe] content-stretch flex items-start justify-end px-[8px] py-[4px] relative rounded-[9999px] shrink-0" data-name="Background">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[12px] justify-center leading-[0] not-italic relative shrink-0 text-[#2563eb] text-[10px] text-right uppercase w-[32.83px]">
-        <p className="leading-[normal] whitespace-pre-wrap">תחבורה</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-start justify-end rounded-[9999px] bg-[#dbeafe] px-[8px] py-[4px]"
+      data-name="Background"
+    >
+      <div className="relative flex h-[12px] w-[32.83px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#2563eb] text-[10px] uppercase not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[normal]">תחבורה</p>
       </div>
     </div>
   );
@@ -784,7 +1177,10 @@ function Background2() {
 
 function Data5() {
   return (
-    <div className="content-stretch flex flex-col items-end pb-[27px] pt-[25.5px] px-[24px] relative shrink-0 w-[101.78px] z-[2]" data-name="Data">
+    <div
+      className="relative z-[2] flex w-[101.78px] shrink-0 flex-col content-stretch items-end px-[24px] pt-[25.5px] pb-[27px]"
+      data-name="Data"
+    >
       <Background2 />
     </div>
   );
@@ -792,9 +1188,12 @@ function Data5() {
 
 function Container25() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[109.19px]">
-        <p className="leading-[20px] whitespace-pre-wrap">הסעות מטיילי הצפון</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[109.19px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">הסעות מטיילי הצפון</p>
       </div>
     </div>
   );
@@ -802,9 +1201,12 @@ function Container25() {
 
 function Container26() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Public_Sans:Regular','Arimo:Regular',sans-serif] font-normal h-[16px] justify-center leading-[0] relative shrink-0 text-[#94a3b8] text-[12px] text-right w-[84.72px]">
-        <p className="leading-[16px] whitespace-pre-wrap">ח.פ 514423982</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[84.72px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Regular','Arimo:Regular',sans-serif] font-normal text-[#94a3b8] text-[12px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">ח.פ 514423982</p>
       </div>
     </div>
   );
@@ -812,7 +1214,10 @@ function Container26() {
 
 function Container24() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Container25 />
       <Container26 />
     </div>
@@ -821,8 +1226,14 @@ function Container24() {
 
 function Container27() {
   return (
-    <div className="h-[16px] relative shrink-0 w-[22px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 22 16">
+    <div className="relative h-[16px] w-[22px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 22 16"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p146eb80} fill="var(--fill-0, #EC5B13)" id="Icon" />
         </g>
@@ -833,7 +1244,10 @@ function Container27() {
 
 function Overlay() {
   return (
-    <div className="bg-[rgba(236,91,19,0.1)] content-stretch flex items-center justify-center relative rounded-[8px] shrink-0 size-[40px]" data-name="Overlay">
+    <div
+      className="relative flex size-[40px] shrink-0 content-stretch items-center justify-center rounded-[8px] bg-[rgba(236,91,19,0.1)]"
+      data-name="Overlay"
+    >
       <Container27 />
     </div>
   );
@@ -841,7 +1255,10 @@ function Overlay() {
 
 function Data6() {
   return (
-    <div className="content-stretch flex gap-[12px] items-center pl-[60.97px] relative shrink-0 w-[222.16px] z-[1]" data-name="Data">
+    <div
+      className="relative z-[1] flex w-[222.16px] shrink-0 content-stretch items-center gap-[12px] pl-[60.97px]"
+      data-name="Data"
+    >
       <Container24 />
       <Overlay />
     </div>
@@ -850,7 +1267,10 @@ function Data6() {
 
 function SupplierRow() {
   return (
-    <div className="content-stretch flex gap-[24px] isolate items-center justify-center mb-[-1px] relative shrink-0 w-full" data-name="Supplier Row 1">
+    <div
+      className="relative isolate mb-[-1px] flex w-full shrink-0 content-stretch items-center justify-center gap-[24px]"
+      data-name="Supplier Row 1"
+    >
       <Data />
       <Data1 />
       <Data2 />
@@ -864,10 +1284,20 @@ function SupplierRow() {
 
 function Container28() {
   return (
-    <div className="relative shrink-0 size-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+    <div className="relative size-[15px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p212e1900} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p212e1900}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -876,7 +1306,10 @@ function Container28() {
 
 function Button6() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container28 />
     </div>
   );
@@ -884,10 +1317,20 @@ function Button6() {
 
 function Container29() {
   return (
-    <div className="relative shrink-0 size-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+    <div className="relative size-[15px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p112afa00} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p112afa00}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -896,7 +1339,10 @@ function Container29() {
 
 function Button7() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container29 />
     </div>
   );
@@ -904,10 +1350,23 @@ function Button7() {
 
 function Container30() {
   return (
-    <div className="h-[12.5px] relative shrink-0 w-[18.333px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 18.3333 12.5">
+    <div
+      className="relative h-[12.5px] w-[18.333px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 18.3333 12.5"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p2e870a60} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p2e870a60}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -916,7 +1375,10 @@ function Container30() {
 
 function Button8() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container30 />
     </div>
   );
@@ -924,8 +1386,8 @@ function Button8() {
 
 function Data7() {
   return (
-    <div className="relative shrink-0 w-[143.89px] z-[7]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[8px] items-center pl-[31.89px] relative w-full">
+    <div className="relative z-[7] w-[143.89px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-center gap-[8px] border-0 border-[transparent] border-solid bg-clip-padding pl-[31.89px]">
         <Button6 />
         <Button7 />
         <Button8 />
@@ -936,9 +1398,12 @@ function Data7() {
 
 function Container31() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#ef4444] text-[12px] text-right w-[72.67px]">
-        <p className="leading-[16px] whitespace-pre-wrap">מסמכים חסרים</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[72.67px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#ef4444] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">מסמכים חסרים</p>
       </div>
     </div>
   );
@@ -946,10 +1411,23 @@ function Container31() {
 
 function Container32() {
   return (
-    <div className="h-[14.25px] relative shrink-0 w-[16.5px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 16.5 14.25">
+    <div
+      className="relative h-[14.25px] w-[16.5px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 16.5 14.25"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p10d9fd00} fill="var(--fill-0, #EF4444)" id="Icon" />
+          <path
+            d={svgPaths.p10d9fd00}
+            fill="var(--fill-0, #EF4444)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -958,8 +1436,8 @@ function Container32() {
 
 function Data8() {
   return (
-    <div className="relative shrink-0 w-[125.47px] z-[6]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[6px] items-center pl-[28.8px] relative w-full">
+    <div className="relative z-[6] w-[125.47px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-center gap-[6px] border-0 border-[transparent] border-solid bg-clip-padding pl-[28.8px]">
         <Container31 />
         <Container32 />
       </div>
@@ -969,8 +1447,14 @@ function Data8() {
 
 function Container33() {
   return (
-    <div className="relative shrink-0 size-[13.333px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333">
+    <div className="relative size-[13.333px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 13.3333 13.3333"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p61c3cc0} fill="var(--fill-0, #D97706)" id="Icon" />
         </g>
@@ -981,9 +1465,12 @@ function Container33() {
 
 function Background3() {
   return (
-    <div className="bg-[#fef3c7] content-stretch flex gap-[6.01px] items-center px-[12px] py-[4px] relative rounded-[9999px] self-stretch shrink-0" data-name="Background">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#d97706] text-[12px] text-right w-[28.09px]">
-        <p className="leading-[16px] whitespace-pre-wrap">ממתין</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-center gap-[6.01px] self-stretch rounded-[9999px] bg-[#fef3c7] px-[12px] py-[4px]"
+      data-name="Background"
+    >
+      <div className="relative flex h-[16px] w-[28.09px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#d97706] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">ממתין</p>
       </div>
       <Container33 />
     </div>
@@ -992,8 +1479,8 @@ function Background3() {
 
 function Data9() {
   return (
-    <div className="relative shrink-0 w-[125.83px] z-[5]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start justify-center relative w-full">
+    <div className="relative z-[5] w-[125.83px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-start justify-center border-0 border-[transparent] border-solid bg-clip-padding">
         <Background3 />
       </div>
     </div>
@@ -1002,9 +1489,12 @@ function Data9() {
 
 function Container34() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Public_Sans:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[#ec5b13] text-[12px] text-right w-[17.94px]">
-        <p className="leading-[16px] whitespace-pre-wrap">4.0</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[17.94px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Medium',sans-serif] font-medium text-[#ec5b13] text-[12px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">4.0</p>
       </div>
     </div>
   );
@@ -1012,7 +1502,10 @@ function Container34() {
 
 function Margin2() {
   return (
-    <div className="content-stretch flex flex-col items-start pr-[4px] relative shrink-0 z-[6]" data-name="Margin">
+    <div
+      className="relative z-[6] flex shrink-0 flex-col content-stretch items-start pr-[4px]"
+      data-name="Margin"
+    >
       <Container34 />
     </div>
   );
@@ -1020,10 +1513,23 @@ function Margin2() {
 
 function Container35() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[5]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[5] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #CBD5E1)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #CBD5E1)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1032,10 +1538,23 @@ function Container35() {
 
 function Container36() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[4]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[4] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1044,10 +1563,23 @@ function Container36() {
 
 function Container37() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[3]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[3] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1056,10 +1588,23 @@ function Container37() {
 
 function Container38() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[2]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[2] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1068,10 +1613,23 @@ function Container38() {
 
 function Container39() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[1]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[1] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1080,8 +1638,8 @@ function Container39() {
 
 function Data10() {
   return (
-    <div className="relative shrink-0 w-[120.3px] z-[4]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex isolate items-center pl-[28.28px] relative w-full">
+    <div className="relative z-[4] w-[120.3px] shrink-0" data-name="Data">
+      <div className="relative isolate flex w-full content-stretch items-center border-0 border-[transparent] border-solid bg-clip-padding pl-[28.28px]">
         <Margin2 />
         <Container35 />
         <Container36 />
@@ -1095,10 +1653,10 @@ function Data10() {
 
 function Data11() {
   return (
-    <div className="relative shrink-0 w-[86.57px] z-[3]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[24px] py-[26.5px] relative w-full">
-        <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[44.22px]">
-          <p className="leading-[20px] whitespace-pre-wrap">ירושלים</p>
+    <div className="relative z-[3] w-[86.57px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[24px] py-[26.5px]">
+        <div className="relative flex h-[20px] w-[44.22px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+          <p className="whitespace-pre-wrap leading-[20px]">ירושלים</p>
         </div>
       </div>
     </div>
@@ -1107,9 +1665,12 @@ function Data11() {
 
 function Background4() {
   return (
-    <div className="bg-[#ffedd5] content-stretch flex items-start justify-end px-[8px] py-[4px] relative rounded-[9999px] shrink-0" data-name="Background">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[12px] justify-center leading-[0] not-italic relative shrink-0 text-[#ea580c] text-[10px] text-right uppercase w-[13.97px]">
-        <p className="leading-[normal] whitespace-pre-wrap">מזון</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-start justify-end rounded-[9999px] bg-[#ffedd5] px-[8px] py-[4px]"
+      data-name="Background"
+    >
+      <div className="relative flex h-[12px] w-[13.97px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#ea580c] text-[10px] uppercase not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[normal]">מזון</p>
       </div>
     </div>
   );
@@ -1117,8 +1678,8 @@ function Background4() {
 
 function Data12() {
   return (
-    <div className="relative shrink-0 w-[77.78px] z-[2]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end pb-[27px] pr-[48px] pt-[26px] relative w-full">
+    <div className="relative z-[2] w-[77.78px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding pt-[26px] pr-[48px] pb-[27px]">
         <Background4 />
       </div>
     </div>
@@ -1127,9 +1688,14 @@ function Data12() {
 
 function Container41() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[118.11px]">
-        <p className="leading-[20px] whitespace-pre-wrap">קייטרינג טעמי המזרח</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[118.11px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">
+          קייטרינג טעמי המזרח
+        </p>
       </div>
     </div>
   );
@@ -1137,9 +1703,14 @@ function Container41() {
 
 function Container42() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Public_Sans:Regular','Arimo:Regular',sans-serif] font-normal h-[16px] justify-center leading-[0] relative shrink-0 text-[#94a3b8] text-[12px] text-right w-[125.31px]">
-        <p className="leading-[16px] whitespace-pre-wrap">עוסק מורשה 032115664</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[125.31px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Regular','Arimo:Regular',sans-serif] font-normal text-[#94a3b8] text-[12px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">
+          עוסק מורשה 032115664
+        </p>
       </div>
     </div>
   );
@@ -1147,7 +1718,10 @@ function Container42() {
 
 function Container40() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Container41 />
       <Container42 />
     </div>
@@ -1156,10 +1730,20 @@ function Container40() {
 
 function Container43() {
   return (
-    <div className="h-[20px] relative shrink-0 w-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 20">
+    <div className="relative h-[20px] w-[15px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p23cfd7c0} fill="var(--fill-0, #EA580C)" id="Icon" />
+          <path
+            d={svgPaths.p23cfd7c0}
+            fill="var(--fill-0, #EA580C)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1168,7 +1752,10 @@ function Container43() {
 
 function Background5() {
   return (
-    <div className="bg-[#ffedd5] content-stretch flex items-center justify-center relative rounded-[8px] shrink-0 size-[40px]" data-name="Background">
+    <div
+      className="relative flex size-[40px] shrink-0 content-stretch items-center justify-center rounded-[8px] bg-[#ffedd5]"
+      data-name="Background"
+    >
       <Container43 />
     </div>
   );
@@ -1176,8 +1763,8 @@ function Background5() {
 
 function Data13() {
   return (
-    <div className="relative shrink-0 w-[198.16px] z-[1]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[12px] items-center pl-[20.85px] relative w-full">
+    <div className="relative z-[1] w-[198.16px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-center gap-[12px] border-0 border-[transparent] border-solid bg-clip-padding pl-[20.85px]">
         <Container40 />
         <Background5 />
       </div>
@@ -1187,8 +1774,14 @@ function Data13() {
 
 function SupplierRow1() {
   return (
-    <div className="content-stretch flex gap-[48px] isolate items-center justify-center mb-[-1px] pt-px relative shrink-0 w-full" data-name="Supplier Row 2">
-      <div aria-hidden="true" className="absolute border-[#f1f5f9] border-solid border-t inset-0 pointer-events-none" />
+    <div
+      className="relative isolate mb-[-1px] flex w-full shrink-0 content-stretch items-center justify-center gap-[48px] pt-px"
+      data-name="Supplier Row 2"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#f1f5f9] border-t border-solid"
+      />
       <Data7 />
       <Data8 />
       <Data9 />
@@ -1202,10 +1795,20 @@ function SupplierRow1() {
 
 function Container44() {
   return (
-    <div className="relative shrink-0 size-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+    <div className="relative size-[15px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p212e1900} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p212e1900}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1214,7 +1817,10 @@ function Container44() {
 
 function Button9() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container44 />
     </div>
   );
@@ -1222,10 +1828,20 @@ function Button9() {
 
 function Container45() {
   return (
-    <div className="relative shrink-0 size-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+    <div className="relative size-[15px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p112afa00} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p112afa00}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1234,7 +1850,10 @@ function Container45() {
 
 function Button10() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container45 />
     </div>
   );
@@ -1242,10 +1861,23 @@ function Button10() {
 
 function Container46() {
   return (
-    <div className="h-[12.5px] relative shrink-0 w-[18.333px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 18.3333 12.5">
+    <div
+      className="relative h-[12.5px] w-[18.333px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 18.3333 12.5"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p2e870a60} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p2e870a60}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1254,7 +1886,10 @@ function Container46() {
 
 function Button11() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container46 />
     </div>
   );
@@ -1262,8 +1897,8 @@ function Button11() {
 
 function Data14() {
   return (
-    <div className="relative shrink-0 w-[143.89px] z-[7]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[8px] items-center pl-[31.89px] relative w-full">
+    <div className="relative z-[7] w-[143.89px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-center gap-[8px] border-0 border-[transparent] border-solid bg-clip-padding pl-[31.89px]">
         <Button9 />
         <Button10 />
         <Button11 />
@@ -1274,10 +1909,10 @@ function Data14() {
 
 function Data15() {
   return (
-    <div className="relative shrink-0 w-[173.47px] z-[6]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[24px] py-[28.5px] relative w-full">
-        <div className="flex flex-col font-['FreeSans:Regular_Italic',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#94a3b8] text-[12px] text-right w-[89.14px]">
-          <p className="leading-[16px] whitespace-pre-wrap">נדרש חידוש ביטוח</p>
+    <div className="relative z-[6] w-[173.47px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[24px] py-[28.5px]">
+        <div className="relative flex h-[16px] w-[89.14px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular_Italic',sans-serif] text-[#94a3b8] text-[12px] not-italic leading-[0]">
+          <p className="whitespace-pre-wrap leading-[16px]">נדרש חידוש ביטוח</p>
         </div>
       </div>
     </div>
@@ -1286,10 +1921,20 @@ function Data15() {
 
 function Container47() {
   return (
-    <div className="relative shrink-0 size-[13.333px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 13.3333 13.3333">
+    <div className="relative size-[13.333px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 13.3333 13.3333"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p33549300} fill="var(--fill-0, #475569)" id="Icon" />
+          <path
+            d={svgPaths.p33549300}
+            fill="var(--fill-0, #475569)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1298,9 +1943,12 @@ function Container47() {
 
 function Background6() {
   return (
-    <div className="bg-[#f1f5f9] content-stretch flex gap-[6px] items-center px-[12px] py-[4px] relative rounded-[9999px] self-stretch shrink-0" data-name="Background">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#475569] text-[12px] text-right w-[50.97px]">
-        <p className="leading-[16px] whitespace-pre-wrap">לא מאומת</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-center gap-[6px] self-stretch rounded-[9999px] bg-[#f1f5f9] px-[12px] py-[4px]"
+      data-name="Background"
+    >
+      <div className="relative flex h-[16px] w-[50.97px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#475569] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">לא מאומת</p>
       </div>
       <Container47 />
     </div>
@@ -1309,8 +1957,8 @@ function Background6() {
 
 function Data16() {
   return (
-    <div className="relative shrink-0 w-[125.83px] z-[5]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start justify-center relative w-full">
+    <div className="relative z-[5] w-[125.83px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-start justify-center border-0 border-[transparent] border-solid bg-clip-padding">
         <Background6 />
       </div>
     </div>
@@ -1319,9 +1967,12 @@ function Data16() {
 
 function Container48() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Public_Sans:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[#ec5b13] text-[12px] text-right w-[18.11px]">
-        <p className="leading-[16px] whitespace-pre-wrap">5.0</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[18.11px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Medium',sans-serif] font-medium text-[#ec5b13] text-[12px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">5.0</p>
       </div>
     </div>
   );
@@ -1329,7 +1980,10 @@ function Container48() {
 
 function Margin3() {
   return (
-    <div className="content-stretch flex flex-col items-start pr-[4px] relative shrink-0 z-[6]" data-name="Margin">
+    <div
+      className="relative z-[6] flex shrink-0 flex-col content-stretch items-start pr-[4px]"
+      data-name="Margin"
+    >
       <Container48 />
     </div>
   );
@@ -1337,10 +1991,23 @@ function Margin3() {
 
 function Container49() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[5]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[5] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1349,10 +2016,23 @@ function Container49() {
 
 function Container50() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[4]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[4] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1361,10 +2041,23 @@ function Container50() {
 
 function Container51() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[3]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[3] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1373,10 +2066,23 @@ function Container51() {
 
 function Container52() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[2]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[2] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1385,10 +2091,23 @@ function Container52() {
 
 function Container53() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[1]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[1] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1397,8 +2116,8 @@ function Container53() {
 
 function Data17() {
   return (
-    <div className="relative shrink-0 w-[144.3px] z-[4]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex isolate items-center pl-[52.11px] relative w-full">
+    <div className="relative z-[4] w-[144.3px] shrink-0" data-name="Data">
+      <div className="relative isolate flex w-full content-stretch items-center border-0 border-[transparent] border-solid bg-clip-padding pl-[52.11px]">
         <Margin3 />
         <Container49 />
         <Container50 />
@@ -1412,10 +2131,10 @@ function Data17() {
 
 function Data18() {
   return (
-    <div className="relative shrink-0 w-[110.58px] z-[3]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[24px] py-[26.5px] relative w-full">
-        <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[27.73px]">
-          <p className="leading-[20px] whitespace-pre-wrap">דרום</p>
+    <div className="relative z-[3] w-[110.58px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[24px] py-[26.5px]">
+        <div className="relative flex h-[20px] w-[27.73px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+          <p className="whitespace-pre-wrap leading-[20px]">דרום</p>
         </div>
       </div>
     </div>
@@ -1424,9 +2143,12 @@ function Data18() {
 
 function Background7() {
   return (
-    <div className="bg-[#f3e8ff] content-stretch flex items-start justify-end px-[8px] py-[4px] relative rounded-[9999px] shrink-0" data-name="Background">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[12px] justify-center leading-[0] not-italic relative shrink-0 text-[#9333ea] text-[10px] text-right uppercase w-[40.91px]">
-        <p className="leading-[normal] whitespace-pre-wrap">אטרקציות</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-start justify-end rounded-[9999px] bg-[#f3e8ff] px-[8px] py-[4px]"
+      data-name="Background"
+    >
+      <div className="relative flex h-[12px] w-[40.91px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#9333ea] text-[10px] uppercase not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[normal]">אטרקציות</p>
       </div>
     </div>
   );
@@ -1434,8 +2156,8 @@ function Background7() {
 
 function Data19() {
   return (
-    <div className="relative shrink-0 w-[101.78px] z-[2]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end pb-[27px] pt-[26px] px-[24px] relative w-full">
+    <div className="relative z-[2] w-[101.78px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[24px] pt-[26px] pb-[27px]">
         <Background7 />
       </div>
     </div>
@@ -1444,9 +2166,12 @@ function Data19() {
 
 function Container55() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[105.83px]">
-        <p className="leading-[20px] whitespace-pre-wrap">ספורט אתגרי בנגב</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[105.83px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">ספורט אתגרי בנגב</p>
       </div>
     </div>
   );
@@ -1454,9 +2179,12 @@ function Container55() {
 
 function Container56() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Public_Sans:Regular','Arimo:Regular',sans-serif] font-normal h-[16px] justify-center leading-[0] relative shrink-0 text-[#94a3b8] text-[12px] text-right w-[84.75px]">
-        <p className="leading-[16px] whitespace-pre-wrap">ח.פ 520038441</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[84.75px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Regular','Arimo:Regular',sans-serif] font-normal text-[#94a3b8] text-[12px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">ח.פ 520038441</p>
       </div>
     </div>
   );
@@ -1464,7 +2192,10 @@ function Container56() {
 
 function Container54() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Container55 />
       <Container56 />
     </div>
@@ -1473,10 +2204,23 @@ function Container54() {
 
 function Container57() {
   return (
-    <div className="h-[21.5px] relative shrink-0 w-[14.494px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 14.4937 21.5">
+    <div
+      className="relative h-[21.5px] w-[14.494px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14.4937 21.5"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p2e11e500} fill="var(--fill-0, #9333EA)" id="Icon" />
+          <path
+            d={svgPaths.p2e11e500}
+            fill="var(--fill-0, #9333EA)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1485,7 +2229,10 @@ function Container57() {
 
 function Background8() {
   return (
-    <div className="bg-[#f3e8ff] content-stretch flex items-center justify-center relative rounded-[8px] shrink-0 size-[40px]" data-name="Background">
+    <div
+      className="relative flex size-[40px] shrink-0 content-stretch items-center justify-center rounded-[8px] bg-[#f3e8ff]"
+      data-name="Background"
+    >
       <Container57 />
     </div>
   );
@@ -1493,8 +2240,8 @@ function Background8() {
 
 function Data20() {
   return (
-    <div className="relative shrink-0 w-[222.16px] z-[1]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[12px] items-center pl-[64.33px] relative w-full">
+    <div className="relative z-[1] w-[222.16px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-center gap-[12px] border-0 border-[transparent] border-solid bg-clip-padding pl-[64.33px]">
         <Container54 />
         <Background8 />
       </div>
@@ -1504,8 +2251,14 @@ function Data20() {
 
 function SupplierRow2() {
   return (
-    <div className="content-stretch flex gap-[24px] isolate items-center justify-center mb-[-1px] pt-px relative shrink-0 w-full" data-name="Supplier Row 3">
-      <div aria-hidden="true" className="absolute border-[#f1f5f9] border-solid border-t inset-0 pointer-events-none" />
+    <div
+      className="relative isolate mb-[-1px] flex w-full shrink-0 content-stretch items-center justify-center gap-[24px] pt-px"
+      data-name="Supplier Row 3"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#f1f5f9] border-t border-solid"
+      />
       <Data14 />
       <Data15 />
       <Data16 />
@@ -1519,10 +2272,20 @@ function SupplierRow2() {
 
 function Container58() {
   return (
-    <div className="relative shrink-0 size-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+    <div className="relative size-[15px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p212e1900} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p212e1900}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1531,7 +2294,10 @@ function Container58() {
 
 function Button12() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container58 />
     </div>
   );
@@ -1539,10 +2305,20 @@ function Button12() {
 
 function Container59() {
   return (
-    <div className="relative shrink-0 size-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+    <div className="relative size-[15px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p112afa00} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p112afa00}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1551,7 +2327,10 @@ function Container59() {
 
 function Button13() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container59 />
     </div>
   );
@@ -1559,10 +2338,23 @@ function Button13() {
 
 function Container60() {
   return (
-    <div className="h-[12.5px] relative shrink-0 w-[18.333px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 18.3333 12.5">
+    <div
+      className="relative h-[12.5px] w-[18.333px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 18.3333 12.5"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p2e870a60} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p2e870a60}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1571,7 +2363,10 @@ function Container60() {
 
 function Button14() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[6px] relative rounded-[8px] shrink-0" data-name="Button">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[6px]"
+      data-name="Button"
+    >
       <Container60 />
     </div>
   );
@@ -1579,8 +2374,8 @@ function Button14() {
 
 function Data21() {
   return (
-    <div className="relative shrink-0 w-[143.89px] z-[7]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[8px] items-center pl-[31.89px] relative w-full">
+    <div className="relative z-[7] w-[143.89px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-center gap-[8px] border-0 border-[transparent] border-solid bg-clip-padding pl-[31.89px]">
         <Button12 />
         <Button13 />
         <Button14 />
@@ -1591,10 +2386,10 @@ function Data21() {
 
 function Data22() {
   return (
-    <div className="relative shrink-0 w-[173.47px] z-[6]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end pb-[28px] pt-[28.5px] px-[24px] relative w-full">
-        <div className="flex flex-col font-['Public_Sans:Regular',sans-serif] font-normal h-[16px] justify-center leading-[0] relative shrink-0 text-[#94a3b8] text-[12px] text-right w-[4.53px]">
-          <p className="leading-[16px] whitespace-pre-wrap">-</p>
+    <div className="relative z-[6] w-[173.47px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[24px] pt-[28.5px] pb-[28px]">
+        <div className="relative flex h-[16px] w-[4.53px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Regular',sans-serif] font-normal text-[#94a3b8] text-[12px] leading-[0]">
+          <p className="whitespace-pre-wrap leading-[16px]">-</p>
         </div>
       </div>
     </div>
@@ -1603,8 +2398,17 @@ function Data22() {
 
 function Container61() {
   return (
-    <div className="h-[14px] relative shrink-0 w-[14.667px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 14.6667 14">
+    <div
+      className="relative h-[14px] w-[14.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 14.6667 14"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.pcb8380} fill="var(--fill-0, #059669)" id="Icon" />
         </g>
@@ -1615,9 +2419,12 @@ function Container61() {
 
 function Background9() {
   return (
-    <div className="bg-[#d1fae5] content-stretch flex gap-[6px] items-center px-[12px] py-[4px] relative rounded-[9999px] self-stretch shrink-0" data-name="Background">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#059669] text-[12px] text-right w-[33.38px]">
-        <p className="leading-[16px] whitespace-pre-wrap">מאומת</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-center gap-[6px] self-stretch rounded-[9999px] bg-[#d1fae5] px-[12px] py-[4px]"
+      data-name="Background"
+    >
+      <div className="relative flex h-[16px] w-[33.38px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#059669] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">מאומת</p>
       </div>
       <Container61 />
     </div>
@@ -1626,8 +2433,8 @@ function Background9() {
 
 function Data23() {
   return (
-    <div className="relative shrink-0 w-[125.83px] z-[5]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start justify-center relative w-full">
+    <div className="relative z-[5] w-[125.83px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-start justify-center border-0 border-[transparent] border-solid bg-clip-padding">
         <Background9 />
       </div>
     </div>
@@ -1636,9 +2443,12 @@ function Data23() {
 
 function Container62() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Public_Sans:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[#ec5b13] text-[12px] text-right w-[18.05px]">
-        <p className="leading-[16px] whitespace-pre-wrap">3.2</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[18.05px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Medium',sans-serif] font-medium text-[#ec5b13] text-[12px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">3.2</p>
       </div>
     </div>
   );
@@ -1646,7 +2456,10 @@ function Container62() {
 
 function Margin4() {
   return (
-    <div className="content-stretch flex flex-col items-start pr-[4px] relative shrink-0 z-[6]" data-name="Margin">
+    <div
+      className="relative z-[6] flex shrink-0 flex-col content-stretch items-start pr-[4px]"
+      data-name="Margin"
+    >
       <Container62 />
     </div>
   );
@@ -1654,10 +2467,23 @@ function Margin4() {
 
 function Container63() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[5]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[5] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #CBD5E1)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #CBD5E1)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1666,10 +2492,23 @@ function Container63() {
 
 function Container64() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[4]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[4] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #CBD5E1)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #CBD5E1)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1678,10 +2517,23 @@ function Container64() {
 
 function Container65() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[3]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[3] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1690,10 +2542,23 @@ function Container65() {
 
 function Container66() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[2]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[2] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1702,10 +2567,23 @@ function Container66() {
 
 function Container67() {
   return (
-    <div className="h-[11.083px] relative shrink-0 w-[11.667px] z-[1]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.0833">
+    <div
+      className="relative z-[1] h-[11.083px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.0833"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p232c0780} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p232c0780}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1714,8 +2592,8 @@ function Container67() {
 
 function Data24() {
   return (
-    <div className="relative shrink-0 w-[144.3px] z-[4]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex isolate items-center pl-[52.17px] relative w-full">
+    <div className="relative z-[4] w-[144.3px] shrink-0" data-name="Data">
+      <div className="relative isolate flex w-full content-stretch items-center border-0 border-[transparent] border-solid bg-clip-padding pl-[52.17px]">
         <Margin4 />
         <Container63 />
         <Container64 />
@@ -1729,10 +2607,10 @@ function Data24() {
 
 function Data25() {
   return (
-    <div className="relative shrink-0 w-[110.58px] z-[3]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end pb-[26px] pt-[26.5px] px-[24px] relative w-full">
-        <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[28.97px]">
-          <p className="leading-[20px] whitespace-pre-wrap">מרכז</p>
+    <div className="relative z-[3] w-[110.58px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[24px] pt-[26.5px] pb-[26px]">
+        <div className="relative flex h-[20px] w-[28.97px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+          <p className="whitespace-pre-wrap leading-[20px]">מרכז</p>
         </div>
       </div>
     </div>
@@ -1741,9 +2619,12 @@ function Data25() {
 
 function Background10() {
   return (
-    <div className="bg-[#cffafe] content-stretch flex items-start justify-end px-[8px] py-[4px] relative rounded-[9999px] shrink-0" data-name="Background">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[12px] justify-center leading-[0] not-italic relative shrink-0 text-[#0891b2] text-[10px] text-right uppercase w-[18px]">
-        <p className="leading-[normal] whitespace-pre-wrap">לינה</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-start justify-end rounded-[9999px] bg-[#cffafe] px-[8px] py-[4px]"
+      data-name="Background"
+    >
+      <div className="relative flex h-[12px] w-[18px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#0891b2] text-[10px] uppercase not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[normal]">לינה</p>
       </div>
     </div>
   );
@@ -1751,8 +2632,8 @@ function Background10() {
 
 function Data26() {
   return (
-    <div className="relative shrink-0 w-[101.78px] z-[2]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end pb-[26.5px] pt-[26px] px-[24px] relative w-full">
+    <div className="relative z-[2] w-[101.78px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[24px] pt-[26px] pb-[26.5px]">
         <Background10 />
       </div>
     </div>
@@ -1761,9 +2642,12 @@ function Data26() {
 
 function Container69() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[20px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[14px] text-right w-[105.91px]">
-        <p className="leading-[20px] whitespace-pre-wrap">מלון פלאזה - מרכז</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[105.91px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[14px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">מלון פלאזה - מרכז</p>
       </div>
     </div>
   );
@@ -1771,9 +2655,12 @@ function Container69() {
 
 function Container70() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Public_Sans:Regular','Arimo:Regular',sans-serif] font-normal h-[16px] justify-center leading-[0] relative shrink-0 text-[#94a3b8] text-[12px] text-right w-[84.69px]">
-        <p className="leading-[16px] whitespace-pre-wrap">ח.פ 510098442</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[84.69px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Regular','Arimo:Regular',sans-serif] font-normal text-[#94a3b8] text-[12px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">ח.פ 510098442</p>
       </div>
     </div>
   );
@@ -1781,7 +2668,10 @@ function Container70() {
 
 function Container68() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Container69 />
       <Container70 />
     </div>
@@ -1790,10 +2680,20 @@ function Container68() {
 
 function Container71() {
   return (
-    <div className="h-[15px] relative shrink-0 w-[22px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 22 15">
+    <div className="relative h-[15px] w-[22px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 22 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p16bbc000} fill="var(--fill-0, #0891B2)" id="Icon" />
+          <path
+            d={svgPaths.p16bbc000}
+            fill="var(--fill-0, #0891B2)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1802,7 +2702,10 @@ function Container71() {
 
 function Background11() {
   return (
-    <div className="bg-[#cffafe] content-stretch flex items-center justify-center relative rounded-[8px] shrink-0 size-[40px]" data-name="Background">
+    <div
+      className="relative flex size-[40px] shrink-0 content-stretch items-center justify-center rounded-[8px] bg-[#cffafe]"
+      data-name="Background"
+    >
       <Container71 />
     </div>
   );
@@ -1810,8 +2713,8 @@ function Background11() {
 
 function Data27() {
   return (
-    <div className="relative shrink-0 w-[222.16px] z-[1]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[12px] items-center pl-[64.25px] relative w-full">
+    <div className="relative z-[1] w-[222.16px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-center gap-[12px] border-0 border-[transparent] border-solid bg-clip-padding pl-[64.25px]">
         <Container68 />
         <Background11 />
       </div>
@@ -1821,8 +2724,14 @@ function Data27() {
 
 function SupplierRow3() {
   return (
-    <div className="content-stretch flex gap-[24px] isolate items-center justify-center mb-[-1px] pt-px relative shrink-0 w-full" data-name="Supplier Row 4">
-      <div aria-hidden="true" className="absolute border-[#f1f5f9] border-solid border-t inset-0 pointer-events-none" />
+    <div
+      className="relative isolate mb-[-1px] flex w-full shrink-0 content-stretch items-center justify-center gap-[24px] pt-px"
+      data-name="Supplier Row 4"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#f1f5f9] border-t border-solid"
+      />
       <Data21 />
       <Data22 />
       <Data23 />
@@ -1836,7 +2745,10 @@ function SupplierRow3() {
 
 function Body() {
   return (
-    <div className="content-stretch flex flex-col items-start pb-px relative shrink-0 w-full" data-name="Body">
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start pb-px"
+      data-name="Body"
+    >
       <SupplierRow />
       <SupplierRow1 />
       <SupplierRow2 />
@@ -1847,8 +2759,8 @@ function Body() {
 
 function Table() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Table">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start overflow-clip relative rounded-[inherit] w-full">
+    <div className="relative w-full shrink-0" data-name="Table">
+      <div className="relative flex w-full flex-col content-stretch items-start overflow-clip rounded-[inherit] border-0 border-[transparent] border-solid bg-clip-padding">
         <HeaderRow />
         <Body />
       </div>
@@ -1858,9 +2770,14 @@ function Table() {
 
 function Container72() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right w-[117.38px]">
-        <p className="leading-[16px] whitespace-pre-wrap">מציג 4 מתוך 128 ספקים</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[117.38px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#64748b] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">
+          מציג 4 מתוך 128 ספקים
+        </p>
       </div>
     </div>
   );
@@ -1868,8 +2785,14 @@ function Container72() {
 
 function Container74() {
   return (
-    <div className="h-[12px] relative shrink-0 w-[7.4px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 7.4 12">
+    <div className="relative h-[12px] w-[7.4px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 7.4 12"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p3ed0080} fill="var(--fill-0, #0F172A)" id="Icon" />
         </g>
@@ -1880,8 +2803,14 @@ function Container74() {
 
 function Button15() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[7px] relative rounded-[8px] shrink-0" data-name="Button">
-      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[8px]" />
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[7px]"
+      data-name="Button"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[8px] border border-[#e2e8f0] border-solid"
+      />
       <Container74 />
     </div>
   );
@@ -1889,9 +2818,12 @@ function Button15() {
 
 function Button16() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center relative rounded-[8px] shrink-0 size-[32px]" data-name="Button">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[12px] text-center w-[7.98px]">
-        <p className="leading-[16px] whitespace-pre-wrap">3</p>
+    <div
+      className="relative flex size-[32px] shrink-0 flex-col content-stretch items-center justify-center rounded-[8px]"
+      data-name="Button"
+    >
+      <div className="relative flex h-[16px] w-[7.98px] shrink-0 flex-col justify-center text-center font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">3</p>
       </div>
     </div>
   );
@@ -1899,9 +2831,12 @@ function Button16() {
 
 function Button17() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center relative rounded-[8px] shrink-0 size-[32px]" data-name="Button">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[12px] text-center w-[7.63px]">
-        <p className="leading-[16px] whitespace-pre-wrap">2</p>
+    <div
+      className="relative flex size-[32px] shrink-0 flex-col content-stretch items-center justify-center rounded-[8px]"
+      data-name="Button"
+    >
+      <div className="relative flex h-[16px] w-[7.63px] shrink-0 flex-col justify-center text-center font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">2</p>
       </div>
     </div>
   );
@@ -1909,9 +2844,12 @@ function Button17() {
 
 function Button18() {
   return (
-    <div className="bg-[#ec5b13] content-stretch flex flex-col items-center justify-center relative rounded-[8px] shrink-0 size-[32px]" data-name="Button">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-center text-white w-[5.14px]">
-        <p className="leading-[16px] whitespace-pre-wrap">1</p>
+    <div
+      className="relative flex size-[32px] shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] bg-[#ec5b13]"
+      data-name="Button"
+    >
+      <div className="relative flex h-[16px] w-[5.14px] shrink-0 flex-col justify-center text-center font-['FreeSans:Semi_Bold',sans-serif] text-[12px] text-white not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">1</p>
       </div>
     </div>
   );
@@ -1919,10 +2857,20 @@ function Button18() {
 
 function Container75() {
   return (
-    <div className="h-[12px] relative shrink-0 w-[7.4px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 7.4 12">
+    <div className="relative h-[12px] w-[7.4px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 7.4 12"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p28c84800} fill="var(--fill-0, #0F172A)" id="Icon" />
+          <path
+            d={svgPaths.p28c84800}
+            fill="var(--fill-0, #0F172A)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1931,8 +2879,14 @@ function Container75() {
 
 function Button19() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center p-[7px] relative rounded-[8px] shrink-0" data-name="Button">
-      <div aria-hidden="true" className="absolute border border-[#e2e8f0] border-solid inset-0 pointer-events-none rounded-[8px]" />
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center rounded-[8px] p-[7px]"
+      data-name="Button"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[8px] border border-[#e2e8f0] border-solid"
+      />
       <Container75 />
     </div>
   );
@@ -1940,7 +2894,10 @@ function Button19() {
 
 function Container73() {
   return (
-    <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 content-stretch items-center gap-[8px]"
+      data-name="Container"
+    >
       <Button15 />
       <Button16 />
       <Button17 />
@@ -1952,9 +2909,12 @@ function Container73() {
 
 function Pagination() {
   return (
-    <div className="bg-[#f8fafc] relative shrink-0 w-full" data-name="Pagination">
-      <div className="flex flex-col items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-center justify-between px-[24px] py-[16px] relative w-full">
+    <div
+      className="relative w-full shrink-0 bg-[#f8fafc]"
+      data-name="Pagination"
+    >
+      <div className="flex size-full flex-col items-center">
+        <div className="relative flex w-full flex-col content-stretch items-center justify-between border-0 border-[transparent] border-solid bg-clip-padding px-[24px] py-[16px]">
           <Container72 />
           <Container73 />
         </div>
@@ -1965,21 +2925,30 @@ function Pagination() {
 
 function SupplierTableCardList() {
   return (
-    <div className="bg-white relative rounded-[16px] shrink-0 w-full" data-name="Supplier Table / Card List">
-      <div className="content-stretch flex flex-col items-start overflow-clip p-px relative rounded-[inherit] w-full">
+    <div
+      className="relative w-full shrink-0 rounded-[16px] bg-white"
+      data-name="Supplier Table / Card List"
+    >
+      <div className="relative flex w-full flex-col content-stretch items-start overflow-clip rounded-[inherit] p-px">
         <Table />
         <Pagination />
       </div>
-      <div aria-hidden="true" className="absolute border border-[#f1f5f9] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[0px_20px_25px_-5px_rgba(0,0,0,0.05),0px_8px_10px_-6px_rgba(0,0,0,0.05)]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[16px] border border-[#f1f5f9] border-solid shadow-[0px_20px_25px_-5px_rgba(0,0,0,0.05),0px_8px_10px_-6px_rgba(0,0,0,0.05)]"
+      />
     </div>
   );
 }
 
 function Container77() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[32px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[24px] text-right w-[25.52px]">
-        <p className="leading-[32px] whitespace-pre-wrap">12</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[32px] w-[25.52px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[24px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[32px]">12</p>
       </div>
     </div>
   );
@@ -1987,9 +2956,12 @@ function Container77() {
 
 function Container78() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right w-[75.94px]">
-        <p className="leading-[16px] whitespace-pre-wrap">בעיות במסמכים</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[75.94px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#64748b] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">בעיות במסמכים</p>
       </div>
     </div>
   );
@@ -1998,7 +2970,7 @@ function Container78() {
 function Container76() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start relative">
+      <div className="relative flex flex-col content-stretch items-start border-0 border-[transparent] border-solid bg-clip-padding">
         <Container77 />
         <Container78 />
       </div>
@@ -2008,8 +2980,14 @@ function Container76() {
 
 function Container79() {
   return (
-    <div className="h-[21px] relative shrink-0 w-[22px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 22 21">
+    <div className="relative h-[21px] w-[22px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 22 21"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.pd694c00} fill="var(--fill-0, #EF4444)" id="Icon" />
         </g>
@@ -2020,8 +2998,11 @@ function Container79() {
 
 function Overlay1() {
   return (
-    <div className="bg-[rgba(239,68,68,0.1)] relative rounded-[12px] shrink-0" data-name="Overlay">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end p-[12px] relative">
+    <div
+      className="relative shrink-0 rounded-[12px] bg-[rgba(239,68,68,0.1)]"
+      data-name="Overlay"
+    >
+      <div className="relative flex flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding p-[12px]">
         <Container79 />
       </div>
     </div>
@@ -2030,10 +3011,16 @@ function Overlay1() {
 
 function BackgroundBorder() {
   return (
-    <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[16px] self-stretch" data-name="Background+Border">
-      <div aria-hidden="true" className="absolute border border-[#f1f5f9] border-solid inset-0 pointer-events-none rounded-[16px]" />
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[15.99px] items-center pl-[135.05px] pr-[17px] py-[17px] relative size-full">
+    <div
+      className="relative min-h-px min-w-px flex-[1_0_0] self-stretch rounded-[16px] bg-white"
+      data-name="Background+Border"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[16px] border border-[#f1f5f9] border-solid"
+      />
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex size-full content-stretch items-center gap-[15.99px] py-[17px] pr-[17px] pl-[135.05px]">
           <Container76 />
           <Overlay1 />
         </div>
@@ -2044,9 +3031,12 @@ function BackgroundBorder() {
 
 function Container81() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[32px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[24px] text-right w-[26.03px]">
-        <p className="leading-[32px] whitespace-pre-wrap">14</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[32px] w-[26.03px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[24px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[32px]">14</p>
       </div>
     </div>
   );
@@ -2054,9 +3044,12 @@ function Container81() {
 
 function Container82() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right w-[78.34px]">
-        <p className="leading-[16px] whitespace-pre-wrap">ממתינים לאימות</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[78.34px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#64748b] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">ממתינים לאימות</p>
       </div>
     </div>
   );
@@ -2065,7 +3058,7 @@ function Container82() {
 function Container80() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start relative">
+      <div className="relative flex flex-col content-stretch items-start border-0 border-[transparent] border-solid bg-clip-padding">
         <Container81 />
         <Container82 />
       </div>
@@ -2075,8 +3068,14 @@ function Container80() {
 
 function Container83() {
   return (
-    <div className="relative shrink-0 size-[20.05px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20.05 20.05">
+    <div className="relative size-[20.05px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20.05 20.05"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p4768a80} fill="var(--fill-0, #F59E0B)" id="Icon" />
         </g>
@@ -2087,8 +3086,11 @@ function Container83() {
 
 function Overlay2() {
   return (
-    <div className="bg-[rgba(245,158,11,0.1)] relative rounded-[12px] shrink-0" data-name="Overlay">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end p-[12px] relative">
+    <div
+      className="relative shrink-0 rounded-[12px] bg-[rgba(245,158,11,0.1)]"
+      data-name="Overlay"
+    >
+      <div className="relative flex flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding p-[12px]">
         <Container83 />
       </div>
     </div>
@@ -2097,10 +3099,16 @@ function Overlay2() {
 
 function BackgroundBorder1() {
   return (
-    <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[16px] self-stretch" data-name="Background+Border">
-      <div aria-hidden="true" className="absolute border border-[#f1f5f9] border-solid inset-0 pointer-events-none rounded-[16px]" />
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[16px] items-center pl-[132.64px] pr-[17px] py-[17px] relative size-full">
+    <div
+      className="relative min-h-px min-w-px flex-[1_0_0] self-stretch rounded-[16px] bg-white"
+      data-name="Background+Border"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[16px] border border-[#f1f5f9] border-solid"
+      />
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex size-full content-stretch items-center gap-[16px] py-[17px] pr-[17px] pl-[132.64px]">
           <Container80 />
           <Overlay2 />
         </div>
@@ -2111,9 +3119,12 @@ function BackgroundBorder1() {
 
 function Container85() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[32px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[24px] text-right w-[40.98px]">
-        <p className="leading-[32px] whitespace-pre-wrap">102</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[32px] w-[40.98px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[24px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[32px]">102</p>
       </div>
     </div>
   );
@@ -2121,9 +3132,12 @@ function Container85() {
 
 function Container86() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right w-[77.36px]">
-        <p className="leading-[16px] whitespace-pre-wrap">ספקים מאומתים</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[77.36px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#64748b] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">ספקים מאומתים</p>
       </div>
     </div>
   );
@@ -2132,7 +3146,7 @@ function Container86() {
 function Container84() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start relative">
+      <div className="relative flex flex-col content-stretch items-start border-0 border-[transparent] border-solid bg-clip-padding">
         <Container85 />
         <Container86 />
       </div>
@@ -2142,10 +3156,20 @@ function Container84() {
 
 function Container87() {
   return (
-    <div className="h-[21px] relative shrink-0 w-[22px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 22 21">
+    <div className="relative h-[21px] w-[22px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 22 21"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p13774060} fill="var(--fill-0, #10B981)" id="Icon" />
+          <path
+            d={svgPaths.p13774060}
+            fill="var(--fill-0, #10B981)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -2154,8 +3178,11 @@ function Container87() {
 
 function Overlay3() {
   return (
-    <div className="bg-[rgba(16,185,129,0.1)] relative rounded-[12px] shrink-0" data-name="Overlay">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end p-[12px] relative">
+    <div
+      className="relative shrink-0 rounded-[12px] bg-[rgba(16,185,129,0.1)]"
+      data-name="Overlay"
+    >
+      <div className="relative flex flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding p-[12px]">
         <Container87 />
       </div>
     </div>
@@ -2164,10 +3191,16 @@ function Overlay3() {
 
 function BackgroundBorder2() {
   return (
-    <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[16px] self-stretch" data-name="Background+Border">
-      <div aria-hidden="true" className="absolute border border-[#f1f5f9] border-solid inset-0 pointer-events-none rounded-[16px]" />
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[15.99px] items-center pl-[133.63px] pr-[17px] py-[17px] relative size-full">
+    <div
+      className="relative min-h-px min-w-px flex-[1_0_0] self-stretch rounded-[16px] bg-white"
+      data-name="Background+Border"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[16px] border border-[#f1f5f9] border-solid"
+      />
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex size-full content-stretch items-center gap-[15.99px] py-[17px] pr-[17px] pl-[133.63px]">
           <Container84 />
           <Overlay3 />
         </div>
@@ -2178,9 +3211,12 @@ function BackgroundBorder2() {
 
 function Container89() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Semi_Bold',sans-serif] h-[32px] justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[24px] text-right w-[41.63px]">
-        <p className="leading-[32px] whitespace-pre-wrap">128</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[32px] w-[41.63px] shrink-0 flex-col justify-center text-right font-['FreeSans:Semi_Bold',sans-serif] text-[#0f172a] text-[24px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[32px]">128</p>
       </div>
     </div>
   );
@@ -2188,9 +3224,12 @@ function Container89() {
 
 function Container90() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['FreeSans:Regular',sans-serif] h-[16px] justify-center leading-[0] not-italic relative shrink-0 text-[#64748b] text-[12px] text-right w-[67.45px]">
-        <p className="leading-[16px] whitespace-pre-wrap">ספקים פעילים</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[16px] w-[67.45px] shrink-0 flex-col justify-center text-right font-['FreeSans:Regular',sans-serif] text-[#64748b] text-[12px] not-italic leading-[0]">
+        <p className="whitespace-pre-wrap leading-[16px]">ספקים פעילים</p>
       </div>
     </div>
   );
@@ -2199,7 +3238,7 @@ function Container90() {
 function Container88() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start relative">
+      <div className="relative flex flex-col content-stretch items-start border-0 border-[transparent] border-solid bg-clip-padding">
         <Container89 />
         <Container90 />
       </div>
@@ -2209,10 +3248,20 @@ function Container88() {
 
 function Container91() {
   return (
-    <div className="h-[16px] relative shrink-0 w-[22px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 22 16">
+    <div className="relative h-[16px] w-[22px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 22 16"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p39955c80} fill="var(--fill-0, #EC5B13)" id="Icon" />
+          <path
+            d={svgPaths.p39955c80}
+            fill="var(--fill-0, #EC5B13)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -2221,8 +3270,11 @@ function Container91() {
 
 function Overlay4() {
   return (
-    <div className="bg-[rgba(236,91,19,0.1)] relative rounded-[12px] shrink-0" data-name="Overlay">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end p-[12px] relative">
+    <div
+      className="relative shrink-0 rounded-[12px] bg-[rgba(236,91,19,0.1)]"
+      data-name="Overlay"
+    >
+      <div className="relative flex flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding p-[12px]">
         <Container91 />
       </div>
     </div>
@@ -2231,10 +3283,16 @@ function Overlay4() {
 
 function BackgroundBorder3() {
   return (
-    <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[16px] self-stretch" data-name="Background+Border">
-      <div aria-hidden="true" className="absolute border border-[#f1f5f9] border-solid inset-0 pointer-events-none rounded-[16px]" />
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[15.99px] items-center pl-[143.53px] pr-[17px] py-[17px] relative size-full">
+    <div
+      className="relative min-h-px min-w-px flex-[1_0_0] self-stretch rounded-[16px] bg-white"
+      data-name="Background+Border"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[16px] border border-[#f1f5f9] border-solid"
+      />
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex size-full content-stretch items-center gap-[15.99px] py-[17px] pr-[17px] pl-[143.53px]">
           <Container88 />
           <Overlay4 />
         </div>
@@ -2245,7 +3303,10 @@ function BackgroundBorder3() {
 
 function FooterStatsCardOptionalUiAddition() {
   return (
-    <div className="content-stretch flex gap-[16px] items-start justify-center relative shrink-0 w-full" data-name="Footer / Stats Card (Optional UI Addition)">
+    <div
+      className="relative flex w-full shrink-0 content-stretch items-start justify-center gap-[16px]"
+      data-name="Footer / Stats Card (Optional UI Addition)"
+    >
       <BackgroundBorder />
       <BackgroundBorder1 />
       <BackgroundBorder2 />
@@ -2256,8 +3317,11 @@ function FooterStatsCardOptionalUiAddition() {
 
 function Main() {
   return (
-    <div className="max-w-[1280px] relative shrink-0 w-full z-[1]" data-name="Main">
-      <div className="content-stretch flex flex-col gap-[32px] items-start max-w-[inherit] p-[32px] relative w-full">
+    <div
+      className="relative z-[1] w-full max-w-[1280px] shrink-0"
+      data-name="Main"
+    >
+      <div className="relative flex w-full max-w-[inherit] flex-col content-stretch items-start gap-[32px] p-[32px]">
         <FiltersToolbar />
         <SupplierTableCardList />
         <FooterStatsCardOptionalUiAddition />
@@ -2268,7 +3332,10 @@ function Main() {
 
 export default function Component() {
   return (
-    <div className="bg-[#f8f6f6] content-stretch flex flex-col isolate items-start pb-[196px] relative size-full" data-name="בנק ספקים - עם תווית">
+    <div
+      className="relative isolate flex size-full flex-col content-stretch items-start bg-[#f8f6f6] pb-[196px]"
+      data-name="בנק ספקים - עם תווית"
+    >
       <BackgroundHorizontalBorder />
       <HeaderTopNavigationBar />
       <Main />

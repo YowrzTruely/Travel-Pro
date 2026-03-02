@@ -1,55 +1,82 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useForm } from 'react-hook-form';
-import { useQuery, useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { useMutation, useQuery } from "convex/react";
 import {
-  Search, Plus, Filter, Eye, Edit2, Copy, Star, CheckCircle,
-  AlertTriangle, Clock, X, ChevronLeft, ChevronRight, Users, Loader2, Archive
-} from 'lucide-react';
-import type { Supplier } from './data';
-import { appToast } from './AppToast';
-import { SupplierMap } from './SupplierMap';
-import { FormField, FormSelect, rules } from './FormField';
-import { computeAutoNotesFromSummary, noteLevelStyles } from './supplierNotes';
-import type { SupplierSummary } from './supplierNotes';
-import { CategoryIcon } from './CategoryIcons';
+  AlertTriangle,
+  Archive,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Copy,
+  Edit2,
+  Eye,
+  Filter,
+  Loader2,
+  Plus,
+  Search,
+  Star,
+  X,
+} from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { api } from "../../../convex/_generated/api";
+import { appToast } from "./AppToast";
+import { CategoryIcon } from "./CategoryIcons";
+import type { Supplier } from "./data";
+import { FormField, FormSelect, rules } from "./FormField";
+import { SupplierMap } from "./SupplierMap";
+import type { SupplierSummary } from "./supplierNotes";
+import { computeAutoNotesFromSummary, noteLevelStyles } from "./supplierNotes";
 
 interface NewSupplierForm {
-  name: string;
   category: string;
-  region: string;
+  name: string;
   phone: string;
+  region: string;
 }
 
-const categories = ['כל הקטגוריות', 'תחבורה', 'מזון', 'אטרקציות', 'לינה', 'אולמות וגנים', 'צילום', 'מוזיקה', 'ציוד', 'כללי', 'בידור'];
-const regions = ['כל הארץ', 'צפון', 'מרכז', 'ירושלים', 'דרום'];
+const categories = [
+  "כל הקטגוריות",
+  "תחבורה",
+  "מזון",
+  "אטרקציות",
+  "לינה",
+  "אולמות וגנים",
+  "צילום",
+  "מוזיקה",
+  "ציוד",
+  "כללי",
+  "בידור",
+];
+const regions = ["כל הארץ", "צפון", "מרכז", "ירושלים", "דרום"];
 
 const CATEGORY_COLOR_MAP: Record<string, { color: string }> = {
-  'תחבורה': { color: '#3b82f6' },
-  'מזון': { color: '#22c55e' },
-  'אטרקציות': { color: '#a855f7' },
-  'לינה': { color: '#ec4899' },
-  'אולמות וגנים': { color: '#f97316' },
-  'צילום': { color: '#06b6d4' },
-  'מוזיקה': { color: '#8b5cf6' },
-  'ציוד': { color: '#64748b' },
-  'כללי': { color: '#8d785e' },
-  'בידור': { color: '#e11d48' },
+  תחבורה: { color: "#3b82f6" },
+  מזון: { color: "#22c55e" },
+  אטרקציות: { color: "#a855f7" },
+  לינה: { color: "#ec4899" },
+  "אולמות וגנים": { color: "#f97316" },
+  צילום: { color: "#06b6d4" },
+  מוזיקה: { color: "#8b5cf6" },
+  ציוד: { color: "#64748b" },
+  כללי: { color: "#8d785e" },
+  בידור: { color: "#e11d48" },
 };
-const statuses = ['הכל', 'מאומת', 'ממתין', 'לא מאומת'];
+const statuses = ["הכל", "מאומת", "ממתין", "לא מאומת"];
 
 export function SupplierBank() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('כל הקטגוריות');
-  const [selectedRegion, setSelectedRegion] = useState('כל הארץ');
-  const [selectedStatus, setSelectedStatus] = useState('הכל');
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("כל הקטגוריות");
+  const [selectedRegion, setSelectedRegion] = useState("כל הארץ");
+  const [selectedStatus, setSelectedStatus] = useState("הכל");
   const [showAddSupplier, setShowAddSupplier] = useState(false);
 
   // ─── Live data from Convex ───
   const suppliers = useQuery(api.suppliers.list) as Supplier[] | undefined;
-  const summaries = useQuery(api.suppliers.summaries) as Record<string, SupplierSummary> | undefined;
+  const summaries = useQuery(api.suppliers.summaries) as
+    | Record<string, SupplierSummary>
+    | undefined;
   const createSupplier = useMutation(api.suppliers.create);
 
   const loading = suppliers === undefined;
@@ -57,36 +84,48 @@ export function SupplierBank() {
 
   // ─── New supplier form state ───
   const [saving, setSaving] = useState(false);
-  const [newSupplierCategories, setNewSupplierCategories] = useState<string[]>(['תחבורה']);
+  const [newSupplierCategories, setNewSupplierCategories] = useState<string[]>([
+    "תחבורה",
+  ]);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
 
-  const { register, handleSubmit, formState: { errors, dirtyFields, isValid }, reset: resetSupplierForm } = useForm<NewSupplierForm>({
-    mode: 'onChange',
-    defaultValues: { name: '', category: 'תחבורה', region: 'צפון', phone: '' },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, dirtyFields, isValid },
+    reset: resetSupplierForm,
+  } = useForm<NewSupplierForm>({
+    mode: "onChange",
+    defaultValues: { name: "", category: "תחבורה", region: "צפון", phone: "" },
   });
 
   const onSubmitSupplier = async (data: NewSupplierForm) => {
-    if (newSupplierCategories.length === 0) return;
+    if (newSupplierCategories.length === 0) {
+      return;
+    }
     try {
       setSaving(true);
-      const categoryStr = newSupplierCategories.join(',');
+      const categoryStr = newSupplierCategories.join(",");
       const primaryCat = CATEGORY_COLOR_MAP[newSupplierCategories[0]];
       await createSupplier({
         name: data.name.trim(),
         category: categoryStr,
-        categoryColor: primaryCat?.color || '#8d785e',
-        icon: newSupplierCategories[0] || 'כללי',
+        categoryColor: primaryCat?.color || "#8d785e",
+        icon: newSupplierCategories[0] || "כללי",
         region: data.region,
         phone: data.phone.trim(),
       });
-      appToast.success('הספק נוסף בהצלחה למאגר', 'ניתן כעת לשייך אותו לפרויקטים');
+      appToast.success(
+        "הספק נוסף בהצלחה למאגר",
+        "ניתן כעת לשייך אותו לפרויקטים"
+      );
       setShowAddSupplier(false);
       resetSupplierForm();
-      setNewSupplierCategories(['תחבורה']);
+      setNewSupplierCategories(["תחבורה"]);
     } catch (err) {
-      console.error('[SupplierBank] Failed to create supplier:', err);
-      appToast.error('שגיאה ביצירת ספק', String(err));
+      console.error("[SupplierBank] Failed to create supplier:", err);
+      appToast.error("שגיאה ביצירת ספק", String(err));
     } finally {
       setSaving(false);
     }
@@ -94,63 +133,73 @@ export function SupplierBank() {
 
   const supplierList = suppliers ?? [];
 
-  const filtered = supplierList.filter(s => {
+  const filtered = supplierList.filter((s) => {
     // Filter out archived suppliers
-    if (s.category === 'ארכיון') return false;
-    const cats = s.category.split(',').map(c => c.trim());
-    const matchesSearch = !search || s.name.includes(search) || s.category.includes(search) || s.region.includes(search);
-    const matchesCategory = selectedCategory === 'כל הקטגוריות' || cats.includes(selectedCategory);
-    const matchesRegion = selectedRegion === 'כל הארץ' || s.region === selectedRegion;
-    const matchesStatus = selectedStatus === 'הכל' ||
-      (selectedStatus === 'מאומת' && s.verificationStatus === 'verified') ||
-      (selectedStatus === 'ממתין' && s.verificationStatus === 'pending') ||
-      (selectedStatus === 'לא מאומת' && s.verificationStatus === 'unverified');
+    if (s.category === "ארכיון") {
+      return false;
+    }
+    const cats = s.category.split(",").map((c) => c.trim());
+    const matchesSearch =
+      !search ||
+      s.name.includes(search) ||
+      s.category.includes(search) ||
+      s.region.includes(search);
+    const matchesCategory =
+      selectedCategory === "כל הקטגוריות" || cats.includes(selectedCategory);
+    const matchesRegion =
+      selectedRegion === "כל הארץ" || s.region === selectedRegion;
+    const matchesStatus =
+      selectedStatus === "הכל" ||
+      (selectedStatus === "מאומת" && s.verificationStatus === "verified") ||
+      (selectedStatus === "ממתין" && s.verificationStatus === "pending") ||
+      (selectedStatus === "לא מאומת" && s.verificationStatus === "unverified");
     return matchesSearch && matchesCategory && matchesRegion && matchesStatus;
   });
 
   const clearFilters = () => {
-    setSelectedCategory('כל הקטגוריות');
-    setSelectedRegion('כל הארץ');
-    setSelectedStatus('הכל');
-    setSearch('');
+    setSelectedCategory("כל הקטגוריות");
+    setSelectedRegion("כל הארץ");
+    setSelectedStatus("הכל");
+    setSearch("");
     setCurrentPage(1);
   };
 
-  const activeSuppliers = supplierList.filter(s => s.category !== 'ארכיון');
-  const archivedCount = supplierList.filter(s => s.category === 'ארכיון').length;
-  const totalSuppliers = activeSuppliers.length;
-  const verifiedCount = activeSuppliers.filter(s => s.verificationStatus === 'verified').length;
-  const pendingCount = activeSuppliers.filter(s => s.verificationStatus === 'pending').length;
-  const docsIssues = activeSuppliers.filter(s => {
-    const notes = computeAutoNotesFromSummary(s, (summaries ?? {})[s.id]);
-    return notes.some(n => n.level === 'critical' || n.level === 'warning');
-  }).length;
+  const archivedCount = supplierList.filter(
+    (s) => s.category === "ארכיון"
+  ).length;
 
   return (
-    <div className="p-4 lg:p-6 mx-auto font-['Assistant',sans-serif]" dir="rtl">
+    <div className="mx-auto p-4 font-['Assistant',sans-serif] lg:p-6" dir="rtl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#ff8c00]/10 rounded-xl flex items-center justify-center">
-            <CategoryIcon category="אולמות וגנים" size={22} color="#ff8c00" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff8c00]/10">
+            <CategoryIcon category="אולמות וגנים" color="#ff8c00" size={22} />
           </div>
-          <h1 className="text-[26px] text-[#181510]" style={{ fontWeight: 700 }}>בנק ספקים</h1>
+          <h1
+            className="text-[#181510] text-[26px]"
+            style={{ fontWeight: 700 }}
+          >
+            בנק ספקים
+          </h1>
         </div>
         <div className="flex items-center gap-3">
           {archivedCount > 0 && (
             <button
-              onClick={() => navigate('/suppliers/archive')}
-              className="flex items-center gap-2 border border-[#e7e1da] text-[#8d785e] hover:text-[#181510] hover:border-[#b8a990] px-4 py-2.5 rounded-xl transition-all text-[14px]"
+              className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#8d785e] text-[14px] transition-all hover:border-[#b8a990] hover:text-[#181510]"
+              onClick={() => navigate("/suppliers/archive")}
               style={{ fontWeight: 600 }}
+              type="button"
             >
               <Archive size={16} />
               ארכיון ({archivedCount})
             </button>
           )}
           <button
+            className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white shadow-[#ff8c00]/20 shadow-lg transition-all hover:bg-[#e67e00]"
             onClick={() => setShowAddSupplier(true)}
-            className="flex items-center gap-2 bg-[#ff8c00] hover:bg-[#e67e00] text-white px-4 py-2.5 rounded-xl shadow-lg shadow-[#ff8c00]/20 transition-all text-[14px]"
             style={{ fontWeight: 600 }}
+            type="button"
           >
             <Plus size={16} />
             הוספת ספק חדש
@@ -160,51 +209,82 @@ export function SupplierBank() {
 
       {/* Search bar */}
       <div className="relative mb-4">
-        <Search size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8d785e]" />
+        <Search
+          className="absolute top-1/2 right-3 -translate-y-1/2 text-[#8d785e]"
+          size={18}
+        />
         <input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full bg-white border border-[#e7e1da] rounded-xl pr-10 pl-4 py-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] transition-all"
+          className="w-full rounded-xl border border-[#e7e1da] bg-white py-3 pr-10 pl-4 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+          onChange={(e) => setSearch(e.target.value)}
           placeholder="חיפוש ספקים, קטגוריות או אזורים..."
+          value={search}
         />
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-5">
-        <div className="flex-1 min-w-[160px]">
-          <label className="text-[11px] text-[#8d785e] mb-1 block" style={{ fontWeight: 600 }}>קטגוריה</label>
+      <div className="mb-5 flex flex-wrap gap-3">
+        <div className="min-w-[160px] flex-1">
+          <label
+            className="mb-1 block text-[#8d785e] text-[11px]"
+            htmlFor="supplier-filter-category"
+            style={{ fontWeight: 600 }}
+          >
+            קטגוריה
+          </label>
           <select
+            className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+            id="supplier-filter-category"
+            onChange={(e) => setSelectedCategory(e.target.value)}
             value={selectedCategory}
-            onChange={e => setSelectedCategory(e.target.value)}
-            className="w-full bg-white border border-[#e7e1da] rounded-lg px-3 py-2 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00]"
           >
-            {categories.map(c => <option key={c}>{c}</option>)}
+            {categories.map((c) => (
+              <option key={c}>{c}</option>
+            ))}
           </select>
         </div>
-        <div className="flex-1 min-w-[160px]">
-          <label className="text-[11px] text-[#8d785e] mb-1 block" style={{ fontWeight: 600 }}>אזור פעילות</label>
+        <div className="min-w-[160px] flex-1">
+          <label
+            className="mb-1 block text-[#8d785e] text-[11px]"
+            htmlFor="supplier-filter-region"
+            style={{ fontWeight: 600 }}
+          >
+            אזור פעילות
+          </label>
           <select
+            className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+            id="supplier-filter-region"
+            onChange={(e) => setSelectedRegion(e.target.value)}
             value={selectedRegion}
-            onChange={e => setSelectedRegion(e.target.value)}
-            className="w-full bg-white border border-[#e7e1da] rounded-lg px-3 py-2 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00]"
           >
-            {regions.map(r => <option key={r}>{r}</option>)}
+            {regions.map((r) => (
+              <option key={r}>{r}</option>
+            ))}
           </select>
         </div>
-        <div className="flex-1 min-w-[160px]">
-          <label className="text-[11px] text-[#8d785e] mb-1 block" style={{ fontWeight: 600 }}>סטטוס אימות</label>
-          <select
-            value={selectedStatus}
-            onChange={e => setSelectedStatus(e.target.value)}
-            className="w-full bg-white border border-[#e7e1da] rounded-lg px-3 py-2 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 focus:border-[#ff8c00]"
+        <div className="min-w-[160px] flex-1">
+          <label
+            className="mb-1 block text-[#8d785e] text-[11px]"
+            htmlFor="supplier-filter-status"
+            style={{ fontWeight: 600 }}
           >
-            {statuses.map(s => <option key={s}>{s}</option>)}
+            סטטוס אימות
+          </label>
+          <select
+            className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+            id="supplier-filter-status"
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            value={selectedStatus}
+          >
+            {statuses.map((s) => (
+              <option key={s}>{s}</option>
+            ))}
           </select>
         </div>
         <div className="flex items-end">
           <button
+            className="flex items-center gap-1 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:text-[#ff8c00]"
             onClick={clearFilters}
-            className="flex items-center gap-1 text-[12px] text-[#8d785e] hover:text-[#ff8c00] border border-[#e7e1da] px-3 py-2 rounded-lg transition-colors"
+            type="button"
           >
             <Filter size={13} />
             ניקוי מסננים
@@ -214,161 +294,315 @@ export function SupplierBank() {
 
       {/* Table */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-[#e7e1da] shadow-sm mb-5">
-          <Loader2 size={32} className="animate-spin text-[#ff8c00] mb-3" />
-          <p className="text-[14px] text-[#8d785e]">טוען ספקים...</p>
+        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-[#e7e1da] bg-white py-16 shadow-sm">
+          <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
+          <p className="text-[#8d785e] text-[14px]">טוען ספקים...</p>
         </div>
       ) : error ? (
-        <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-[#e7e1da] shadow-sm mb-5">
-          <AlertTriangle size={32} className="text-[#ef4444] mb-3" />
-          <p className="text-[14px] text-[#ef4444]">{error}</p>
+        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-[#e7e1da] bg-white py-16 shadow-sm">
+          <AlertTriangle className="mb-3 text-[#ef4444]" size={32} />
+          <p className="text-[#ef4444] text-[14px]">{error}</p>
         </div>
       ) : (
-      <div className="bg-white rounded-2xl border border-[#e7e1da] shadow-sm overflow-hidden mb-5">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-[#f5f3f0] border-b border-[#e7e1da]">
-                {['ספק', 'קטגוריה', 'אזור', 'דירוג', 'סטטוס אימות', 'הערות', 'פעולות'].map(h => (
-                  <th key={h} className="p-3 text-right text-[12px] text-[#8d785e] whitespace-nowrap" style={{ fontWeight: 600 }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((supplier) => (
-                <tr key={supplier.id} className="border-b border-[#ece8e3] hover:bg-[#f5f3f0]/50 transition-colors">
-                  <td className="p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: supplier.categoryColor + '15' }}>
-                        <CategoryIcon category={supplier.category.split(',')[0]?.trim() || supplier.category} size={18} color={supplier.categoryColor} />
-                      </div>
-                      <div>
-                        <div className="text-[14px] text-[#181510]" style={{ fontWeight: 600 }}>{supplier.name}</div>
-                        <div className="text-[11px] text-[#8d785e]">{supplier.phone}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-3">
-                    <div className="flex flex-wrap gap-1">
-                      {supplier.category.split(',').map(c => c.trim()).filter(Boolean).map(cat => {
-                        const cm = CATEGORY_COLOR_MAP[cat];
-                        const color = cm?.color || supplier.categoryColor || '#8d785e';
-                        return (
-                          <span key={cat} className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full" style={{ backgroundColor: color + '15', color, fontWeight: 600 }}>
-                            <CategoryIcon category={cat} size={12} color={color} />
-                            {cat}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </td>
-                  <td className="p-3 text-[13px] text-[#6b5d45]">{supplier.region}</td>
-                  <td className="p-3">
-                    <div className="flex items-center gap-1">
-                      <span className="text-[13px] text-[#181510]" style={{ fontWeight: 600 }}>{supplier.rating}</span>
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map(s => (
-                          <Star key={s} size={12} fill={s <= supplier.rating ? '#ff8c00' : 'none'} className={s <= supplier.rating ? 'text-[#ff8c00]' : 'text-[#ddd6cb]'} />
-                        ))}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-3">
-                    {supplier.verificationStatus === 'verified' && (
-                      <span className="flex items-center gap-1 text-[12px] text-green-600" style={{ fontWeight: 600 }}>
-                        <CheckCircle size={14} /> מאומת
-                      </span>
-                    )}
-                    {supplier.verificationStatus === 'pending' && (
-                      <span className="flex items-center gap-1 text-[12px] text-yellow-600" style={{ fontWeight: 600 }}>
-                        <Clock size={14} /> ממתין
-                      </span>
-                    )}
-                    {supplier.verificationStatus === 'unverified' && (
-                      <span className="flex items-center gap-1 text-[12px] text-[#8d785e]" style={{ fontWeight: 600 }}>
-                        <AlertTriangle size={14} /> לא מאומת
-                      </span>
-                    )}
-                  </td>
-                  <td className="p-3 text-[12px]">
-                    {(() => {
-                      const notes = computeAutoNotesFromSummary(supplier, (summaries ?? {})[supplier.id]);
-                      if (notes.length === 0) return <span className="text-[#b8a990]">-</span>;
-                      const first = notes[0];
-                      const styles = noteLevelStyles(first.level);
-                      return (
-                        <div className="flex items-center gap-1.5">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${styles.dot}`} />
-                          <span className={`${styles.text} leading-tight`} style={{ fontWeight: 500 }}>{first.text}</span>
-                          {notes.length > 1 && (
-                            <span className="text-[10px] text-[#b8a990] bg-[#f5f3f0] px-1.5 py-0.5 rounded-full shrink-0" style={{ fontWeight: 600 }}>
-                              +{notes.length - 1}
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })()}
-                  </td>
-                  <td className="p-3">
-                    <div className="flex items-center gap-1">
-                      <button onClick={() => navigate(`/suppliers/${supplier.id}`)} className="p-1.5 text-[#8d785e] hover:text-[#ff8c00] hover:bg-[#ff8c00]/10 rounded-lg transition-all"><Eye size={15} /></button>
-                      <button onClick={() => navigate(`/suppliers/${supplier.id}`)} className="p-1.5 text-[#8d785e] hover:text-[#ff8c00] hover:bg-[#ff8c00]/10 rounded-lg transition-all"><Edit2 size={15} /></button>
-                      <button onClick={() => {
-                        const text = `${supplier.name}\nקטגוריות: ${supplier.category.split(',').map(c => c.trim()).join(', ')}\nאזור: ${supplier.region}\nטלפון: ${supplier.phone}\nדירוג: ${supplier.rating}`;
-                        navigator.clipboard.writeText(text).then(() => {
-                          appToast.info('הספק הועתק', `פרטי "${supplier.name}" הועתקו ללוח`);
-                        }).catch(() => appToast.info('הספק הועתק', 'פרטי הספק הועתקו ללוח'));
-                      }} className="p-1.5 text-[#8d785e] hover:text-[#181510] hover:bg-[#ece8e3] rounded-lg transition-all"><Copy size={15} /></button>
-                    </div>
-                  </td>
+        <div className="mb-5 overflow-hidden rounded-2xl border border-[#e7e1da] bg-white shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-[#e7e1da] border-b bg-[#f5f3f0]">
+                  {[
+                    "ספק",
+                    "קטגוריה",
+                    "אזור",
+                    "דירוג",
+                    "סטטוס אימות",
+                    "הערות",
+                    "פעולות",
+                  ].map((h) => (
+                    <th
+                      className="whitespace-nowrap p-3 text-right text-[#8d785e] text-[12px]"
+                      key={h}
+                      style={{ fontWeight: 600 }}
+                    >
+                      {h}
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {filtered
+                  .slice(
+                    (currentPage - 1) * ITEMS_PER_PAGE,
+                    currentPage * ITEMS_PER_PAGE
+                  )
+                  .map((supplier) => (
+                    <tr
+                      className="border-[#ece8e3] border-b transition-colors hover:bg-[#f5f3f0]/50"
+                      key={supplier.id}
+                    >
+                      <td className="p-3">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="flex h-9 w-9 items-center justify-center rounded-lg"
+                            style={{
+                              backgroundColor: `${supplier.categoryColor}15`,
+                            }}
+                          >
+                            <CategoryIcon
+                              category={
+                                supplier.category.split(",")[0]?.trim() ||
+                                supplier.category
+                              }
+                              color={supplier.categoryColor}
+                              size={18}
+                            />
+                          </div>
+                          <div>
+                            <div
+                              className="text-[#181510] text-[14px]"
+                              style={{ fontWeight: 600 }}
+                            >
+                              {supplier.name}
+                            </div>
+                            <div className="text-[#8d785e] text-[11px]">
+                              {supplier.phone}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex flex-wrap gap-1">
+                          {supplier.category
+                            .split(",")
+                            .map((c) => c.trim())
+                            .filter(Boolean)
+                            .map((cat) => {
+                              const cm = CATEGORY_COLOR_MAP[cat];
+                              const color =
+                                cm?.color ||
+                                supplier.categoryColor ||
+                                "#8d785e";
+                              return (
+                                <span
+                                  className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px]"
+                                  key={cat}
+                                  style={{
+                                    backgroundColor: `${color}15`,
+                                    color,
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  <CategoryIcon
+                                    category={cat}
+                                    color={color}
+                                    size={12}
+                                  />
+                                  {cat}
+                                </span>
+                              );
+                            })}
+                        </div>
+                      </td>
+                      <td className="p-3 text-[#6b5d45] text-[13px]">
+                        {supplier.region}
+                      </td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-1">
+                          <span
+                            className="text-[#181510] text-[13px]"
+                            style={{ fontWeight: 600 }}
+                          >
+                            {supplier.rating}
+                          </span>
+                          <div className="flex">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                              <Star
+                                className={
+                                  s <= supplier.rating
+                                    ? "text-[#ff8c00]"
+                                    : "text-[#ddd6cb]"
+                                }
+                                fill={s <= supplier.rating ? "#ff8c00" : "none"}
+                                key={s}
+                                size={12}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-3">
+                        {supplier.verificationStatus === "verified" && (
+                          <span
+                            className="flex items-center gap-1 text-[12px] text-green-600"
+                            style={{ fontWeight: 600 }}
+                          >
+                            <CheckCircle size={14} /> מאומת
+                          </span>
+                        )}
+                        {supplier.verificationStatus === "pending" && (
+                          <span
+                            className="flex items-center gap-1 text-[12px] text-yellow-600"
+                            style={{ fontWeight: 600 }}
+                          >
+                            <Clock size={14} /> ממתין
+                          </span>
+                        )}
+                        {supplier.verificationStatus === "unverified" && (
+                          <span
+                            className="flex items-center gap-1 text-[#8d785e] text-[12px]"
+                            style={{ fontWeight: 600 }}
+                          >
+                            <AlertTriangle size={14} /> לא מאומת
+                          </span>
+                        )}
+                      </td>
+                      <td className="p-3 text-[12px]">
+                        {(() => {
+                          const notes = computeAutoNotesFromSummary(
+                            supplier,
+                            summaries?.[supplier.id]
+                          );
+                          if (notes.length === 0) {
+                            return <span className="text-[#b8a990]">-</span>;
+                          }
+                          const first = notes[0];
+                          const styles = noteLevelStyles(first.level);
+                          return (
+                            <div className="flex items-center gap-1.5">
+                              <span
+                                className={`h-1.5 w-1.5 shrink-0 rounded-full ${styles.dot}`}
+                              />
+                              <span
+                                className={`${styles.text} leading-tight`}
+                                style={{ fontWeight: 500 }}
+                              >
+                                {first.text}
+                              </span>
+                              {notes.length > 1 && (
+                                <span
+                                  className="shrink-0 rounded-full bg-[#f5f3f0] px-1.5 py-0.5 text-[#b8a990] text-[10px]"
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  +{notes.length - 1}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })()}
+                      </td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-1">
+                          <button
+                            className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ff8c00]/10 hover:text-[#ff8c00]"
+                            onClick={() =>
+                              navigate(`/suppliers/${supplier.id}`)
+                            }
+                            type="button"
+                          >
+                            <Eye size={15} />
+                          </button>
+                          <button
+                            className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ff8c00]/10 hover:text-[#ff8c00]"
+                            onClick={() =>
+                              navigate(`/suppliers/${supplier.id}`)
+                            }
+                            type="button"
+                          >
+                            <Edit2 size={15} />
+                          </button>
+                          <button
+                            className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ece8e3] hover:text-[#181510]"
+                            onClick={() => {
+                              const text = `${supplier.name}\nקטגוריות: ${supplier.category
+                                .split(",")
+                                .map((c) => c.trim())
+                                .join(
+                                  ", "
+                                )}\nאזור: ${supplier.region}\nטלפון: ${supplier.phone}\nדירוג: ${supplier.rating}`;
+                              navigator.clipboard
+                                .writeText(text)
+                                .then(() => {
+                                  appToast.info(
+                                    "הספק הועתק",
+                                    `פרטי "${supplier.name}" הועתקו ללוח`
+                                  );
+                                })
+                                .catch(() =>
+                                  appToast.info(
+                                    "הספק הועתק",
+                                    "פרטי הספק הועתקו ללוח"
+                                  )
+                                );
+                            }}
+                            type="button"
+                          >
+                            <Copy size={15} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between p-3 bg-[#f5f3f0] border-t border-[#e7e1da]">
-          <span className="text-[12px] text-[#8d785e]">
-            מציג {Math.min((currentPage - 1) * ITEMS_PER_PAGE + 1, filtered.length)}-{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} מתוך {filtered.length} ספקים
-          </span>
-          {(() => {
-            const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
-            return (
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage <= 1}
-                  className="w-7 h-7 rounded-md flex items-center justify-center text-[#8d785e] hover:bg-white transition-colors disabled:opacity-30"
-                >
-                  <ChevronRight size={14} />
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+          {/* Pagination */}
+          <div className="flex items-center justify-between border-[#e7e1da] border-t bg-[#f5f3f0] p-3">
+            <span className="text-[#8d785e] text-[12px]">
+              מציג{" "}
+              {Math.min(
+                (currentPage - 1) * ITEMS_PER_PAGE + 1,
+                filtered.length
+              )}
+              -{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} מתוך{" "}
+              {filtered.length} ספקים
+            </span>
+            {(() => {
+              const totalPages = Math.max(
+                1,
+                Math.ceil(filtered.length / ITEMS_PER_PAGE)
+              );
+              return (
+                <div className="flex items-center gap-1">
                   <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`w-7 h-7 rounded-md flex items-center justify-center text-[12px] transition-colors ${
-                      currentPage === page
-                        ? 'bg-[#ff8c00] text-white'
-                        : 'text-[#8d785e] hover:bg-white'
-                    }`}
-                    style={{ fontWeight: currentPage === page ? 600 : 400 }}
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-white disabled:opacity-30"
+                    disabled={currentPage <= 1}
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    type="button"
                   >
-                    {page}
+                    <ChevronRight size={14} />
                   </button>
-                ))}
-                <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage >= totalPages}
-                  className="w-7 h-7 rounded-md flex items-center justify-center text-[#8d785e] hover:bg-white transition-colors disabled:opacity-30"
-                >
-                  <ChevronLeft size={14} />
-                </button>
-              </div>
-            );
-          })()}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (page) => (
+                      <button
+                        className={`flex h-7 w-7 items-center justify-center rounded-md text-[12px] transition-colors ${
+                          currentPage === page
+                            ? "bg-[#ff8c00] text-white"
+                            : "text-[#8d785e] hover:bg-white"
+                        }`}
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        style={{ fontWeight: currentPage === page ? 600 : 400 }}
+                        type="button"
+                      >
+                        {page}
+                      </button>
+                    )
+                  )}
+                  <button
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-white disabled:opacity-30"
+                    disabled={currentPage >= totalPages}
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    type="button"
+                  >
+                    <ChevronLeft size={14} />
+                  </button>
+                </div>
+              );
+            })()}
+          </div>
         </div>
-      </div>
       )}
 
       {/* ══════════ Supplier Map ══════════ */}
@@ -378,106 +612,205 @@ export function SupplierBank() {
 
       {/* Add supplier modal */}
       {showAddSupplier && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => { setShowAddSupplier(false); resetSupplierForm(); }}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-[20px] text-[#181510]" style={{ fontWeight: 700 }}>הוספת ספק חדש</h2>
-              <button onClick={() => { setShowAddSupplier(false); resetSupplierForm(); }} className="text-[#8d785e] hover:text-[#181510]"><X size={20} /></button>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => {
+            setShowAddSupplier(false);
+            resetSupplierForm();
+          }}
+          role="presentation"
+        >
+          <div
+            aria-modal="true"
+            className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+            role="dialog"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h2
+                className="text-[#181510] text-[20px]"
+                style={{ fontWeight: 700 }}
+              >
+                הוספת ספק חדש
+              </h2>
+              <button
+                className="text-[#8d785e] hover:text-[#181510]"
+                onClick={() => {
+                  setShowAddSupplier(false);
+                  resetSupplierForm();
+                }}
+                type="button"
+              >
+                <X size={20} />
+              </button>
             </div>
-            <form onSubmit={handleSubmit(onSubmitSupplier)} className="space-y-3">
+            <form
+              className="space-y-3"
+              onSubmit={handleSubmit(onSubmitSupplier)}
+            >
               <FormField
-                label="שם הספק"
-                required
                 error={errors.name}
                 isDirty={dirtyFields.name}
+                label="שם הספק"
                 placeholder="שם הספק"
-                {...register('name', rules.requiredMin('שם הספק', 2))}
+                required
+                {...register("name", rules.requiredMin("שם הספק", 2))}
               />
               {/* קטגוריות — multi-select */}
-              <div>
-                <label className="text-[13px] text-[#8d785e] mb-2 block" style={{ fontWeight: 600 }}>
+              <fieldset>
+                <legend
+                  className="mb-2 block text-[#8d785e] text-[13px]"
+                  style={{ fontWeight: 600 }}
+                >
                   קטגוריות <span className="text-[#ff8c00]">*</span>
                   {newSupplierCategories.length > 0 && (
-                    <span className="text-[11px] text-[#b5a48b] mr-1" style={{ fontWeight: 400 }}>({newSupplierCategories.length} נבחרו)</span>
+                    <span
+                      className="mr-1 text-[#b5a48b] text-[11px]"
+                      style={{ fontWeight: 400 }}
+                    >
+                      ({newSupplierCategories.length} נבחרו)
+                    </span>
                   )}
-                </label>
+                </legend>
                 <div className="grid grid-cols-3 gap-1.5">
-                  {Object.entries(CATEGORY_COLOR_MAP).map(([cat, { color }]) => {
-                    const isSelected = newSupplierCategories.includes(cat);
-                    return (
-                      <button
-                        key={cat}
-                        type="button"
-                        onClick={() => {
-                          setNewSupplierCategories(prev =>
-                            prev.includes(cat)
-                              ? prev.filter(c => c !== cat)
-                              : [...prev, cat]
-                          );
-                        }}
-                        className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border text-[12px] transition-all ${
-                          isSelected
-                            ? 'border-[#ff8c00] bg-[#ff8c00]/10 shadow-sm'
-                            : 'border-[#e7e1da] bg-white hover:border-[#d5cdc0] hover:bg-[#faf9f7]'
-                        }`}
-                        style={{ fontWeight: isSelected ? 600 : 400 }}
-                      >
-                        <div
-                          className={`w-3.5 h-3.5 rounded flex items-center justify-center flex-shrink-0 border transition-all ${
+                  {Object.entries(CATEGORY_COLOR_MAP).map(
+                    ([cat, { color }]) => {
+                      const isSelected = newSupplierCategories.includes(cat);
+                      return (
+                        <button
+                          className={`flex items-center gap-1.5 rounded-lg border px-2 py-1.5 text-[12px] transition-all ${
                             isSelected
-                              ? 'bg-[#ff8c00] border-[#ff8c00]'
-                              : 'border-[#d5cdc0] bg-white'
+                              ? "border-[#ff8c00] bg-[#ff8c00]/10 shadow-sm"
+                              : "border-[#e7e1da] bg-white hover:border-[#d5cdc0] hover:bg-[#faf9f7]"
                           }`}
+                          key={cat}
+                          onClick={() => {
+                            setNewSupplierCategories((prev) =>
+                              prev.includes(cat)
+                                ? prev.filter((c) => c !== cat)
+                                : [...prev, cat]
+                            );
+                          }}
+                          style={{ fontWeight: isSelected ? 600 : 400 }}
+                          type="button"
                         >
-                          {isSelected && (
-                            <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
-                              <path d="M2 5L4.2 7.5L8 2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          )}
-                        </div>
-                        <CategoryIcon category={cat} size={14} color={isSelected ? color : '#8d785e'} />
-                        <span className={isSelected ? 'text-[#181510]' : 'text-[#6b5d45]'}>{cat}</span>
-                      </button>
-                    );
-                  })}
+                          <div
+                            className={`flex h-3.5 w-3.5 flex-shrink-0 items-center justify-center rounded border transition-all ${
+                              isSelected
+                                ? "border-[#ff8c00] bg-[#ff8c00]"
+                                : "border-[#d5cdc0] bg-white"
+                            }`}
+                          >
+                            {isSelected && (
+                              <svg
+                                fill="none"
+                                height="8"
+                                viewBox="0 0 10 10"
+                                width="8"
+                              >
+                                <title>Decorative icon</title>
+                                <path
+                                  d="M2 5L4.2 7.5L8 2.5"
+                                  stroke="white"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="1.5"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                          <CategoryIcon
+                            category={cat}
+                            color={isSelected ? color : "#8d785e"}
+                            size={14}
+                          />
+                          <span
+                            className={
+                              isSelected ? "text-[#181510]" : "text-[#6b5d45]"
+                            }
+                          >
+                            {cat}
+                          </span>
+                        </button>
+                      );
+                    }
+                  )}
                 </div>
                 {newSupplierCategories.length === 0 && (
-                  <p className="text-[11px] text-red-500 mt-1">יש לבחור לפחות קטגוריה אחת</p>
+                  <p className="mt-1 text-[11px] text-red-500">
+                    יש לבחור לפחות קטגוריה אחת
+                  </p>
                 )}
-              </div>
+              </fieldset>
               <FormSelect
-                label="אזור"
                 error={errors.region}
                 isDirty={dirtyFields.region}
-                {...register('region')}
+                label="אזור"
+                {...register("region")}
               >
-                {regions.filter(r => r !== 'כל הארץ').map(r => <option key={r}>{r}</option>)}
+                {regions
+                  .filter((r) => r !== "כל הארץ")
+                  .map((r) => (
+                    <option key={r}>{r}</option>
+                  ))}
               </FormSelect>
               <FormField
-                label="טלפון"
-                placeholder="05X-XXXXXXX"
                 error={errors.phone}
                 isDirty={dirtyFields.phone}
-                {...register('phone', rules.israeliPhone(false))}
+                label="טלפון"
+                placeholder="05X-XXXXXXX"
+                {...register("phone", rules.israeliPhone(false))}
               />
               <div className="flex gap-3 pt-2">
                 <button
-                  type="submit"
-                  disabled={saving || !isValid || newSupplierCategories.length === 0}
-                  className="flex-1 bg-[#ff8c00] hover:bg-[#e67e00] disabled:opacity-50 disabled:cursor-not-allowed text-white py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={
+                    saving || !isValid || newSupplierCategories.length === 0
+                  }
                   style={{ fontWeight: 600 }}
+                  type="submit"
                 >
-                  {saving ? <Loader2 size={16} className="animate-spin" /> : 'הוסף ספק'}
+                  {saving ? (
+                    <Loader2 className="animate-spin" size={16} />
+                  ) : (
+                    "הוסף ספק"
+                  )}
                 </button>
-                <button type="button" onClick={() => { setShowAddSupplier(false); resetSupplierForm(); }} className="px-5 border border-[#e7e1da] rounded-xl hover:bg-[#f5f3f0] transition-colors">ביטול</button>
+                <button
+                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  onClick={() => {
+                    setShowAddSupplier(false);
+                    resetSupplierForm();
+                  }}
+                  type="button"
+                >
+                  ביטול
+                </button>
               </div>
             </form>
-            <div className="border-t border-[#e7e1da] mt-4 pt-4 flex gap-2">
-              <button onClick={() => { setShowAddSupplier(false); resetSupplierForm(); navigate('/suppliers/import'); }} className="text-[13px] text-[#ff8c00] hover:text-[#e67e00]" style={{ fontWeight: 600 }}>
+            <div className="mt-4 flex gap-2 border-[#e7e1da] border-t pt-4">
+              <button
+                className="text-[#ff8c00] text-[13px] hover:text-[#e67e00]"
+                onClick={() => {
+                  setShowAddSupplier(false);
+                  resetSupplierForm();
+                  navigate("/suppliers/import");
+                }}
+                style={{ fontWeight: 600 }}
+                type="button"
+              >
                 ייבוא מאקסל →
               </button>
               <span className="text-[#c4b89a]">|</span>
-              <button onClick={() => { setShowAddSupplier(false); resetSupplierForm(); navigate('/suppliers/classify'); }} className="text-[13px] text-[#ff8c00] hover:text-[#e67e00]" style={{ fontWeight: 600 }}>
+              <button
+                className="text-[#ff8c00] text-[13px] hover:text-[#e67e00]"
+                onClick={() => {
+                  setShowAddSupplier(false);
+                  resetSupplierForm();
+                  navigate("/suppliers/classify");
+                }}
+                style={{ fontWeight: 600 }}
+                type="button"
+              >
                 אשף סיווג →
               </button>
             </div>

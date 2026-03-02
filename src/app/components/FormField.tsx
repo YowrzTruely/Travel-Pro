@@ -2,9 +2,10 @@
  * Shared form field component with validation styling and Hebrew error messages.
  * Works with react-hook-form's register.
  */
-import { forwardRef } from 'react';
-import { CheckCircle, AlertCircle } from 'lucide-react';
-import type { FieldError } from 'react-hook-form';
+
+import { AlertCircle, CheckCircle } from "lucide-react";
+import { forwardRef, useId } from "react";
+import type { FieldError } from "react-hook-form";
 
 // ─── Validation patterns ───
 export const patterns = {
@@ -17,12 +18,15 @@ export const patterns = {
 // ─── Hebrew error messages ───
 export const messages = {
   required: (field: string) => `${field} הוא שדה חובה`,
-  minLength: (field: string, min: number) => `${field} חייב להכיל לפחות ${min} תווים`,
-  maxLength: (field: string, max: number) => `${field} לא יכול לעלות על ${max} תווים`,
+  minLength: (field: string, min: number) =>
+    `${field} חייב להכיל לפחות ${min} תווים`,
+  maxLength: (field: string, max: number) =>
+    `${field} לא יכול לעלות על ${max} תווים`,
   positiveNumber: (field: string) => `${field} חייב להיות מספר חיובי`,
-  maxNumber: (field: string, max: number) => `${field} לא יכול לעלות על ${max.toLocaleString()}`,
-  israeliPhone: 'מספר טלפון לא תקין (פורמט: 05X-XXXXXXX)',
-  email: 'כתובת אימייל לא תקינה',
+  maxNumber: (field: string, max: number) =>
+    `${field} לא יכול לעלות על ${max.toLocaleString()}`,
+  israeliPhone: "מספר טלפון לא תקין (פורמט: 05X-XXXXXXX)",
+  email: "כתובת אימייל לא תקינה",
 };
 
 // ─── Rule builders ───
@@ -35,39 +39,53 @@ export const rules = {
   positiveInt: (field: string) => ({
     required: messages.required(field),
     validate: (v: string) => {
-      const n = parseInt(v, 10);
-      if (isNaN(n) || n <= 0) return messages.positiveNumber(field);
+      const n = Number.parseInt(v, 10);
+      if (Number.isNaN(n) || n <= 0) {
+        return messages.positiveNumber(field);
+      }
       return true;
     },
   }),
   optionalPositiveInt: (field: string) => ({
     validate: (v: string) => {
-      if (!v || v === '') return true;
-      const n = parseInt(v, 10);
-      if (isNaN(n) || n <= 0) return messages.positiveNumber(field);
+      if (!v || v === "") {
+        return true;
+      }
+      const n = Number.parseInt(v, 10);
+      if (Number.isNaN(n) || n <= 0) {
+        return messages.positiveNumber(field);
+      }
       return true;
     },
   }),
   positivePrice: (field: string, max = 10_000_000) => ({
     required: messages.required(field),
     validate: (v: string) => {
-      const n = parseFloat(v);
-      if (isNaN(n) || n <= 0) return messages.positiveNumber(field);
-      if (n > max) return messages.maxNumber(field, max);
+      const n = Number.parseFloat(v);
+      if (Number.isNaN(n) || n <= 0) {
+        return messages.positiveNumber(field);
+      }
+      if (n > max) {
+        return messages.maxNumber(field, max);
+      }
       return true;
     },
   }),
   israeliPhone: (required = false) => ({
-    ...(required ? { required: messages.required('טלפון') } : {}),
+    ...(required ? { required: messages.required("טלפון") } : {}),
     validate: (v: string) => {
-      if (!v || v.trim() === '') return required ? messages.required('טלפון') : true;
+      if (!v || v.trim() === "") {
+        return required ? messages.required("טלפון") : true;
+      }
       return patterns.israeliPhone.test(v.trim()) || messages.israeliPhone;
     },
   }),
   email: (required = false) => ({
-    ...(required ? { required: messages.required('אימייל') } : {}),
+    ...(required ? { required: messages.required("אימייל") } : {}),
     validate: (v: string) => {
-      if (!v || v.trim() === '') return required ? messages.required('אימייל') : true;
+      if (!v || v.trim() === "") {
+        return required ? messages.required("אימייל") : true;
+      }
       return patterns.email.test(v.trim()) || messages.email;
     },
   }),
@@ -75,7 +93,7 @@ export const rules = {
 
 // ─── Base input class ───
 const baseInput =
-  'w-full border rounded-lg px-3 py-2.5 text-[14px] focus:outline-none focus:ring-2 transition-all';
+  "w-full border rounded-lg px-3 py-2.5 text-[14px] focus:outline-none focus:ring-2 transition-all";
 
 function inputClasses(error?: FieldError, isDirty?: boolean) {
   if (error) {
@@ -89,21 +107,31 @@ function inputClasses(error?: FieldError, isDirty?: boolean) {
 
 // ─── FormField component ───
 interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-  error?: FieldError;
-  isDirty?: boolean;
   /** Use if you want to render a <select> or <textarea> instead — pass children */
   children?: React.ReactNode;
+  error?: FieldError;
+  isDirty?: boolean;
+  label: string;
 }
 
 export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
-  function FormField({ label, error, isDirty, children, className, ...rest }, ref) {
+  function FormField(
+    { label, error, isDirty, children, className, ...rest },
+    ref
+  ) {
+    const generatedId = useId();
+    const inputId = rest.id || generatedId;
+
     return (
       <div className={className}>
-        <label className="text-[13px] text-[#8d785e] mb-1 flex items-center gap-1" style={{ fontWeight: 600 }}>
+        <label
+          className="mb-1 flex items-center gap-1 text-[#8d785e] text-[13px]"
+          htmlFor={inputId}
+          style={{ fontWeight: 600 }}
+        >
           {label}
           {rest.required !== undefined && rest.required !== false && (
-            <span className="text-red-400 text-[11px]">*</span>
+            <span className="text-[11px] text-red-400">*</span>
           )}
         </label>
         {children ? (
@@ -114,19 +142,29 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
               ref={ref}
               {...rest}
               className={inputClasses(error, isDirty)}
+              id={inputId}
             />
             {/* Status icon */}
             {error && (
-              <AlertCircle size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-red-400" />
+              <AlertCircle
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-red-400"
+                size={16}
+              />
             )}
             {!error && isDirty && (
-              <CheckCircle size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500" />
+              <CheckCircle
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-green-500"
+                size={16}
+              />
             )}
           </div>
         )}
         {/* Error message */}
         {error && (
-          <p className="text-[12px] text-red-500 mt-1 flex items-center gap-1" style={{ fontWeight: 500 }}>
+          <p
+            className="mt-1 flex items-center gap-1 text-[12px] text-red-500"
+            style={{ fontWeight: 500 }}
+          >
             <AlertCircle size={12} />
             {error.message}
           </p>
@@ -137,30 +175,44 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
 );
 
 // ─── FormSelect (for selects) ───
-interface FormSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  label: string;
+interface FormSelectProps
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
   error?: FieldError;
   isDirty?: boolean;
+  label: string;
 }
 
 export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
-  function FormSelect({ label, error, isDirty, children, className, ...rest }, ref) {
+  function FormSelect(
+    { label, error, isDirty, children, className, ...rest },
+    ref
+  ) {
+    const generatedId = useId();
+    const selectId = rest.id || generatedId;
+
     const selectClass = error
       ? `${baseInput} border-red-400 focus:ring-red-200 focus:border-red-400 bg-red-50/30 bg-white`
       : isDirty
-      ? `${baseInput} border-green-400 focus:ring-green-200 focus:border-green-400 bg-white`
-      : `${baseInput} border-[#e7e1da] focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-white`;
+        ? `${baseInput} border-green-400 focus:ring-green-200 focus:border-green-400 bg-white`
+        : `${baseInput} border-[#e7e1da] focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-white`;
 
     return (
       <div className={className}>
-        <label className="text-[13px] text-[#8d785e] mb-1 block" style={{ fontWeight: 600 }}>
+        <label
+          className="mb-1 block text-[#8d785e] text-[13px]"
+          htmlFor={selectId}
+          style={{ fontWeight: 600 }}
+        >
           {label}
         </label>
-        <select ref={ref} {...rest} className={selectClass}>
+        <select ref={ref} {...rest} className={selectClass} id={selectId}>
           {children}
         </select>
         {error && (
-          <p className="text-[12px] text-red-500 mt-1 flex items-center gap-1" style={{ fontWeight: 500 }}>
+          <p
+            className="mt-1 flex items-center gap-1 text-[12px] text-red-500"
+            style={{ fontWeight: 500 }}
+          >
             <AlertCircle size={12} />
             {error.message}
           </p>
@@ -171,28 +223,44 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
 );
 
 // ─── FormTextarea ───
-interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  label: string;
+interface FormTextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: FieldError;
   isDirty?: boolean;
+  label: string;
 }
 
 export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
   function FormTextarea({ label, error, isDirty, className, ...rest }, ref) {
+    const generatedId = useId();
+    const textareaId = rest.id || generatedId;
+
     const textareaClass = error
       ? `${baseInput} border-red-400 focus:ring-red-200 focus:border-red-400 bg-red-50/30 resize-none`
       : isDirty
-      ? `${baseInput} border-green-400 focus:ring-green-200 focus:border-green-400 resize-none`
-      : `${baseInput} border-[#e7e1da] focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] resize-none`;
+        ? `${baseInput} border-green-400 focus:ring-green-200 focus:border-green-400 resize-none`
+        : `${baseInput} border-[#e7e1da] focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] resize-none`;
 
     return (
       <div className={className}>
-        <label className="text-[13px] text-[#8d785e] mb-1 block" style={{ fontWeight: 600 }}>
+        <label
+          className="mb-1 block text-[#8d785e] text-[13px]"
+          htmlFor={textareaId}
+          style={{ fontWeight: 600 }}
+        >
           {label}
         </label>
-        <textarea ref={ref} {...rest} className={textareaClass} />
+        <textarea
+          ref={ref}
+          {...rest}
+          className={textareaClass}
+          id={textareaId}
+        />
         {error && (
-          <p className="text-[12px] text-red-500 mt-1 flex items-center gap-1" style={{ fontWeight: 500 }}>
+          <p
+            className="mt-1 flex items-center gap-1 text-[12px] text-red-500"
+            style={{ fontWeight: 500 }}
+          >
             <AlertCircle size={12} />
             {error.message}
           </p>

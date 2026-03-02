@@ -1,13 +1,21 @@
-import svgPaths from "./svg-shz9on8vkh";
-import imgBusServiceProviderLogo from "figma:asset/d73707bb4386962f3b39e753b18457e218ab8734.png";
 import imgKayaksInRiver from "figma:asset/310a9986a9c85b38e0f7b8ed95d8c20f1172abfd.png";
 import imgAtvVehiclesInNature from "figma:asset/b71f8f8a403af4e48699963fe7b0c724787a040e.png";
+import imgBusServiceProviderLogo from "figma:asset/d73707bb4386962f3b39e753b18457e218ab8734.png";
+import svgPaths from "./svg-shz9on8vkh";
 
 function Background() {
   return (
-    <div className="bg-[#231a0f] content-stretch flex flex-col items-center py-[8px] relative shrink-0 w-full z-[2]" data-name="Background">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold h-[16px] justify-center leading-[0] relative shrink-0 text-[12px] text-center text-white tracking-[1.2px] uppercase w-[241.94px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[16px] whitespace-pre-wrap">SCREEN LABEL: ניהול פרויקט ותמחור</p>
+    <div
+      className="relative z-[2] flex w-full shrink-0 flex-col content-stretch items-center bg-[#231a0f] py-[8px]"
+      data-name="Background"
+    >
+      <div
+        className="relative flex h-[16px] w-[241.94px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold text-[12px] text-white uppercase leading-[0] tracking-[1.2px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[16px]">
+          SCREEN LABEL: ניהול פרויקט ותמחור
+        </p>
       </div>
     </div>
   );
@@ -15,9 +23,15 @@ function Background() {
 
 function Container3() {
   return (
-    <div className="content-stretch flex flex-col items-center relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[14px] text-center text-white w-[93.48px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">צור גרסת הצעה</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[20px] w-[93.48px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[14px] text-white leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">צור גרסת הצעה</p>
       </div>
     </div>
   );
@@ -25,8 +39,14 @@ function Container3() {
 
 function Container4() {
   return (
-    <div className="h-[15px] relative shrink-0 w-[12px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 12 15">
+    <div className="relative h-[15px] w-[12px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 12 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p292bd880} fill="var(--fill-0, white)" id="Icon" />
         </g>
@@ -37,7 +57,10 @@ function Container4() {
 
 function Button() {
   return (
-    <div className="bg-[#ff8c00] content-stretch flex gap-[8px] h-[40px] items-center justify-center px-[16px] relative rounded-[8px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] shrink-0" data-name="Button">
+    <div
+      className="relative flex h-[40px] shrink-0 content-stretch items-center justify-center gap-[8px] rounded-[8px] bg-[#ff8c00] px-[16px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      data-name="Button"
+    >
       <Container3 />
       <Container4 />
     </div>
@@ -47,9 +70,12 @@ function Button() {
 function Container5() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-center relative">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-center w-[112.78px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">בדיקה לפני שליחה</p>
+      <div className="relative flex flex-col content-stretch items-center border-0 border-[transparent] border-solid bg-clip-padding">
+        <div
+          className="relative flex h-[20px] w-[112.78px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">בדיקה לפני שליחה</p>
         </div>
       </div>
     </div>
@@ -58,10 +84,23 @@ function Container5() {
 
 function Container6() {
   return (
-    <div className="h-[11.306px] relative shrink-0 w-[15px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 11.3062">
+    <div
+      className="relative h-[11.306px] w-[15px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 15 11.3062"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p3a873716} fill="var(--fill-0, #181510)" id="Icon" />
+          <path
+            d={svgPaths.p3a873716}
+            fill="var(--fill-0, #181510)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -70,8 +109,14 @@ function Container6() {
 
 function Button1() {
   return (
-    <div className="bg-white content-stretch flex gap-[8.01px] h-[40px] items-center justify-center px-[17px] py-px relative rounded-[8px] shrink-0" data-name="Button">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[8px]" />
+    <div
+      className="relative flex h-[40px] shrink-0 content-stretch items-center justify-center gap-[8.01px] rounded-[8px] bg-white px-[17px] py-px"
+      data-name="Button"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[8px] border border-[#e7e1da] border-solid"
+      />
       <Container5 />
       <Container6 />
     </div>
@@ -81,9 +126,14 @@ function Button1() {
 function Container7() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-center relative">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-center w-[132.63px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">תצוגה מקדימה ללקוח</p>
+      <div className="relative flex flex-col content-stretch items-center border-0 border-[transparent] border-solid bg-clip-padding">
+        <div
+          className="relative flex h-[20px] w-[132.63px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">
+            תצוגה מקדימה ללקוח
+          </p>
         </div>
       </div>
     </div>
@@ -92,10 +142,23 @@ function Container7() {
 
 function Container8() {
   return (
-    <div className="h-[11.25px] relative shrink-0 w-[16.5px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 16.5 11.25">
+    <div
+      className="relative h-[11.25px] w-[16.5px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 16.5 11.25"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p110cf380} fill="var(--fill-0, #181510)" id="Icon" />
+          <path
+            d={svgPaths.p110cf380}
+            fill="var(--fill-0, #181510)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -104,8 +167,14 @@ function Container8() {
 
 function Button2() {
   return (
-    <div className="bg-white content-stretch flex gap-[7.99px] h-[40px] items-center justify-center px-[17px] py-px relative rounded-[8px] shrink-0" data-name="Button">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[8px]" />
+    <div
+      className="relative flex h-[40px] shrink-0 content-stretch items-center justify-center gap-[7.99px] rounded-[8px] bg-white px-[17px] py-px"
+      data-name="Button"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[8px] border border-[#e7e1da] border-solid"
+      />
       <Container7 />
       <Container8 />
     </div>
@@ -115,7 +184,7 @@ function Button2() {
 function Container2() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[12px] items-start relative">
+      <div className="relative flex content-stretch items-start gap-[12px] border-0 border-[transparent] border-solid bg-clip-padding">
         <Button />
         <Button1 />
         <Button2 />
@@ -126,9 +195,17 @@ function Container2() {
 
 function Heading() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Heading 1">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold h-[25px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[20px] text-right tracking-[-0.5px] w-[238.97px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[25px] whitespace-pre-wrap">פרויקט: נופש שנתי גליל עליון</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Heading 1"
+    >
+      <div
+        className="relative flex h-[25px] w-[238.97px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold text-[#181510] text-[20px] leading-[0] tracking-[-0.5px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[25px]">
+          פרויקט: נופש שנתי גליל עליון
+        </p>
       </div>
     </div>
   );
@@ -136,9 +213,14 @@ function Heading() {
 
 function Container11() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Regular','Arimo:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[14px] text-right w-[153.06px]">
-        <p className="leading-[20px] whitespace-pre-wrap">מזהה פרויקט: #4829-24</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[20px] w-[153.06px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Regular','Arimo:Regular',sans-serif] font-normal text-[#8d785e] text-[14px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">
+          מזהה פרויקט: #4829-24
+        </p>
       </div>
     </div>
   );
@@ -146,7 +228,10 @@ function Container11() {
 
 function Container10() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Heading />
       <Container11 />
     </div>
@@ -155,8 +240,14 @@ function Container10() {
 
 function Container12() {
   return (
-    <div className="h-[20px] relative shrink-0 w-[18px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 18 20">
+    <div className="relative h-[20px] w-[18px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 18 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.pd0beb00} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </g>
@@ -167,7 +258,10 @@ function Container12() {
 
 function Overlay() {
   return (
-    <div className="bg-[rgba(255,140,0,0.1)] content-stretch flex items-center justify-center p-[8px] relative rounded-[8px] shrink-0" data-name="Overlay">
+    <div
+      className="relative flex shrink-0 content-stretch items-center justify-center rounded-[8px] bg-[rgba(255,140,0,0.1)] p-[8px]"
+      data-name="Overlay"
+    >
       <Container12 />
     </div>
   );
@@ -176,7 +270,7 @@ function Overlay() {
 function Container9() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[15.99px] items-center relative">
+      <div className="relative flex content-stretch items-center gap-[15.99px] border-0 border-[transparent] border-solid bg-clip-padding">
         <Container10 />
         <Overlay />
       </div>
@@ -186,10 +280,16 @@ function Container9() {
 
 function HeaderSection() {
   return (
-    <div className="bg-white relative shrink-0 w-full z-[2]" data-name="Header Section">
-      <div aria-hidden="true" className="absolute border-[#e7e1da] border-b border-solid inset-0 pointer-events-none" />
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex items-center justify-between pb-[13px] pt-[12px] px-[40px] relative w-full">
+    <div
+      className="relative z-[2] w-full shrink-0 bg-white"
+      data-name="Header Section"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#e7e1da] border-b border-solid"
+      />
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center justify-between px-[40px] pt-[12px] pb-[13px]">
           <Container2 />
           <Container9 />
         </div>
@@ -200,9 +300,15 @@ function HeaderSection() {
 
 function Container15() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[12px] text-right tracking-[0.6px] uppercase w-[24.23px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[16px] whitespace-pre-wrap">אזור</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[16px] w-[24.23px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium text-[#8d785e] text-[12px] uppercase leading-[0] tracking-[0.6px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[16px]">אזור</p>
       </div>
     </div>
   );
@@ -210,10 +316,23 @@ function Container15() {
 
 function Container16() {
   return (
-    <div className="h-[11.667px] relative shrink-0 w-[9.333px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 9.33333 11.6667">
+    <div
+      className="relative h-[11.667px] w-[9.333px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 9.33333 11.6667"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p3d8f00c0} fill="var(--fill-0, #8D785E)" id="Icon" />
+          <path
+            d={svgPaths.p3d8f00c0}
+            fill="var(--fill-0, #8D785E)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -222,9 +341,9 @@ function Container16() {
 
 function Container14() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[8px] items-center pl-[187.75px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[8px] border-0 border-[transparent] border-solid bg-clip-padding pl-[187.75px]">
           <Container15 />
           <Container16 />
         </div>
@@ -235,10 +354,13 @@ function Container14() {
 
 function Container17() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end relative w-full">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[18px] text-right w-[76.19px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[28px] whitespace-pre-wrap">גליל עליון</p>
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding">
+        <div
+          className="relative flex h-[28px] w-[76.19px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[18px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[28px]">גליל עליון</p>
         </div>
       </div>
     </div>
@@ -247,9 +369,15 @@ function Container17() {
 
 function BackgroundBorderShadow() {
   return (
-    <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[12px] self-stretch" data-name="Background+Border+Shadow">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]" />
-      <div className="content-stretch flex flex-col gap-[8px] items-start p-[21px] relative size-full">
+    <div
+      className="relative min-h-px min-w-px flex-[1_0_0] self-stretch rounded-[12px] bg-white"
+      data-name="Background+Border+Shadow"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      />
+      <div className="relative flex size-full flex-col content-stretch items-start gap-[8px] p-[21px]">
         <Container14 />
         <Container17 />
       </div>
@@ -259,9 +387,15 @@ function BackgroundBorderShadow() {
 
 function Container19() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[12px] text-right tracking-[0.6px] uppercase w-[56.7px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[16px] whitespace-pre-wrap">משתתפים</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[16px] w-[56.7px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium text-[#8d785e] text-[12px] uppercase leading-[0] tracking-[0.6px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[16px]">משתתפים</p>
       </div>
     </div>
   );
@@ -269,10 +403,23 @@ function Container19() {
 
 function Container20() {
   return (
-    <div className="h-[9.333px] relative shrink-0 w-[12.833px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 12.8333 9.33333">
+    <div
+      className="relative h-[9.333px] w-[12.833px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 12.8333 9.33333"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p1d3af800} fill="var(--fill-0, #8D785E)" id="Icon" />
+          <path
+            d={svgPaths.p1d3af800}
+            fill="var(--fill-0, #8D785E)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -281,9 +428,9 @@ function Container20() {
 
 function Container18() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[8px] items-center pl-[155.28px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[8px] border-0 border-[transparent] border-solid bg-clip-padding pl-[155.28px]">
           <Container19 />
           <Container20 />
         </div>
@@ -294,10 +441,10 @@ function Container18() {
 
 function Container21() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end relative w-full">
-        <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold','Arimo:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[18px] text-right w-[65.91px]">
-          <p className="leading-[28px] whitespace-pre-wrap">120 איש</p>
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding">
+        <div className="relative flex h-[28px] w-[65.91px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold','Arimo:Bold',sans-serif] font-bold text-[#181510] text-[18px] leading-[0]">
+          <p className="whitespace-pre-wrap leading-[28px]">120 איש</p>
         </div>
       </div>
     </div>
@@ -306,9 +453,15 @@ function Container21() {
 
 function BackgroundBorderShadow1() {
   return (
-    <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[12px] self-stretch" data-name="Background+Border+Shadow">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]" />
-      <div className="content-stretch flex flex-col gap-[8px] items-start p-[21px] relative size-full">
+    <div
+      className="relative min-h-px min-w-px flex-[1_0_0] self-stretch rounded-[12px] bg-white"
+      data-name="Background+Border+Shadow"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      />
+      <div className="relative flex size-full flex-col content-stretch items-start gap-[8px] p-[21px]">
         <Container18 />
         <Container21 />
       </div>
@@ -318,9 +471,15 @@ function BackgroundBorderShadow1() {
 
 function Container23() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[12px] text-right tracking-[0.6px] uppercase w-[31.19px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[16px] whitespace-pre-wrap">חברה</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[16px] w-[31.19px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium text-[#8d785e] text-[12px] uppercase leading-[0] tracking-[0.6px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[16px]">חברה</p>
       </div>
     </div>
   );
@@ -328,8 +487,17 @@ function Container23() {
 
 function Container24() {
   return (
-    <div className="h-[10.5px] relative shrink-0 w-[11.667px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 10.5">
+    <div
+      className="relative h-[10.5px] w-[11.667px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 10.5"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p1031840} fill="var(--fill-0, #8D785E)" id="Icon" />
         </g>
@@ -340,9 +508,9 @@ function Container24() {
 
 function Container22() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[7.99px] items-center pl-[180.8px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[7.99px] border-0 border-[transparent] border-solid bg-clip-padding pl-[180.8px]">
           <Container23 />
           <Container24 />
         </div>
@@ -353,10 +521,13 @@ function Container22() {
 
 function Container25() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end relative w-full">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[18px] text-right w-[97.98px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[28px] whitespace-pre-wrap">סייבר-גלובל</p>
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding">
+        <div
+          className="relative flex h-[28px] w-[97.98px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[18px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[28px]">סייבר-גלובל</p>
         </div>
       </div>
     </div>
@@ -365,9 +536,15 @@ function Container25() {
 
 function BackgroundBorderShadow2() {
   return (
-    <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[12px] self-stretch" data-name="Background+Border+Shadow">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]" />
-      <div className="content-stretch flex flex-col gap-[8px] items-start p-[21px] relative size-full">
+    <div
+      className="relative min-h-px min-w-px flex-[1_0_0] self-stretch rounded-[12px] bg-white"
+      data-name="Background+Border+Shadow"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      />
+      <div className="relative flex size-full flex-col content-stretch items-start gap-[8px] p-[21px]">
         <Container22 />
         <Container25 />
       </div>
@@ -377,9 +554,15 @@ function BackgroundBorderShadow2() {
 
 function Container27() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[12px] text-right tracking-[0.6px] uppercase w-[37.52px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[16px] whitespace-pre-wrap">סטטוס</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[16px] w-[37.52px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium text-[#8d785e] text-[12px] uppercase leading-[0] tracking-[0.6px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[16px]">סטטוס</p>
       </div>
     </div>
   );
@@ -387,10 +570,20 @@ function Container27() {
 
 function Container28() {
   return (
-    <div className="relative shrink-0 size-[11.667px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.6667">
+    <div className="relative size-[11.667px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.6667"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p3dc33e00} fill="var(--fill-0, #8D785E)" id="Icon" />
+          <path
+            d={svgPaths.p3dc33e00}
+            fill="var(--fill-0, #8D785E)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -399,9 +592,9 @@ function Container28() {
 
 function Container26() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[7.99px] items-center pl-[174.47px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[7.99px] border-0 border-[transparent] border-solid bg-clip-padding pl-[174.47px]">
           <Container27 />
           <Container28 />
         </div>
@@ -412,9 +605,15 @@ function Container26() {
 
 function Container30() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[18px] text-right w-[91.13px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[28px] whitespace-pre-wrap">בניית הצעה</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[28px] w-[91.13px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[18px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[28px]">בניית הצעה</p>
       </div>
     </div>
   );
@@ -422,11 +621,14 @@ function Container30() {
 
 function Container29() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[7.99px] items-center pl-[126.88px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[7.99px] border-0 border-[transparent] border-solid bg-clip-padding pl-[126.88px]">
           <Container30 />
-          <div className="bg-[#ff8c00] rounded-[9999px] shrink-0 size-[8px]" data-name="Background" />
+          <div
+            className="size-[8px] shrink-0 rounded-[9999px] bg-[#ff8c00]"
+            data-name="Background"
+          />
         </div>
       </div>
     </div>
@@ -435,9 +637,15 @@ function Container29() {
 
 function BackgroundBorderShadow3() {
   return (
-    <div className="bg-white flex-[1_0_0] min-h-px min-w-px relative rounded-[12px] self-stretch" data-name="Background+Border+Shadow">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]" />
-      <div className="content-stretch flex flex-col gap-[8px] items-start p-[21px] relative size-full">
+    <div
+      className="relative min-h-px min-w-px flex-[1_0_0] self-stretch rounded-[12px] bg-white"
+      data-name="Background+Border+Shadow"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      />
+      <div className="relative flex size-full flex-col content-stretch items-start gap-[8px] p-[21px]">
         <Container26 />
         <Container29 />
       </div>
@@ -447,7 +655,10 @@ function BackgroundBorderShadow3() {
 
 function StatusInfoGrid() {
   return (
-    <div className="content-stretch flex gap-[16px] items-start justify-center relative shrink-0 w-full" data-name="Status & Info Grid">
+    <div
+      className="relative flex w-full shrink-0 content-stretch items-start justify-center gap-[16px]"
+      data-name="Status & Info Grid"
+    >
       <BackgroundBorderShadow />
       <BackgroundBorderShadow1 />
       <BackgroundBorderShadow2 />
@@ -458,10 +669,21 @@ function StatusInfoGrid() {
 
 function Container32() {
   return (
-    <div className="h-[15px] relative shrink-0 w-[25px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 25 15">
+    <div className="relative h-[15px] w-[25px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 25 15"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p1430df00} fill="var(--fill-0, #FF8C00)" fillOpacity="0.4" id="Icon" />
+          <path
+            d={svgPaths.p1430df00}
+            fill="var(--fill-0, #FF8C00)"
+            fillOpacity="0.4"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -470,9 +692,15 @@ function Container32() {
 
 function Container34() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[16px] justify-center leading-[0] relative shrink-0 text-[#ff8c00] text-[12px] text-right w-[75.92px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[16px] whitespace-pre-wrap">רווח יעד מוגדר</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[16px] w-[75.92px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#ff8c00] text-[12px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[16px]">רווח יעד מוגדר</p>
       </div>
     </div>
   );
@@ -480,9 +708,12 @@ function Container34() {
 
 function Container35() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[32px] justify-center leading-[0] relative shrink-0 text-[#ff8c00] text-[24px] text-right w-[54.2px]">
-        <p className="leading-[32px] whitespace-pre-wrap">25%</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[32px] w-[54.2px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#ff8c00] text-[24px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[32px]">25%</p>
       </div>
     </div>
   );
@@ -490,7 +721,10 @@ function Container35() {
 
 function Container33() {
   return (
-    <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start gap-[4px]"
+      data-name="Container"
+    >
       <Container34 />
       <Container35 />
     </div>
@@ -499,7 +733,10 @@ function Container33() {
 
 function Container31() {
   return (
-    <div className="content-stretch flex items-center justify-between min-w-[200px] px-[16px] relative shrink-0 w-[356.67px]" data-name="Container">
+    <div
+      className="relative flex w-[356.67px] min-w-[200px] shrink-0 content-stretch items-center justify-between px-[16px]"
+      data-name="Container"
+    >
       <Container32 />
       <Container33 />
     </div>
@@ -508,10 +745,24 @@ function Container31() {
 
 function Container36() {
   return (
-    <div className="h-[20px] relative shrink-0 w-[27.5px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 27.5 20">
+    <div
+      className="relative h-[20px] w-[27.5px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 27.5 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p3fb16680} fill="var(--fill-0, white)" fillOpacity="0.2" id="Icon" />
+          <path
+            d={svgPaths.p3fb16680}
+            fill="var(--fill-0, white)"
+            fillOpacity="0.2"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -520,9 +771,15 @@ function Container36() {
 
 function Container38() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Medium','Noto_Sans:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[12px] text-[rgba(255,255,255,0.6)] text-right w-[95.11px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[16px] whitespace-pre-wrap">מחיר כולל (משוער)</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[16px] w-[95.11px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Medium','Noto_Sans:Medium',sans-serif] font-medium text-[12px] text-[rgba(255,255,255,0.6)] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[16px]">מחיר כולל (משוער)</p>
       </div>
     </div>
   );
@@ -530,9 +787,12 @@ function Container38() {
 
 function Container39() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[32px] justify-center leading-[0] relative shrink-0 text-[24px] text-right text-white w-[116.28px]">
-        <p className="leading-[32px] whitespace-pre-wrap">₪102,000</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[32px] w-[116.28px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[24px] text-white leading-[0]">
+        <p className="whitespace-pre-wrap leading-[32px]">₪102,000</p>
       </div>
     </div>
   );
@@ -541,7 +801,7 @@ function Container39() {
 function Container37() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col gap-[4px] items-start relative">
+      <div className="relative flex flex-col content-stretch items-start gap-[4px] border-0 border-[transparent] border-solid bg-clip-padding">
         <Container38 />
         <Container39 />
       </div>
@@ -551,8 +811,14 @@ function Container37() {
 
 function VerticalBorder() {
   return (
-    <div className="content-stretch flex items-center justify-between min-w-[200px] pl-[17px] pr-[16px] relative shrink-0 w-[357.67px]" data-name="VerticalBorder">
-      <div aria-hidden="true" className="absolute border-[rgba(255,255,255,0.1)] border-l border-solid inset-0 pointer-events-none" />
+    <div
+      className="relative flex w-[357.67px] min-w-[200px] shrink-0 content-stretch items-center justify-between pr-[16px] pl-[17px]"
+      data-name="VerticalBorder"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[rgba(255,255,255,0.1)] border-l border-solid"
+      />
       <Container36 />
       <Container37 />
     </div>
@@ -561,10 +827,21 @@ function VerticalBorder() {
 
 function Container40() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+    <div className="relative size-[20px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p1a881780} fill="var(--fill-0, white)" fillOpacity="0.2" id="Icon" />
+          <path
+            d={svgPaths.p1a881780}
+            fill="var(--fill-0, white)"
+            fillOpacity="0.2"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -573,9 +850,15 @@ function Container40() {
 
 function Container42() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium h-[16px] justify-center leading-[0] relative shrink-0 text-[12px] text-[rgba(255,255,255,0.6)] text-right w-[56.86px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[16px] whitespace-pre-wrap">מחיר לאדם</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[16px] w-[56.86px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium text-[12px] text-[rgba(255,255,255,0.6)] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[16px]">מחיר לאדם</p>
       </div>
     </div>
   );
@@ -583,9 +866,12 @@ function Container42() {
 
 function Container43() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[32px] justify-center leading-[0] relative shrink-0 text-[24px] text-right text-white w-[62.67px]">
-        <p className="leading-[32px] whitespace-pre-wrap">₪850</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[32px] w-[62.67px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[24px] text-white leading-[0]">
+        <p className="whitespace-pre-wrap leading-[32px]">₪850</p>
       </div>
     </div>
   );
@@ -594,7 +880,7 @@ function Container43() {
 function Container41() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col gap-[4px] items-start relative">
+      <div className="relative flex flex-col content-stretch items-start gap-[4px] border-0 border-[transparent] border-solid bg-clip-padding">
         <Container42 />
         <Container43 />
       </div>
@@ -604,8 +890,14 @@ function Container41() {
 
 function VerticalBorder1() {
   return (
-    <div className="content-stretch flex items-center justify-between min-w-[200px] pl-[17px] pr-[16px] relative shrink-0 w-[357.67px]" data-name="VerticalBorder">
-      <div aria-hidden="true" className="absolute border-[rgba(255,255,255,0.1)] border-l border-solid inset-0 pointer-events-none" />
+    <div
+      className="relative flex w-[357.67px] min-w-[200px] shrink-0 content-stretch items-center justify-between pr-[16px] pl-[17px]"
+      data-name="VerticalBorder"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[rgba(255,255,255,0.1)] border-l border-solid"
+      />
       <Container40 />
       <Container41 />
     </div>
@@ -614,13 +906,19 @@ function VerticalBorder1() {
 
 function FinancialSummaryRibbon() {
   return (
-    <div className="bg-[#231a0f] relative rounded-[12px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] shrink-0 w-full" data-name="Financial Summary Ribbon">
-      <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
-        <div className="content-stretch flex gap-[16px] items-center justify-center p-[24px] relative w-full">
+    <div
+      className="relative w-full shrink-0 rounded-[12px] bg-[#231a0f] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)]"
+      data-name="Financial Summary Ribbon"
+    >
+      <div className="flex size-full flex-row items-center justify-center overflow-clip rounded-[inherit]">
+        <div className="relative flex w-full content-stretch items-center justify-center gap-[16px] p-[24px]">
           <Container31 />
           <VerticalBorder />
           <VerticalBorder1 />
-          <div className="absolute bg-[rgba(255,140,0,0.2)] blur-[32px] right-[-64px] rounded-[9999px] size-[128px] top-[-64px]" data-name="Overlay+Blur" />
+          <div
+            className="absolute top-[-64px] right-[-64px] size-[128px] rounded-[9999px] bg-[rgba(255,140,0,0.2)] blur-[32px]"
+            data-name="Overlay+Blur"
+          />
         </div>
       </div>
     </div>
@@ -629,10 +927,19 @@ function FinancialSummaryRibbon() {
 
 function Button3() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center pb-[14px] relative shrink-0" data-name="Button">
-      <div aria-hidden="true" className="absolute border-[rgba(0,0,0,0)] border-b-2 border-solid inset-0 pointer-events-none" />
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[14px] text-center tracking-[0.35px] w-[85.48px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">{`לו"ז הפעילות`}</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center pb-[14px]"
+      data-name="Button"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[rgba(0,0,0,0)] border-b-2 border-solid"
+      />
+      <div
+        className="relative flex h-[20px] w-[85.48px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold text-[#8d785e] text-[14px] leading-[0] tracking-[0.35px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">{`לו"ז הפעילות`}</p>
       </div>
     </div>
   );
@@ -640,10 +947,19 @@ function Button3() {
 
 function Button4() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center pb-[14px] relative shrink-0" data-name="Button">
-      <div aria-hidden="true" className="absolute border-[rgba(0,0,0,0)] border-b-2 border-solid inset-0 pointer-events-none" />
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[14px] text-center tracking-[0.35px] w-[103.83px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">תמחור ורווח יעד</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center pb-[14px]"
+      data-name="Button"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[rgba(0,0,0,0)] border-b-2 border-solid"
+      />
+      <div
+        className="relative flex h-[20px] w-[103.83px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#8d785e] text-[14px] leading-[0] tracking-[0.35px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">תמחור ורווח יעד</p>
       </div>
     </div>
   );
@@ -651,10 +967,19 @@ function Button4() {
 
 function Button5() {
   return (
-    <div className="content-stretch flex flex-col items-center justify-center pb-[14px] relative shrink-0" data-name="Button">
-      <div aria-hidden="true" className="absolute border-[#ff8c00] border-b-2 border-solid inset-0 pointer-events-none" />
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#ff8c00] text-[14px] text-center tracking-[0.35px] w-[94.09px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">רכיבים וספקים</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-center justify-center pb-[14px]"
+      data-name="Button"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#ff8c00] border-b-2 border-solid"
+      />
+      <div
+        className="relative flex h-[20px] w-[94.09px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#ff8c00] text-[14px] leading-[0] tracking-[0.35px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">רכיבים וספקים</p>
       </div>
     </div>
   );
@@ -662,8 +987,8 @@ function Button5() {
 
 function Container44() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[40px] items-start pl-[788.59px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full content-stretch items-start gap-[40px] border-0 border-[transparent] border-solid bg-clip-padding pl-[788.59px]">
         <Button3 />
         <Button4 />
         <Button5 />
@@ -674,8 +999,14 @@ function Container44() {
 
 function NavigationTabs() {
   return (
-    <div className="content-stretch flex flex-col items-start pb-px relative shrink-0 w-full" data-name="Navigation Tabs">
-      <div aria-hidden="true" className="absolute border-[#e7e1da] border-b border-solid inset-0 pointer-events-none" />
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start pb-px"
+      data-name="Navigation Tabs"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#e7e1da] border-b border-solid"
+      />
       <Container44 />
     </div>
   );
@@ -683,8 +1014,14 @@ function NavigationTabs() {
 
 function Container46() {
   return (
-    <div className="relative shrink-0 size-[11.667px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11.6667 11.6667">
+    <div className="relative size-[11.667px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11.6667 11.6667"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p957df70} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </g>
@@ -695,9 +1032,15 @@ function Container46() {
 
 function Button6() {
   return (
-    <div className="content-stretch flex gap-[4px] items-center relative shrink-0" data-name="Button">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#ff8c00] text-[14px] text-center w-[102.72px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">הוספת רכיב חדש</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-center gap-[4px]"
+      data-name="Button"
+    >
+      <div
+        className="relative flex h-[20px] w-[102.72px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#ff8c00] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">הוספת רכיב חדש</p>
       </div>
       <Container46 />
     </div>
@@ -706,8 +1049,14 @@ function Button6() {
 
 function Container47() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+    <div className="relative size-[20px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p643d217} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </g>
@@ -718,9 +1067,15 @@ function Container47() {
 
 function Heading1() {
   return (
-    <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Heading 2">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[20px] text-right w-[127.92px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[28px] whitespace-pre-wrap">רכיבים וספקים</p>
+    <div
+      className="relative flex shrink-0 content-stretch items-center gap-[8px]"
+      data-name="Heading 2"
+    >
+      <div
+        className="relative flex h-[28px] w-[127.92px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[20px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[28px]">רכיבים וספקים</p>
       </div>
       <Container47 />
     </div>
@@ -729,7 +1084,10 @@ function Heading1() {
 
 function Container45() {
   return (
-    <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-name="Container">
+    <div
+      className="relative flex w-full shrink-0 content-stretch items-center justify-between"
+      data-name="Container"
+    >
       <Button6 />
       <Heading1 />
     </div>
@@ -738,10 +1096,23 @@ function Container45() {
 
 function Container48() {
   return (
-    <div className="h-[10.5px] relative shrink-0 w-[11px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 11 10.5">
+    <div
+      className="relative h-[10.5px] w-[11px] shrink-0"
+      data-name="Container"
+    >
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 11 10.5"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p3112c700} fill="var(--fill-0, #15803D)" id="Icon" />
+          <path
+            d={svgPaths.p3112c700}
+            fill="var(--fill-0, #15803D)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -750,10 +1121,16 @@ function Container48() {
 
 function Background1() {
   return (
-    <div className="bg-[#dcfce7] relative rounded-[4px] shrink-0" data-name="Background">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[4px] items-center px-[8px] py-[2px] relative">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[15px] justify-center leading-[0] relative shrink-0 text-[#15803d] text-[10px] text-right uppercase w-[30.31px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[15px] whitespace-pre-wrap">מאושר</p>
+    <div
+      className="relative shrink-0 rounded-[4px] bg-[#dcfce7]"
+      data-name="Background"
+    >
+      <div className="relative flex content-stretch items-center gap-[4px] border-0 border-[transparent] border-solid bg-clip-padding px-[8px] py-[2px]">
+        <div
+          className="relative flex h-[15px] w-[30.31px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#15803d] text-[10px] uppercase leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[15px]">מאושר</p>
         </div>
         <Container48 />
       </div>
@@ -763,9 +1140,15 @@ function Background1() {
 
 function Heading2() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Heading 3">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[24px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[16px] text-right w-[56.3px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[24px] whitespace-pre-wrap">תחבורה</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Heading 3"
+    >
+      <div
+        className="relative flex h-[24px] w-[56.3px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[16px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[24px]">תחבורה</p>
       </div>
     </div>
   );
@@ -773,8 +1156,14 @@ function Heading2() {
 
 function Container50() {
   return (
-    <div className="h-[19px] relative shrink-0 w-[16px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 16 19">
+    <div className="relative h-[19px] w-[16px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 16 19"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.pdce8f20} fill="var(--fill-0, #8D785E)" id="Icon" />
         </g>
@@ -786,7 +1175,7 @@ function Container50() {
 function Container49() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[11.99px] items-center relative">
+      <div className="relative flex content-stretch items-center gap-[11.99px] border-0 border-[transparent] border-solid bg-clip-padding">
         <Heading2 />
         <Container50 />
       </div>
@@ -796,10 +1185,16 @@ function Container49() {
 
 function BackgroundHorizontalBorder() {
   return (
-    <div className="bg-[#f5f3f0] relative shrink-0 w-full" data-name="Background+HorizontalBorder">
-      <div aria-hidden="true" className="absolute border-[#e7e1da] border-b border-solid inset-0 pointer-events-none" />
-      <div className="flex flex-row items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-center justify-between pb-[13px] pt-[12px] px-[16px] relative w-full">
+    <div
+      className="relative w-full shrink-0 bg-[#f5f3f0]"
+      data-name="Background+HorizontalBorder"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#e7e1da] border-b border-solid"
+      />
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center justify-between border-0 border-[transparent] border-solid bg-clip-padding px-[16px] pt-[12px] pb-[13px]">
           <Background1 />
           <Container49 />
         </div>
@@ -810,8 +1205,14 @@ function BackgroundHorizontalBorder() {
 
 function Container52() {
   return (
-    <div className="relative shrink-0 size-[18px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
+    <div className="relative size-[18px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 18 18"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.pad10a80} fill="var(--fill-0, #8D785E)" id="Icon" />
         </g>
@@ -822,8 +1223,14 @@ function Container52() {
 
 function Button7() {
   return (
-    <div className="content-stretch flex items-center justify-center p-px relative rounded-[9999px] shrink-0 size-[40px]" data-name="Button">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[9999px]" />
+    <div
+      className="relative flex size-[40px] shrink-0 content-stretch items-center justify-center rounded-[9999px] p-px"
+      data-name="Button"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[9999px] border border-[#e7e1da] border-solid"
+      />
       <Container52 />
     </div>
   );
@@ -831,9 +1238,15 @@ function Button7() {
 
 function Container54() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[14px] w-[29.42px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">עלות</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[20px] w-[29.42px] shrink-0 flex-col justify-center font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal text-[#8d785e] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">עלות</p>
       </div>
     </div>
   );
@@ -841,9 +1254,12 @@ function Container54() {
 
 function Container55() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[24px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[16px] w-[56.66px]">
-        <p className="leading-[24px] whitespace-pre-wrap">₪7,500</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
+      <div className="relative flex h-[24px] w-[56.66px] shrink-0 flex-col justify-center font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#181510] text-[16px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[24px]">₪7,500</p>
       </div>
     </div>
   );
@@ -851,7 +1267,10 @@ function Container55() {
 
 function Container53() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Container54 />
       <Container55 />
     </div>
@@ -860,9 +1279,15 @@ function Container53() {
 
 function Heading3() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Heading 4">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[18px] text-right w-[130.84px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[28px] whitespace-pre-wrap">אוטובוסים הגליל</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Heading 4"
+    >
+      <div
+        className="relative flex h-[28px] w-[130.84px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[18px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[28px]">אוטובוסים הגליל</p>
       </div>
     </div>
   );
@@ -870,9 +1295,17 @@ function Heading3() {
 
 function Container57() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular','Noto_Sans:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[14px] text-right w-[208.78px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">3 אוטובוסים ממוגנים, איסוף מהמרכז</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[20px] w-[208.78px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular','Noto_Sans:Regular',sans-serif] font-normal text-[#8d785e] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">
+          3 אוטובוסים ממוגנים, איסוף מהמרכז
+        </p>
       </div>
     </div>
   );
@@ -880,7 +1313,10 @@ function Container57() {
 
 function Container56() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px relative" data-name="Container">
+    <div
+      className="relative flex min-h-px min-w-px flex-[1_0_0] flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Heading3 />
       <Container57 />
     </div>
@@ -889,9 +1325,18 @@ function Container56() {
 
 function BusServiceProviderLogo() {
   return (
-    <div className="flex-[1_0_0] h-full min-h-px min-w-px relative" data-name="Bus service provider logo">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgBusServiceProviderLogo} />
+    <div
+      className="relative h-full min-h-px min-w-px flex-[1_0_0]"
+      data-name="Bus service provider logo"
+    >
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <img
+          alt=""
+          className="absolute top-0 left-0 size-full max-w-none"
+          height="600"
+          src={imgBusServiceProviderLogo}
+          width="800"
+        />
       </div>
     </div>
   );
@@ -899,7 +1344,10 @@ function BusServiceProviderLogo() {
 
 function Background2() {
   return (
-    <div className="bg-[#f3f4f6] content-stretch flex items-center justify-center overflow-clip relative rounded-[8px] shrink-0 size-[64px]" data-name="Background">
+    <div
+      className="relative flex size-[64px] shrink-0 content-stretch items-center justify-center overflow-clip rounded-[8px] bg-[#f3f4f6]"
+      data-name="Background"
+    >
       <BusServiceProviderLogo />
     </div>
   );
@@ -907,9 +1355,9 @@ function Background2() {
 
 function Container51() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[16px] items-center p-[16px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[16px] border-0 border-[transparent] border-solid bg-clip-padding p-[16px]">
           <Button7 />
           <Container53 />
           <Container56 />
@@ -922,20 +1370,32 @@ function Container51() {
 
 function Slot1Transportation() {
   return (
-    <div className="bg-white relative rounded-[12px] shrink-0 w-full" data-name="Slot 1: Transportation">
-      <div className="content-stretch flex flex-col items-start overflow-clip p-px relative rounded-[inherit] w-full">
+    <div
+      className="relative w-full shrink-0 rounded-[12px] bg-white"
+      data-name="Slot 1: Transportation"
+    >
+      <div className="relative flex w-full flex-col content-stretch items-start overflow-clip rounded-[inherit] p-px">
         <BackgroundHorizontalBorder />
         <Container51 />
       </div>
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid"
+      />
     </div>
   );
 }
 
 function Container58() {
   return (
-    <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 10 9.5"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </g>
@@ -946,10 +1406,16 @@ function Container58() {
 
 function Overlay1() {
   return (
-    <div className="bg-[rgba(255,140,0,0.1)] relative rounded-[4px] shrink-0" data-name="Overlay">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[4px] items-center px-[8px] py-[2px] relative">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[15px] justify-center leading-[0] relative shrink-0 text-[#ff8c00] text-[10px] text-right uppercase w-[28.86px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[15px] whitespace-pre-wrap">מומלץ</p>
+    <div
+      className="relative shrink-0 rounded-[4px] bg-[rgba(255,140,0,0.1)]"
+      data-name="Overlay"
+    >
+      <div className="relative flex content-stretch items-center gap-[4px] border-0 border-[transparent] border-solid bg-clip-padding px-[8px] py-[2px]">
+        <div
+          className="relative flex h-[15px] w-[28.86px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#ff8c00] text-[10px] uppercase leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[15px]">מומלץ</p>
         </div>
         <Container58 />
       </div>
@@ -959,9 +1425,15 @@ function Overlay1() {
 
 function Heading4() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Heading 3">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[24px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[16px] text-right w-[88.2px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[24px] whitespace-pre-wrap">פעילות בוקר</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Heading 3"
+    >
+      <div
+        className="relative flex h-[24px] w-[88.2px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[16px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[24px]">פעילות בוקר</p>
       </div>
     </div>
   );
@@ -969,10 +1441,20 @@ function Heading4() {
 
 function Container60() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+    <div className="relative size-[20px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p176f0bb4} fill="var(--fill-0, #8D785E)" id="Icon" />
+          <path
+            d={svgPaths.p176f0bb4}
+            fill="var(--fill-0, #8D785E)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -982,7 +1464,7 @@ function Container60() {
 function Container59() {
   return (
     <div className="relative shrink-0" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[12px] items-center relative">
+      <div className="relative flex content-stretch items-center gap-[12px] border-0 border-[transparent] border-solid bg-clip-padding">
         <Heading4 />
         <Container60 />
       </div>
@@ -992,10 +1474,16 @@ function Container59() {
 
 function BackgroundHorizontalBorder1() {
   return (
-    <div className="bg-[#f5f3f0] relative shrink-0 w-full" data-name="Background+HorizontalBorder">
-      <div aria-hidden="true" className="absolute border-[#e7e1da] border-b border-solid inset-0 pointer-events-none" />
-      <div className="flex flex-row items-center size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-center justify-between pb-[13px] pt-[12px] px-[16px] relative w-full">
+    <div
+      className="relative w-full shrink-0 bg-[#f5f3f0]"
+      data-name="Background+HorizontalBorder"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#e7e1da] border-b border-solid"
+      />
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center justify-between border-0 border-[transparent] border-solid bg-clip-padding px-[16px] pt-[12px] pb-[13px]">
           <Overlay1 />
           <Container59 />
         </div>
@@ -1006,9 +1494,15 @@ function BackgroundHorizontalBorder1() {
 
 function Container62() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold h-[16px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[12px] text-right tracking-[0.6px] uppercase w-[93.78px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[16px] whitespace-pre-wrap">חלופות לבחירה:</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[16px] w-[93.78px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold text-[#8d785e] text-[12px] uppercase leading-[0] tracking-[0.6px]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[16px]">חלופות לבחירה:</p>
       </div>
     </div>
   );
@@ -1016,9 +1510,15 @@ function Container62() {
 
 function Heading5() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Heading 5">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[99.73px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">ספק מהאינטרנט</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Heading 5"
+    >
+      <div
+        className="relative flex h-[20px] w-[99.73px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">ספק מהאינטרנט</p>
       </div>
     </div>
   );
@@ -1026,9 +1526,15 @@ function Heading5() {
 
 function Container66() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal h-[15px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[10px] text-right w-[72.89px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[15px] whitespace-pre-wrap">סדנת צילום בטבע</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[15px] w-[72.89px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal text-[#8d785e] text-[10px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[15px]">סדנת צילום בטבע</p>
       </div>
     </div>
   );
@@ -1036,7 +1542,10 @@ function Container66() {
 
 function Container65() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Heading5 />
       <Container66 />
     </div>
@@ -1045,10 +1554,20 @@ function Container65() {
 
 function Container67() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+    <div className="relative size-[20px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p237be000} fill="var(--fill-0, #9CA3AF)" id="Icon" />
+          <path
+            d={svgPaths.p237be000}
+            fill="var(--fill-0, #9CA3AF)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1057,7 +1576,10 @@ function Container67() {
 
 function BackgroundShadow() {
   return (
-    <div className="bg-[#f9fafb] content-stretch flex items-center justify-center relative rounded-[8px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] shrink-0 size-[48px]" data-name="Background+Shadow">
+    <div
+      className="relative flex size-[48px] shrink-0 content-stretch items-center justify-center rounded-[8px] bg-[#f9fafb] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      data-name="Background+Shadow"
+    >
       <Container67 />
     </div>
   );
@@ -1065,8 +1587,8 @@ function BackgroundShadow() {
 
 function Container64() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[12px] items-start pl-[170.92px] pr-[0.01px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full content-stretch items-start gap-[12px] border-0 border-[transparent] border-solid bg-clip-padding pr-[0.01px] pl-[170.92px]">
         <Container65 />
         <BackgroundShadow />
       </div>
@@ -1076,10 +1598,20 @@ function Container64() {
 
 function Container69() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+    <div className="relative size-[20px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p2e4e7b80} fill="var(--fill-0, #D1D5DB)" id="Icon" />
+          <path
+            d={svgPaths.p2e4e7b80}
+            fill="var(--fill-0, #D1D5DB)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1088,9 +1620,15 @@ function Container69() {
 
 function Container71() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal h-[15px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[10px] text-right w-[46.27px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[15px] whitespace-pre-wrap">עלות לאדם</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[15px] w-[46.27px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal text-[#8d785e] text-[10px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[15px]">עלות לאדם</p>
       </div>
     </div>
   );
@@ -1098,9 +1636,12 @@ function Container71() {
 
 function Container72() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[24px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[16px] text-right w-[38.39px]">
-        <p className="leading-[24px] whitespace-pre-wrap">₪180</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[24px] w-[38.39px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#181510] text-[16px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[24px]">₪180</p>
       </div>
     </div>
   );
@@ -1108,7 +1649,10 @@ function Container72() {
 
 function Container70() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Container71 />
       <Container72 />
     </div>
@@ -1117,8 +1661,8 @@ function Container70() {
 
 function Container68() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-end justify-between relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full content-stretch items-end justify-between border-0 border-[transparent] border-solid bg-clip-padding">
         <Container69 />
         <Container70 />
       </div>
@@ -1128,8 +1672,14 @@ function Container68() {
 
 function Alternative1() {
   return (
-    <div className="bg-white content-stretch flex flex-col gap-[12px] items-start p-[17px] relative rounded-[12px] self-stretch shrink-0 w-[364.66px]" data-name="Alternative 3">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px]" />
+    <div
+      className="relative flex w-[364.66px] shrink-0 flex-col content-stretch items-start gap-[12px] self-stretch rounded-[12px] bg-white p-[17px]"
+      data-name="Alternative 3"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid"
+      />
       <Container64 />
       <Container68 />
     </div>
@@ -1138,9 +1688,15 @@ function Alternative1() {
 
 function Heading6() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Heading 5">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[69.78px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">קייקי הגליל</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Heading 5"
+    >
+      <div
+        className="relative flex h-[20px] w-[69.78px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">קייקי הגליל</p>
       </div>
     </div>
   );
@@ -1148,9 +1704,15 @@ function Heading6() {
 
 function Container75() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal h-[15px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[10px] text-right w-[83.66px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[15px] whitespace-pre-wrap">מסלול משפחתי רגוע</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[15px] w-[83.66px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal text-[#8d785e] text-[10px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[15px]">מסלול משפחתי רגוע</p>
       </div>
     </div>
   );
@@ -1158,7 +1720,10 @@ function Container75() {
 
 function Container74() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Heading6 />
       <Container75 />
     </div>
@@ -1167,9 +1732,18 @@ function Container74() {
 
 function KayaksInRiver() {
   return (
-    <div className="flex-[1_0_0] h-full min-h-px min-w-px relative" data-name="Kayaks in river">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgKayaksInRiver} />
+    <div
+      className="relative h-full min-h-px min-w-px flex-[1_0_0]"
+      data-name="Kayaks in river"
+    >
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <img
+          alt=""
+          className="absolute top-0 left-0 size-full max-w-none"
+          height="600"
+          src={imgKayaksInRiver}
+          width="800"
+        />
       </div>
     </div>
   );
@@ -1177,7 +1751,10 @@ function KayaksInRiver() {
 
 function BackgroundShadow1() {
   return (
-    <div className="bg-[#f9fafb] content-stretch flex items-center justify-center overflow-clip relative rounded-[8px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] shrink-0 size-[48px]" data-name="Background+Shadow">
+    <div
+      className="relative flex size-[48px] shrink-0 content-stretch items-center justify-center overflow-clip rounded-[8px] bg-[#f9fafb] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      data-name="Background+Shadow"
+    >
       <KayaksInRiver />
     </div>
   );
@@ -1185,8 +1762,8 @@ function BackgroundShadow1() {
 
 function Container73() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[11.99px] items-start pl-[187.02px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full content-stretch items-start gap-[11.99px] border-0 border-[transparent] border-solid bg-clip-padding pl-[187.02px]">
         <Container74 />
         <BackgroundShadow1 />
       </div>
@@ -1196,10 +1773,20 @@ function Container73() {
 
 function Container77() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+    <div className="relative size-[20px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p2e4e7b80} fill="var(--fill-0, #D1D5DB)" id="Icon" />
+          <path
+            d={svgPaths.p2e4e7b80}
+            fill="var(--fill-0, #D1D5DB)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1208,9 +1795,15 @@ function Container77() {
 
 function Container79() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal h-[15px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[10px] text-right w-[46.27px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[15px] whitespace-pre-wrap">עלות לאדם</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[15px] w-[46.27px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal text-[#8d785e] text-[10px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[15px]">עלות לאדם</p>
       </div>
     </div>
   );
@@ -1218,9 +1811,12 @@ function Container79() {
 
 function Container80() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[24px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[16px] text-right w-[34.73px]">
-        <p className="leading-[24px] whitespace-pre-wrap">₪110</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[24px] w-[34.73px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#181510] text-[16px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[24px]">₪110</p>
       </div>
     </div>
   );
@@ -1228,7 +1824,10 @@ function Container80() {
 
 function Container78() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Container79 />
       <Container80 />
     </div>
@@ -1237,8 +1836,8 @@ function Container78() {
 
 function Container76() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-end justify-between relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full content-stretch items-end justify-between border-0 border-[transparent] border-solid bg-clip-padding">
         <Container77 />
         <Container78 />
       </div>
@@ -1248,8 +1847,14 @@ function Container76() {
 
 function Alternative() {
   return (
-    <div className="bg-white content-stretch flex flex-col gap-[12px] items-start p-[17px] relative rounded-[12px] self-stretch shrink-0 w-[364.67px]" data-name="Alternative 2">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px]" />
+    <div
+      className="relative flex w-[364.67px] shrink-0 flex-col content-stretch items-start gap-[12px] self-stretch rounded-[12px] bg-white p-[17px]"
+      data-name="Alternative 2"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid"
+      />
       <Container73 />
       <Container76 />
     </div>
@@ -1258,9 +1863,15 @@ function Alternative() {
 
 function Heading7() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Heading 5">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[74.08px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">רייזרים בנוף</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Heading 5"
+    >
+      <div
+        className="relative flex h-[20px] w-[74.08px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">רייזרים בנוף</p>
       </div>
     </div>
   );
@@ -1268,9 +1879,15 @@ function Heading7() {
 
 function Container83() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal h-[15px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[10px] text-right w-[67.23px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[15px] whitespace-pre-wrap">מסלול נחל דישון</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[15px] w-[67.23px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal text-[#8d785e] text-[10px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[15px]">מסלול נחל דישון</p>
       </div>
     </div>
   );
@@ -1278,7 +1895,10 @@ function Container83() {
 
 function Container82() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Heading7 />
       <Container83 />
     </div>
@@ -1287,9 +1907,18 @@ function Container82() {
 
 function AtvVehiclesInNature() {
   return (
-    <div className="flex-[1_0_0] h-full min-h-px min-w-px relative" data-name="ATV vehicles in nature">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgAtvVehiclesInNature} />
+    <div
+      className="relative h-full min-h-px min-w-px flex-[1_0_0]"
+      data-name="ATV vehicles in nature"
+    >
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <img
+          alt=""
+          className="absolute top-0 left-0 size-full max-w-none"
+          height="600"
+          src={imgAtvVehiclesInNature}
+          width="800"
+        />
       </div>
     </div>
   );
@@ -1297,7 +1926,10 @@ function AtvVehiclesInNature() {
 
 function BackgroundShadow2() {
   return (
-    <div className="bg-white content-stretch flex items-center justify-center overflow-clip relative rounded-[8px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] shrink-0 size-[48px]" data-name="Background+Shadow">
+    <div
+      className="relative flex size-[48px] shrink-0 content-stretch items-center justify-center overflow-clip rounded-[8px] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      data-name="Background+Shadow"
+    >
       <AtvVehiclesInNature />
     </div>
   );
@@ -1305,8 +1937,8 @@ function BackgroundShadow2() {
 
 function Container81() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[12px] items-start pl-[194.58px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full content-stretch items-start gap-[12px] border-0 border-[transparent] border-solid bg-clip-padding pl-[194.58px]">
         <Container82 />
         <BackgroundShadow2 />
       </div>
@@ -1316,10 +1948,20 @@ function Container81() {
 
 function Container85() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+    <div className="relative size-[20px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p24aa4770} fill="var(--fill-0, #FF8C00)" id="Icon" />
+          <path
+            d={svgPaths.p24aa4770}
+            fill="var(--fill-0, #FF8C00)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1328,9 +1970,15 @@ function Container85() {
 
 function Container87() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal h-[15px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[10px] text-right w-[46.27px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[15px] whitespace-pre-wrap">עלות לאדם</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[15px] w-[46.27px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular',sans-serif] font-normal text-[#8d785e] text-[10px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[15px]">עלות לאדם</p>
       </div>
     </div>
   );
@@ -1338,9 +1986,12 @@ function Container87() {
 
 function Container88() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[24px] justify-center leading-[0] relative shrink-0 text-[#ff8c00] text-[16px] text-right w-[41.69px]">
-        <p className="leading-[24px] whitespace-pre-wrap">₪240</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[24px] w-[41.69px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#ff8c00] text-[16px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[24px]">₪240</p>
       </div>
     </div>
   );
@@ -1348,7 +1999,10 @@ function Container88() {
 
 function Container86() {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Container">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <Container87 />
       <Container88 />
     </div>
@@ -1357,9 +2011,9 @@ function Container86() {
 
 function Container84() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-end size-full">
-        <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-end justify-between relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-end">
+        <div className="relative flex w-full content-stretch items-end justify-between border-0 border-[transparent] border-solid bg-clip-padding">
           <Container85 />
           <Container86 />
         </div>
@@ -1370,10 +2024,16 @@ function Container84() {
 
 function Background3() {
   return (
-    <div className="absolute bg-[#ff8c00] left-[10px] rounded-[4px] top-[10px]" data-name="Background">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[6px] py-[2px] relative">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[15px] justify-center leading-[0] relative shrink-0 text-[10px] text-right text-white w-[22.28px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[15px] whitespace-pre-wrap">נבחר</p>
+    <div
+      className="absolute top-[10px] left-[10px] rounded-[4px] bg-[#ff8c00]"
+      data-name="Background"
+    >
+      <div className="relative flex flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[6px] py-[2px]">
+        <div
+          className="relative flex h-[15px] w-[22.28px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[10px] text-white leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[15px]">נבחר</p>
         </div>
       </div>
     </div>
@@ -1382,8 +2042,14 @@ function Background3() {
 
 function RecommendedAlt() {
   return (
-    <div className="bg-[rgba(255,140,0,0.05)] content-stretch flex flex-col gap-[12px] items-start p-[18px] relative rounded-[12px] self-stretch shrink-0 w-[364.66px]" data-name="Recommended Alt">
-      <div aria-hidden="true" className="absolute border-2 border-[#ff8c00] border-solid inset-0 pointer-events-none rounded-[12px]" />
+    <div
+      className="relative flex w-[364.66px] shrink-0 flex-col content-stretch items-start gap-[12px] self-stretch rounded-[12px] bg-[rgba(255,140,0,0.05)] p-[18px]"
+      data-name="Recommended Alt"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border-2 border-[#ff8c00] border-solid"
+      />
       <Container81 />
       <Container84 />
       <Background3 />
@@ -1393,7 +2059,10 @@ function RecommendedAlt() {
 
 function Container63() {
   return (
-    <div className="content-stretch flex gap-[12px] items-start justify-center relative shrink-0 w-full" data-name="Container">
+    <div
+      className="relative flex w-full shrink-0 content-stretch items-start justify-center gap-[12px]"
+      data-name="Container"
+    >
       <Alternative1 />
       <Alternative />
       <RecommendedAlt />
@@ -1403,8 +2072,8 @@ function Container63() {
 
 function Container61() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col gap-[12px] items-start p-[16px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full flex-col content-stretch items-start gap-[12px] border-0 border-[transparent] border-solid bg-clip-padding p-[16px]">
         <Container62 />
         <Container63 />
       </div>
@@ -1414,19 +2083,28 @@ function Container61() {
 
 function Slot2MorningActivityAlternatives() {
   return (
-    <div className="bg-white relative rounded-[12px] shrink-0 w-full" data-name="Slot 2: Morning Activity (Alternatives)">
-      <div className="content-stretch flex flex-col items-start overflow-clip p-px relative rounded-[inherit] w-full">
+    <div
+      className="relative w-full shrink-0 rounded-[12px] bg-white"
+      data-name="Slot 2: Morning Activity (Alternatives)"
+    >
+      <div className="relative flex w-full flex-col content-stretch items-start overflow-clip rounded-[inherit] p-px">
         <BackgroundHorizontalBorder1 />
         <Container61 />
       </div>
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid"
+      />
     </div>
   );
 }
 
 function Section1ComponentsAndVendors() {
   return (
-    <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full" data-name="Section 1: Components and Vendors">
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start gap-[16px]"
+      data-name="Section 1: Components and Vendors"
+    >
       <Container45 />
       <Slot1Transportation />
       <Slot2MorningActivityAlternatives />
@@ -1436,8 +2114,14 @@ function Section1ComponentsAndVendors() {
 
 function Container89() {
   return (
-    <div className="h-[18px] relative shrink-0 w-[19px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 19 18">
+    <div className="relative h-[18px] w-[19px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 19 18"
+      >
+        <title>Interface icon</title>
         <g id="Container">
           <path d={svgPaths.p53fc80} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </g>
@@ -1448,11 +2132,16 @@ function Container89() {
 
 function Heading8() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Heading 2">
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[8px] items-center pl-[979.17px] relative w-full">
-          <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[20px] text-right w-[140.81px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-            <p className="leading-[28px] whitespace-pre-wrap">תמחור ורווח יעד</p>
+    <div className="relative w-full shrink-0" data-name="Heading 2">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[8px] pl-[979.17px]">
+          <div
+            className="relative flex h-[28px] w-[140.81px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[20px] leading-[0]"
+            style={{ fontVariationSettings: "'wdth' 100" }}
+          >
+            <p className="whitespace-pre-wrap leading-[28px]">
+              תמחור ורווח יעד
+            </p>
           </div>
           <Container89 />
         </div>
@@ -1463,10 +2152,13 @@ function Heading8() {
 
 function Cell() {
   return (
-    <div className="relative shrink-0 w-[220.34px] z-[5]" data-name="Cell">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[16px] py-[12px] relative w-full">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[66.95px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">משקל רווח</p>
+    <div className="relative z-[5] w-[220.34px] shrink-0" data-name="Cell">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] py-[12px]">
+        <div
+          className="relative flex h-[20px] w-[66.95px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">משקל רווח</p>
         </div>
       </div>
     </div>
@@ -1475,10 +2167,13 @@ function Cell() {
 
 function Cell1() {
   return (
-    <div className="relative shrink-0 w-[277.92px] z-[4]" data-name="Cell">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[16px] py-[12px] relative w-full">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[26.67px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">רווח</p>
+    <div className="relative z-[4] w-[277.92px] shrink-0" data-name="Cell">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] py-[12px]">
+        <div
+          className="relative flex h-[20px] w-[26.67px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">רווח</p>
         </div>
       </div>
     </div>
@@ -1487,10 +2182,13 @@ function Cell1() {
 
 function Cell2() {
   return (
-    <div className="relative shrink-0 w-[212.03px] z-[3]" data-name="Cell">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[16px] py-[12px] relative w-full">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[72.02px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">מחיר מכירה</p>
+    <div className="relative z-[3] w-[212.03px] shrink-0" data-name="Cell">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] py-[12px]">
+        <div
+          className="relative flex h-[20px] w-[72.02px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">מחיר מכירה</p>
         </div>
       </div>
     </div>
@@ -1499,10 +2197,13 @@ function Cell2() {
 
 function Cell3() {
   return (
-    <div className="relative shrink-0 w-[211.91px] z-[2]" data-name="Cell">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[16px] py-[12px] relative w-full">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[71.95px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">עלות (ספק)</p>
+    <div className="relative z-[2] w-[211.91px] shrink-0" data-name="Cell">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] py-[12px]">
+        <div
+          className="relative flex h-[20px] w-[71.95px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">עלות (ספק)</p>
         </div>
       </div>
     </div>
@@ -1511,10 +2212,13 @@ function Cell3() {
 
 function Cell4() {
   return (
-    <div className="relative shrink-0 w-[227.8px] z-[1]" data-name="Cell">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[16px] py-[12px] relative w-full">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[27.03px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">רכיב</p>
+    <div className="relative z-[1] w-[227.8px] shrink-0" data-name="Cell">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] py-[12px]">
+        <div
+          className="relative flex h-[20px] w-[27.03px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">רכיב</p>
         </div>
       </div>
     </div>
@@ -1523,8 +2227,14 @@ function Cell4() {
 
 function HeaderRow() {
   return (
-    <div className="bg-[#f5f3f0] content-stretch flex isolate items-start justify-center mb-[-1px] pb-px relative shrink-0 w-full" data-name="Header → Row">
-      <div aria-hidden="true" className="absolute border-[#e7e1da] border-b border-solid inset-0 pointer-events-none" />
+    <div
+      className="relative isolate mb-[-1px] flex w-full shrink-0 content-stretch items-start justify-center bg-[#f5f3f0] pb-px"
+      data-name="Header → Row"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#e7e1da] border-b border-solid"
+      />
       <Cell />
       <Cell1 />
       <Cell2 />
@@ -1536,9 +2246,18 @@ function HeaderRow() {
 
 function Container90() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #E5E7EB)" id="Icon" />
         </svg>
       </div>
@@ -1548,9 +2267,18 @@ function Container90() {
 
 function Container91() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #E5E7EB)" id="Icon" />
         </svg>
       </div>
@@ -1560,9 +2288,18 @@ function Container91() {
 
 function Container92() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #E5E7EB)" id="Icon" />
         </svg>
       </div>
@@ -1572,9 +2309,18 @@ function Container92() {
 
 function Container93() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </svg>
       </div>
@@ -1584,9 +2330,18 @@ function Container93() {
 
 function Container94() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </svg>
       </div>
@@ -1596,7 +2351,10 @@ function Container94() {
 
 function Data() {
   return (
-    <div className="content-stretch flex gap-[4px] items-start pl-[112.27px] relative shrink-0 w-[188.34px] z-[5]" data-name="Data">
+    <div
+      className="relative z-[5] flex w-[188.34px] shrink-0 content-stretch items-start gap-[4px] pl-[112.27px]"
+      data-name="Data"
+    >
       <Container90 />
       <Container91 />
       <Container92 />
@@ -1608,9 +2366,12 @@ function Data() {
 
 function Data1() {
   return (
-    <div className="content-stretch flex flex-col items-end px-[16px] py-[16.5px] relative shrink-0 w-[277.92px] z-[4]" data-name="Data">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#16a34a] text-[14px] text-right w-[48.27px]">
-        <p className="leading-[20px] whitespace-pre-wrap">₪1,500</p>
+    <div
+      className="relative z-[4] flex w-[277.92px] shrink-0 flex-col content-stretch items-end px-[16px] py-[16.5px]"
+      data-name="Data"
+    >
+      <div className="relative flex h-[20px] w-[48.27px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#16a34a] text-[14px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[20px]">₪1,500</p>
       </div>
     </div>
   );
@@ -1618,9 +2379,12 @@ function Data1() {
 
 function Data2() {
   return (
-    <div className="content-stretch flex flex-col items-end px-[16px] py-[16.5px] relative shrink-0 w-[196.04px] z-[3]" data-name="Data">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right tracking-[-0.35px] w-[49.8px]">
-        <p className="leading-[20px] whitespace-pre-wrap">₪9,000</p>
+    <div
+      className="relative z-[3] flex w-[196.04px] shrink-0 flex-col content-stretch items-end px-[16px] py-[16.5px]"
+      data-name="Data"
+    >
+      <div className="relative flex h-[20px] w-[49.8px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal text-[#181510] text-[14px] leading-[0] tracking-[-0.35px]">
+        <p className="whitespace-pre-wrap leading-[20px]">₪9,000</p>
       </div>
     </div>
   );
@@ -1628,9 +2392,12 @@ function Data2() {
 
 function Data3() {
   return (
-    <div className="content-stretch flex flex-col items-end px-[16px] py-[16.5px] relative shrink-0 w-[195.91px] z-[2]" data-name="Data">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right tracking-[-0.35px] w-[47.13px]">
-        <p className="leading-[20px] whitespace-pre-wrap">₪7,500</p>
+    <div
+      className="relative z-[2] flex w-[195.91px] shrink-0 flex-col content-stretch items-end px-[16px] py-[16.5px]"
+      data-name="Data"
+    >
+      <div className="relative flex h-[20px] w-[47.13px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal text-[#181510] text-[14px] leading-[0] tracking-[-0.35px]">
+        <p className="whitespace-pre-wrap leading-[20px]">₪7,500</p>
       </div>
     </div>
   );
@@ -1638,9 +2405,15 @@ function Data3() {
 
 function Data4() {
   return (
-    <div className="content-stretch flex flex-col items-end px-[16px] py-[16.5px] relative shrink-0 w-[211.79px] z-[1]" data-name="Data">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[47.8px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">תחבורה</p>
+    <div
+      className="relative z-[1] flex w-[211.79px] shrink-0 flex-col content-stretch items-end px-[16px] py-[16.5px]"
+      data-name="Data"
+    >
+      <div
+        className="relative flex h-[20px] w-[47.8px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium text-[#181510] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">תחבורה</p>
       </div>
     </div>
   );
@@ -1648,9 +2421,9 @@ function Data4() {
 
 function Row() {
   return (
-    <div className="mb-[-1px] relative shrink-0 w-full" data-name="Row">
-      <div className="flex flex-row items-center justify-center size-full">
-        <div className="content-stretch flex gap-[16px] isolate items-center justify-center pl-[16px] relative w-full">
+    <div className="relative mb-[-1px] w-full shrink-0" data-name="Row">
+      <div className="flex size-full flex-row items-center justify-center">
+        <div className="relative isolate flex w-full content-stretch items-center justify-center gap-[16px] pl-[16px]">
           <Data />
           <Data1 />
           <Data2 />
@@ -1664,9 +2437,18 @@ function Row() {
 
 function Container95() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #E5E7EB)" id="Icon" />
         </svg>
       </div>
@@ -1676,9 +2458,18 @@ function Container95() {
 
 function Container96() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </svg>
       </div>
@@ -1688,9 +2479,18 @@ function Container96() {
 
 function Container97() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </svg>
       </div>
@@ -1700,9 +2500,18 @@ function Container97() {
 
 function Container98() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </svg>
       </div>
@@ -1712,9 +2521,18 @@ function Container98() {
 
 function Container99() {
   return (
-    <div className="content-stretch flex flex-col items-end relative self-stretch shrink-0" data-name="Container">
-      <div className="h-[9.5px] relative shrink-0 w-[10px]" data-name="Icon">
-        <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 10 9.5">
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end self-stretch"
+      data-name="Container"
+    >
+      <div className="relative h-[9.5px] w-[10px] shrink-0" data-name="Icon">
+        <svg
+          className="absolute inset-0 block"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 10 9.5"
+        >
+          <title>Interface icon</title>
           <path d={svgPaths.pc98bac0} fill="var(--fill-0, #FF8C00)" id="Icon" />
         </svg>
       </div>
@@ -1724,8 +2542,8 @@ function Container99() {
 
 function Data5() {
   return (
-    <div className="relative shrink-0 w-[188.34px] z-[5]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[4px] items-start pl-[112.27px] relative w-full">
+    <div className="relative z-[5] w-[188.34px] shrink-0" data-name="Data">
+      <div className="relative flex w-full content-stretch items-start gap-[4px] border-0 border-[transparent] border-solid bg-clip-padding pl-[112.27px]">
         <Container95 />
         <Container96 />
         <Container97 />
@@ -1738,10 +2556,10 @@ function Data5() {
 
 function Data6() {
   return (
-    <div className="relative shrink-0 w-[277.92px] z-[4]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[16px] py-[16.5px] relative w-full">
-        <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#16a34a] text-[14px] text-right w-[49.33px]">
-          <p className="leading-[20px] whitespace-pre-wrap">₪7,200</p>
+    <div className="relative z-[4] w-[277.92px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] py-[16.5px]">
+        <div className="relative flex h-[20px] w-[49.33px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#16a34a] text-[14px] leading-[0]">
+          <p className="whitespace-pre-wrap leading-[20px]">₪7,200</p>
         </div>
       </div>
     </div>
@@ -1750,10 +2568,10 @@ function Data6() {
 
 function Data7() {
   return (
-    <div className="relative shrink-0 w-[196.04px] z-[3]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[16px] py-[16.5px] relative w-full">
-        <div className="flex flex-col font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right tracking-[-0.35px] w-[58.25px]">
-          <p className="leading-[20px] whitespace-pre-wrap">₪36,000</p>
+    <div className="relative z-[3] w-[196.04px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] py-[16.5px]">
+        <div className="relative flex h-[20px] w-[58.25px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal text-[#181510] text-[14px] leading-[0] tracking-[-0.35px]">
+          <p className="whitespace-pre-wrap leading-[20px]">₪36,000</p>
         </div>
       </div>
     </div>
@@ -1762,10 +2580,10 @@ function Data7() {
 
 function Data8() {
   return (
-    <div className="relative shrink-0 w-[195.91px] z-[2]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[16px] py-[16.5px] relative w-full">
-        <div className="flex flex-col font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right tracking-[-0.35px] w-[57.09px]">
-          <p className="leading-[20px] whitespace-pre-wrap">₪28,800</p>
+    <div className="relative z-[2] w-[195.91px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] py-[16.5px]">
+        <div className="relative flex h-[20px] w-[57.09px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal text-[#181510] text-[14px] leading-[0] tracking-[-0.35px]">
+          <p className="whitespace-pre-wrap leading-[20px]">₪28,800</p>
         </div>
       </div>
     </div>
@@ -1774,10 +2592,13 @@ function Data8() {
 
 function Data9() {
   return (
-    <div className="relative shrink-0 w-[211.79px] z-[1]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end px-[16px] py-[16.5px] relative w-full">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[74.17px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">פעילות בוקר</p>
+    <div className="relative z-[1] w-[211.79px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] py-[16.5px]">
+        <div
+          className="relative flex h-[20px] w-[74.17px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Medium',sans-serif] font-medium text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">פעילות בוקר</p>
         </div>
       </div>
     </div>
@@ -1786,10 +2607,13 @@ function Data9() {
 
 function Row1() {
   return (
-    <div className="mb-[-1px] relative shrink-0 w-full" data-name="Row">
-      <div aria-hidden="true" className="absolute border-[#e7e1da] border-solid border-t inset-0 pointer-events-none" />
-      <div className="flex flex-row items-center justify-center size-full">
-        <div className="content-stretch flex gap-[16px] isolate items-center justify-center pl-[16px] pt-px relative w-full">
+    <div className="relative mb-[-1px] w-full shrink-0" data-name="Row">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#e7e1da] border-t border-solid"
+      />
+      <div className="flex size-full flex-row items-center justify-center">
+        <div className="relative isolate flex w-full content-stretch items-center justify-center gap-[16px] pt-px pl-[16px]">
           <Data5 />
           <Data6 />
           <Data7 />
@@ -1803,10 +2627,10 @@ function Row1() {
 
 function Data10() {
   return (
-    <div className="relative shrink-0 w-[220.34px] z-[5]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end pb-[18.5px] pt-[18px] px-[16px] relative w-full">
-        <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold','Arimo:Bold',sans-serif] font-bold h-[16px] justify-center leading-[0] relative shrink-0 text-[#ff8c00] text-[12px] text-right w-[61.58px]">
-          <p className="leading-[16px] whitespace-pre-wrap">ממוצע: 4.2</p>
+    <div className="relative z-[5] w-[220.34px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding px-[16px] pt-[18px] pb-[18.5px]">
+        <div className="relative flex h-[16px] w-[61.58px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold','Arimo:Bold',sans-serif] font-bold text-[#ff8c00] text-[12px] leading-[0]">
+          <p className="whitespace-pre-wrap leading-[16px]">ממוצע: 4.2</p>
         </div>
       </div>
     </div>
@@ -1815,10 +2639,10 @@ function Data10() {
 
 function Data11() {
   return (
-    <div className="relative shrink-0 w-[277.92px] z-[4]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end p-[16px] relative w-full">
-        <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#ff8c00] text-[14px] text-right w-[104.34px]">
-          <p className="leading-[20px] whitespace-pre-wrap">₪25,500 (25%)</p>
+    <div className="relative z-[4] w-[277.92px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding p-[16px]">
+        <div className="relative flex h-[20px] w-[104.34px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#ff8c00] text-[14px] leading-[0]">
+          <p className="whitespace-pre-wrap leading-[20px]">₪25,500 (25%)</p>
         </div>
       </div>
     </div>
@@ -1827,10 +2651,10 @@ function Data11() {
 
 function Data12() {
   return (
-    <div className="relative shrink-0 w-[212.03px] z-[3]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end p-[16px] relative w-full">
-        <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right tracking-[-0.35px] w-[65.03px]">
-          <p className="leading-[20px] whitespace-pre-wrap">₪102,000</p>
+    <div className="relative z-[3] w-[212.03px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding p-[16px]">
+        <div className="relative flex h-[20px] w-[65.03px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0] tracking-[-0.35px]">
+          <p className="whitespace-pre-wrap leading-[20px]">₪102,000</p>
         </div>
       </div>
     </div>
@@ -1839,10 +2663,10 @@ function Data12() {
 
 function Data13() {
   return (
-    <div className="relative shrink-0 w-[211.91px] z-[2]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end p-[16px] relative w-full">
-        <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right tracking-[-0.35px] w-[55.73px]">
-          <p className="leading-[20px] whitespace-pre-wrap">₪76,500</p>
+    <div className="relative z-[2] w-[211.91px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding p-[16px]">
+        <div className="relative flex h-[20px] w-[55.73px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0] tracking-[-0.35px]">
+          <p className="whitespace-pre-wrap leading-[20px]">₪76,500</p>
         </div>
       </div>
     </div>
@@ -1851,10 +2675,13 @@ function Data13() {
 
 function Data14() {
   return (
-    <div className="relative shrink-0 w-[227.8px] z-[1]" data-name="Data">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-end p-[16px] relative w-full">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-right w-[79.75px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">{`סה"כ פרויקט`}</p>
+    <div className="relative z-[1] w-[227.8px] shrink-0" data-name="Data">
+      <div className="relative flex w-full flex-col content-stretch items-end border-0 border-[transparent] border-solid bg-clip-padding p-[16px]">
+        <div
+          className="relative flex h-[20px] w-[79.75px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">{`סה"כ פרויקט`}</p>
         </div>
       </div>
     </div>
@@ -1863,8 +2690,14 @@ function Data14() {
 
 function Row2() {
   return (
-    <div className="bg-[rgba(255,140,0,0.05)] content-stretch flex isolate items-start justify-center mb-[-1px] pt-px relative shrink-0 w-full" data-name="Row">
-      <div aria-hidden="true" className="absolute border-[#e7e1da] border-solid border-t inset-0 pointer-events-none" />
+    <div
+      className="relative isolate mb-[-1px] flex w-full shrink-0 content-stretch items-start justify-center bg-[rgba(255,140,0,0.05)] pt-px"
+      data-name="Row"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#e7e1da] border-t border-solid"
+      />
       <Data10 />
       <Data11 />
       <Data12 />
@@ -1876,7 +2709,10 @@ function Row2() {
 
 function Body() {
   return (
-    <div className="content-stretch flex flex-col items-start mb-[-1px] pb-px relative shrink-0 w-full" data-name="Body">
+    <div
+      className="relative mb-[-1px] flex w-full shrink-0 flex-col content-stretch items-start pb-px"
+      data-name="Body"
+    >
       <Row />
       <Row1 />
       <Row2 />
@@ -1886,8 +2722,8 @@ function Body() {
 
 function Table() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Table">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start pb-px relative w-full">
+    <div className="relative w-full shrink-0" data-name="Table">
+      <div className="relative flex w-full flex-col content-stretch items-start border-0 border-[transparent] border-solid bg-clip-padding pb-px">
         <HeaderRow />
         <Body />
       </div>
@@ -1897,18 +2733,27 @@ function Table() {
 
 function BackgroundBorderShadow4() {
   return (
-    <div className="bg-white relative rounded-[12px] shrink-0 w-full" data-name="Background+Border+Shadow">
-      <div className="content-stretch flex flex-col items-start overflow-clip p-px relative rounded-[inherit] w-full">
+    <div
+      className="relative w-full shrink-0 rounded-[12px] bg-white"
+      data-name="Background+Border+Shadow"
+    >
+      <div className="relative flex w-full flex-col content-stretch items-start overflow-clip rounded-[inherit] p-px">
         <Table />
       </div>
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      />
     </div>
   );
 }
 
 function Section2PricingTable() {
   return (
-    <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full" data-name="Section 2: Pricing Table">
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start gap-[16px]"
+      data-name="Section 2: Pricing Table"
+    >
       <Heading8 />
       <BackgroundBorderShadow4 />
     </div>
@@ -1917,10 +2762,20 @@ function Section2PricingTable() {
 
 function Container100() {
   return (
-    <div className="relative shrink-0 size-[20px]" data-name="Container">
-      <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+    <div className="relative size-[20px] shrink-0" data-name="Container">
+      <svg
+        className="absolute inset-0 block"
+        fill="none"
+        preserveAspectRatio="none"
+        viewBox="0 0 20 20"
+      >
+        <title>Interface icon</title>
         <g id="Container">
-          <path d={svgPaths.p256e1340} fill="var(--fill-0, #FF8C00)" id="Icon" />
+          <path
+            d={svgPaths.p256e1340}
+            fill="var(--fill-0, #FF8C00)"
+            id="Icon"
+          />
         </g>
       </svg>
     </div>
@@ -1929,11 +2784,14 @@ function Container100() {
 
 function Heading9() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Heading 2">
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[7.99px] items-center pl-[1003.88px] relative w-full">
-          <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[20px] text-right w-[116.11px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-            <p className="leading-[28px] whitespace-pre-wrap">{`לו"ז הפעילות`}</p>
+    <div className="relative w-full shrink-0" data-name="Heading 2">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[7.99px] pl-[1003.88px]">
+          <div
+            className="relative flex h-[28px] w-[116.11px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold','Noto_Sans:Bold',sans-serif] font-bold text-[#181510] text-[20px] leading-[0]"
+            style={{ fontVariationSettings: "'wdth' 100" }}
+          >
+            <p className="whitespace-pre-wrap leading-[28px]">{`לו"ז הפעילות`}</p>
           </div>
           <Container100 />
         </div>
@@ -1944,9 +2802,15 @@ function Heading9() {
 
 function Container104() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[24px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[16px] text-right w-[91.7px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[24px] whitespace-pre-wrap">יציאה ואיסוף</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[24px] w-[91.7px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[16px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[24px]">יציאה ואיסוף</p>
       </div>
     </div>
   );
@@ -1954,9 +2818,12 @@ function Container104() {
 
 function Container105() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal h-[24px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[16px] text-right w-[8.58px]">
-        <p className="leading-[24px] whitespace-pre-wrap">•</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[24px] w-[8.58px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal text-[#8d785e] text-[16px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[24px]">•</p>
       </div>
     </div>
   );
@@ -1964,9 +2831,12 @@ function Container105() {
 
 function Container106() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[18px] text-right w-[56.42px]">
-        <p className="leading-[28px] whitespace-pre-wrap">08:00</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[28px] w-[56.42px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#181510] text-[18px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[28px]">08:00</p>
       </div>
     </div>
   );
@@ -1974,9 +2844,9 @@ function Container106() {
 
 function Container103() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[8px] items-center pl-[833.28px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[8px] pl-[833.28px]">
           <Container104 />
           <Container105 />
           <Container106 />
@@ -1988,9 +2858,17 @@ function Container103() {
 
 function Container107() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular','Noto_Sans:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[14px] text-right w-[339.27px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">נקודת מפגש: חניון הסינמה סיטי גלילות. חלוקת ערכות בוקר.</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[20px] w-[339.27px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular','Noto_Sans:Regular',sans-serif] font-normal text-[#8d785e] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">
+          נקודת מפגש: חניון הסינמה סיטי גלילות. חלוקת ערכות בוקר.
+        </p>
       </div>
     </div>
   );
@@ -1998,7 +2876,10 @@ function Container107() {
 
 function Container102() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative" data-name="Container">
+    <div
+      className="relative flex min-h-px min-w-px flex-[1_0_0] flex-col content-stretch items-start gap-[4px]"
+      data-name="Container"
+    >
       <Container103 />
       <Container107 />
     </div>
@@ -2007,20 +2888,39 @@ function Container102() {
 
 function BackgroundBorder() {
   return (
-    <div className="absolute bg-[#ff8c00] right-[-2.5px] rounded-[9999px] size-[8px] top-[6px]" data-name="Background+Border">
-      <div aria-hidden="true" className="absolute border-4 border-solid border-white inset-0 pointer-events-none rounded-[9999px]" />
-      <div className="absolute bg-[rgba(255,255,255,0)] right-0 rounded-[9999px] shadow-[0px_0px_0px_2px_rgba(255,140,0,0.2)] size-[8px] top-0" data-name="Overlay+Shadow" />
+    <div
+      className="absolute top-[6px] right-[-2.5px] size-[8px] rounded-[9999px] bg-[#ff8c00]"
+      data-name="Background+Border"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[9999px] border-4 border-white border-solid"
+      />
+      <div
+        className="absolute top-0 right-0 size-[8px] rounded-[9999px] bg-[rgba(255,255,255,0)] shadow-[0px_0px_0px_2px_rgba(255,140,0,0.2)]"
+        data-name="Overlay+Shadow"
+      />
     </div>
   );
 }
 
 function TimelineItem() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Timeline item 1">
-      <div className="content-stretch flex gap-[24px] items-start pr-[32px] relative w-full">
-        <div className="relative shrink-0 size-[20px]" data-name="Icon">
-          <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
-            <path d={svgPaths.pfc7c8c0} fill="var(--fill-0, #D1D5DB)" id="Icon" />
+    <div className="relative w-full shrink-0" data-name="Timeline item 1">
+      <div className="relative flex w-full content-stretch items-start gap-[24px] pr-[32px]">
+        <div className="relative size-[20px] shrink-0" data-name="Icon">
+          <svg
+            className="absolute inset-0 block"
+            fill="none"
+            preserveAspectRatio="none"
+            viewBox="0 0 20 20"
+          >
+            <title>Interface icon</title>
+            <path
+              d={svgPaths.pfc7c8c0}
+              fill="var(--fill-0, #D1D5DB)"
+              id="Icon"
+            />
           </svg>
         </div>
         <Container102 />
@@ -2032,9 +2932,17 @@ function TimelineItem() {
 
 function Container110() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[24px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[16px] text-right w-[153.47px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[24px] whitespace-pre-wrap">פעילות בוקר - רייזרים</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[24px] w-[153.47px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[16px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[24px]">
+          פעילות בוקר - רייזרים
+        </p>
       </div>
     </div>
   );
@@ -2042,9 +2950,12 @@ function Container110() {
 
 function Container111() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal h-[24px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[16px] text-right w-[8.58px]">
-        <p className="leading-[24px] whitespace-pre-wrap">•</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[24px] w-[8.58px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal text-[#8d785e] text-[16px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[24px]">•</p>
       </div>
     </div>
   );
@@ -2052,9 +2963,12 @@ function Container111() {
 
 function Container112() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[18px] text-right w-[50.55px]">
-        <p className="leading-[28px] whitespace-pre-wrap">10:30</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[28px] w-[50.55px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#181510] text-[18px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[28px]">10:30</p>
       </div>
     </div>
   );
@@ -2062,9 +2976,9 @@ function Container112() {
 
 function Container109() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[8px] items-center pl-[777.39px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[8px] pl-[777.39px]">
           <Container110 />
           <Container111 />
           <Container112 />
@@ -2076,9 +2990,17 @@ function Container109() {
 
 function Container113() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular','Noto_Sans:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[14px] text-right w-[328.52px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">הגעה למתחם רייזרים בנוף. תדריך בטיחות ויציאה למסלול.</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[20px] w-[328.52px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular','Noto_Sans:Regular',sans-serif] font-normal text-[#8d785e] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">
+          הגעה למתחם רייזרים בנוף. תדריך בטיחות ויציאה למסלול.
+        </p>
       </div>
     </div>
   );
@@ -2086,7 +3008,10 @@ function Container113() {
 
 function Container108() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative" data-name="Container">
+    <div
+      className="relative flex min-h-px min-w-px flex-[1_0_0] flex-col content-stretch items-start gap-[4px]"
+      data-name="Container"
+    >
       <Container109 />
       <Container113 />
     </div>
@@ -2095,20 +3020,39 @@ function Container108() {
 
 function BackgroundBorder1() {
   return (
-    <div className="absolute bg-[#ff8c00] right-[-2.5px] rounded-[9999px] size-[8px] top-[6px]" data-name="Background+Border">
-      <div aria-hidden="true" className="absolute border-4 border-solid border-white inset-0 pointer-events-none rounded-[9999px]" />
-      <div className="absolute bg-[rgba(255,255,255,0)] right-0 rounded-[9999px] shadow-[0px_0px_0px_2px_rgba(255,140,0,0.2)] size-[8px] top-0" data-name="Overlay+Shadow" />
+    <div
+      className="absolute top-[6px] right-[-2.5px] size-[8px] rounded-[9999px] bg-[#ff8c00]"
+      data-name="Background+Border"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[9999px] border-4 border-white border-solid"
+      />
+      <div
+        className="absolute top-0 right-0 size-[8px] rounded-[9999px] bg-[rgba(255,255,255,0)] shadow-[0px_0px_0px_2px_rgba(255,140,0,0.2)]"
+        data-name="Overlay+Shadow"
+      />
     </div>
   );
 }
 
 function TimelineItem1() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Timeline item 2">
-      <div className="content-stretch flex gap-[24px] items-start pr-[32px] relative w-full">
-        <div className="h-[16px] relative shrink-0 w-[14px]" data-name="Icon">
-          <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 14 16">
-            <path d={svgPaths.p15780600} fill="var(--fill-0, #D1D5DB)" id="Icon" />
+    <div className="relative w-full shrink-0" data-name="Timeline item 2">
+      <div className="relative flex w-full content-stretch items-start gap-[24px] pr-[32px]">
+        <div className="relative h-[16px] w-[14px] shrink-0" data-name="Icon">
+          <svg
+            className="absolute inset-0 block"
+            fill="none"
+            preserveAspectRatio="none"
+            viewBox="0 0 14 16"
+          >
+            <title>Interface icon</title>
+            <path
+              d={svgPaths.p15780600}
+              fill="var(--fill-0, #D1D5DB)"
+              id="Icon"
+            />
           </svg>
         </div>
         <Container108 />
@@ -2120,9 +3064,15 @@ function TimelineItem1() {
 
 function Container116() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[24px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[16px] text-right w-[100.34px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[24px] whitespace-pre-wrap">ארוחת צהריים</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[24px] w-[100.34px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[16px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[24px]">ארוחת צהריים</p>
       </div>
     </div>
   );
@@ -2130,9 +3080,12 @@ function Container116() {
 
 function Container117() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal h-[24px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[16px] text-right w-[8.58px]">
-        <p className="leading-[24px] whitespace-pre-wrap">•</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[24px] w-[8.58px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Regular',sans-serif] font-normal text-[#8d785e] text-[16px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[24px]">•</p>
       </div>
     </div>
   );
@@ -2140,9 +3093,12 @@ function Container117() {
 
 function Container118() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0" data-name="Container">
-      <div className="flex flex-col font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold h-[28px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[18px] text-right w-[50.55px]">
-        <p className="leading-[28px] whitespace-pre-wrap">13:00</p>
+    <div
+      className="relative flex shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div className="relative flex h-[28px] w-[50.55px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#181510] text-[18px] leading-[0]">
+        <p className="whitespace-pre-wrap leading-[28px]">13:00</p>
       </div>
     </div>
   );
@@ -2150,9 +3106,9 @@ function Container118() {
 
 function Container115() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[8px] items-center pl-[830.51px] relative w-full">
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="flex size-full flex-row items-center">
+        <div className="relative flex w-full content-stretch items-center gap-[8px] pl-[830.51px]">
           <Container116 />
           <Container117 />
           <Container118 />
@@ -2164,9 +3120,15 @@ function Container115() {
 
 function Container119() {
   return (
-    <div className="content-stretch flex flex-col items-end relative shrink-0 w-full" data-name="Container">
-      <div className="flex flex-col font-['Noto_Sans_Hebrew:Regular','Noto_Sans:Regular',sans-serif] font-normal h-[20px] justify-center leading-[0] relative shrink-0 text-[#8d785e] text-[14px] text-right w-[273.52px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-        <p className="leading-[20px] whitespace-pre-wrap">{`ארוחת בשרים כשרה למהדרין במסעדת "החווה".`}</p>
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-end"
+      data-name="Container"
+    >
+      <div
+        className="relative flex h-[20px] w-[273.52px] shrink-0 flex-col justify-center text-right font-['Noto_Sans_Hebrew:Regular','Noto_Sans:Regular',sans-serif] font-normal text-[#8d785e] text-[14px] leading-[0]"
+        style={{ fontVariationSettings: "'wdth' 100" }}
+      >
+        <p className="whitespace-pre-wrap leading-[20px]">{`ארוחת בשרים כשרה למהדרין במסעדת "החווה".`}</p>
       </div>
     </div>
   );
@@ -2174,7 +3136,10 @@ function Container119() {
 
 function Container114() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative" data-name="Container">
+    <div
+      className="relative flex min-h-px min-w-px flex-[1_0_0] flex-col content-stretch items-start gap-[4px]"
+      data-name="Container"
+    >
       <Container115 />
       <Container119 />
     </div>
@@ -2183,20 +3148,39 @@ function Container114() {
 
 function BackgroundBorder2() {
   return (
-    <div className="absolute bg-[#ff8c00] right-[-2.5px] rounded-[9999px] size-[8px] top-[6px]" data-name="Background+Border">
-      <div aria-hidden="true" className="absolute border-4 border-solid border-white inset-0 pointer-events-none rounded-[9999px]" />
-      <div className="absolute bg-[rgba(255,255,255,0)] right-0 rounded-[9999px] shadow-[0px_0px_0px_2px_rgba(255,140,0,0.2)] size-[8px] top-0" data-name="Overlay+Shadow" />
+    <div
+      className="absolute top-[6px] right-[-2.5px] size-[8px] rounded-[9999px] bg-[#ff8c00]"
+      data-name="Background+Border"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[9999px] border-4 border-white border-solid"
+      />
+      <div
+        className="absolute top-0 right-0 size-[8px] rounded-[9999px] bg-[rgba(255,255,255,0)] shadow-[0px_0px_0px_2px_rgba(255,140,0,0.2)]"
+        data-name="Overlay+Shadow"
+      />
     </div>
   );
 }
 
 function TimelineItem2() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Timeline item 3">
-      <div className="content-stretch flex gap-[24px] items-start pr-[32px] relative w-full">
-        <div className="h-[20px] relative shrink-0 w-[15px]" data-name="Icon">
-          <svg className="absolute block inset-0" fill="none" preserveAspectRatio="none" viewBox="0 0 15 20">
-            <path d={svgPaths.p23cfd7c0} fill="var(--fill-0, #D1D5DB)" id="Icon" />
+    <div className="relative w-full shrink-0" data-name="Timeline item 3">
+      <div className="relative flex w-full content-stretch items-start gap-[24px] pr-[32px]">
+        <div className="relative h-[20px] w-[15px] shrink-0" data-name="Icon">
+          <svg
+            className="absolute inset-0 block"
+            fill="none"
+            preserveAspectRatio="none"
+            viewBox="0 0 15 20"
+          >
+            <title>Interface icon</title>
+            <path
+              d={svgPaths.p23cfd7c0}
+              fill="var(--fill-0, #D1D5DB)"
+              id="Icon"
+            />
           </svg>
         </div>
         <Container114 />
@@ -2208,9 +3192,12 @@ function TimelineItem2() {
 
 function Container101() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col gap-[32px] items-start pr-[16px] relative w-full">
-        <div className="absolute bg-[#f3f4f6] bottom-[8px] right-[14px] top-[8px] w-[2px]" data-name="Vertical line" />
+    <div className="relative w-full shrink-0" data-name="Container">
+      <div className="relative flex w-full flex-col content-stretch items-start gap-[32px] border-0 border-[transparent] border-solid bg-clip-padding pr-[16px]">
+        <div
+          className="absolute top-[8px] right-[14px] bottom-[8px] w-[2px] bg-[#f3f4f6]"
+          data-name="Vertical line"
+        />
         <TimelineItem />
         <TimelineItem1 />
         <TimelineItem2 />
@@ -2221,9 +3208,15 @@ function Container101() {
 
 function BackgroundBorderShadow5() {
   return (
-    <div className="bg-white relative rounded-[12px] shrink-0 w-full" data-name="Background+Border+Shadow">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]" />
-      <div className="content-stretch flex flex-col items-start p-[25px] relative w-full">
+    <div
+      className="relative w-full shrink-0 rounded-[12px] bg-white"
+      data-name="Background+Border+Shadow"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e7e1da] border-solid shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      />
+      <div className="relative flex w-full flex-col content-stretch items-start p-[25px]">
         <Container101 />
       </div>
     </div>
@@ -2232,7 +3225,10 @@ function BackgroundBorderShadow5() {
 
 function Section3Timeline() {
   return (
-    <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full" data-name="Section 3: Timeline">
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start gap-[16px]"
+      data-name="Section 3: Timeline"
+    >
       <Heading9 />
       <BackgroundBorderShadow5 />
     </div>
@@ -2241,7 +3237,10 @@ function Section3Timeline() {
 
 function MainSectionsAccordionContentSimulated() {
   return (
-    <div className="content-stretch flex flex-col gap-[32px] items-start relative shrink-0 w-full" data-name="Main Sections (Accordion Content Simulated)">
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start gap-[32px]"
+      data-name="Main Sections (Accordion Content Simulated)"
+    >
       <Section1ComponentsAndVendors />
       <Section2PricingTable />
       <Section3Timeline />
@@ -2251,11 +3250,20 @@ function MainSectionsAccordionContentSimulated() {
 
 function Button8() {
   return (
-    <div className="bg-[#231a0f] relative rounded-[8px] shrink-0" data-name="Button">
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-center justify-center px-[32px] py-[11px] relative">
-        <div className="absolute bg-[rgba(255,255,255,0)] inset-0 rounded-[8px] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)]" data-name="Button:shadow" />
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[14px] text-center text-white w-[72.25px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">שמור טיוטה</p>
+    <div
+      className="relative shrink-0 rounded-[8px] bg-[#231a0f]"
+      data-name="Button"
+    >
+      <div className="relative flex flex-col content-stretch items-center justify-center border-0 border-[transparent] border-solid bg-clip-padding px-[32px] py-[11px]">
+        <div
+          className="absolute inset-0 rounded-[8px] bg-[rgba(255,255,255,0)] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)]"
+          data-name="Button:shadow"
+        />
+        <div
+          className="relative flex h-[20px] w-[72.25px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[14px] text-white leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">שמור טיוטה</p>
         </div>
       </div>
     </div>
@@ -2264,11 +3272,17 @@ function Button8() {
 
 function Button9() {
   return (
-    <div className="relative rounded-[8px] shrink-0" data-name="Button">
-      <div aria-hidden="true" className="absolute border border-[#e7e1da] border-solid inset-0 pointer-events-none rounded-[8px]" />
-      <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-center justify-center px-[25px] py-[11px] relative">
-        <div className="flex flex-col font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold h-[20px] justify-center leading-[0] relative shrink-0 text-[#181510] text-[14px] text-center w-[81.77px]" style={{ fontVariationSettings: "\'wdth\' 100" }}>
-          <p className="leading-[20px] whitespace-pre-wrap">ביטול שינויים</p>
+    <div className="relative shrink-0 rounded-[8px]" data-name="Button">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[8px] border border-[#e7e1da] border-solid"
+      />
+      <div className="relative flex flex-col content-stretch items-center justify-center border-0 border-[transparent] border-solid bg-clip-padding px-[25px] py-[11px]">
+        <div
+          className="relative flex h-[20px] w-[81.77px] shrink-0 flex-col justify-center text-center font-['Noto_Sans_Hebrew:Bold',sans-serif] font-bold text-[#181510] text-[14px] leading-[0]"
+          style={{ fontVariationSettings: "'wdth' 100" }}
+        >
+          <p className="whitespace-pre-wrap leading-[20px]">ביטול שינויים</p>
         </div>
       </div>
     </div>
@@ -2277,10 +3291,16 @@ function Button9() {
 
 function BottomActionBarFloatingMobileStuckDesktop() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Bottom Action Bar (Floating mobile/stuck desktop)">
-      <div aria-hidden="true" className="absolute border-[#e7e1da] border-solid border-t inset-0 pointer-events-none" />
-      <div className="flex flex-row justify-end size-full">
-        <div className="content-stretch flex gap-[12px] items-start justify-end pb-[24px] pr-[871.98px] pt-[25px] relative w-full">
+    <div
+      className="relative w-full shrink-0"
+      data-name="Bottom Action Bar (Floating mobile/stuck desktop)"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 border-[#e7e1da] border-t border-solid"
+      />
+      <div className="flex size-full flex-row justify-end">
+        <div className="relative flex w-full content-stretch items-start justify-end gap-[12px] pt-[25px] pr-[871.98px] pb-[24px]">
           <Button8 />
           <Button9 />
         </div>
@@ -2291,7 +3311,10 @@ function BottomActionBarFloatingMobileStuckDesktop() {
 
 function BottomActionBarFloatingMobileStuckDesktopMargin() {
   return (
-    <div className="content-stretch flex flex-col items-start pt-[16px] relative shrink-0 w-full" data-name="Bottom Action Bar (Floating mobile/stuck desktop):margin">
+    <div
+      className="relative flex w-full shrink-0 flex-col content-stretch items-start pt-[16px]"
+      data-name="Bottom Action Bar (Floating mobile/stuck desktop):margin"
+    >
       <BottomActionBarFloatingMobileStuckDesktop />
     </div>
   );
@@ -2299,7 +3322,10 @@ function BottomActionBarFloatingMobileStuckDesktopMargin() {
 
 function Container13() {
   return (
-    <div className="content-stretch flex flex-col gap-[24px] items-start max-w-[1200px] px-[24px] relative self-stretch shrink-0 w-[1200px]" data-name="Container">
+    <div
+      className="relative flex w-[1200px] max-w-[1200px] shrink-0 flex-col content-stretch items-start gap-[24px] self-stretch px-[24px]"
+      data-name="Container"
+    >
       <StatusInfoGrid />
       <FinancialSummaryRibbon />
       <NavigationTabs />
@@ -2311,7 +3337,10 @@ function Container13() {
 
 function Main() {
   return (
-    <div className="content-stretch flex items-start justify-center py-[24px] relative shrink-0 w-full z-[1]" data-name="Main">
+    <div
+      className="relative z-[1] flex w-full shrink-0 content-stretch items-start justify-center py-[24px]"
+      data-name="Main"
+    >
       <Container13 />
     </div>
   );
@@ -2319,7 +3348,10 @@ function Main() {
 
 function Container1() {
   return (
-    <div className="content-stretch flex flex-col isolate items-start relative shrink-0 w-full z-[1]" data-name="Container">
+    <div
+      className="relative isolate z-[1] flex w-full shrink-0 flex-col content-stretch items-start"
+      data-name="Container"
+    >
       <HeaderSection />
       <Main />
     </div>
@@ -2328,7 +3360,10 @@ function Container1() {
 
 function Container() {
   return (
-    <div className="content-stretch flex flex-col isolate items-start min-h-[1666px] overflow-clip relative shrink-0 w-full" data-name="Container">
+    <div
+      className="relative isolate flex min-h-[1666px] w-full shrink-0 flex-col content-stretch items-start overflow-clip"
+      data-name="Container"
+    >
       <Background />
       <Container1 />
     </div>
@@ -2337,7 +3372,10 @@ function Container() {
 
 export default function Component() {
   return (
-    <div className="bg-[#f8f7f5] content-stretch flex flex-col items-start relative size-full" data-name="ניהול פרויקט ותמחור - עם תווית">
+    <div
+      className="relative flex size-full flex-col content-stretch items-start bg-[#f8f7f5]"
+      data-name="ניהול פרויקט ותמחור - עם תווית"
+    >
       <Container />
     </div>
   );

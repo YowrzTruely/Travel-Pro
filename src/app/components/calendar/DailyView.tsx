@@ -1,24 +1,24 @@
-import { useMemo } from 'react';
-import { format } from 'date-fns';
-import { he } from 'date-fns/locale';
+import { format } from "date-fns";
+import { he } from "date-fns/locale";
 import {
   CalendarDays,
-  Plus,
-  Pencil,
-  Trash2,
-  FolderOpen,
   Clock,
-} from 'lucide-react';
-import { motion } from 'motion/react';
-import type { CalendarEvent } from '../data';
-import type { DisplayEvent } from '../CalendarPage';
+  FolderOpen,
+  Pencil,
+  Plus,
+  Trash2,
+} from "lucide-react";
+import { motion } from "motion/react";
+import { useMemo } from "react";
+import type { DisplayEvent } from "../CalendarPage";
+import type { CalendarEvent } from "../data";
 
 interface DailyViewProps {
   currentDate: Date;
   events: DisplayEvent[];
+  onDeleteEvent: (event: CalendarEvent) => void;
   onEventClick: (event: DisplayEvent) => void;
   onNewEvent: (date: Date) => void;
-  onDeleteEvent: (event: CalendarEvent) => void;
 }
 
 export function DailyView({
@@ -29,7 +29,7 @@ export function DailyView({
   onDeleteEvent,
 }: DailyViewProps) {
   const dayEvents = useMemo(() => {
-    const dayKey = format(currentDate, 'yyyy-MM-dd');
+    const dayKey = format(currentDate, "yyyy-MM-dd");
     return events
       .filter((ev) => ev.date === dayKey)
       .sort((a, b) => a.startTime.localeCompare(b.startTime));
@@ -38,30 +38,31 @@ export function DailyView({
   return (
     <div className="space-y-4">
       {/* Day header */}
-      <div className="bg-white rounded-xl border border-[#e7e1da] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] p-5">
+      <div className="rounded-xl border border-[#e7e1da] bg-white p-5 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
         <div className="flex items-center justify-between">
           <div>
             <h3
-              className="text-[20px] text-[#181510]"
+              className="text-[#181510] text-[20px]"
               style={{ fontWeight: 700 }}
             >
-              {format(currentDate, 'EEEE', { locale: he })}
+              {format(currentDate, "EEEE", { locale: he })}
             </h3>
-            <p className="text-[14px] text-[#8d785e] mt-0.5">
-              {format(currentDate, 'd MMMM yyyy', { locale: he })}
+            <p className="mt-0.5 text-[#8d785e] text-[14px]">
+              {format(currentDate, "d MMMM yyyy", { locale: he })}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <span
-              className="text-[13px] text-[#8d785e] bg-[#f5f3f0] px-3 py-1.5 rounded-lg"
+              className="rounded-lg bg-[#f5f3f0] px-3 py-1.5 text-[#8d785e] text-[13px]"
               style={{ fontWeight: 600 }}
             >
               {dayEvents.length} אירועים
             </span>
             <button
+              className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[13px] text-white transition-colors hover:bg-[#e67e00]"
               onClick={() => onNewEvent(currentDate)}
-              className="flex items-center gap-1.5 text-[13px] text-white bg-[#ff8c00] hover:bg-[#e67e00] px-3 py-1.5 rounded-lg transition-colors"
               style={{ fontWeight: 600 }}
+              type="button"
             >
               <Plus size={14} />
               אירוע חדש
@@ -72,26 +73,27 @@ export function DailyView({
 
       {/* Events */}
       {dayEvents.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#e7e1da] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] p-10">
+        <div className="rounded-xl border border-[#e7e1da] bg-white p-10 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
           <div className="flex flex-col items-center justify-center text-center">
             <CalendarDays
+              className="mb-3 text-[#e7e1da]"
               size={40}
-              className="text-[#e7e1da] mb-3"
               strokeWidth={1.5}
             />
             <h4
-              className="text-[16px] text-[#181510] mb-1"
+              className="mb-1 text-[#181510] text-[16px]"
               style={{ fontWeight: 600 }}
             >
               אין אירועים ביום זה
             </h4>
-            <p className="text-[13px] text-[#8d785e] mb-4">
+            <p className="mb-4 text-[#8d785e] text-[13px]">
               לחץ על "אירוע חדש" כדי להוסיף אירוע
             </p>
             <button
+              className="flex items-center gap-2 text-[#ff8c00] text-[13px] transition-colors hover:text-[#e67e00]"
               onClick={() => onNewEvent(currentDate)}
-              className="flex items-center gap-2 text-[13px] text-[#ff8c00] hover:text-[#e67e00] transition-colors"
               style={{ fontWeight: 600 }}
+              type="button"
             >
               <Plus size={14} />
               צור אירוע חדש
@@ -102,43 +104,43 @@ export function DailyView({
         <div className="space-y-3">
           {dayEvents.map((ev, idx) => (
             <motion.div
-              key={ev.id}
-              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
+              className="rounded-xl border border-[#e7e1da] bg-white p-4 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] transition-colors hover:border-[#d6cfc6]"
+              initial={{ opacity: 0, y: 10 }}
+              key={ev.id}
               transition={{ duration: 0.3, delay: idx * 0.05 }}
-              className="bg-white rounded-xl border border-[#e7e1da] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] p-4 hover:border-[#d6cfc6] transition-colors"
             >
               <div className="flex items-start gap-3">
                 {/* Color bar */}
                 <div
-                  className="w-1 min-h-[56px] rounded-full shrink-0 mt-0.5"
+                  className="mt-0.5 min-h-[56px] w-1 shrink-0 rounded-full"
                   style={{ backgroundColor: ev.color }}
                 />
 
                 {/* Content */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <h4
-                        className="text-[16px] text-[#181510] truncate"
+                        className="truncate text-[#181510] text-[16px]"
                         style={{ fontWeight: 600 }}
                       >
                         {ev.title}
                       </h4>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Clock size={12} className="text-[#8d785e] shrink-0" />
-                        <span className="text-[13px] text-[#8d785e]">
+                      <div className="mt-1 flex items-center gap-2">
+                        <Clock className="shrink-0 text-[#8d785e]" size={12} />
+                        <span className="text-[#8d785e] text-[13px]">
                           {ev.startTime} - {ev.endTime}
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex shrink-0 items-center gap-2">
                       {/* Type badge */}
                       <span
-                        className="text-[11px] px-2.5 py-1 rounded-full"
+                        className="rounded-full px-2.5 py-1 text-[11px]"
                         style={{
-                          backgroundColor: ev.color + '15',
+                          backgroundColor: `${ev.color}15`,
                           color: ev.color,
                           fontWeight: 600,
                         }}
@@ -147,8 +149,8 @@ export function DailyView({
                       </span>
 
                       {/* Project badge */}
-                      {ev.source === 'project' && (
-                        <span className="flex items-center gap-1 text-[11px] text-[#ff8c00] bg-[#ff8c00]/10 px-2.5 py-1 rounded-full">
+                      {ev.source === "project" && (
+                        <span className="flex items-center gap-1 rounded-full bg-[#ff8c00]/10 px-2.5 py-1 text-[#ff8c00] text-[11px]">
                           <FolderOpen size={10} />
                           פרויקט
                         </span>
@@ -158,26 +160,30 @@ export function DailyView({
 
                   {/* Description */}
                   {ev.description && (
-                    <p className="text-[13px] text-[#8d785e]/80 mt-2 leading-relaxed">
+                    <p className="mt-2 text-[#8d785e]/80 text-[13px] leading-relaxed">
                       {ev.description}
                     </p>
                   )}
 
                   {/* Actions for calendar events */}
-                  {ev.source === 'calendar' && (
-                    <div className="flex items-center gap-3 mt-3 pt-3 border-t border-[#f5f3f0]">
+                  {ev.source === "calendar" && (
+                    <div className="mt-3 flex items-center gap-3 border-[#f5f3f0] border-t pt-3">
                       <button
+                        className="flex items-center gap-1.5 text-[#8d785e] text-[12px] transition-colors hover:text-[#181510]"
                         onClick={() => onEventClick(ev)}
-                        className="flex items-center gap-1.5 text-[12px] text-[#8d785e] hover:text-[#181510] transition-colors"
                         style={{ fontWeight: 500 }}
+                        type="button"
                       >
                         <Pencil size={12} />
                         עריכה
                       </button>
                       <button
-                        onClick={() => onDeleteEvent(ev.originalEvent!)}
-                        className="flex items-center gap-1.5 text-[12px] text-[#8d785e] hover:text-red-500 transition-colors"
+                        className="flex items-center gap-1.5 text-[#8d785e] text-[12px] transition-colors hover:text-red-500"
+                        onClick={() =>
+                          ev.originalEvent && onDeleteEvent(ev.originalEvent)
+                        }
                         style={{ fontWeight: 500 }}
+                        type="button"
                       >
                         <Trash2 size={12} />
                         מחיקה
@@ -186,12 +192,13 @@ export function DailyView({
                   )}
 
                   {/* Project link for project events */}
-                  {ev.source === 'project' && (
-                    <div className="flex items-center gap-3 mt-3 pt-3 border-t border-[#f5f3f0]">
+                  {ev.source === "project" && (
+                    <div className="mt-3 flex items-center gap-3 border-[#f5f3f0] border-t pt-3">
                       <button
+                        className="flex items-center gap-1.5 text-[#ff8c00] text-[12px] transition-colors hover:text-[#e67e00]"
                         onClick={() => onEventClick(ev)}
-                        className="flex items-center gap-1.5 text-[12px] text-[#ff8c00] hover:text-[#e67e00] transition-colors"
                         style={{ fontWeight: 500 }}
+                        type="button"
                       >
                         <FolderOpen size={12} />
                         צפה בפרויקט

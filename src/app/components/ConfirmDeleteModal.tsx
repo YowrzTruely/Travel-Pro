@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { AlertTriangle, Trash2, Loader2, X } from 'lucide-react';
+import { AlertTriangle, Loader2, Trash2, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface ConfirmDeleteModalProps {
-  open: boolean;
-  title: string;
   description?: string;
   itemName?: string;
   loading?: boolean;
-  onConfirm: () => void;
   onCancel: () => void;
+  onConfirm: () => void;
+  open: boolean;
+  title: string;
 }
 
-const CONFIRM_WORD = 'מחיקה';
+const CONFIRM_WORD = "מחיקה";
 
 export function ConfirmDeleteModal({
   open,
@@ -23,14 +23,14 @@ export function ConfirmDeleteModal({
   onConfirm,
   onCancel,
 }: ConfirmDeleteModalProps) {
-  const [typed, setTyped] = useState('');
+  const [typed, setTyped] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const isMatch = typed.trim() === CONFIRM_WORD;
 
   // Reset on open/close
   useEffect(() => {
     if (open) {
-      setTyped('');
+      setTyped("");
       setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [open]);
@@ -38,11 +38,11 @@ export function ConfirmDeleteModal({
   // Handle Enter key
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && isMatch && !loading) {
+      if (e.key === "Enter" && isMatch && !loading) {
         e.preventDefault();
         onConfirm();
       }
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onCancel();
       }
     },
@@ -53,38 +53,43 @@ export function ConfirmDeleteModal({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[9999] flex items-center justify-center p-4"
-          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]"
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0 }}
           onClick={onCancel}
+          transition={{ duration: 0.2 }}
         >
           <motion.div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-[400px] overflow-hidden"
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 20 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 350 }}
-            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-[400px] overflow-hidden rounded-2xl bg-white shadow-2xl"
             dir="rtl"
+            exit={{ opacity: 0, scale: 0.92, y: 20 }}
+            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            transition={{ type: "spring", damping: 28, stiffness: 350 }}
           >
             {/* Header */}
             <div className="flex items-start justify-between p-6 pb-0">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle size={24} className="text-red-500" />
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-red-50">
+                  <AlertTriangle className="text-red-500" size={24} />
                 </div>
                 <div>
-                  <h3 className="text-[17px] text-[#181510] leading-tight" style={{ fontWeight: 700 }}>
+                  <h3
+                    className="text-[#181510] text-[17px] leading-tight"
+                    style={{ fontWeight: 700 }}
+                  >
                     {title}
                   </h3>
-                  <p className="text-[12px] text-[#8d785e] mt-0.5">פעולה זו אינה ניתנת לביטול</p>
+                  <p className="mt-0.5 text-[#8d785e] text-[12px]">
+                    פעולה זו אינה ניתנת לביטול
+                  </p>
                 </div>
               </div>
               <button
+                className="mt-1 text-[#b5a48b] transition-colors hover:text-[#181510]"
                 onClick={onCancel}
-                className="text-[#b5a48b] hover:text-[#181510] transition-colors mt-1"
+                type="button"
               >
                 <X size={18} />
               </button>
@@ -93,77 +98,83 @@ export function ConfirmDeleteModal({
             {/* Body */}
             <div className="px-6 py-4">
               {description && (
-                <p className="text-[14px] text-[#3d3322] mb-1 leading-relaxed">{description}</p>
+                <p className="mb-1 text-[#3d3322] text-[14px] leading-relaxed">
+                  {description}
+                </p>
               )}
               {itemName && (
-                <p className="text-[14px] text-[#181510] mb-4">
-                  האם אתה בטוח שברצונך למחוק את{' '}
-                  <span style={{ fontWeight: 700 }} className="text-red-600">
+                <p className="mb-4 text-[#181510] text-[14px]">
+                  האם אתה בטוח שברצונך למחוק את{" "}
+                  <span className="text-red-600" style={{ fontWeight: 700 }}>
                     &quot;{itemName}&quot;
                   </span>
                   ?
                 </p>
               )}
-              {!itemName && !description && (
-                <p className="text-[14px] text-[#181510] mb-4">האם אתה בטוח שברצונך לבצע מחיקה זו?</p>
+              {!(itemName || description) && (
+                <p className="mb-4 text-[#181510] text-[14px]">
+                  האם אתה בטוח שברצונך לבצע מחיקה זו?
+                </p>
               )}
 
               {/* Type to confirm */}
-              <div className="bg-[#fef2f2] border border-red-100 rounded-xl p-4">
-                <p className="text-[13px] text-[#3d3322] mb-2.5 leading-relaxed">
-                  לאישור, הקלד{' '}
+              <div className="rounded-xl border border-red-100 bg-[#fef2f2] p-4">
+                <p className="mb-2.5 text-[#3d3322] text-[13px] leading-relaxed">
+                  לאישור, הקלד{" "}
                   <span
-                    className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-mono text-[13px]"
+                    className="rounded bg-red-100 px-1.5 py-0.5 font-mono text-[13px] text-red-700"
                     style={{ fontWeight: 700 }}
                   >
                     {CONFIRM_WORD}
-                  </span>{' '}
+                  </span>{" "}
                   בשדה למטה:
                 </p>
                 <input
-                  ref={inputRef}
-                  type="text"
-                  value={typed}
+                  autoComplete="off"
+                  className={`w-full rounded-lg border-2 bg-white px-3 py-2.5 text-[14px] outline-none transition-colors placeholder:text-[#c4b89a] ${
+                    typed.length === 0
+                      ? "border-[#e7e1da] focus:border-red-300"
+                      : isMatch
+                        ? "border-green-400 bg-green-50/50"
+                        : "border-red-300"
+                  }`}
+                  dir="rtl"
                   onChange={(e) => setTyped(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={`הקלד "${CONFIRM_WORD}" כאן...`}
-                  dir="rtl"
-                  className={`w-full text-[14px] bg-white border-2 rounded-lg px-3 py-2.5 outline-none transition-colors placeholder:text-[#c4b89a] ${
-                    typed.length === 0
-                      ? 'border-[#e7e1da] focus:border-red-300'
-                      : isMatch
-                        ? 'border-green-400 bg-green-50/50'
-                        : 'border-red-300'
-                  }`}
+                  ref={inputRef}
                   style={{ fontWeight: 600 }}
-                  autoComplete="off"
+                  type="text"
+                  value={typed}
                 />
               </div>
             </div>
 
             {/* Footer */}
-            <div className="flex gap-3 px-6 pb-6 pt-2">
+            <div className="flex gap-3 px-6 pt-2 pb-6">
               <button
-                onClick={onConfirm}
-                disabled={!isMatch || loading}
-                className={`flex-1 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 text-[14px] ${
+                className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[14px] transition-all ${
                   isMatch && !loading
-                    ? 'bg-red-500 hover:bg-red-600 text-white shadow-sm'
-                    : 'bg-[#e7e1da] text-[#b5a48b] cursor-not-allowed'
+                    ? "bg-red-500 text-white shadow-sm hover:bg-red-600"
+                    : "cursor-not-allowed bg-[#e7e1da] text-[#b5a48b]"
                 }`}
+                disabled={!isMatch || loading}
+                onClick={onConfirm}
                 style={{ fontWeight: 600 }}
+                type="button"
               >
                 {loading ? (
-                  <Loader2 size={16} className="animate-spin" />
+                  <Loader2 className="animate-spin" size={16} />
                 ) : (
                   <Trash2 size={16} />
                 )}
-                {loading ? 'מוחק...' : 'אישור מחיקה'}
+                {loading ? "מוחק..." : "אישור מחיקה"}
               </button>
               <button
+                className="rounded-xl border border-[#e7e1da] px-5 py-2.5 text-[#3d3322] text-[14px] transition-colors hover:bg-[#f5f3f0]"
                 onClick={onCancel}
-                className="px-5 py-2.5 border border-[#e7e1da] rounded-xl hover:bg-[#f5f3f0] transition-colors text-[14px] text-[#3d3322]"
                 style={{ fontWeight: 600 }}
+                type="button"
               >
                 ביטול
               </button>
@@ -186,13 +197,18 @@ export function useConfirmDelete() {
     onConfirm: () => void;
   }>({
     open: false,
-    title: '',
+    title: "",
     loading: false,
     onConfirm: () => {},
   });
 
   const requestDelete = useCallback(
-    (opts: { title: string; description?: string; itemName?: string; onConfirm: () => Promise<void> | void }) => {
+    (opts: {
+      title: string;
+      description?: string;
+      itemName?: string;
+      onConfirm: () => Promise<void> | void;
+    }) => {
       setState({
         open: true,
         title: opts.title,
@@ -218,13 +234,13 @@ export function useConfirmDelete() {
 
   const modal = (
     <ConfirmDeleteModal
-      open={state.open}
-      title={state.title}
       description={state.description}
       itemName={state.itemName}
       loading={state.loading}
-      onConfirm={state.onConfirm}
       onCancel={cancel}
+      onConfirm={state.onConfirm}
+      open={state.open}
+      title={state.title}
     />
   );
 

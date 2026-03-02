@@ -1,5 +1,5 @@
-import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const listByProjectId = query({
   args: { projectId: v.id("projects") },
@@ -62,7 +62,10 @@ export const create = mutation({
       notes: args.notes,
     });
     const item = await ctx.db.get(id);
-    return { ...item!, id: item!._id };
+    if (!item) {
+      throw new Error("Quote item not found after creation");
+    }
+    return { ...item, id: item._id };
   },
 });
 
@@ -103,10 +106,15 @@ export const update = mutation({
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);
-    if (!existing) throw new Error("Quote item not found");
+    if (!existing) {
+      throw new Error("Quote item not found");
+    }
     await ctx.db.patch(id, updates);
     const item = await ctx.db.get(id);
-    return { ...item!, id: item!._id };
+    if (!item) {
+      throw new Error("Quote item not found after update");
+    }
+    return { ...item, id: item._id };
   },
 });
 
