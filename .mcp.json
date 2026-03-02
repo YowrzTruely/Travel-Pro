@@ -19,8 +19,8 @@
       "headers": {}
     },
     "resend": {
-      "type": "command",
-      "command": "node ABSOLUTE_PATH_TO_MCP_SEND_EMAIL_PROJECT/build/index.js"
+      "command": "node",
+      "args": ["ABSOLUTE_PATH_TO_MCP_SEND_EMAIL_PROJECT/build/index.js"]
     },
     "supabase": {
       "type": "http",

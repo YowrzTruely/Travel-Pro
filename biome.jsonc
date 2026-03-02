@@ -1,0 +1,76 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"extends": [
+		"ultracite/biome/core",
+		"ultracite/biome/react"
+	],
+	"files": {
+		"ignoreUnknown": true,
+		"includes": [
+			"**",
+			"!.claude",
+			"!convex/_generated",
+			"!convex/tsconfig.json"
+		]
+	},
+	"linter": {
+		"rules": {
+			"correctness": {
+				// Figma Make origin — many inline component patterns
+				"noNestedComponentDefinitions": "off",
+				"useExhaustiveDependencies": "warn",
+				"noUnusedVariables": {
+					"level": "error",
+					"options": {
+						"ignoreRestSiblings": true
+					}
+				}
+			},
+			"suspicious": {
+				"noConsole": "off",
+				"noExplicitAny": "off",
+				"useAwait": "off",
+				"noEmptyBlockStatements": "off",
+				"noBitwiseOperators": "off",
+				"noArrayIndexKey": "off",
+				"noEvolvingTypes": "warn",
+				// Tailwind CSS v4 custom @rules (@theme, @plugin, etc.)
+				"noUnknownAtRules": "off",
+				"useGuardForIn": "warn"
+			},
+			"complexity": {
+				"noExcessiveCognitiveComplexity": "off",
+				"noForEach": "off"
+			},
+			"style": {
+				"noMagicNumbers": "off",
+				// Existing PascalCase component files from Figma Make
+				"useFilenamingConvention": "off",
+				"noNestedTernary": "off",
+				"noNonNullAssertion": "warn",
+				"useConsistentMemberAccessibility": "off"
+			},
+			"performance": {
+				"noBarrelFile": "off",
+				"noNamespaceImport": "off",
+				"useTopLevelRegex": "warn"
+			}
+		}
+	},
+	"overrides": [
+		{
+			// Convex backend functions run in Node-like environment
+			"includes": ["convex/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"useNodejsImportProtocol": "off"
+					},
+					"performance": {
+						"useTopLevelRegex": "off"
+					}
+				}
+			}
+		}
+	]
+}

@@ -14,13 +14,34 @@ Originally scaffolded from **Figma Make** (code bundle export). The Figma design
 bun install          # Install dependencies (bun.lock is the lockfile)
 bun run dev          # Start Vite dev server
 bun run build        # Production build
+bun lint             # Biome lint + TypeScript type-check
+bun tsc              # TypeScript type-check (standalone)
+bun ultracite        # Ultracite check
 npx convex dev       # Start Convex dev server (syncs schema + functions)
 npx convex run seed:seedAll  # Seed initial data (idempotent)
 ```
 
 Development requires **two terminals**: `bun run dev` (frontend) and `npx convex dev` (backend). The Convex dev server watches `convex/` and hot-deploys function/schema changes.
 
-No linting or formatting tools are configured (no ESLint, Biome, or Prettier). No root `tsconfig.json` — frontend TS is handled by Vite's built-in transpilation; only `convex/tsconfig.json` exists for backend functions.
+**Always use `bun` instead of `npm`** (unless bun doesn't work for a specific command).
+
+### Linting & Formatting (Biome + Ultracite)
+
+- **Biome**: `biome.jsonc` extends `ultracite/biome/core` and `ultracite/biome/react`
+- **TypeScript**: Root `tsconfig.json` for frontend (`src/`), separate `convex/tsconfig.json` for backend
+- **Scripts**: `bun lint` (biome + tsc), `bun lint:fix`, `bun format`, `bun tsc`, `bun ultracite`
+
+### Verification (required after every code change)
+
+After **every** code change, run all three checks to ensure clean, production-ready code:
+
+```bash
+bun lint        # Biome lint + TypeScript type-check
+bun tsc         # TypeScript type-check (standalone)
+bun ultracite   # Ultracite check
+```
+
+Do not skip these. Fix any errors before considering work complete.
 
 ## Environment Variables
 
