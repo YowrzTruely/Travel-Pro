@@ -141,7 +141,7 @@ export function Layout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 right-0 z-50 w-[256px] transform bg-white transition-transform duration-300 ease-in-out lg:static ${sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}flex flex-col border-[#e7e1da] border-l`}
+        className={`fixed inset-y-0 right-0 z-50 w-[256px] transform bg-white transition-transform duration-300 ease-in-out lg:static ${sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"} flex flex-col border-[#e7e1da] border-l`}
       >
         {/* Logo */}
         <div className="border-[#f5f3f0] border-b">
