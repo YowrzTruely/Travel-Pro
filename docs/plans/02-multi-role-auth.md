@@ -1,14 +1,15 @@
-# Plan 02 — Multi-Role Auth & Onboarding
+# Plan 02 — Multi-Role Auth & Supplier Registration
 
 **Phase:** 1 (Foundation)
 **Depends on:** Plan 01 (Data Model)
-**Blocks:** Plans 03–13
+**Blocks:** Plans 03–15
+**PRD refs:** §3.1 (Supplier Registration), §9 (Technical Requirements)
 
 ---
 
 ## Goal
 
-Transform the app from single-role to 3 user roles (admin, producer, supplier) with role-gated routing, separate onboarding flows, and admin approval for suppliers.
+Transform the app from single-role to 3 user roles (admin, producer, supplier) with role-gated routing, supplier self-registration via shareable links, and a 3-stage progressive profile flow per PRD §3.1.
 
 ---
 
@@ -45,10 +46,6 @@ rejectSupplier      — admin sets supplier status to "suspended" + optional rea
 updateRole          — admin only: change user role
 ```
 
-**Key logic:**
-- After Convex Auth signup, the app must create a `users` record
-- `getCurrent` uses `ctx.auth.getUserIdentity()` to find the auth user, then looks up the `users` record by `authId`
-
 ### Step 2: Auth Context Extension
 
 **File: `src/app/components/AuthContext.tsx`** (modify)
@@ -67,7 +64,21 @@ interface AuthState {
 
 After successful auth, query `api.users.getCurrent` to load the profile. If no profile exists (first login), redirect to onboarding.
 
-### Step 3: Registration Flow Modification
+### Step 3: Registration Flow — 3 Entry Points (PRD §3.1)
+
+**Entry Point A: Manual by Producer**
+- Producer adds supplier from SupplierBank → creates `suppliers` record + `users` record with `registrationSource: "manual"`
+
+**Entry Point B: Self-Registration Link**
+- Shareable link (for WhatsApp/Facebook/Telegram groups) → `/register/supplier`
+- Simple signup form with Stage 1 fields (see below)
+- Creates `users` record with `registrationSource: "self_registration"`
+
+**Entry Point C: Availability Invite**
+- Producer sends availability request to unregistered supplier (by phone number)
+- System sends WhatsApp/SMS with magic link: "היי {ספק}, ה{מפיק} בודק איתך זמינות..."
+- Supplier clicks link → registration page pre-filled with context
+- Creates `users` record with `registrationSource: "availability_invite"`
 
 **File: `src/app/components/LoginPage.tsx`** (modify)
 
@@ -96,38 +107,46 @@ Add role selection to signup form:
 - Admin accounts are created manually (no self-signup)
 - Supplier signup → status = "pending" until admin approves
 
-### Step 4: Onboarding Screens
+### Step 4: 3-Stage Progressive Profile (PRD §3.1)
+
+**Stage 1 — Basic Entry (required):**
+- Full name / business name
+- Phone
+- Email
+- Primary category (closed list — PRD §3.2)
+- Operating region (11 regions — PRD §3.2)
+- First product/service
+
+**Stage 2 — Full Profile (recommended, not required):**
+- Logo + images per product (AI cleanup — Gemini Flash)
+- Short + extended description per product (AI marketing descriptions)
+- Upsells (add-on products per service)
+- 4-tier pricing (list/direct/producer/client — PRD §3.3)
+- Operating hours + seasonality
+- Equipment requirements
+- Gross/net time per activity
+- Documents and licenses
+
+**Stage 3 — Post-First-Deal (required after closing):**
+- Upload insurance documents (mandatory)
+- Business license
+- Kosher certificate (if food-related)
+
+**File: `src/app/components/onboarding/SupplierOnboarding.tsx`** (new)
+
+3-step progressive wizard matching PRD stages.
 
 **File: `src/app/components/onboarding/ProducerOnboarding.tsx`** (new)
 
-Simple welcome screen after first producer signup:
+Simple welcome screen for producers:
 - "Welcome to TravelPro" message
 - Brief feature tour (3-4 slides)
 - "Go to Dashboard" button
 - Sets `onboardingCompleted: true`
 
-**File: `src/app/components/onboarding/SupplierOnboarding.tsx`** (new)
-
-3-step wizard for approved suppliers:
-1. **Profile** — verify/complete business info (name, phone, address, category, region)
-2. **Products** — add at least one product/service
-3. **Documents** — upload required documents (business license, insurance)
-- Sets `onboardingCompleted: true` after step 3
-
 **File: `src/app/components/onboarding/SupplierPending.tsx`** (new)
 
-Waiting screen for suppliers not yet approved:
-```
-┌──────────────────────────────────┐
-│  ⏳ החשבון שלך ממתין לאישור       │
-│                                  │
-│  קיבלנו את בקשת ההרשמה שלך.     │
-│  צוות TravelPro יבדוק את הפרטים │
-│  ויאשר את חשבונך בהקדם.         │
-│                                  │
-│  נודיע לך במייל כשהחשבון יאושר.  │
-└──────────────────────────────────┘
-```
+Waiting screen for suppliers not yet approved.
 
 ### Step 5: Role-Gated Routing
 
@@ -137,40 +156,39 @@ Update `AppInner()` decision tree:
 
 ```
 1. If URL is /quote/:id → publicRouter (no auth)
-2. If authLoading → spinner
-3. If !user → LoginPage
-4. If user but no profile → call createProfile mutation
-5. If supplier + status="pending" → SupplierPending screen
-6. If !onboardingCompleted → role-specific onboarding
-7. If role="admin" → adminRouter
-8. If role="producer" → producerRouter (current main router)
-9. If role="supplier" → supplierRouter
+2. If URL is /register/supplier → supplier self-registration (no auth)
+3. If URL is /availability-invite/:token → availability invite flow (no auth)
+4. If authLoading → spinner
+5. If !user → LoginPage
+6. If user but no profile → call createProfile mutation
+7. If supplier + status="pending" → SupplierPending screen
+8. If !onboardingCompleted → role-specific onboarding
+9. If role="admin" → adminRouter
+10. If role="producer" → producerRouter (current main router)
+11. If role="supplier" → supplierRouter
 ```
 
 **File: `src/app/routes.ts`** (modify → split into 3 route configs)
 
 ```ts
-// Producer routes (current routes, mostly unchanged)
 export const producerRoutes = [ /* existing routes */ ];
 
-// Supplier routes (new)
 export const supplierRoutes = [
   { path: "/", element: SupplierDashboard },
   { path: "/products", element: SupplierMyProducts },
   { path: "/documents", element: SupplierMyDocuments },
   { path: "/availability", element: SupplierAvailability },
   { path: "/requests", element: SupplierRequests },
-  { path: "/messages", element: MessagesPage },
+  { path: "/profile", element: SupplierProfile },
+  { path: "/promotions", element: SupplierPromotions },
   { path: "/ratings", element: SupplierRatings },
   { path: "/settings", element: SupplierSettings },
 ];
 
-// Admin routes (new)
 export const adminRoutes = [
   { path: "/", element: AdminDashboard },
   { path: "/approve-suppliers", element: ApproveSuppliers },
   { path: "/users", element: UserManagement },
-  { path: "/teams", element: TeamManagement },
   { path: "/stats", element: PlatformStats },
   { path: "/activity-log", element: ActivityLog },
   { path: "/settings", element: AdminSettings },
@@ -181,7 +199,7 @@ export const adminRoutes = [
 
 **File: `src/app/components/Layout.tsx`** (modify)
 
-The sidebar navigation items should change based on user role:
+Sidebar navigation items change based on user role:
 
 ```ts
 const producerNavItems = [
@@ -191,8 +209,6 @@ const producerNavItems = [
   { path: "/suppliers", label: "בנק ספקים", icon: Building2 },
   { path: "/clients", label: "לקוחות", icon: UserCircle },
   { path: "/documents", label: "מסמכים", icon: FileText },
-  { path: "/kanban", label: "קנבן", icon: Columns },
-  { path: "/messages", label: "הודעות", icon: MessageSquare },
   { path: "/calendar", label: "יומן", icon: Calendar },
 ];
 
@@ -202,7 +218,7 @@ const supplierNavItems = [
   { path: "/documents", label: "המסמכים שלי", icon: FileText },
   { path: "/availability", label: "לוח זמינות", icon: CalendarCheck },
   { path: "/requests", label: "בקשות & הזמנות", icon: ClipboardList },
-  { path: "/messages", label: "הודעות", icon: MessageSquare },
+  { path: "/promotions", label: "מבצעים", icon: Percent },
   { path: "/ratings", label: "הדירוג שלי", icon: Star },
 ];
 
@@ -210,21 +226,30 @@ const adminNavItems = [
   { path: "/", label: "דשבורד", icon: LayoutDashboard },
   { path: "/approve-suppliers", label: "אישור ספקים", icon: ShieldCheck },
   { path: "/users", label: "ניהול משתמשים", icon: Users },
-  { path: "/teams", label: "ניהול צוותים", icon: UsersRound },
   { path: "/stats", label: "סטטיסטיקות", icon: BarChart3 },
   { path: "/activity-log", label: "לוג פעילות", icon: ScrollText },
 ];
 ```
 
-### Step 7: Supplier Invitation Flow
+### Step 7: Supplier Self-Registration Page
 
-**File: `src/app/components/SupplierInviteModal.tsx`** (new)
+**File: `src/app/components/SupplierSelfRegister.tsx`** (new)
 
-Modal in SupplierBank for producers to invite new suppliers:
-- Email + supplier name fields
-- Creates a `users` record with status="pending" and `invitedBy`
-- Creates/links a `suppliers` record
-- (Future: sends email/SMS/WhatsApp — for now, just creates the record)
+Public page at `/register/supplier` for self-registration:
+- Only Stage 1 fields
+- After submit: creates user + supplier records
+- Shows SupplierPending screen while awaiting admin approval
+- Shareable link for WhatsApp/Facebook groups
+
+### Step 8: Availability Invite Flow
+
+**File: `src/app/components/AvailabilityInvitePage.tsx`** (new)
+
+Public page at `/availability-invite/:token`:
+- Pre-filled with event context (date, service, producer name)
+- If supplier already registered → login and approve/decline
+- If not registered → register (Stage 1 only) then approve/decline
+- Message template per PRD §3.1: "היי {ספק}, ה{מפיק} בודק איתך זמינות..."
 
 ---
 
@@ -236,7 +261,8 @@ Modal in SupplierBank for producers to invite new suppliers:
 | `src/app/components/onboarding/ProducerOnboarding.tsx` | Page |
 | `src/app/components/onboarding/SupplierOnboarding.tsx` | Page |
 | `src/app/components/onboarding/SupplierPending.tsx` | Page |
-| `src/app/components/SupplierInviteModal.tsx` | Component |
+| `src/app/components/SupplierSelfRegister.tsx` | Page (public) |
+| `src/app/components/AvailabilityInvitePage.tsx` | Page (public) |
 
 ## Modified Files
 
@@ -245,6 +271,6 @@ Modal in SupplierBank for producers to invite new suppliers:
 | `convex/schema.ts` | (done in Plan 01) |
 | `src/app/components/AuthContext.tsx` | Add profile, role to auth state |
 | `src/app/components/LoginPage.tsx` | Add role selection to signup |
-| `src/app/App.tsx` | Role-gated routing logic |
+| `src/app/App.tsx` | Role-gated routing logic + public routes |
 | `src/app/routes.ts` | Split into 3 route configs |
 | `src/app/components/Layout.tsx` | Role-based sidebar nav |

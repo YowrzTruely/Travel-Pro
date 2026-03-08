@@ -1,14 +1,15 @@
 # Plan 06 — Quote Editor Enhancements
 
-**Phase:** 3 (Business Logic)
-**Depends on:** Plan 01 (Data Model), Plan 05 (Supplier Portal — for product addons)
-**Blocks:** Plan 07 (Availability Workflow), Plan 08 (Client Quote Enhancements)
+**Phase:** 3 (Proposal Builder — PRD Priority #2)
+**Depends on:** Plan 01 (Data Model), Plan 03 (Supplier Profile & Products — for 4-tier pricing + addons)
+**Blocks:** Plan 07 (Availability & Booking), Plan 08 (Client Proposal Page)
+**PRD refs:** §4.1 (Quote Flow), §4.2 (Quote Structure), §3.3 (4-Tier Pricing)
 
 ---
 
 ## Goal
 
-Enhance the existing QuoteEditor with: product add-ons, supplier alternatives, per-item availability status, margin calculator, and improved pricing summary.
+Enhance the existing QuoteEditor with: 4-tier pricing support, equipment list aggregation, visual timeline with hide toggle, upsells display, 2-4 alternatives per item, and enhanced margin calculator.
 
 ---
 
@@ -23,163 +24,221 @@ Enhance the existing QuoteEditor with: product add-ons, supplier alternatives, p
 - `ItemEditor.tsx` — modal for editing a quote item (name, supplier, description, cost, directPrice, sellingPrice, profitWeight, images, notes)
 - `SupplierSearch.tsx` — search/select suppliers when adding items
 - `quoteItems` schema has: cost, directPrice, sellingPrice, profitWeight, status, alternatives (array of strings)
-- No add-on support, no availability status indicators, alternatives are just text strings
+- No add-on/upsell support, no availability status indicators, alternatives are just text strings
+- No 4-tier pricing, no equipment aggregation, no gross/net time
 
 ---
 
 ## Implementation
 
-### 1. Add-On Support in ItemEditor
+### 1. 4-Tier Pricing in ItemEditor (PRD §3.3)
 
 **File: `src/app/components/ItemEditor.tsx`** (modify)
 
-Add a new section below price fields:
+Replace current pricing fields with 4-tier pricing:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Item Editor                                         │
+│  ── תמחור (4 רמות) ──                                │
 │                                                     │
-│  [Existing fields: name, supplier, prices, etc.]     │
+│  מחיר מחירון (ציבורי):    ₪120/אדם  [auto-filled]   │
+│  מחיר ישיר (מהספק):       ₪80/אדם   [auto-filled]   │
+│  מחיר מפיק (מוסכם):       ₪70/אדם   [editable]      │
+│  מחיר ללקוח:               ₪96/אדם   [editable]      │
 │                                                     │
-│  ── תוספות זמינות ──────────────────────────────── │
-│  (populated from selected supplier's product addons) │
+│  מרווח: ₪26/אדם (37%)  [profit bar ████████░░ 37%]  │
+│                                                     │
+│  ℹ️ ברירת מחדל: 20% מרווח על מחיר מפיק              │
+└─────────────────────────────────────────────────────┘
+```
+
+Logic:
+- When supplier+product selected, auto-fill list/direct/producer prices from `supplierProducts`
+- Client price defaults to producerPrice × 1.20 (20% margin per PRD §3.3)
+- Producer can override client price manually
+- Margin calculator: `(clientPrice - producerPrice) / clientPrice × 100`
+
+### 2. Upsells / Add-Ons in ItemEditor (PRD §4.2)
+
+**File: `src/app/components/ItemEditor.tsx`** (modify)
+
+Add upsells section below pricing:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  ── תוספות זמינות (אפסלרים) ──                       │
+│  (מתוך המוצר שנבחר)                                  │
 │                                                     │
 │  ☑ פלטת גבינות          +₪35/אדם                   │
 │  ☐ הסעה מהצפון           +₪50/אדם                   │
 │  ☑ מדריך צמוד            +₪200/קבוצה                │
 │                                                     │
-│  [Addon price auto-added to selling price]           │
+│  [מחיר תוספות ייתוסף אוטומטית לסכום]                │
 └─────────────────────────────────────────────────────┘
 ```
 
 Logic:
-- When a supplier + product is selected, fetch `productAddons` for that product
+- When supplier+product selected, fetch `productAddons` for that product
 - Show checkboxes for each addon
 - Selected addons stored in `quoteItems.selectedAddons`
 - Addon prices contribute to total selling price calculation
+- Upsells displayed to client on proposal page (Plan 08)
 
-### 2. Availability Status Indicators
+### 3. Equipment List Aggregation (PRD §4.2, §7)
 
-**File: `src/app/components/ItemEditor.tsx`** (modify)
 **File: `src/app/components/QuoteEditor.tsx`** (modify)
 
-Each quote item now shows availability status:
+New section in QuoteEditor — aggregated equipment requirements across all items:
+
+```
+┌───────────────────────────────────┐
+│  ציוד נדרש (מצטבר)               │
+│                                   │
+│  • נעליים סגורות (סיור ביקב, הליכה) │
+│  • רישיון נהיגה (טרקטורונים)      │
+│  • בגד ים (קיאקים)               │
+│  • כובע ומים (כל הפעילויות)       │
+│                                   │
+│  [ייצא PDF לרשימת ציוד →]        │
+└───────────────────────────────────┘
+```
+
+Logic:
+- Aggregate `equipmentRequirements` from all selected products across all quote items
+- Deduplicate
+- Show which activities require each item
+- PDF export button (implemented in Plan 14)
+
+### 4. Visual Timeline with Hide Toggle (PRD §4.2)
+
+**File: `src/app/components/QuoteEditor.tsx`** (modify)
+
+Enhanced timeline section:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  רכיב: "סיור ביקב הגולן"                             │
-│  ספק: יקב הגולן                                     │
-│  מחיר ספק: ₪80/אדם | מחיר מכירה: ₪120              │
-│  רווח: ₪40/אדם (33%)                                │
-│  זמינות: ✅ אושר / ⏳ ממתין / ❌ נדחה / ⬜ לא נבדק  │
+│  לוח זמנים ויזואלי            [👁 הצג/הסתר לפני שליחה]│
 │                                                     │
-│  תוספות:                                             │
-│    ☑ פלטת גבינות (+₪35/אדם)                         │
+│  09:00 ━━━━━━ הגעה ומפגש ━━━━━━━━━━ 09:30           │
+│  09:30 ━━━━━━ סיור ביקב ━━━━━━━━━━━ 12:00           │
+│         ⏱ ברוטו: 2.5ש | נטו: 2ש                    │
+│  12:00 ━━ 🚗 נסיעה (15 דק) ━━━━━━━ 12:15           │
+│  12:15 ━━━━━━ ארוחת צהריים ━━━━━━━ 14:00            │
+│         ⏱ ברוטו: 1.75ש | נטו: 1.5ש                 │
+│  14:15 ━━━━━━ סדנת יין ━━━━━━━━━━━ 16:30            │
+│         ⏱ ברוטו: 2.25ש | נטו: 2ש                   │
 │                                                     │
-│  [עריכה ✏️] [בדוק זמינות 📅] [חלופות ↺]              │
+│  סה"כ: 7.5 שעות | 3 תחנות                           │
 └─────────────────────────────────────────────────────┘
 ```
 
-Status badge colors:
-- `not_checked` → gray badge "לא נבדק"
-- `pending` → yellow badge "ממתין"
-- `approved` → green badge "אושר"
-- `declined` → red badge "נדחה"
+- Toggle: "הסתר לפני שליחה" hides timeline from client view (PRD §4.2: "ניתן להסתרה לפני שליחה")
+- Shows gross/net time per activity (from `supplierProducts`)
+- Drag & drop reordering (existing feature)
 
-### 3. Check Availability Button
-
-**File: `src/app/components/QuoteEditor.tsx`** (modify)
-
-Add "בדוק זמינות" button per item. Clicking it:
-1. Creates an `availabilityRequest` record (Plan 07 backend)
-2. Updates item's `availabilityStatus` to "pending"
-3. Shows loading/pending state on the item card
-4. (Full workflow handled in Plan 07)
-
-### 4. Alternatives System (Enhanced)
+### 5. Alternatives System (2-4 per item — PRD §4.2)
 
 **File: `src/app/components/AlternativesModal.tsx`** (new)
 
-Replace the current text-based alternatives with a proper supplier selection:
+Replace text-based alternatives with proper supplier selection:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  חלופות ל: "סיור ביקב הגולן"                         │
+│  חלופות ל: "סיור ביקב הגולן"  (מקסימום 4)            │
 │  קטגוריה: אטרקציות                                   │
 │                                                     │
 │  ┌─────────────────────────────────────┐            │
 │  │ יקב כרמל                            │            │
-│  │ ⭐ 4.5 | מרכז | ₪70/אדם | ✅ מאומת  │            │
-│  │ [בחר]                                │            │
+│  │ ⭐ 4.5 | מרכז | מפיק: ₪70 | לקוח: ₪96 │          │
+│  │ 🔥 מבצע פעיל                        │            │
+│  │ [הוסף כחלופה]                       │            │
 │  ├─────────────────────────────────────┤            │
 │  │ יקב ברקן                            │            │
-│  │ ⭐ 4.2 | שפלה | ₪65/אדם | ✅ מאומת  │            │
-│  │ [בחר]                                │            │
-│  ├─────────────────────────────────────┤            │
-│  │ יקב רמת הגולן                        │            │
-│  │ ⭐ 4.7 | צפון | ₪90/אדם | ✅ מאומת  │            │
-│  │ [בחר]                                │            │
+│  │ ⭐ 4.2 | שפלה | מפיק: ₪65 | לקוח: ₪84 │          │
+│  │ [הוסף כחלופה]                       │            │
 │  └─────────────────────────────────────┘            │
 │                                                     │
-│  Shows suppliers in same category, sorted by rating  │
-│  Clicking "בחר" replaces the supplier on the item    │
+│  חלופות שנבחרו: 2/4                                  │
+│  הלקוח יוכל לבחור בין הפעילות המקורית לחלופות       │
 └─────────────────────────────────────────────────────┘
 ```
 
 **Backend: `convex/suppliers.ts`** (extend)
 
-Add query:
 ```ts
 findAlternatives: query({
-  args: { category: v.string(), excludeId: v.optional(v.id("suppliers")) },
+  args: { category: v.string(), region: v.optional(v.string()), excludeId: v.optional(v.id("suppliers")) },
   // Returns suppliers in same category, excluding current, sorted by rating
 })
 ```
 
-### 5. Enhanced Pricing Summary
+Selected alternatives stored in `quoteItems.alternativeItems` — displayed on client proposal page (Plan 08) for client selection.
+
+### 6. Availability Status Indicators
 
 **File: `src/app/components/QuoteEditor.tsx`** (modify)
 
-Replace simple pricing with detailed breakdown:
+Each quote item shows availability status:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  רכיב: "סיור ביקב הגולן"                             │
+│  ספק: יקב הגולן                                     │
+│  💰 מפיק: ₪70 | לקוח: ₪96 | מרווח: 37%             │
+│  ⏱ ברוטו: 2.5ש | נטו: 2ש                           │
+│  זמינות: ✅ אושר / ⏳ ממתין / ❌ נדחה / ⬜ לא נבדק  │
+│                                                     │
+│  תוספות: ☑ פלטת גבינות (+₪35)                       │
+│  🎒 ציוד: נעליים סגורות, כובע                        │
+│                                                     │
+│  [עריכה ✏️] [בדוק זמינות 📅] [חלופות ↺]              │
+└─────────────────────────────────────────────────────┘
+```
+
+Status badges:
+- `not_checked` → gray "לא נבדק"
+- `pending` → yellow "ממתין"
+- `approved` → green "אושר"
+- `declined` → red "נדחה"
+
+### 7. Enhanced Pricing Summary
+
+**File: `src/app/components/QuoteEditor.tsx`** (modify)
 
 ```
 ┌───────────────────────────────────┐
 │  סיכום תמחור                      │
 │                                   │
-│  סה"כ עלות ספקים:      ₪15,000   │
-│  סה"כ תוספות:          ₪2,500    │
-│  סה"כ מחיר מכירה:      ₪25,000   │
+│  סה"כ עלות ספקים (מפיק):  ₪15,000 │
+│  סה"כ תוספות:              ₪2,500 │
+│  סה"כ מחיר ללקוח:          ₪25,000 │
 │  ──────────────────────           │
-│  רווח גולמי:           ₪7,500    │
-│  אחוז רווח:            30%       │
-│  מחיר למשתתף:          ₪833      │
+│  רווח גולמי:               ₪7,500 │
+│  אחוז רווח:                30%    │
+│  מחיר למשתתף:              ₪833   │
 │                                   │
-│  [Profit bar — visual indicator]  │
-│  ████████████░░░░░ 30%            │
+│  [Profit bar ████████████░░░ 30%] │
 └───────────────────────────────────┘
 ```
 
 Calculations:
-- Supplier cost = sum of all items' `cost`
-- Addons total = sum of selected addons across all items × participants
-- Selling price = sum of all items' `sellingPrice` + addon selling prices
-- Gross profit = selling - supplier cost - addon cost
-- Margin % = profit / selling × 100
-- Per participant = selling / project.participants
+- Supplier cost = sum of all items' producerPrice × participants
+- Addons total = sum of selected addons × participants (per unit)
+- Client price = sum of all items' clientPrice × participants + addon markup
+- Gross profit = client price - supplier cost - addon cost
+- Margin % = profit / client price × 100
+- Per participant = client price / participants
 
-### 6. Quote Actions Bar
+### 8. Quote Actions Bar
 
 **File: `src/app/components/QuoteEditor.tsx`** (modify)
 
-Add action buttons at bottom of QuoteEditor:
-
 ```
-[שלח הצעה ללקוח] → generates /quote/:id link + copies to clipboard
-[שמור טיוטה]      → already works (auto-save via mutations)
-[ייצא PDF]         → placeholder for Plan 13
+[שלח הצעה ללקוח]    → generates /quote/:id link + copies to clipboard
+[שמור טיוטה]        → already works (auto-save)
+[ייצא PDF]           → placeholder for Plan 14
+[שתף ללא מחירים]     → generates link with prices hidden (Plan 08)
 ```
-
-"שלח הצעה ללקוח" creates/updates the quote version and generates the shareable link.
 
 ---
 
@@ -193,8 +252,8 @@ Add action buttons at bottom of QuoteEditor:
 
 | File | Changes |
 |------|---------|
-| `src/app/components/ItemEditor.tsx` | Add addons section, availability status, link to alternatives |
-| `src/app/components/QuoteEditor.tsx` | Availability badges, enhanced pricing summary, action buttons |
-| `src/app/components/SupplierSearch.tsx` | Pass product selection for addon loading |
+| `src/app/components/ItemEditor.tsx` | 4-tier pricing, addons section, availability status, equipment |
+| `src/app/components/QuoteEditor.tsx` | Equipment aggregation, timeline toggle, availability badges, enhanced pricing, action buttons |
+| `src/app/components/SupplierSearch.tsx` | Pass product selection for addon loading, show promotions |
 | `convex/suppliers.ts` | Add `findAlternatives` query |
-| `convex/quoteItems.ts` | Handle `selectedAddons`, `availabilityStatus`, `supplierId`, `productId` |
+| `convex/quoteItems.ts` | Handle `selectedAddons`, `availabilityStatus`, `alternativeItems`, `equipmentRequirements`, timing |

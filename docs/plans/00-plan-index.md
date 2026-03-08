@@ -1,56 +1,89 @@
 # TravelPro — Implementation Plan Index
 
-Master plan to bring TravelPro from ~60% MVP to full spec per `תרשים זרימה.md`.
+Master plan to bring TravelPro to full MVP spec per `YOMKEF PRD.docx.md`.
+
+Plans are ordered by **business priority** (not just technical dependency), matching the PRD's development priorities:
+1. Supplier Module (Critical)
+2. Proposal Builder (Critical)
+3. CRM & Projects (High)
+4. Field Operations (High)
+5. Dashboard, Notifications & Digital Assets (Medium)
 
 ## Current State Summary
 
 **Built:** Login/signup (single role), Dashboard, Projects list, QuoteEditor, SupplierBank (list+map), SupplierDetail (4 tabs), ImportWizard, ClassificationWizard, ClientsPage, DocumentsPage, CalendarPage, ClientQuote (public), KanbanBoard (no route), GlobalSearch, NotificationsPanel.
 
-**Not built:** Multi-role auth, CRM/leads, supplier self-service portal, messaging, notifications backend, availability workflow, product add-ons, team management, and more.
+**Not built:** Multi-role auth, supplier self-registration, 4-tier pricing, CRM/leads, availability+booking workflow, field operations HQ, supplier orders/invoicing, digital assets, notifications backend, and more.
 
 ---
 
 ## Implementation Phases
 
-Phases are ordered by dependency — each phase builds on the previous ones.
-
 ### Phase 1: Foundation
 
 | # | Plan | Description | Estimated Scope |
 |---|------|-------------|-----------------|
-| 01 | [Data Model Expansion](./01-data-model-expansion.md) | New schema tables + extend existing ones | `convex/schema.ts` + migrations |
-| 02 | [Multi-Role Auth & Onboarding](./02-multi-role-auth.md) | 3 user roles (admin/producer/supplier), role-gated routing, onboarding flows | Auth, routing, Layout |
+| 01 | [Data Model Expansion](./01-data-model-expansion.md) | New PRD tables + extend existing ones with 4-tier pricing, equipment, timing | `convex/schema.ts` + migrations |
+| 02 | [Multi-Role Auth & Supplier Registration](./02-multi-role-auth.md) | 3 user roles, supplier self-registration via shareable links, 3-stage profile | Auth, routing, Layout |
 
-### Phase 2: Core Features
-
-| # | Plan | Description | Estimated Scope |
-|---|------|-------------|-----------------|
-| 03 | [Role-Based Dashboards](./03-role-based-dashboards.md) | Separate dashboards for admin, producer, supplier | 3 new page components |
-| 04 | [CRM & Lead Management](./04-crm-lead-management.md) | Lead intake, pipeline Kanban, client file with communication history | New module, ~8 components |
-| 05 | [Supplier Portal](./05-supplier-portal.md) | Supplier self-service: products, documents, availability calendar | New portal layout + pages |
-
-### Phase 3: Business Logic
+### Phase 2: Supplier Module (PRD Priority #1 — Critical)
 
 | # | Plan | Description | Estimated Scope |
 |---|------|-------------|-----------------|
-| 06 | [Quote Editor Enhancements](./06-quote-editor-enhancements.md) | Add-ons, alternatives, margin calculator, availability status per item | Extend existing QuoteEditor |
-| 07 | [Availability Workflow](./07-availability-workflow.md) | Producer→Supplier availability requests, response flow, alternative proposals | New workflow + UI on both sides |
-| 08 | [Client Quote Page Enhancements](./08-client-quote-enhancements.md) | "Request changes" flow, per-item feedback, negotiation loop | Extend ClientQuote |
+| 03 | [Supplier Profile & Products](./03-supplier-profile-products.md) | 4-tier pricing, product gallery, equipment/gear, timing, regions, categories, AI cleanup | Supplier portal pages + backend |
+| 04 | [Supplier Documents & Compliance](./04-supplier-documents-compliance.md) | Document types, expiry 7-day-timer, "I don't have it" reminders, post-deal insurance | Documents page + cron jobs |
+| 05 | [Supplier Public Profile & Promotions](./05-supplier-public-profile.md) | "How I look" preview, promotions board, star ratings, public profile page | New pages + public routes |
 
-### Phase 4: Communication
-
-| # | Plan | Description | Estimated Scope |
-|---|------|-------------|-----------------|
-| 09 | [Messaging System](./09-messaging-system.md) | In-app chat: direct, project-threaded, producer↔client post-approval | New module, ~6 components |
-| 10 | [Notifications System](./10-notifications-system.md) | In-app bell, email, SMS, WhatsApp triggers | Backend + NotificationsPanel rewrite |
-
-### Phase 5: Integration & Polish
+### Phase 3: Proposal Builder (PRD Priority #2 — Critical)
 
 | # | Plan | Description | Estimated Scope |
 |---|------|-------------|-----------------|
-| 11 | [Kanban & Task Integration](./11-kanban-integration.md) | Route Kanban, link tasks to projects, auto-create tasks on approval | Extend KanbanBoard |
-| 12 | [Team Management](./12-team-management.md) | Teams, member assignment, permission system | New admin pages |
-| 13 | [Cross-System Polish](./13-cross-system-polish.md) | PDF export, supplier recommendations, duplicate detection, travel time, Google Calendar sync | Stretch features |
+| 06 | [Quote Editor Enhancements](./06-quote-editor-enhancements.md) | 4-tier pricing, equipment aggregation, visual timeline, upsells, 2-4 alternatives, margin calculator | Extend QuoteEditor |
+| 07 | [Availability & Booking Workflow](./07-availability-booking-workflow.md) | Multi-channel notifications (WhatsApp+SMS+email), unregistered supplier flow, booking/reservation with expiry | New workflow + UI |
+| 08 | [Client Proposal Page](./08-client-proposal-page.md) | Client alternative selection, "share without prices", digital signature, upsells, version management | Extend ClientQuote |
+| 09 | [Supplier Orders & Invoicing](./09-supplier-orders-invoicing.md) | Auto-generate orders per supplier, custom order formats, invoice tracking, archive gate | New module |
+
+### Phase 4: CRM & Projects (PRD Priority #3 — High)
+
+| # | Plan | Description | Estimated Scope |
+|---|------|-------------|-----------------|
+| 10 | [CRM Pipeline & Lead Management](./10-crm-pipeline.md) | Mandatory loss reason, auto-create client, lead sources per PRD, pipeline Kanban | New CRM module |
+
+### Phase 5: Field Operations (PRD Priority #4 — High)
+
+| # | Plan | Description | Estimated Scope |
+|---|------|-------------|-----------------|
+| 11 | [Field Operations HQ (חמ"ל שטח)](./11-field-operations.md) | Planned vs actual times, quantity updates, time-shift button, supplier signatures, road expenses | New mobile-first module |
+
+### Phase 6: Dashboard, Notifications & Digital Assets (PRD Priority #5 — Medium)
+
+| # | Plan | Description | Estimated Scope |
+|---|------|-------------|-----------------|
+| 12 | [Dashboards & Morning HQ](./12-dashboards-morning-hq.md) | Morning HQ widget, quote heat meter, urgent alerts, drag-drop widgets, supplier+admin dashboards | Dashboard rewrites |
+| 13 | [Notifications System](./13-notifications-system.md) | Multi-channel MVP (WhatsApp Business API + SMS + email), document expiry cron, reservation alerts | Backend + panel rewrite |
+| 14 | [Digital Assets & Gallery](./14-digital-assets-gallery.md) | Equipment list PDF, driver trip file, client trip file, post-event gallery, participant ratings | New module |
+
+### Phase 7: Post-MVP & Stretch
+
+| # | Plan | Description | Estimated Scope |
+|---|------|-------------|-----------------|
+| 15 | [Cross-System Polish](./15-cross-system-polish.md) | Supplier recommendations, duplicate detection, travel time, responsive polish, settings | Stretch features |
+
+---
+
+## Removed from MVP (per PRD Section 10)
+
+| Feature | Reason |
+|---------|--------|
+| In-app messaging system (chat) | PRD uses WhatsApp/SMS/email, not in-app chat |
+| Standalone Kanban board | Not mentioned in PRD as standalone feature |
+| Team management | Not mentioned in PRD |
+| Google Calendar sync | PRD explicitly excludes from MVP |
+| Payment & commission system | PRD Priority #6, explicitly post-MVP |
+| Mobile app (App Store/Play) | PRD states Web App only |
+| B2C customer flow | PRD defers to later |
+| Canva API integration | PRD defers to later |
+| ManyChat integration | PRD defers to later |
 
 ---
 
@@ -61,25 +94,46 @@ Phase 1 (Foundation)
   01 Data Model ─────┐
   02 Multi-Role Auth ─┤
                       ▼
-Phase 2 (Core Features)
-  03 Role Dashboards ─────┐
-  04 CRM & Leads ─────────┤
-  05 Supplier Portal ──────┤
-                           ▼
-Phase 3 (Business Logic)
-  06 Quote Enhancements ──────┐
-  07 Availability Workflow ────┤  (depends on 05 + 06)
-  08 Client Quote Enhance. ────┤  (depends on 06 + 07)
-                               ▼
-Phase 4 (Communication)
-  09 Messaging ────────────────┐
-  10 Notifications ─────────────┤  (depends on all above)
-                                ▼
-Phase 5 (Integration & Polish)
-  11 Kanban Integration ────────┐
-  12 Team Management ────────────┤
-  13 Cross-System Polish ────────┘
+Phase 2 (Supplier Module — PRD #1)
+  03 Supplier Profile & Products ──┐
+  04 Supplier Documents ───────────┤
+  05 Supplier Public Profile ──────┤
+                                   ▼
+Phase 3 (Proposal Builder — PRD #2)
+  06 Quote Editor Enhancements ───────┐
+  07 Availability & Booking ──────────┤  (depends on 03 + 06)
+  08 Client Proposal Page ────────────┤  (depends on 06 + 07)
+  09 Supplier Orders & Invoicing ─────┤  (depends on 07 + 08)
+                                      ▼
+Phase 4 (CRM — PRD #3)
+  10 CRM Pipeline ────────────────────┤  (depends on 01 + 02)
+                                      ▼
+Phase 5 (Field Operations — PRD #4)
+  11 Field Operations HQ ────────────┤  (depends on 09)
+                                      ▼
+Phase 6 (Dashboard & Assets — PRD #5)
+  12 Dashboards & Morning HQ ────────┐
+  13 Notifications System ────────────┤  (depends on all above)
+  14 Digital Assets & Gallery ────────┤
+                                      ▼
+Phase 7 (Post-MVP)
+  15 Cross-System Polish ─────────────┘
 ```
+
+---
+
+## PRD Traceability
+
+| PRD Section | Plans |
+|-------------|-------|
+| §3 Supplier Module | 03, 04, 05 |
+| §4 Proposal Builder | 06, 07, 08, 09 |
+| §5 CRM & Leads | 10 |
+| §6 Field Operations | 11 |
+| §7 Digital Assets | 14 |
+| §8 Dashboard & UI | 12 |
+| §9 Technical Requirements | 01, 02, 13 |
+| §10 Not in MVP | Removed features list above |
 
 ---
 
