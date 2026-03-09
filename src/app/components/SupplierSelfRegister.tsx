@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useAuth } from "./AuthContext";
+import {
+  OPERATING_REGIONS,
+  SUPPLIER_CATEGORIES,
+} from "./constants/supplierConstants";
 import { FormField, FormSelect } from "./FormField";
 
 interface SupplierRegisterForm {
@@ -9,28 +13,12 @@ interface SupplierRegisterForm {
   category: string;
   confirmPassword: string;
   email: string;
+  firstProduct: string;
   fullName: string;
   password: string;
   phone: string;
   region: string;
 }
-
-const categoryOptions = [
-  { label: "תחבורה", value: "תחבורה" },
-  { label: "מזון", value: "מזון" },
-  { label: "אטרקציות", value: "אטרקציות" },
-  { label: "לינה", value: "לינה" },
-  { label: "בידור", value: "בידור" },
-];
-
-const regionOptions = [
-  { label: "צפון", value: "צפון" },
-  { label: "מרכז", value: "מרכז" },
-  { label: "דרום", value: "דרום" },
-  { label: "ירושלים", value: "ירושלים" },
-  { label: "אילת", value: "אילת" },
-  { label: "גולן", value: "גולן" },
-];
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -55,6 +43,7 @@ export function SupplierSelfRegister() {
       confirmPassword: "",
       category: "",
       region: "",
+      firstProduct: "",
     },
   });
 
@@ -202,13 +191,13 @@ export function SupplierSelfRegister() {
           <FormSelect
             error={errors.category}
             isDirty={dirtyFields.category}
-            label="קטגוריה"
+            label="קטגוריה ראשית"
             {...register("category", { required: "שדה חובה" })}
           >
             <option value="">בחר קטגוריה</option>
-            {categoryOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
+            {SUPPLIER_CATEGORIES.map((cat) => (
+              <option key={cat.value} value={cat.value}>
+                {cat.label}
               </option>
             ))}
           </FormSelect>
@@ -216,16 +205,27 @@ export function SupplierSelfRegister() {
           <FormSelect
             error={errors.region}
             isDirty={dirtyFields.region}
-            label="אזור"
+            label="אזור פעילות"
             {...register("region", { required: "שדה חובה" })}
           >
             <option value="">בחר אזור</option>
-            {regionOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
+            {OPERATING_REGIONS.map((reg) => (
+              <option key={reg.value} value={reg.value}>
+                {reg.label}
               </option>
             ))}
           </FormSelect>
+
+          <FormField
+            error={errors.firstProduct}
+            isDirty={dirtyFields.firstProduct}
+            label="מוצר / שירות ראשון"
+            required
+            {...register("firstProduct", {
+              required: "שדה חובה",
+              minLength: { value: 2, message: "מינימום 2 תווים" },
+            })}
+          />
 
           <button
             className="mt-2 w-full rounded-lg px-4 py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"

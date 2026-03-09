@@ -4,33 +4,20 @@ import { useForm } from "react-hook-form";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { useAuth } from "../AuthContext";
+import {
+  OPERATING_REGIONS,
+  SUPPLIER_CATEGORIES,
+} from "../constants/supplierConstants";
 import { FormField, FormSelect } from "../FormField";
 
 interface Stage1Form {
   businessName: string;
   category: string;
+  email: string;
+  firstProduct: string;
   phone: string;
   region: string;
 }
-
-const CATEGORY_OPTIONS = [
-  { value: "", label: "בחר קטגוריה" },
-  { value: "תחבורה", label: "תחבורה" },
-  { value: "מזון", label: "מזון" },
-  { value: "אטרקציות", label: "אטרקציות" },
-  { value: "לינה", label: "לינה" },
-  { value: "בידור", label: "בידור" },
-];
-
-const REGION_OPTIONS = [
-  { value: "", label: "בחר אזור" },
-  { value: "צפון", label: "צפון" },
-  { value: "מרכז", label: "מרכז" },
-  { value: "דרום", label: "דרום" },
-  { value: "ירושלים", label: "ירושלים" },
-  { value: "אילת", label: "אילת" },
-  { value: "גולן", label: "גולן" },
-];
 
 const STEPS = [
   { label: "פרטי עסק", index: 0 },
@@ -105,13 +92,13 @@ export function SupplierOnboarding() {
           ))}
         </div>
 
-        {/* Stage 1 — Business Details */}
+        {/* Stage 1 — Business Details (PRD §3.1 — mandatory entry) */}
         {activeStep === 0 && (
           <form
             className="flex flex-col gap-5"
             onSubmit={handleSubmit(onSubmitStage1)}
           >
-            <FormField error={errors.businessName} label="שם עסק">
+            <FormField error={errors.businessName} label="שם מלא / שם עסק">
               <input
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-right focus:outline-none"
                 style={{ borderColor: "#d4c9b8" }}
@@ -126,8 +113,19 @@ export function SupplierOnboarding() {
               <input
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-right focus:outline-none"
                 style={{ borderColor: "#d4c9b8" }}
-                type="text"
+                type="tel"
                 {...register("phone", {
+                  required: "שדה חובה",
+                })}
+              />
+            </FormField>
+
+            <FormField error={errors.email} label="אימייל">
+              <input
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-right focus:outline-none"
+                style={{ borderColor: "#d4c9b8" }}
+                type="email"
+                {...register("email", {
                   required: "שדה חובה",
                 })}
               />
@@ -135,31 +133,45 @@ export function SupplierOnboarding() {
 
             <FormSelect
               error={errors.category}
-              label="קטגוריה"
+              label="קטגוריה ראשית (רשימה סגורה)"
               {...register("category", {
                 required: "שדה חובה",
               })}
             >
-              {CATEGORY_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+              <option value="">בחר קטגוריה</option>
+              {SUPPLIER_CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
                 </option>
               ))}
             </FormSelect>
 
             <FormSelect
               error={errors.region}
-              label="אזור"
+              label="אזור פעילות"
               {...register("region", {
                 required: "שדה חובה",
               })}
             >
-              {REGION_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+              <option value="">בחר אזור</option>
+              {OPERATING_REGIONS.map((reg) => (
+                <option key={reg.value} value={reg.value}>
+                  {reg.label}
                 </option>
               ))}
             </FormSelect>
+
+            <FormField error={errors.firstProduct} label="מוצר / שירות ראשון">
+              <input
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-right focus:outline-none"
+                placeholder='לדוגמה: "סיור ביקב", "הסעת VIP"...'
+                style={{ borderColor: "#d4c9b8" }}
+                type="text"
+                {...register("firstProduct", {
+                  required: "שדה חובה",
+                })}
+              />
+            </FormField>
 
             <button
               className="mt-2 w-full cursor-pointer rounded-xl px-8 py-4 font-bold text-lg text-white transition-opacity hover:opacity-90"
@@ -171,7 +183,7 @@ export function SupplierOnboarding() {
           </form>
         )}
 
-        {/* Stage 2 — Coming Soon */}
+        {/* Stage 2 — Products & Services (coming soon) */}
         {activeStep === 1 && (
           <div className="flex flex-col items-center gap-4 py-12">
             <div
@@ -185,13 +197,14 @@ export function SupplierOnboarding() {
             <p className="font-bold text-xl" style={{ color: "#181510" }}>
               מוצרים ושירותים
             </p>
-            <p className="text-lg" style={{ color: "#8d785e" }}>
-              בקרוב
+            <p className="text-center text-lg" style={{ color: "#8d785e" }}>
+              בשלב הבא תוכל להוסיף מוצרים, תמונות, מחירים ותיאורים שיווקיים
+              בשיתוף עם AI
             </p>
           </div>
         )}
 
-        {/* Stage 3 — Coming Soon */}
+        {/* Stage 3 — Documents (coming soon) */}
         {activeStep === 2 && (
           <div className="flex flex-col items-center gap-4 py-12">
             <div
@@ -205,8 +218,8 @@ export function SupplierOnboarding() {
             <p className="font-bold text-xl" style={{ color: "#181510" }}>
               מסמכים
             </p>
-            <p className="text-lg" style={{ color: "#8d785e" }}>
-              בקרוב
+            <p className="text-center text-lg" style={{ color: "#8d785e" }}>
+              העלאת מסמכי ביטוח, רישיון עסק, תעודת כשרות
             </p>
           </div>
         )}

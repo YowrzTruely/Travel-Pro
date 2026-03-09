@@ -75,6 +75,9 @@ export default defineSchema({
     profileCompletionStage: v.optional(
       v.union(v.literal("stage1"), v.literal("stage2"), v.literal("stage3"))
     ),
+    // URLs for AI marketing description generation (PRD §3.5)
+    websiteUrl: v.optional(v.string()),
+    facebookUrl: v.optional(v.string()),
     operatingHours: v.optional(v.string()),
     seasonalAvailability: v.optional(v.string()),
     defaultMarginPercent: v.optional(v.number()),
@@ -123,6 +126,11 @@ export default defineSchema({
     directPrice: v.optional(v.number()),
     producerPrice: v.optional(v.number()),
     clientPrice: v.optional(v.number()),
+    // Volume pricing (PRD §3.3 — different price above quantity "X")
+    volumeThreshold: v.optional(v.number()),
+    volumeListPrice: v.optional(v.number()),
+    volumeDirectPrice: v.optional(v.number()),
+    volumeProducerPrice: v.optional(v.number()),
     // Timing
     grossTime: v.optional(v.number()),
     netTime: v.optional(v.number()),
