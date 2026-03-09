@@ -62,6 +62,13 @@ Replace the single `Dashboard.tsx` with role-specific dashboards featuring: Morn
 │  │ שף אבי | XY | 16/04 | 20/03 | 🟡           │    │
 │  └─────────────────────────────────────────────┘    │
 │                                                     │
+│  ── בדיקת כמות משתתפים (יום אירוע) ─── ⓘ ──         │
+│  ┌─────────────────────────────────────────────┐    │
+│  │ ⚠️ גיבוש ABC: 42 משתתפים (במקום 45)          │    │
+│  │ → התראה נשלחה לכל הספקים עם הכמות בפועל    │    │
+│  │ [עדכן כמות] [שלח התראה מחדש]                │    │
+│  └─────────────────────────────────────────────┘    │
+│                                                     │
 │  ── סטטיסטיקות ──                                   │
 │  [Summary Cards — existing animated stats]           │
 │  לידים חדשים | פרויקטים | ספקים | הכנסות             │
@@ -172,6 +179,7 @@ morningHQ: query         — events today + tomorrow with supplier details
 quoteHeatMeter: query    — quote status distribution (sent/discussing/closed/lost)
 urgentAlerts: query      — expiring docs, pending reservations, missing invoices
 openReservations: query  — active bookings with expiry info
+eventHeadcount: query    — for events today, check if participant count changed; if fewer people → alert all suppliers with actual count (PRD §8: "בדיקת של אירוע בתחילת היום של כמות אנשים — במידה ויש פחות כל הספקים מקבלים התראה")
 
 // Supplier
 supplierStats: query     — pending requests, active bookings, avg rating, missing docs

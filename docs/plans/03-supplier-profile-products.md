@@ -9,7 +9,7 @@
 
 ## Goal
 
-Build the supplier-facing product management system with 4-tier pricing, product gallery, equipment/gear requirements, gross/net timing, seasonal availability, operating hours, 11 regions, 8 categories, AI image cleanup + marketing descriptions (Gemini Flash), and upsells/add-ons per product.
+Build the supplier-facing product management system with 4-tier pricing (with volume-based pricing per tier), product gallery, equipment/gear requirements, gross/net timing, seasonal availability, operating hours, 11 regions, 8 categories (closed list, admin approval if >3), AI image cleanup + marketing descriptions from website/Facebook URL (Gemini Flash), upsells/add-ons per product, and AI-assisted onboarding for stage 2 profile completion.
 
 ---
 
@@ -30,8 +30,9 @@ Build the supplier-facing product management system with 4-tier pricing, product
 **Constants file: `src/app/components/constants/supplierConstants.ts`** (new)
 
 ```ts
+// Closed list (רשימה סגורה) — multi-select, admin approval required if supplier selects >3 categories
 export const SUPPLIER_CATEGORIES = [
-  { value: "attractions", label: "אטרקציות ופעילויות" },
+  { value: "attractions", label: "אטרקציות ופעילויות", examples: "קיאקים, טרקטורונים, ג'יפים, אופניים, פארק חבל..." },
   { value: "food", label: "מסעדות ואוכל" },
   { value: "transport", label: "הסעות ותחבורה" },
   { value: "photography", label: "צילום ומגנטים" },
@@ -51,7 +52,7 @@ export const OPERATING_REGIONS = [
   { value: "shfela", label: "שפלה" },
   { value: "jerusalem", label: "ירושלים והר יהודה" },
   { value: "negev", label: "נגב" },
-  { value: "arava", label: "ערבה" },
+  { value: "arava_eilat", label: "ערבה-אילת" },
   { value: "dead_sea", label: "ים המלח" },
 ] as const;
 ```
@@ -110,6 +111,11 @@ Features:
 │  אחוז רווח ברירת מחדל: 20%          │
 │  יחידה: [לאדם / לקבוצה / ליום]       │
 │                                      │
+│  ── תמחור לפי כמות ──               │
+│  מעל כמות [___] → מחיר אחר: ₪ ____ │
+│  (לכל מחיר אפשר להגדיר מחיר שונה   │
+│   מעל כמות "א" מסוימת)              │
+│                                      │
 │  ── זמנים ──                         │
 │  זמן ברוטו: ____ דקות               │
 │  זמן נטו: ____ דקות                 │
@@ -155,28 +161,67 @@ Features:
 
 Default margin: 20% (configurable per product).
 
-### 4. AI Image Cleanup & Descriptions (PRD §3.1)
+**Volume pricing:** For each price tier, the supplier can define a quantity threshold ("above X people") with a different price. This applies per tier independently.
+
+### 4. AI Image Cleanup & Descriptions (PRD §3.1, §3.5)
 
 **File: `convex/aiSupplier.ts`** (new — Convex action)
 
 ```ts
 // Gemini Flash integration
 generateMarketingDescription: action({
-  args: { productName: v.string(), category: v.string(), supplierInfo: v.optional(v.string()) },
-  // Uses Gemini Flash to generate emotionally-driven marketing description
-  // Returns { shortDescription, longDescription }
+  args: {
+    productName: v.string(),
+    category: v.string(),
+    supplierInfo: v.optional(v.string()),
+    websiteUrl: v.optional(v.string()),  // supplier website or Facebook URL
+  },
+  // Uses Gemini Flash to auto-generate marketing description
+  // Scrapes website/Facebook URL for context (PRD §3.5)
+  // Generates: service description + all product descriptions with marketing copy
+  // Returns { shortDescription, longDescription, productDescriptions }
 })
 
 cleanProductImage: action({
   args: { imageStorageId: v.string() },
   // Uses AI to clean product image (remove backgrounds, make sterile/professional)
-  // Returns new storageId for cleaned image
+  // Per PRD: "AI להעלות תמונות ולנקות את המוצר להראות סטרילי"
+  // Uses Nano-Banana or similar — gives short description of the service
+  // Returns new storageId for cleaned image + short description
 })
 ```
 
-- AI descriptions: one-sentence + paragraph versions, emotionally engaging (per PRD)
+- AI descriptions: auto-generated from supplier's website/Facebook URL (PRD §3.5)
+- Covers service description + all supplier products with individual descriptions
 - AI image cleanup: "sterile" professional product shot from raw supplier photos
 - Each field can be filled with AI or manually (per PRD §3.1 note)
+
+### 4b. AI-Assisted Onboarding for Stage 2 (PRD §3.1)
+
+**File: `src/app/components/supplier/AIOnboarding.tsx`** (new)
+
+At the end of stage 2 profile setup, offer an AI onboarding flow:
+
+```
+┌──────────────────────────────────────┐
+│  🤖 מילוי פרופיל עם AI               │
+│                                      │
+│  ה-AI ישאל אותך שאלות ויעזור לך     │
+│  למלא את כל השדות בשלב 2 בשיתוף     │
+│  פעולה.                              │
+│                                      │
+│  [התחל מילוי עם AI]  [אמלא ידנית]   │
+└──────────────────────────────────────┘
+```
+
+The AI asks questions interactively to help the supplier complete all stage 2 fields:
+- Logo + product images (with AI cleanup)
+- Short + long descriptions per product (AI-generated from supplier's responses)
+- Upsells
+- Pricing tiers (4 prices)
+- Operating hours + seasonal availability
+- Equipment requirements
+- Documents and licenses
 
 ### 5. Backend — Product Addons (Upsells)
 
@@ -195,7 +240,7 @@ remove           — delete addon
 
 Profile editing page (simple form):
 - Business name, contact name, phone, email
-- Category (multi-select, admin approval if >2), regions (multi-select)
+- Category (multi-select from closed list, admin approval if >3), regions (multi-select)
 - Address, location picker (Leaflet map — reuse SupplierLocationMap)
 - Operating hours, seasonal availability
 - Profile image upload
@@ -241,6 +286,7 @@ Monthly calendar view where suppliers mark dates as available/unavailable:
 | `convex/productAddons.ts` | Backend |
 | `convex/supplierAvailability.ts` | Backend |
 | `convex/aiSupplier.ts` | Backend action (Gemini Flash) |
+| `src/app/components/supplier/AIOnboarding.tsx` | Component (AI-assisted stage 2) |
 
 ## Modified Files
 

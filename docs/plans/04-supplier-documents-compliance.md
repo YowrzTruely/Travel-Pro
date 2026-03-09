@@ -33,7 +33,7 @@ Build document management for suppliers with specific document types (insurance 
 | 3rd Party Insurance | ביטוח צד ג' | After first deal (mandatory) | Yes — 7-day warning |
 | Employer Liability Insurance | ביטוח חבות מעבידים | After first deal (mandatory) | Yes — 7-day warning |
 | Business License | רישיון עסק | Recommended | Yes — 7-day warning |
-| Kosher Certificate | תעודת כשרות | If food-related category | Yes — 7-day warning |
+| Kosher Certificate | תעודת כשרות | If food-related category — yes/no toggle: if "כן" → upload immediately + alerts | Yes — 7-day warning |
 
 ### 2. My Documents Page (Supplier View)
 
@@ -65,6 +65,7 @@ Features:
 - **"אין לי" (I don't have it)** button: marks document as acknowledged-missing, triggers reminder cron
 - Color-coded expiry: green (>30 days), yellow (≤30 days), red (expired)
 - Kosher cert row only shown for suppliers in "food" category
+- Kosher cert has a **yes/no toggle** ("תעודת כשרות - כן/לא"): if "כן" → immediately prompt to upload + enable expiry alerts; if "לא" → skip row
 
 ### 3. "I Don't Have It" Flow (PRD §3.4)
 

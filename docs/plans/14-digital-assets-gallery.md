@@ -9,7 +9,7 @@
 
 ## Goal
 
-Build digital assets generation: equipment list PDF, driver trip file, client trip file, post-event photo gallery upload, post-event participant ratings per supplier, PDF export for quotes. Plus placeholders for Save the Date (Canva — post-MVP) and B2C lead capture (ManyChat — post-MVP).
+Build digital assets generation: Save the Date image, equipment list PDF, driver trip file, client trip file, post-event photo/video gallery (producer + participant uploads), post-event participant ratings per supplier, PDF export for quotes. Plus placeholders for Canva API integration (post-MVP) and B2C lead capture via ManyChat (post-MVP).
 
 ---
 
@@ -106,7 +106,7 @@ generateClientTripFile: action({
 
 **File: `src/app/components/gallery/EventGallery.tsx`** (new)
 
-Producer uploads photos/videos from the event:
+Producer uploads photos/videos from the event. Per PRD §7: all participants in the trip who took photos + videos can upload them too, so the trip organizer has everything in one place:
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -135,8 +135,8 @@ Participant-facing gallery at `/gallery/:projectId`:
 │                                                     │
 │  [Photo grid]                                        │
 │                                                     │
-│  📤 גם אתם צילמתם? שתפו תמונות:                    │
-│  [📸 העלה תמונות]                                    │
+│  📤 גם אתם צילמתם? שתפו תמונות וסרטונים:            │
+│  [📸 העלה תמונות] [📹 העלה סרטונים]                  │
 │                                                     │
 │  ── להורדת התמונות ──                                │
 │  ┌──────────────────────────────┐                   │
@@ -151,7 +151,11 @@ Participant-facing gallery at `/gallery/:projectId`:
 └─────────────────────────────────────────────────────┘
 ```
 
-**Key PRD feature:** Gallery is a "honey pot" — participants must register to download photos, creating B2C leads.
+**Key PRD §7 features:**
+- Gallery is a "honey pot" (פח דבש) — participants must register (name + phone) to download photos, creating B2C leads
+- Participants who register are automatically fed to ManyChat distribution list (WhatsApp/Messenger) for B2C marketing
+- The gallery converts B2B event participants into B2C private trip leads: "אנשים פרטיים שהיו בטיול ואולי ירצו בעתיד להזמין טיול פרטי דרכם"
+- Before downloading, participants must fill name + phone and approve marketing consent
 
 **Note on storage:** Per PRD: "לבדוק את האופציה שתמונות כבדות לא ישמרו על השרת שלנו" — consider external image hosting (Cloudflare R2, S3) for heavy media files.
 
@@ -209,16 +213,24 @@ createBulk: mutation({
 })
 ```
 
-### 4. Save the Date Placeholder (PRD §7 — Post-MVP)
+### 4. Save the Date (PRD §7)
+
+Per PRD: "Save the Date — תמונה מעוצבת עם תאריך, אווירה, לו"ז (ללא מחירים). חיבור ל-Canva."
+
+MVP: Generate a basic Save the Date image with trip name, date, atmosphere, and schedule (no prices). Canva API integration is post-MVP.
 
 ```
 ┌────────────────────────────────────┐
 │  🎨 Save the Date                  │
 │                                    │
-│  תכונה זו תהיה זמינה בקרוב!       │
-│  חיבור ל-Canva לייצור תמונות      │
-│  מעוצבות עם תאריך, אווירה ולו"ז.  │
+│  שם הטיול: ___________            │
+│  תאריך: [date picker]             │
+│  אווירה: [dropdown]               │
+│  לו"ז: [auto from timeline]       │
 │                                    │
+│  [🖼 צור תמונה]                   │
+│                                    │
+│  (Canva API — שלב מאוחר)          │
 │  [🔔 עדכנו אותי כשזמין]            │
 └────────────────────────────────────┘
 ```

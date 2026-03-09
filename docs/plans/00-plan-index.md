@@ -30,7 +30,7 @@ Plans are ordered by **business priority** (not just technical dependency), matc
 
 | # | Plan | Description | Estimated Scope |
 |---|------|-------------|-----------------|
-| 03 | [Supplier Profile & Products](./03-supplier-profile-products.md) | 4-tier pricing, product gallery, equipment/gear, timing, regions, categories, AI cleanup | Supplier portal pages + backend |
+| 03 | [Supplier Profile & Products](./03-supplier-profile-products.md) | 4-tier pricing with volume pricing, product gallery, equipment/gear, timing, 11 regions, 8 categories (closed list), AI cleanup + descriptions from URL, AI-assisted onboarding | Supplier portal pages + backend |
 | 04 | [Supplier Documents & Compliance](./04-supplier-documents-compliance.md) | Document types, expiry 7-day-timer, "I don't have it" reminders, post-deal insurance | Documents page + cron jobs |
 | 05 | [Supplier Public Profile & Promotions](./05-supplier-public-profile.md) | "How I look" preview, promotions board, star ratings, public profile page | New pages + public routes |
 
@@ -38,7 +38,7 @@ Plans are ordered by **business priority** (not just technical dependency), matc
 
 | # | Plan | Description | Estimated Scope |
 |---|------|-------------|-----------------|
-| 06 | [Quote Editor Enhancements](./06-quote-editor-enhancements.md) | 4-tier pricing, equipment aggregation, visual timeline, upsells, 2-4 alternatives, margin calculator | Extend QuoteEditor |
+| 06 | [Quote Editor Enhancements](./06-quote-editor-enhancements.md) | Trip name + AI opening paragraph, 4-tier pricing with volume, equipment aggregation, visual timeline (hideable), upsells, 2-4 alternatives, price toggle, margin calculator | Extend QuoteEditor |
 | 07 | [Availability & Booking Workflow](./07-availability-booking-workflow.md) | Multi-channel notifications (WhatsApp+SMS+email), unregistered supplier flow, booking/reservation with expiry | New workflow + UI |
 | 08 | [Client Proposal Page](./08-client-proposal-page.md) | Client alternative selection, "share without prices", digital signature, upsells, version management | Extend ClientQuote |
 | 09 | [Supplier Orders & Invoicing](./09-supplier-orders-invoicing.md) | Auto-generate orders per supplier, custom order formats, invoice tracking, archive gate | New module |
@@ -59,15 +59,15 @@ Plans are ordered by **business priority** (not just technical dependency), matc
 
 | # | Plan | Description | Estimated Scope |
 |---|------|-------------|-----------------|
-| 12 | [Dashboards & Morning HQ](./12-dashboards-morning-hq.md) | Morning HQ widget, quote heat meter, urgent alerts, drag-drop widgets, supplier+admin dashboards | Dashboard rewrites |
+| 12 | [Dashboards & Morning HQ](./12-dashboards-morning-hq.md) | Morning HQ widget, event-day headcount check with supplier alerts, quote heat meter, urgent alerts, drag-drop widgets, supplier+admin dashboards | Dashboard rewrites |
 | 13 | [Notifications System](./13-notifications-system.md) | Multi-channel MVP (WhatsApp Business API + SMS + email), document expiry cron, reservation alerts | Backend + panel rewrite |
-| 14 | [Digital Assets & Gallery](./14-digital-assets-gallery.md) | Equipment list PDF, driver trip file, client trip file, post-event gallery, participant ratings | New module |
+| 14 | [Digital Assets & Gallery](./14-digital-assets-gallery.md) | Save the Date, equipment list PDF, driver trip file, client trip file, post-event gallery (producer + participant uploads), B2C lead capture, participant ratings | New module |
 
 ### Phase 7: Post-MVP & Stretch
 
 | # | Plan | Description | Estimated Scope |
 |---|------|-------------|-----------------|
-| 15 | [Cross-System Polish](./15-cross-system-polish.md) | Supplier recommendations, duplicate detection, travel time, responsive polish, settings | Stretch features |
+| 15 | [Cross-System Polish](./15-cross-system-polish.md) | Supplier recommendations, duplicate detection, travel time, responsive polish, AI integrations (Gemini Flash), payment system integration, settings | Stretch features |
 
 ---
 
@@ -132,7 +132,7 @@ Phase 7 (Post-MVP)
 | §6 Field Operations | 11 |
 | §7 Digital Assets | 14 |
 | §8 Dashboard & UI | 12 |
-| §9 Technical Requirements | 01, 02, 13 |
+| §9 Technical Requirements | 01, 02, 13, 15 (AI + payments) |
 | §10 Not in MVP | Removed features list above |
 
 ---

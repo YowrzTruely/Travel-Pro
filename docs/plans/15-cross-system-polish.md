@@ -9,7 +9,7 @@
 
 ## Goal
 
-Implement remaining cross-cutting features that span multiple modules: supplier recommendation engine, duplicate detection, travel time calculation, responsive polish (mobile-first per PRD), settings enhancements, and general UX improvements.
+Implement remaining cross-cutting features that span multiple modules: supplier recommendation engine, duplicate detection, travel time calculation, responsive polish (mobile-first per PRD), settings enhancements, AI integrations (Gemini Flash for marketing descriptions, trip names, invoice analysis), payment system integration decision, and general UX improvements.
 
 ---
 
@@ -169,7 +169,31 @@ Per PRD: "Progressive disclosure — ספק רואה רק מה שרלוונטי 
 - "חזור לדף הבית" button
 - Error logging to activity log
 
-### 8. Activity Log (Admin)
+### 8. AI Integration Summary (PRD §9)
+
+Per PRD §9: "AI: Gemini Flash (תיאורים שיווקיים, שם טיול, ניתוח חשבוניות)"
+
+AI (Gemini Flash) is used across the platform for:
+1. **Marketing descriptions** — auto-generate from supplier website/Facebook URL (Plan 03, §3.5)
+2. **Trip name generation** — suggest creative trip names based on activities + region (Plan 06, §4.2)
+3. **Invoice analysis** — extract data from uploaded invoices (amounts, dates, supplier info) for Plan 09
+4. **Image cleanup** — clean product images to look professional (Plan 03, §3.1)
+5. **AI onboarding** — interactive Q&A to help suppliers complete stage 2 profile (Plan 03, §3.1)
+
+### 9. Payment System Integration (PRD §9)
+
+Per PRD §9: "היסגרות על מערכת תשלומים (אם זה Polar, Cardcom, או אחר) - לדבר עם ערן בנוגע לפוסט פרודקשין או בהשקה."
+
+**Decision required:** Which payment provider to integrate:
+- **Polar** — modern, developer-friendly
+- **Cardcom** — popular in Israel, Hebrew-native
+- **Other** — to be discussed with Eran
+
+**Timing:** Can be integrated post-production or at launch. Not blocking MVP development.
+
+**Scope:** Supplier commission collection (retainer ~50-150 NIS/month per PRD business model).
+
+### 10. Activity Log (Admin)
 
 **File: `convex/activityLog.ts`** (new)
 
@@ -224,6 +248,8 @@ Table view with filters (user, action type, date range).
 | Responsive Polish | High | Medium |
 | Settings Page | Medium | Low |
 | Progressive Disclosure | Medium | Medium |
+| AI Integration (Gemini Flash) | High | Medium |
+| Payment System Integration | High | Medium |
 | Activity Log | Medium | Low |
 | Travel Time | Low | Medium |
 | Error Boundary | Low | Low |

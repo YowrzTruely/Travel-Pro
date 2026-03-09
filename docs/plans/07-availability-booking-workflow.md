@@ -55,7 +55,9 @@ Producer (QuoteEditor)                    Supplier
         │  Producer gets reminder to extend/cancel  │
         │                                          │
         │  If declined/alternative:                 │
-        │  5. Producer sees options,                │
+        │  5. System auto-suggests alternative      │
+        │     suppliers from same category           │
+        │     Producer sees options,                │
         │     picks alternative or new supplier     │
         │                                          │
         │  Cancellation:                            │
@@ -263,7 +265,7 @@ crons.hourly(
 
 Response flows:
 - **Approve:** confirm modal → creates booking → card moves to "שריונות פעילים"
-- **Decline:** reason textarea → notify producer → card disappears
+- **Decline:** reason textarea → notify producer → card disappears → **system automatically suggests alternative suppliers from the same category** (PRD §4.4: "אם לא זמין — המערכת מציעה ספקים חלופיים מאותה קטגוריה")
 - **Propose alternative:** select different product/date → notify producer
 
 ### 6. Alternative Proposal View (Producer Side)

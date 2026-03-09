@@ -9,7 +9,7 @@
 
 ## Goal
 
-Enhance the existing QuoteEditor with: 4-tier pricing support, equipment list aggregation, visual timeline with hide toggle, upsells display, 2-4 alternatives per item, and enhanced margin calculator.
+Enhance the existing QuoteEditor with: trip name + AI-generated opening paragraph (from supplier AI content in §3.1 stage 2), 4-tier pricing support with volume pricing, equipment list aggregation, visual timeline with hide toggle, upsells display, activity cards with marketing descriptions (no supplier names), 2-4 alternatives per item, price toggle (show/hide detailed prices before sending), and enhanced margin calculator.
 
 ---
 
@@ -30,6 +30,26 @@ Enhance the existing QuoteEditor with: 4-tier pricing support, equipment list ag
 ---
 
 ## Implementation
+
+### 0. Trip Name + Opening Paragraph (PRD §4.2)
+
+**File: `src/app/components/QuoteEditor.tsx`** (modify)
+
+At the top of the quote, the producer sets:
+- **Trip name** — AI can generate suggestions (Gemini Flash)
+- **Opening paragraph** — auto-populated from supplier AI-generated marketing descriptions created during §3.1 stage 2 profile setup + supplier product images
+
+```
+┌─────────────────────────────────────────────────────┐
+│  שם הטיול: [יום כיף בגולן ________________] [🤖 הצע]│
+│                                                     │
+│  פסקת פתיחה:                                        │
+│  [Auto-filled from AI content created in §3.1]      │
+│  [Editable — producer can modify]                   │
+│                                                     │
+│  [🤖 צור תיאור עם AI]                              │
+└─────────────────────────────────────────────────────┘
+```
 
 ### 1. 4-Tier Pricing in ItemEditor (PRD §3.3)
 
@@ -57,6 +77,7 @@ Logic:
 - Client price defaults to producerPrice × 1.20 (20% margin per PRD §3.3)
 - Producer can override client price manually
 - Margin calculator: `(clientPrice - producerPrice) / clientPrice × 100`
+- **Volume pricing:** If product has quantity-based pricing (above X people → different price), auto-apply based on participant count
 
 ### 2. Upsells / Add-Ons in ItemEditor (PRD §4.2)
 

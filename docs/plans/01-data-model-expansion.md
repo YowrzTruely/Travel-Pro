@@ -420,6 +420,8 @@ invitedBy: v.optional(v.id("users")),
 profileCompletionStage: v.optional(v.union(
   v.literal("stage1"), v.literal("stage2"), v.literal("stage3")
 )),
+websiteUrl: v.optional(v.string()),         // PRD 3.5 — for AI marketing description generation
+facebookUrl: v.optional(v.string()),        // PRD 3.5 — for AI marketing description generation
 operatingHours: v.optional(v.string()),     // PRD 3.1 — operating hours
 seasonalAvailability: v.optional(v.string()), // PRD 3.1 — seasonal notes
 defaultMarginPercent: v.optional(v.number()), // PRD 3.3 — default 20%
@@ -437,6 +439,12 @@ listPrice: v.optional(v.number()),        // מחיר מחירון (public)
 directPrice: v.optional(v.number()),      // מחיר ישיר (supplier only)
 producerPrice: v.optional(v.number()),    // מחיר מפיק (producer only)
 clientPrice: v.optional(v.number()),      // מחיר ללקוח (internal to producer)
+
+// Volume pricing (PRD §3.3 — different price above quantity "X"):
+volumeThreshold: v.optional(v.number()),      // quantity above which volume price applies
+volumeListPrice: v.optional(v.number()),      // volume מחיר מחירון
+volumeDirectPrice: v.optional(v.number()),    // volume מחיר ישיר
+volumeProducerPrice: v.optional(v.number()),  // volume מחיר מפיק
 
 // Timing:
 grossTime: v.optional(v.number()),        // זמן ברוטו (minutes)
@@ -546,4 +554,5 @@ source: v.optional(v.string()),
 - The `users` table is separate from Convex Auth's internal `authTables` — it stores app-level profile/role data
 - `teams` table removed — PRD does not mention team management
 - `conversations` and `messages` tables removed — PRD communicates via WhatsApp/SMS/email, not in-app chat
-- 4-tier pricing on `supplierProducts` matches PRD §3.3 exactly
+- 4-tier pricing on `supplierProducts` matches PRD §3.3 exactly, with volume pricing (above quantity X → different price per tier)
+- Supplier `websiteUrl`/`facebookUrl` used by AI to auto-generate marketing descriptions (PRD §3.5)

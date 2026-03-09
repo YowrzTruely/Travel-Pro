@@ -155,8 +155,9 @@ Supplier-facing ratings page:
 ```
 
 Ratings come from:
-1. Producer ratings (post-event, via field operations)
+1. Producer ratings (post-event, via field operations) — includes producer's own rating
 2. Participant ratings (future — post-event survey, per PRD §7)
+3. Google Business ratings (future — pull ratings from Google Business profile, per PRD §3.5)
 
 **Backend: `convex/supplierRatings.ts`** (new)
 
@@ -195,6 +196,8 @@ Public page at `/supplier/:id/public` (no auth required):
 ```
 
 Shows only מחיר מחירון (list price). No internal pricing visible.
+
+**AI marketing description:** Auto-generated from supplier's website/Facebook URL (per PRD §3.5). AI scrapes the URL and generates a comprehensive marketing description covering the service, all supplier products with individual descriptions. Displayed on the public profile page.
 
 **Route addition:**
 ```ts
