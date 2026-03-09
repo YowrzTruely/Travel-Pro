@@ -8,6 +8,7 @@ import { Eye, EyeOff, Loader2, LogIn, UserPlus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import type { UserRole } from "./AuthContext";
 import { useAuth } from "./AuthContext";
 import { FormField, rules } from "./FormField";
 
@@ -17,10 +18,12 @@ interface LoginForm {
 }
 
 interface SignupForm {
+  company: string;
   confirmPassword: string;
   email: string;
   name: string;
   password: string;
+  role: UserRole;
 }
 
 export function LoginPage() {
@@ -36,10 +39,19 @@ export function LoginPage() {
     defaultValues: { email: "", password: "" },
   });
 
+  const [selectedRole, setSelectedRole] = useState<UserRole>("producer");
+
   // Signup form
   const signupForm = useForm<SignupForm>({
     mode: "onChange",
-    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role: "producer",
+      company: "",
+    },
   });
 
   /** Map known English error strings to Hebrew. */
@@ -88,7 +100,8 @@ export function LoginPage() {
     const { error } = await signup(
       data.email.trim(),
       data.password,
-      data.name.trim()
+      data.name.trim(),
+      selectedRole
     );
     setSubmitting(false);
     if (error) {
@@ -99,6 +112,7 @@ export function LoginPage() {
   const switchMode = (newMode: "login" | "signup") => {
     setMode(newMode);
     setServerError("");
+    setSelectedRole("producer");
     loginForm.reset();
     signupForm.reset();
   };
@@ -250,6 +264,57 @@ export function LoginPage() {
                   placeholder="ערן לוי"
                   required
                   {...signupForm.register("name", rules.requiredMin("שם", 2))}
+                />
+                {/* Role selection */}
+                <div>
+                  <div
+                    className="mb-2 block text-[#181510] text-[14px]"
+                    style={{ fontWeight: 600 }}
+                  >
+                    סוג חשבון
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-2.5 text-[13px] transition-all ${
+                        selectedRole === "producer"
+                          ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
+                          : "border-[#e7e1da] text-[#8d785e] hover:border-[#ff8c00]/50"
+                      }`}
+                      onClick={() => setSelectedRole("producer")}
+                      style={{
+                        fontWeight: selectedRole === "producer" ? 600 : 400,
+                      }}
+                      type="button"
+                    >
+                      מפיק טיולים
+                    </button>
+                    <button
+                      className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-2.5 text-[13px] transition-all ${
+                        selectedRole === "supplier"
+                          ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
+                          : "border-[#e7e1da] text-[#8d785e] hover:border-[#ff8c00]/50"
+                      }`}
+                      onClick={() => setSelectedRole("supplier")}
+                      style={{
+                        fontWeight: selectedRole === "supplier" ? 600 : 400,
+                      }}
+                      type="button"
+                    >
+                      ספק שירותים
+                    </button>
+                  </div>
+                </div>
+                {/* Conditional company/business name field */}
+                <FormField
+                  error={signupForm.formState.errors.company}
+                  isDirty={signupForm.formState.dirtyFields.company}
+                  label={selectedRole === "producer" ? "שם חברה" : "שם עסק"}
+                  placeholder={
+                    selectedRole === "producer"
+                      ? "חברת ההפקות שלי"
+                      : "שם העסק שלי"
+                  }
+                  {...signupForm.register("company")}
                 />
                 <FormField
                   error={signupForm.formState.errors.email}

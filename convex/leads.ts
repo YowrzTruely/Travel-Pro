@@ -1,0 +1,143 @@
+import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
+
+export const list = query({
+  args: {},
+  handler: async (ctx) => {
+    const leads = await ctx.db.query("leads").collect();
+    return leads.map((lead) => ({
+      ...lead,
+      id: lead._id,
+    }));
+  },
+});
+
+export const get = query({
+  args: { id: v.id("leads") },
+  handler: async (ctx, args) => {
+    const lead = await ctx.db.get(args.id);
+    if (!lead) {
+      return null;
+    }
+    return {
+      ...lead,
+      id: lead._id,
+    };
+  },
+});
+
+export const create = mutation({
+  args: {
+    name: v.string(),
+    phone: v.optional(v.string()),
+    email: v.optional(v.string()),
+    source: v.union(
+      v.literal("facebook"),
+      v.literal("instagram"),
+      v.literal("tiktok"),
+      v.literal("youtube"),
+      v.literal("linkedin"),
+      v.literal("whatsapp"),
+      v.literal("phone"),
+      v.literal("manual"),
+      v.literal("website")
+    ),
+    participants: v.optional(v.number()),
+    dateRequested: v.optional(v.string()),
+    budget: v.optional(v.number()),
+    eventType: v.optional(v.string()),
+    region: v.optional(v.string()),
+    preferences: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    assignedTo: v.optional(v.id("users")),
+  },
+  handler: async (ctx, args) => {
+    const leadId = await ctx.db.insert("leads", {
+      ...args,
+      status: "new",
+      createdAt: Date.now(),
+    });
+    const lead = await ctx.db.get(leadId);
+    return {
+      ...lead,
+      id: leadId,
+    };
+  },
+});
+
+export const update = mutation({
+  args: {
+    id: v.id("leads"),
+    name: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    email: v.optional(v.string()),
+    participants: v.optional(v.number()),
+    dateRequested: v.optional(v.string()),
+    budget: v.optional(v.number()),
+    eventType: v.optional(v.string()),
+    region: v.optional(v.string()),
+    preferences: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    assignedTo: v.optional(v.id("users")),
+    projectId: v.optional(v.id("projects")),
+    clientId: v.optional(v.id("clients")),
+  },
+  handler: async (ctx, args) => {
+    const { id, ...fields } = args;
+    await ctx.db.patch(id, fields);
+    const lead = await ctx.db.get(id);
+    return {
+      ...lead,
+      id,
+    };
+  },
+});
+
+export const remove = mutation({
+  args: { id: v.id("leads") },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.id);
+    return { success: true, id: args.id };
+  },
+});
+
+export const updateStatus = mutation({
+  args: {
+    id: v.id("leads"),
+    status: v.union(
+      v.literal("new"),
+      v.literal("first_contact"),
+      v.literal("needs_assessment"),
+      v.literal("building_plan"),
+      v.literal("quote_sent"),
+      v.literal("approved"),
+      v.literal("closed_won"),
+      v.literal("closed_lost")
+    ),
+    lossReason: v.optional(
+      v.union(
+        v.literal("expensive"),
+        v.literal("competitor"),
+        v.literal("disappeared"),
+        v.literal("other")
+      )
+    ),
+    lossReasonNotes: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const { id, status, lossReason, lossReasonNotes } = args;
+    const patch: Record<string, unknown> = { status };
+    if (lossReason !== undefined) {
+      patch.lossReason = lossReason;
+    }
+    if (lossReasonNotes !== undefined) {
+      patch.lossReasonNotes = lossReasonNotes;
+    }
+    await ctx.db.patch(id, patch);
+    const lead = await ctx.db.get(id);
+    return {
+      ...lead,
+      id,
+    };
+  },
+});

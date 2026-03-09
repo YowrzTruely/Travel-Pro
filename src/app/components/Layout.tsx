@@ -1,8 +1,12 @@
 import imgAvatar from "figma:asset/3e33ffb968ecb98f421cfb68a6d08fed3e8bf007.png";
 import imgLogo from "figma:asset/b655d2164f14a54b258c6a8a069f10a88a1c4640.png";
 import { useMutation } from "convex/react";
+import type { LucideIcon } from "lucide-react";
 import {
+  Box,
   Calendar,
+  CheckCircle,
+  ClipboardList,
   FileText,
   FolderOpen,
   HelpCircle,
@@ -11,6 +15,7 @@ import {
   LogOut,
   Menu,
   Settings,
+  Shield,
   UserCircle,
   Users,
   X,
@@ -38,7 +43,13 @@ interface NewProjectForm {
   region: string;
 }
 
-const mainNavItems = [
+interface NavItem {
+  icon: LucideIcon;
+  label: string;
+  path: string;
+}
+
+const producerNavItems: NavItem[] = [
   { path: "/", label: "דשבורד", icon: LayoutDashboard },
   { path: "/projects", label: "פרויקטים", icon: FolderOpen },
   { path: "/suppliers", label: "בנק ספקים", icon: Users },
@@ -47,13 +58,43 @@ const mainNavItems = [
   { path: "/calendar", label: "יומן", icon: Calendar },
 ];
 
-const bottomNavItems = [{ path: "/settings", label: "הגדרות", icon: Settings }];
+const supplierNavItems: NavItem[] = [
+  { path: "/", label: "דשבורד", icon: LayoutDashboard },
+  { path: "/products", label: "מוצרים", icon: Box },
+  { path: "/documents", label: "מסמכים", icon: FileText },
+  { path: "/availability", label: "זמינות", icon: Calendar },
+  { path: "/requests", label: "בקשות", icon: ClipboardList },
+  { path: "/profile", label: "פרופיל", icon: UserCircle },
+];
+
+const adminNavItems: NavItem[] = [
+  { path: "/", label: "דשבורד", icon: Shield },
+  { path: "/approve-suppliers", label: "אישור ספקים", icon: CheckCircle },
+  { path: "/users", label: "משתמשים", icon: Users },
+];
+
+const bottomNavItems: NavItem[] = [
+  { path: "/settings", label: "הגדרות", icon: Settings },
+];
+
+function getNavItemsForRole(role?: string): NavItem[] {
+  switch (role) {
+    case "supplier":
+      return supplierNavItems;
+    case "admin":
+      return adminNavItems;
+    default:
+      return producerNavItems;
+  }
+}
 
 export function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { logout, user } = useAuth();
+  const { logout, user, profile } = useAuth();
+  const mainNavItems = getNavItemsForRole(profile?.role);
+  const isProducer = !profile?.role || profile.role === "producer";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showNewProject, setShowNewProject] = useState(false);
   const [npSaving, setNpSaving] = useState(false);
@@ -250,10 +291,14 @@ export function Layout() {
                 className="truncate text-[#181510] text-[14px]"
                 style={{ fontWeight: 600 }}
               >
-                {user?.email?.split("@")[0] || "משתמש"}
+                {profile?.name || user?.email?.split("@")[0] || "משתמש"}
               </div>
               <div className="truncate text-[#8d785e] text-[12px]">
-                {user?.email || "מפיק ראשי"}
+                {profile?.role === "supplier"
+                  ? "ספק"
+                  : profile?.role === "admin"
+                    ? "מנהל מערכת"
+                    : "מפיק"}
               </div>
             </div>
             <button
@@ -265,14 +310,16 @@ export function Layout() {
               <LogOut size={16} />
             </button>
           </div>
-          <button
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#ff8c00] py-2.5 text-white shadow-sm transition-all hover:bg-[#e67e00]"
-            onClick={() => setShowNewProject(true)}
-            style={{ fontWeight: 600 }}
-            type="button"
-          >
-            <span className="text-[16px]">+ פרויקט חדש</span>
-          </button>
+          {isProducer && (
+            <button
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#ff8c00] py-2.5 text-white shadow-sm transition-all hover:bg-[#e67e00]"
+              onClick={() => setShowNewProject(true)}
+              style={{ fontWeight: 600 }}
+              type="button"
+            >
+              <span className="text-[16px]">+ פרויקט חדש</span>
+            </button>
+          )}
         </div>
       </aside>
 

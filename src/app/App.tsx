@@ -2,55 +2,117 @@ import { useMemo } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./components/AuthContext";
+import { AvailabilityInvitePage } from "./components/AvailabilityInvitePage";
 import { ClientQuote } from "./components/ClientQuote";
 import { ConvexProvider } from "./components/ConvexProvider";
 import { LoginPage } from "./components/LoginPage";
-import { router } from "./routes";
+import { ProducerOnboarding } from "./components/onboarding/ProducerOnboarding";
+import { SupplierOnboarding } from "./components/onboarding/SupplierOnboarding";
+import { SupplierPending } from "./components/onboarding/SupplierPending";
+import { SupplierSelfRegister } from "./components/SupplierSelfRegister";
+import {
+  createAdminRouter,
+  createProducerRouter,
+  createSupplierRouter,
+} from "./routes";
 
 /**
- * Check if the current URL is a public client quote page.
+ * Check if the current URL is a public page (no auth required).
  */
-const PUBLIC_QUOTE_REGEX = /^\/quote\/.+$/;
-function isPublicQuotePage(): boolean {
-  return PUBLIC_QUOTE_REGEX.test(window.location.pathname);
+const PUBLIC_PATTERNS = [
+  /^\/quote\/.+$/,
+  /^\/register\/supplier$/,
+  /^\/availability-invite\/.+$/,
+];
+
+function isPublicPage(): boolean {
+  const path = window.location.pathname;
+  return PUBLIC_PATTERNS.some((re) => re.test(path));
 }
 
-/** Minimal public router for the client quote page (no auth required) */
+/** Public router for unauthenticated pages */
 const publicRouter = createBrowserRouter([
   { path: "/quote/:id", Component: ClientQuote },
+  { path: "/register/supplier", Component: SupplierSelfRegister },
+  { path: "/availability-invite/:token", Component: AvailabilityInvitePage },
   { path: "*", Component: () => null },
 ]);
 
-function AppInner() {
-  const { user, loading: authLoading } = useAuth();
-  const isPublic = useMemo(() => isPublicQuotePage(), []);
+/** Loading spinner */
+function LoadingSpinner({ message }: { message: string }) {
+  return (
+    <div
+      className="flex h-screen items-center justify-center bg-[#f8f7f5]"
+      dir="rtl"
+    >
+      <div className="flex flex-col items-center gap-4">
+        <div className="h-10 w-10 animate-spin rounded-full border-3 border-[#ff8c00] border-t-transparent" />
+        <p className="font-['Assistant',sans-serif] text-[#8d785e] text-[15px]">
+          {message}
+        </p>
+      </div>
+    </div>
+  );
+}
 
-  // ─── Public client quote page — no auth required ───
+function AppInner() {
+  const { user, profile, loading: authLoading, profileLoading } = useAuth();
+  const isPublic = useMemo(() => isPublicPage(), []);
+
+  // 1. Public pages — no auth required
   if (isPublic) {
     return <RouterProvider router={publicRouter} />;
   }
 
-  // Auth loading
+  // 2. Auth loading
   if (authLoading) {
-    return (
-      <div
-        className="flex h-screen items-center justify-center bg-[#f8f7f5]"
-        dir="rtl"
-      >
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 animate-spin rounded-full border-3 border-[#ff8c00] border-t-transparent" />
-          <p className="font-['Assistant',sans-serif] text-[#8d785e] text-[15px]">
-            בודק הרשאות...
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="בודק הרשאות..." />;
   }
 
-  // Not logged in → show login page
+  // 3. Not logged in → login page
   if (!user) {
     return <LoginPage />;
   }
+
+  // 4. Profile loading
+  if (profileLoading) {
+    return <LoadingSpinner message="טוען פרופיל..." />;
+  }
+
+  // 5. No profile yet (first-time user, auto-creation in progress)
+  if (!profile) {
+    return <LoadingSpinner message="יוצר פרופיל..." />;
+  }
+
+  // 6. Supplier with pending status → waiting screen
+  if (profile.role === "supplier" && profile.status === "pending") {
+    return <SupplierPending />;
+  }
+
+  // 7. Onboarding not completed → role-specific onboarding
+  if (!profile.onboardingCompleted) {
+    if (profile.role === "supplier") {
+      return <SupplierOnboarding />;
+    }
+    return <ProducerOnboarding />;
+  }
+
+  // 8–10. Role-based routing
+  return <RoleRouter role={profile.role} />;
+}
+
+/** Memoized role-based router to prevent re-creation on every render */
+function RoleRouter({ role }: { role: string }) {
+  const router = useMemo(() => {
+    switch (role) {
+      case "admin":
+        return createAdminRouter();
+      case "supplier":
+        return createSupplierRouter();
+      default:
+        return createProducerRouter();
+    }
+  }, [role]);
 
   return <RouterProvider router={router} />;
 }

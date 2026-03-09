@@ -9,6 +9,17 @@ import { RootErrorBoundary } from "./components/ErrorBoundary";
 import { ImportWizard } from "./components/ImportWizard";
 import { Layout } from "./components/Layout";
 import { NotFoundPage, SettingsPage } from "./components/PlaceholderPage";
+import {
+  AdminDashboardPlaceholder,
+  ApproveSupplierPlaceholder,
+  SupplierAvailabilityPlaceholder,
+  SupplierDashboardPlaceholder,
+  SupplierDocumentsPlaceholder,
+  SupplierProductsPlaceholder,
+  SupplierProfilePlaceholder,
+  SupplierRequestsPlaceholder,
+  UserManagementPlaceholder,
+} from "./components/PortalPlaceholders";
 import { PRDDocument } from "./components/PRDDocument";
 import { ProjectsList } from "./components/ProjectsList";
 import { QuoteEditor } from "./components/QuoteEditor";
@@ -17,28 +28,73 @@ import { SupplierArchive } from "./components/SupplierArchive";
 import { SupplierBank } from "./components/SupplierBank";
 import { SupplierDetail } from "./components/SupplierDetail";
 
-export const router = createBrowserRouter([
-  {
-    path: "/",
-    Component: Layout,
-    ErrorBoundary: RootErrorBoundary,
-    children: [
-      { index: true, Component: Dashboard },
-      { path: "projects", Component: ProjectsList },
-      { path: "projects/:id", Component: QuoteEditor },
-      { path: "suppliers", Component: SupplierBank },
-      { path: "suppliers/archive", Component: SupplierArchive },
-      { path: "suppliers/import", Component: ImportWizard },
-      { path: "suppliers/classify", Component: ClassificationWizard },
-      { path: "suppliers/scan", Component: ScannedProducts },
-      { path: "suppliers/:id", Component: SupplierDetail },
-      { path: "clients", Component: ClientsPage },
-      { path: "documents", Component: DocumentsPage },
-      { path: "settings", Component: SettingsPage },
-      { path: "calendar", Component: CalendarPage },
-      { path: "quote/:id", Component: ClientQuote },
-      { path: "prd", Component: PRDDocument },
-      { path: "*", Component: NotFoundPage },
-    ],
-  },
-]);
+/** Producer router — current main app routes */
+export function createProducerRouter() {
+  return createBrowserRouter([
+    {
+      path: "/",
+      Component: Layout,
+      ErrorBoundary: RootErrorBoundary,
+      children: [
+        { index: true, Component: Dashboard },
+        { path: "projects", Component: ProjectsList },
+        { path: "projects/:id", Component: QuoteEditor },
+        { path: "suppliers", Component: SupplierBank },
+        { path: "suppliers/archive", Component: SupplierArchive },
+        { path: "suppliers/import", Component: ImportWizard },
+        { path: "suppliers/classify", Component: ClassificationWizard },
+        { path: "suppliers/scan", Component: ScannedProducts },
+        { path: "suppliers/:id", Component: SupplierDetail },
+        { path: "clients", Component: ClientsPage },
+        { path: "documents", Component: DocumentsPage },
+        { path: "settings", Component: SettingsPage },
+        { path: "calendar", Component: CalendarPage },
+        { path: "quote/:id", Component: ClientQuote },
+        { path: "prd", Component: PRDDocument },
+        { path: "*", Component: NotFoundPage },
+      ],
+    },
+  ]);
+}
+
+/** Supplier portal router */
+export function createSupplierRouter() {
+  return createBrowserRouter([
+    {
+      path: "/",
+      Component: Layout,
+      ErrorBoundary: RootErrorBoundary,
+      children: [
+        { index: true, Component: SupplierDashboardPlaceholder },
+        { path: "products", Component: SupplierProductsPlaceholder },
+        { path: "documents", Component: SupplierDocumentsPlaceholder },
+        { path: "availability", Component: SupplierAvailabilityPlaceholder },
+        { path: "requests", Component: SupplierRequestsPlaceholder },
+        { path: "profile", Component: SupplierProfilePlaceholder },
+        { path: "settings", Component: SettingsPage },
+        { path: "*", Component: NotFoundPage },
+      ],
+    },
+  ]);
+}
+
+/** Admin portal router */
+export function createAdminRouter() {
+  return createBrowserRouter([
+    {
+      path: "/",
+      Component: Layout,
+      ErrorBoundary: RootErrorBoundary,
+      children: [
+        { index: true, Component: AdminDashboardPlaceholder },
+        { path: "approve-suppliers", Component: ApproveSupplierPlaceholder },
+        { path: "users", Component: UserManagementPlaceholder },
+        { path: "settings", Component: SettingsPage },
+        { path: "*", Component: NotFoundPage },
+      ],
+    },
+  ]);
+}
+
+/** @deprecated Use createProducerRouter() instead. Kept for backward compatibility. */
+export const router = createProducerRouter();
