@@ -39,6 +39,30 @@ export const create = mutation({
   },
 });
 
+export const startOperation = mutation({
+  args: { id: v.id("fieldOperations") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, {
+      status: "in_progress",
+      startedAt: Date.now(),
+    });
+    const doc = await ctx.db.get(args.id);
+    return { ...doc, id: doc?._id };
+  },
+});
+
+export const completeOperation = mutation({
+  args: { id: v.id("fieldOperations") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, {
+      status: "completed",
+      completedAt: Date.now(),
+    });
+    const doc = await ctx.db.get(args.id);
+    return { ...doc, id: doc?._id };
+  },
+});
+
 export const update = mutation({
   args: {
     id: v.id("fieldOperations"),

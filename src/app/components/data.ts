@@ -69,6 +69,53 @@ export interface QuoteVersion {
   version: number;
 }
 
+export interface Lead {
+  budget?: number;
+  clientId?: string;
+  createdAt: number;
+  dateRequested?: string;
+  email?: string;
+  eventType?: string;
+  id: string;
+  lossReason?: "expensive" | "competitor" | "disappeared" | "other";
+  lossReasonNotes?: string;
+  name: string;
+  notes?: string;
+  participants?: number;
+  phone?: string;
+  preferences?: string;
+  projectId?: string;
+  region?: string;
+  source:
+    | "facebook"
+    | "instagram"
+    | "tiktok"
+    | "youtube"
+    | "linkedin"
+    | "whatsapp"
+    | "phone"
+    | "manual"
+    | "website";
+  status:
+    | "new"
+    | "first_contact"
+    | "needs_assessment"
+    | "building_plan"
+    | "quote_sent"
+    | "approved"
+    | "closed_won"
+    | "closed_lost";
+}
+
+export interface LeadCommunication {
+  content: string;
+  createdAt: number;
+  duration?: number;
+  id: string;
+  leadId: string;
+  type: "call" | "whatsapp" | "email" | "sms" | "note" | "system";
+}
+
 export const suppliers: Supplier[] = [
   {
     id: "1",

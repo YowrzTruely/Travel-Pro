@@ -12,6 +12,86 @@ export const list = query({
   },
 });
 
+export const listByStatus = query({
+  args: {},
+  handler: async (ctx) => {
+    const leads = await ctx.db.query("leads").withIndex("by_status").collect();
+    return leads.map((lead) => ({
+      ...lead,
+      id: lead._id,
+    }));
+  },
+});
+
+export const stats = query({
+  args: {},
+  handler: async (ctx) => {
+    const leads = await ctx.db.query("leads").collect();
+    const counts: Record<string, number> = {};
+    for (const lead of leads) {
+      counts[lead.status] = (counts[lead.status] || 0) + 1;
+    }
+    return counts;
+  },
+});
+
+export const convertToProject = mutation({
+  args: { id: v.id("leads") },
+  handler: async (ctx, args) => {
+    const lead = await ctx.db.get(args.id);
+    if (!lead) {
+      throw new Error("Lead not found");
+    }
+
+    // Create a client
+    const clientId = await ctx.db.insert("clients", {
+      name: lead.name,
+      phone: lead.phone,
+      email: lead.email,
+      status: "active",
+      notes: lead.notes || "",
+      totalProjects: 1,
+      totalRevenue: 0,
+      leadId: args.id,
+      source: lead.source,
+    });
+
+    // Create a project with legacyId format
+    const year = new Date().getFullYear().toString().slice(2);
+    const seq = Math.floor(1000 + Math.random() * 9000);
+    const legacyId = `${seq}-${year}`;
+
+    const projectId = await ctx.db.insert("projects", {
+      legacyId,
+      name: lead.eventType || lead.name,
+      client: lead.name,
+      company: lead.name,
+      participants: lead.participants ?? 0,
+      region: lead.region || "",
+      status: "ליד חדש",
+      statusColor: "#3b82f6",
+      totalPrice: lead.budget ?? 0,
+      pricePerPerson: 0,
+      profitMargin: 0,
+      date: lead.dateRequested || new Date().toISOString().split("T")[0],
+      leadId: args.id,
+    });
+
+    // Update lead with references and status
+    await ctx.db.patch(args.id, {
+      clientId,
+      projectId,
+      status: "closed_won",
+    });
+
+    const updatedLead = await ctx.db.get(args.id);
+    return {
+      ...updatedLead,
+      id: args.id,
+    };
+  },
+});
+
 export const get = query({
   args: { id: v.id("leads") },
   handler: async (ctx, args) => {

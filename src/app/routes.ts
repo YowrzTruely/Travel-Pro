@@ -3,9 +3,12 @@ import { CalendarPage } from "./components/CalendarPage";
 import { ClassificationWizard } from "./components/ClassificationWizard";
 import { ClientQuote } from "./components/ClientQuote";
 import { ClientsPage } from "./components/ClientsPage";
+import { LeadDetail } from "./components/crm/LeadDetail";
+import { LeadsPage } from "./components/crm/LeadsPage";
 import { Dashboard } from "./components/Dashboard";
 import { DocumentsPage } from "./components/DocumentsPage";
 import { RootErrorBoundary } from "./components/ErrorBoundary";
+import { FieldOperationsHQ } from "./components/field/FieldOperationsHQ";
 import { ImportWizard } from "./components/ImportWizard";
 import { Layout } from "./components/Layout";
 import { NotFoundPage, SettingsPage } from "./components/PlaceholderPage";
@@ -49,10 +52,13 @@ export function createProducerRouter() {
         { path: "suppliers/scan", Component: ScannedProducts },
         { path: "suppliers/:id", Component: SupplierDetail },
         { path: "clients", Component: ClientsPage },
+        { path: "crm", Component: LeadsPage },
+        { path: "crm/:id", Component: LeadDetail },
         { path: "documents", Component: DocumentsPage },
         { path: "settings", Component: SettingsPage },
         { path: "calendar", Component: CalendarPage },
         { path: "quote/:id", Component: ClientQuote },
+        { path: "field/:projectId", Component: FieldOperationsHQ },
         { path: "prd", Component: PRDDocument },
         { path: "*", Component: NotFoundPage },
       ],

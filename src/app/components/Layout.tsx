@@ -16,6 +16,7 @@ import {
   Menu,
   Settings,
   Shield,
+  Target,
   UserCircle,
   Users,
   X,
@@ -54,6 +55,7 @@ const producerNavItems: NavItem[] = [
   { path: "/projects", label: "פרויקטים", icon: FolderOpen },
   { path: "/suppliers", label: "בנק ספקים", icon: Users },
   { path: "/clients", label: "לקוחות", icon: UserCircle },
+  { path: "/crm", label: "ניהול לידים", icon: Target },
   { path: "/documents", label: "מסמכים", icon: FileText },
   { path: "/calendar", label: "יומן", icon: Calendar },
 ];
