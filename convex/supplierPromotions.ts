@@ -58,6 +58,22 @@ export const update = mutation({
   },
 });
 
+export const listActive = query({
+  args: { supplierId: v.optional(v.id("suppliers")) },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+    const { supplierId } = args;
+    const docs = supplierId
+      ? await ctx.db
+          .query("supplierPromotions")
+          .withIndex("by_supplierId", (q) => q.eq("supplierId", supplierId))
+          .collect()
+      : await ctx.db.query("supplierPromotions").collect();
+    const active = docs.filter((d) => d.isActive && d.expiresAt > now);
+    return active.map((doc) => ({ ...doc, id: doc._id }));
+  },
+});
+
 export const deactivate = mutation({
   args: { id: v.id("supplierPromotions") },
   handler: async (ctx, args) => {

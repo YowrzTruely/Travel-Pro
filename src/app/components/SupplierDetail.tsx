@@ -214,6 +214,10 @@ export function SupplierDetail() {
     api.supplierDocuments.listBySupplierId,
     supplierId ? { supplierId: supplierId as any } : "skip"
   );
+  const insuranceCompliance = useQuery(
+    api.supplierDocuments.checkInsuranceCompliance,
+    supplierId ? { supplierId: supplierId as any } : "skip"
+  );
 
   // ─── Convex Mutations ───
   const updateSupplier = useMutation(api.suppliers.update);
@@ -614,11 +618,14 @@ export function SupplierDetail() {
             style={{ fontWeight: activeTab === tab.id ? 600 : 400 }}
             type="button"
           >
-            {tab.id === "docs" &&
-              documentsList.some((d) => d.status === "expired") && (
-                <span className="ml-1 inline-block h-2 w-2 rounded-full bg-red-500" />
-              )}
             {tab.label}
+            {tab.id === "docs" &&
+              insuranceCompliance &&
+              (insuranceCompliance.compliant ? (
+                <ShieldCheck className="mr-1 inline h-3.5 w-3.5 text-green-500" />
+              ) : (
+                <ShieldAlert className="mr-1 inline h-3.5 w-3.5 text-red-500" />
+              ))}
             {tab.id === "contacts" && (
               <span className="mr-1 text-[#b8a990] text-[10px]">
                 ({contactsList.length})

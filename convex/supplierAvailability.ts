@@ -1,6 +1,19 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
+export const checkAvailability = query({
+  args: { supplierId: v.id("suppliers"), date: v.string() },
+  handler: async (ctx, args) => {
+    const doc = await ctx.db
+      .query("supplierAvailability")
+      .withIndex("by_supplierId_date", (q) =>
+        q.eq("supplierId", args.supplierId).eq("date", args.date)
+      )
+      .first();
+    return doc ? { available: doc.available, notes: doc.notes } : null;
+  },
+});
+
 export const listByMonth = query({
   args: {
     supplierId: v.id("suppliers"),

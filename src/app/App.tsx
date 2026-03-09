@@ -10,6 +10,7 @@ import { ProducerOnboarding } from "./components/onboarding/ProducerOnboarding";
 import { SupplierOnboarding } from "./components/onboarding/SupplierOnboarding";
 import { SupplierPending } from "./components/onboarding/SupplierPending";
 import { SupplierSelfRegister } from "./components/SupplierSelfRegister";
+import { PublicSupplierProfile } from "./components/supplier/PublicSupplierProfile";
 import {
   createAdminRouter,
   createProducerRouter,
@@ -23,6 +24,7 @@ const PUBLIC_PATTERNS = [
   /^\/quote\/.+$/,
   /^\/register\/supplier$/,
   /^\/availability-invite\/.+$/,
+  /^\/supplier\/.+\/public$/,
 ];
 
 function isPublicPage(): boolean {
@@ -35,6 +37,7 @@ const publicRouter = createBrowserRouter([
   { path: "/quote/:id", Component: ClientQuote },
   { path: "/register/supplier", Component: SupplierSelfRegister },
   { path: "/availability-invite/:token", Component: AvailabilityInvitePage },
+  { path: "/supplier/:id/public", Component: PublicSupplierProfile },
   { path: "*", Component: () => null },
 ]);
 

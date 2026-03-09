@@ -12,11 +12,7 @@ import { NotFoundPage, SettingsPage } from "./components/PlaceholderPage";
 import {
   AdminDashboardPlaceholder,
   ApproveSupplierPlaceholder,
-  SupplierAvailabilityPlaceholder,
   SupplierDashboardPlaceholder,
-  SupplierDocumentsPlaceholder,
-  SupplierProductsPlaceholder,
-  SupplierProfilePlaceholder,
   SupplierRequestsPlaceholder,
   UserManagementPlaceholder,
 } from "./components/PortalPlaceholders";
@@ -27,6 +23,13 @@ import { ScannedProducts } from "./components/ScannedProducts";
 import { SupplierArchive } from "./components/SupplierArchive";
 import { SupplierBank } from "./components/SupplierBank";
 import { SupplierDetail } from "./components/SupplierDetail";
+import { AvailabilityCalendar } from "./components/supplier/AvailabilityCalendar";
+import { MyDocuments } from "./components/supplier/MyDocuments";
+import { MyProducts } from "./components/supplier/MyProducts";
+import { SupplierPreview } from "./components/supplier/SupplierPreview";
+import { SupplierProfile } from "./components/supplier/SupplierProfile";
+import { SupplierPromotions } from "./components/supplier/SupplierPromotions";
+import { SupplierRatings } from "./components/supplier/SupplierRatings";
 
 /** Producer router — current main app routes */
 export function createProducerRouter() {
@@ -66,11 +69,14 @@ export function createSupplierRouter() {
       ErrorBoundary: RootErrorBoundary,
       children: [
         { index: true, Component: SupplierDashboardPlaceholder },
-        { path: "products", Component: SupplierProductsPlaceholder },
-        { path: "documents", Component: SupplierDocumentsPlaceholder },
-        { path: "availability", Component: SupplierAvailabilityPlaceholder },
+        { path: "products", Component: MyProducts },
+        { path: "documents", Component: MyDocuments },
+        { path: "availability", Component: AvailabilityCalendar },
         { path: "requests", Component: SupplierRequestsPlaceholder },
-        { path: "profile", Component: SupplierProfilePlaceholder },
+        { path: "profile", Component: SupplierProfile },
+        { path: "preview", Component: SupplierPreview },
+        { path: "promotions", Component: SupplierPromotions },
+        { path: "ratings", Component: SupplierRatings },
         { path: "settings", Component: SettingsPage },
         { path: "*", Component: NotFoundPage },
       ],

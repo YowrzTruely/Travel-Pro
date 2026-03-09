@@ -3,12 +3,12 @@ import { mutation, query } from "./_generated/server";
 
 export const listByProductId = query({
   args: { productId: v.id("supplierProducts") },
-  handler: async (ctx, args) => {
-    const docs = await ctx.db
+  handler: async (ctx, { productId }) => {
+    const addons = await ctx.db
       .query("productAddons")
-      .withIndex("by_productId", (q) => q.eq("productId", args.productId))
+      .withIndex("by_productId", (q) => q.eq("productId", productId))
       .collect();
-    return docs.map((doc) => ({ ...doc, id: doc._id }));
+    return addons.map((a) => ({ ...a, id: a._id }));
   },
 });
 
@@ -23,12 +23,20 @@ export const create = mutation({
     unit: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const id = await ctx.db.insert("productAddons", args);
-    const doc = await ctx.db.get(id);
-    if (!doc) {
-      throw new Error("Failed to read inserted document");
+    const id = await ctx.db.insert("productAddons", {
+      productId: args.productId,
+      name: args.name,
+      description: args.description,
+      listPrice: args.listPrice,
+      directPrice: args.directPrice,
+      producerPrice: args.producerPrice,
+      unit: args.unit,
+    });
+    const addon = await ctx.db.get(id);
+    if (!addon) {
+      throw new Error("Product addon not found after creation");
     }
-    return { ...doc, id: doc._id };
+    return { ...addon, id: addon._id };
   },
 });
 
@@ -42,21 +50,24 @@ export const update = mutation({
     producerPrice: v.optional(v.number()),
     unit: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
-    const { id, ...fields } = args;
-    await ctx.db.patch(id, fields);
-    const doc = await ctx.db.get(id);
-    if (!doc) {
-      throw new Error("Failed to read updated document");
+  handler: async (ctx, { id, ...updates }) => {
+    const existing = await ctx.db.get(id);
+    if (!existing) {
+      throw new Error("Product addon not found");
     }
-    return { ...doc, id: doc._id };
+    await ctx.db.patch(id, updates);
+    const addon = await ctx.db.get(id);
+    if (!addon) {
+      throw new Error("Product addon not found after update");
+    }
+    return { ...addon, id: addon._id };
   },
 });
 
 export const remove = mutation({
   args: { id: v.id("productAddons") },
-  handler: async (ctx, args) => {
-    await ctx.db.delete(args.id);
-    return { success: true, id: args.id };
+  handler: async (ctx, { id }) => {
+    await ctx.db.delete(id);
+    return { success: true, id };
   },
 });

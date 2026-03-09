@@ -158,6 +158,12 @@ export default defineSchema({
       v.literal("expired")
     ),
     fileName: v.optional(v.string()),
+    documentType: v.optional(v.string()),
+    storageId: v.optional(v.string()),
+    acknowledged: v.optional(v.boolean()),
+    acknowledgedAt: v.optional(v.number()),
+    lastReminderAt: v.optional(v.number()),
+    reminderCount: v.optional(v.number()),
   })
     .index("by_legacyId", ["legacyId"])
     .index("by_supplierId", ["supplierId"]),

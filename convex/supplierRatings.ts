@@ -12,6 +12,21 @@ export const listBySupplier = query({
   },
 });
 
+export const getAverageRating = query({
+  args: { supplierId: v.id("suppliers") },
+  handler: async (ctx, args) => {
+    const ratings = await ctx.db
+      .query("supplierRatings")
+      .withIndex("by_supplierId", (q) => q.eq("supplierId", args.supplierId))
+      .collect();
+    if (ratings.length === 0) {
+      return { average: 0, count: 0 };
+    }
+    const sum = ratings.reduce((acc, r) => acc + r.rating, 0);
+    return { average: sum / ratings.length, count: ratings.length };
+  },
+});
+
 export const create = mutation({
   args: {
     supplierId: v.id("suppliers"),

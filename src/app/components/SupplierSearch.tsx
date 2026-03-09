@@ -21,6 +21,16 @@ export function SupplierSearch({
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const allSuppliers = useQuery(api.suppliers.list);
+  const activePromotions = useQuery(api.supplierPromotions.listActive, {});
+
+  const promotionSupplierIds = useMemo(() => {
+    if (!activePromotions) {
+      return new Set<string>();
+    }
+    return new Set(
+      activePromotions.map((p: { supplierId: string }) => p.supplierId)
+    );
+  }, [activePromotions]);
 
   const loaded = allSuppliers !== undefined;
 
@@ -138,6 +148,14 @@ export function SupplierSearch({
                   {"★".repeat(Math.round(s.rating))}
                 </div>
               </div>
+              {promotionSupplierIds.has(s._id) && (
+                <span
+                  className="shrink-0 rounded-full bg-orange-50 px-1.5 py-0.5 text-[10px] text-orange-600"
+                  style={{ fontWeight: 600 }}
+                >
+                  מבצע פעיל
+                </span>
+              )}
               {s.verificationStatus === "verified" && (
                 <span
                   className="shrink-0 rounded-full bg-green-50 px-1.5 py-0.5 text-[10px] text-green-600"

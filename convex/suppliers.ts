@@ -175,6 +175,11 @@ export const update = mutation({
     icon: v.optional(v.string()),
     address: v.optional(v.string()),
     location: v.optional(v.object({ lat: v.number(), lng: v.number() })),
+    websiteUrl: v.optional(v.string()),
+    facebookUrl: v.optional(v.string()),
+    operatingHours: v.optional(v.string()),
+    seasonalAvailability: v.optional(v.string()),
+    defaultMarginPercent: v.optional(v.number()),
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);
