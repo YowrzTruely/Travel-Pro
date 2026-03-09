@@ -11,20 +11,20 @@ Plans are ordered by **business priority** (not just technical dependency), matc
 
 ## Current State Summary
 
-**Built:** Login/signup (single role), Dashboard, Projects list, QuoteEditor, SupplierBank (list+map), SupplierDetail (4 tabs), ImportWizard, ClassificationWizard, ClientsPage, DocumentsPage, CalendarPage, ClientQuote (public), KanbanBoard (no route), GlobalSearch, NotificationsPanel.
+**Built:** Login/signup with 3-role auth (admin/producer/supplier), role-gated routing, supplier self-registration, 3-stage progressive onboarding, supplier pending approval flow, Dashboard, Projects list, QuoteEditor, SupplierBank (list+map), SupplierDetail (4 tabs), ImportWizard, ClassificationWizard, ClientsPage, DocumentsPage, CalendarPage, ClientQuote (public), KanbanBoard (no route), GlobalSearch, NotificationsPanel. Schema expanded with 25+ tables (4-tier pricing, volume pricing, leads, bookings, field ops, etc.). Shared supplier constants (8 categories, 11 regions).
 
-**Not built:** Multi-role auth, supplier self-registration, 4-tier pricing, CRM/leads, availability+booking workflow, field operations HQ, supplier orders/invoicing, digital assets, notifications backend, and more.
+**Not built:** Supplier product management UI (Plan 03), supplier documents/compliance (Plan 04), supplier public profile (Plan 05), quote editor enhancements (Plan 06), availability+booking workflow (Plan 07), client proposal enhancements (Plan 08), supplier orders/invoicing (Plan 09), CRM pipeline (Plan 10), field operations HQ (Plan 11), role-specific dashboards (Plan 12), notifications backend (Plan 13), digital assets (Plan 14), cross-system polish (Plan 15).
 
 ---
 
 ## Implementation Phases
 
-### Phase 1: Foundation
+### Phase 1: Foundation — COMPLETE
 
-| # | Plan | Description | Estimated Scope |
-|---|------|-------------|-----------------|
-| 01 | [Data Model Expansion](./01-data-model-expansion.md) | New PRD tables + extend existing ones with 4-tier pricing, equipment, timing | `convex/schema.ts` + migrations |
-| 02 | [Multi-Role Auth & Supplier Registration](./02-multi-role-auth.md) | 3 user roles, supplier self-registration via shareable links, 3-stage profile | Auth, routing, Layout |
+| # | Plan | Status | Description |
+|---|------|--------|-------------|
+| 01 | [Data Model Expansion](./01-data-model-expansion.md) | **DONE** | 25+ tables in schema, 4-tier + volume pricing, all CRUD stubs |
+| 02 | [Multi-Role Auth & Supplier Registration](./02-multi-role-auth.md) | **DONE** | 3 roles, role-gated routing, self-registration, 3-stage onboarding, shared constants (8 categories, 11 regions) |
 
 ### Phase 2: Supplier Module (PRD Priority #1 — Critical)
 

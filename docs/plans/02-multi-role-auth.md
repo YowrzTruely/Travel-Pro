@@ -1,5 +1,6 @@
-# Plan 02 — Multi-Role Auth & Supplier Registration
+# Plan 02 — Multi-Role Auth & Supplier Registration — COMPLETE
 
+**Status:** DONE
 **Phase:** 1 (Foundation)
 **Depends on:** Plan 01 (Data Model)
 **Blocks:** Plans 03–15

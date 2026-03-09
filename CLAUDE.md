@@ -57,7 +57,8 @@ VITE_CONVEX_SITE_URL=https://unique-ermine-475.convex.site
 ### Frontend (Vite + React 18 + TypeScript)
 
 - **Entry**: `src/main.tsx` → `src/app/App.tsx`
-- **Routing**: React Router v7 (`src/app/routes.ts`). `App.tsx` creates a **separate `publicRouter`** for `/quote/:id` (no auth). The main router uses `Layout` which wraps all authenticated pages. Auth gating is in `AppInner()` in `App.tsx`, not in the Layout component itself
+- **Routing**: React Router v7 (`src/app/routes.ts`). Three role-based router factories: `createProducerRouter()`, `createSupplierRouter()`, `createAdminRouter()`. `App.tsx` also creates a **separate `publicRouter`** for `/quote/:id` (no auth). The main router uses `Layout` which wraps all authenticated pages. Auth gating is in `AppInner()` in `App.tsx`, not in the Layout component itself
+- **Roles**: `users` table has `role` field (`admin` | `producer` | `supplier`) with role-specific onboarding flows in `src/app/components/onboarding/`
 - **Auth**: Convex Auth via `src/app/components/AuthContext.tsx` — provides `useAuth()` hook with `login`, `signup`, `logout`. Uses `@convex-dev/auth` with email/password provider
 - **Backend calls**: All pages use `useQuery` / `useMutation` hooks from `convex/react` directly — no API client layer. Data is real-time reactive
 - **Data types**: `src/app/components/data.ts` — `Supplier`, `Project`, `Client`, `CalendarEvent`, `QuoteVersion` interfaces
@@ -69,7 +70,7 @@ VITE_CONVEX_SITE_URL=https://unique-ermine-475.convex.site
 ### Backend (Convex)
 
 - **Deployment**: `unique-ermine-475.convex.cloud`
-- **Schema**: `convex/schema.ts` — 11 domain tables + `metadata` + `authTables`. All entities use `_id` (Convex internal) with `legacyId` for backward-compatible URL routing
+- **Schema**: `convex/schema.ts` — 25+ tables including core domain tables (suppliers, projects, clients, calendarEvents, kanbanTasks) + extended tables (leads, bookings, invoiceTracking, supplierAvailability, supplierOrders, notifications, etc.) + `metadata` + `authTables`. All entities use `_id` (Convex internal) with `legacyId` for backward-compatible URL routing
 - **Functions** (in `convex/`):
   - `suppliers.ts` — list, get, getByLegacyId, summaries, create, update, remove, archive, bulkImport, bulkRollback
   - `supplierContacts.ts`, `supplierProducts.ts`, `supplierDocuments.ts` — sub-resources by supplierId
@@ -102,6 +103,10 @@ VITE_CONVEX_SITE_URL=https://unique-ermine-475.convex.site
 - **Charts**: Recharts for dashboard analytics
 - **Calendar views**: `src/app/components/calendar/` — DailyView, WeeklyView, MonthlyView, EventFormModal
 
+## Testing
+
+No automated test suite. Playwright is installed (`@playwright/test`) but no test files exist. Testing is manual. See `docs/testing-plan-01-02.md` for planned testing strategy.
+
 ## Project Status
 
-~60-65% of MVP spec built. Core CRUD works. Backend fully migrated from Supabase to Convex. Missing "smart" features: PDF export, WhatsApp/email sending, supplier recommendation engine, duplicate detection, profit distribution, travel time calculation, Google Calendar sync. See `docs/project-status.md` for details.
+~60-65% of MVP spec built. Core CRUD works. Backend fully migrated from Supabase to Convex. Missing "smart" features: PDF export, WhatsApp/email sending, supplier recommendation engine, duplicate detection, profit distribution, travel time calculation, Google Calendar sync. See `docs/project-status.md` for details. Feature plans live in `docs/plans/`.
