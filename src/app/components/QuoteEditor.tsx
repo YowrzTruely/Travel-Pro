@@ -7,14 +7,18 @@ import {
   Camera,
   Check,
   CheckSquare,
+  ChevronDown,
   CircleDot,
   Clock,
   Coins,
   Compass,
+  Copy,
   Download,
   Eye,
+  EyeOff,
   FileText,
   Info,
+  Link,
   Loader2,
   MapPin,
   Music,
@@ -28,9 +32,10 @@ import {
   User,
   Users,
   UtensilsCrossed,
+  Wrench,
   X,
 } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { api } from "../../../convex/_generated/api";
@@ -46,6 +51,7 @@ import { SupplierSearch } from "./SupplierSearch";
 interface QuoteItem {
   _creationTime: number;
   _id: Id<"quoteItems">;
+  alternativeItems?: any[];
   alternatives?: {
     id: string;
     name: string;
@@ -53,19 +59,27 @@ interface QuoteItem {
     costPerPerson: number;
     selected: boolean;
   }[];
+  availabilityStatus?: string;
   cost: number;
   description: string;
   directPrice: number;
+  equipmentRequirements?: string[];
+  grossTime?: number;
   icon: string;
   id: string;
   images?: { id: string; url: string; name: string }[];
   name: string;
+  netTime?: number;
   notes?: string;
+  productId?: Id<"supplierProducts">;
   profitWeight: number;
   projectId: Id<"projects">;
+  selectedAddons?: { addonId: string; name: string; price: number }[];
+  selectedByClient?: boolean;
   sellingPrice: number;
   status: string;
   supplier: string;
+  supplierId?: Id<"suppliers">;
   type: string;
 }
 
@@ -399,6 +413,30 @@ export function QuoteEditor() {
   const animatedTotal = useAnimatedCounter(totalSelling);
   const animatedPPP = useAnimatedCounter(pricePerPerson);
 
+  const totalAddons = currentItems.reduce((sum, item) => {
+    if (!item.selectedAddons) {
+      return sum;
+    }
+    return sum + item.selectedAddons.reduce((s, a) => s + a.price, 0);
+  }, 0);
+
+  const [equipmentOpen, setEquipmentOpen] = useState(true);
+
+  const aggregatedEquipment = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const item of currentItems) {
+      if (!item.equipmentRequirements) {
+        continue;
+      }
+      for (const eq of item.equipmentRequirements) {
+        const existing = map.get(eq) || [];
+        existing.push(item.name || item.type);
+        map.set(eq, existing);
+      }
+    }
+    return map;
+  }, [currentItems]);
+
   const updateProfitWeight = async (item: QuoteItem, newWeight: number) => {
     if (!project?._id) {
       return;
@@ -581,10 +619,60 @@ export function QuoteEditor() {
             </h1>
             <p className="text-[#8d785e] text-[12px]">
               מזהה פרויקט: #{projectId} &bull; {project.company}
+              {project.quoteVersion != null && (
+                <span
+                  className="mr-2 rounded-full bg-[#ff8c00]/10 px-2 py-0.5 text-[#ff8c00] text-[11px]"
+                  style={{ fontWeight: 600 }}
+                >
+                  גרסה {project.quoteVersion}
+                </span>
+              )}
             </p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          {/* Duplicate version button */}
+          <button
+            className="flex items-center gap-2 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+            onClick={async () => {
+              if (!(project?._id && projectId)) {
+                return;
+              }
+              try {
+                const nextVersion = (project.quoteVersion ?? 1) + 1;
+                await updateProject({
+                  id: projectId,
+                  quoteVersion: nextVersion,
+                });
+                // Duplicate all quote items
+                for (const item of currentItems) {
+                  await createItem({
+                    projectId: project._id,
+                    type: item.type,
+                    icon: item.icon,
+                    name: item.name,
+                    supplier: item.supplier,
+                    description: item.description,
+                    cost: item.cost,
+                    directPrice: item.directPrice,
+                    sellingPrice: item.sellingPrice,
+                    profitWeight: item.profitWeight,
+                    status: "pending",
+                  });
+                }
+                appToast.success(
+                  `גרסה ${nextVersion} נוצרה`,
+                  `${currentItems.length} רכיבים שוכפלו`
+                );
+              } catch {
+                appToast.error("שגיאה", "לא ניתן לשכפל גרסה");
+              }
+            }}
+            type="button"
+          >
+            <FileText size={15} />
+            שכפל גרסה
+          </button>
           <button
             className="flex items-center gap-2 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
             onClick={() => navigate(`/quote/${projectId}`)}
@@ -721,6 +809,20 @@ export function QuoteEditor() {
               </div>
             </div>
           </div>
+          {totalAddons > 0 && (
+            <>
+              <div className="h-10 w-px bg-white/20" />
+              <div className="text-center">
+                <div className="text-[#c4b89a] text-[11px]">תוספות</div>
+                <div
+                  className="text-[18px] text-white"
+                  style={{ fontWeight: 600 }}
+                >
+                  ₪{totalAddons.toLocaleString()}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         <div
@@ -1261,6 +1363,53 @@ export function QuoteEditor() {
         )}
       </div>
 
+      {/* ═══ Equipment Aggregation Section ═══ */}
+      {aggregatedEquipment.size > 0 && (
+        <div className="mt-8 space-y-3">
+          <button
+            className="flex w-full items-center justify-between"
+            onClick={() => setEquipmentOpen((o) => !o)}
+            type="button"
+          >
+            <h2
+              className="flex items-center gap-2 text-[#181510] text-[18px]"
+              style={{ fontWeight: 700 }}
+            >
+              <SectionIcon>
+                <Wrench size={15} />
+              </SectionIcon>
+              ציוד נדרש ({aggregatedEquipment.size})
+            </h2>
+            <ChevronDown
+              className={`text-[#8d785e] transition-transform ${equipmentOpen ? "rotate-180" : ""}`}
+              size={18}
+            />
+          </button>
+          {equipmentOpen && (
+            <div className="space-y-2 rounded-xl border border-[#e7e1da] bg-white p-4">
+              {Array.from(aggregatedEquipment.entries()).map(
+                ([eq, activities]: [string, string[]]) => (
+                  <div className="flex items-start gap-2 text-[13px]" key={eq}>
+                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ff8c00]" />
+                    <div>
+                      <span
+                        className="text-[#181510]"
+                        style={{ fontWeight: 600 }}
+                      >
+                        {eq}
+                      </span>
+                      <span className="mr-2 text-[#8d785e]">
+                        ({activities.join(", ")})
+                      </span>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ═══ Timeline Section ═══ */}
       <div
         className="mt-8 scroll-mt-4 space-y-5"
@@ -1269,15 +1418,47 @@ export function QuoteEditor() {
           sectionRefs.current.timeline = el;
         }}
       >
-        <h2
-          className="flex items-center gap-2 text-[#181510] text-[18px]"
-          style={{ fontWeight: 700 }}
-        >
-          <SectionIcon>
-            <Clock size={15} />
-          </SectionIcon>
-          לו"ז הפעילות
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2
+            className="flex items-center gap-2 text-[#181510] text-[18px]"
+            style={{ fontWeight: 700 }}
+          >
+            <SectionIcon>
+              <Clock size={15} />
+            </SectionIcon>
+            לו"ז הפעילות
+          </h2>
+          <button
+            className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] transition-all ${
+              project?.timelineHidden
+                ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
+                : "border-[#e7e1da] text-[#8d785e] hover:border-[#ff8c00] hover:text-[#ff8c00]"
+            }`}
+            onClick={async () => {
+              if (!projectId) {
+                return;
+              }
+              try {
+                await updateProject({
+                  id: projectId,
+                  timelineHidden: !project?.timelineHidden,
+                });
+                appToast.success(
+                  project?.timelineHidden
+                    ? 'לו"ז יוצג ללקוח'
+                    : 'לו"ז הוסתר מהלקוח'
+                );
+              } catch {
+                appToast.error("שגיאה", "לא ניתן לעדכן");
+              }
+            }}
+            style={{ fontWeight: 600 }}
+            type="button"
+          >
+            {project?.timelineHidden ? <EyeOff size={13} /> : <Eye size={13} />}
+            {project?.timelineHidden ? "מוסתר מהלקוח" : "הסתר מהלקוח"}
+          </button>
+        </div>
 
         {currentTimeline.length === 0 ? (
           <div className="rounded-xl border border-[#e7e1da] bg-white py-12 text-center">
@@ -1329,24 +1510,37 @@ export function QuoteEditor() {
         )}
       </div>
 
-      {/* Bottom actions */}
-      <div className="mt-6 flex gap-3">
+      {/* Bottom sticky action bar */}
+      <div className="sticky bottom-0 z-30 mt-8 flex flex-wrap items-center gap-2 rounded-xl border border-[#e7e1da] bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md">
         <button
-          className="flex items-center gap-2 rounded-xl bg-[#181510] px-6 py-2.5 text-[14px] text-white transition-colors hover:bg-[#2a2518] disabled:opacity-50"
+          className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[13px] text-white shadow-sm transition-colors hover:bg-[#e67e00]"
+          onClick={() => {
+            const url = `${window.location.origin}/quote/${projectId}`;
+            navigator.clipboard.writeText(url);
+            appToast.success("קישור הועתק", url);
+          }}
+          style={{ fontWeight: 600 }}
+          type="button"
+        >
+          <Link size={15} />
+          שלח הצעה ללקוח
+        </button>
+        <button
+          className="flex items-center gap-2 rounded-xl bg-[#181510] px-5 py-2.5 text-[13px] text-white transition-colors hover:bg-[#2a2518] disabled:opacity-50"
           disabled={saving}
           onClick={saveDraft}
           style={{ fontWeight: 600 }}
           type="button"
         >
           {saving ? (
-            <Loader2 className="animate-spin" size={16} />
+            <Loader2 className="animate-spin" size={15} />
           ) : (
-            <Save size={16} />
+            <Save size={15} />
           )}
           {saving ? "שומר..." : "שמור טיוטה"}
         </button>
         <button
-          className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-5 py-2.5 text-[#6b5d45] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+          className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
           onClick={() => {
             const printWin = window.open("", "_blank");
             if (!printWin) {
@@ -1376,20 +1570,20 @@ export function QuoteEditor() {
           }}
           type="button"
         >
-          <Download size={16} />
-          ייצוא PDF
+          <Download size={15} />
+          ייצא PDF
         </button>
         <button
-          className="rounded-xl border border-[#e7e1da] px-6 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
-          onClick={() =>
-            appToast.neutral(
-              "הנתונים עודכנו",
-              "הנתונים מסונכרנים אוטומטית עם Convex"
-            )
-          }
+          className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+          onClick={() => {
+            const url = `${window.location.origin}/quote/${projectId}?mode=noPrices`;
+            navigator.clipboard.writeText(url);
+            appToast.success("קישור ללא מחירים הועתק", url);
+          }}
           type="button"
         >
-          ביטול שינויים
+          <Copy size={15} />
+          שתף ללא מחירים
         </button>
       </div>
 

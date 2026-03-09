@@ -1,5 +1,6 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
+import { internalMutation, mutation, query } from "./_generated/server";
 
 export const listByProject = query({
   args: { projectId: v.id("projects") },
@@ -78,6 +79,118 @@ export const update = mutation({
       }
     }
     await ctx.db.patch(id, patch);
+    const doc = await ctx.db.get(id);
+    if (!doc) {
+      throw new Error("Failed to read updated document");
+    }
+    return { ...doc, id: doc._id };
+  },
+});
+
+export const generateOrdersForProject = internalMutation({
+  args: { projectId: v.id("projects") },
+  handler: async (ctx, { projectId }) => {
+    const project = await ctx.db.get(projectId);
+    if (!project) {
+      throw new Error("Project not found");
+    }
+
+    const items = await ctx.db
+      .query("quoteItems")
+      .withIndex("by_projectId", (q) => q.eq("projectId", projectId))
+      .collect();
+
+    // Group items by supplierId
+    const supplierItems = new Map<string, typeof items>();
+    for (const item of items) {
+      if (!item.supplierId) {
+        continue;
+      }
+      const key = item.supplierId;
+      if (!supplierItems.has(key)) {
+        supplierItems.set(key, []);
+      }
+      supplierItems.get(key)?.push(item);
+    }
+
+    let ordersCreated = 0;
+    for (const [supplierId, sItems] of supplierItems) {
+      const supplier = await ctx.db.get(supplierId as Id<"suppliers">);
+      const totalPrice = sItems.reduce((sum, i) => sum + (i.cost || 0), 0);
+
+      const orderId = await ctx.db.insert("supplierOrders", {
+        projectId,
+        supplierId: supplierId as Id<"suppliers">,
+        productId: sItems[0].productId,
+        clientName: project.client || project.company || project.name,
+        date: project.date || new Date().toISOString().split("T")[0],
+        participants: project.participants,
+        agreedPrice: totalPrice,
+        usesCustomFormat: supplier?.usesCustomOrderFormat ?? false,
+        customFormatNotes: supplier?.customOrderFormatNotes,
+        status: "pending",
+        createdAt: Date.now(),
+      });
+
+      await ctx.db.insert("invoiceTracking", {
+        projectId,
+        supplierId: supplierId as Id<"suppliers">,
+        orderId,
+        status: "pending",
+        createdAt: Date.now(),
+      });
+
+      ordersCreated++;
+    }
+
+    // Block archiving until invoices received
+    await ctx.db.patch(projectId, {
+      archiveBlocked: true,
+      archiveBlockReason: "ממתין לקבלת חשבוניות מספקים",
+    });
+
+    return { ordersCreated };
+  },
+});
+
+export const sendOrder = mutation({
+  args: { id: v.id("supplierOrders") },
+  handler: async (ctx, { id }) => {
+    const order = await ctx.db.get(id);
+    if (!order) {
+      throw new Error("Order not found");
+    }
+    console.log(
+      `[SupplierOrders] Sending order ${id} to supplier ${order.supplierId}`
+    );
+    await ctx.db.patch(id, { status: "sent" });
+    const doc = await ctx.db.get(id);
+    if (!doc) {
+      throw new Error("Failed to read updated document");
+    }
+    return { ...doc, id: doc._id };
+  },
+});
+
+export const confirmOrder = mutation({
+  args: { id: v.id("supplierOrders") },
+  handler: async (ctx, { id }) => {
+    await ctx.db.patch(id, { status: "confirmed" });
+    const doc = await ctx.db.get(id);
+    if (!doc) {
+      throw new Error("Failed to read updated document");
+    }
+    return { ...doc, id: doc._id };
+  },
+});
+
+export const cancelOrder = mutation({
+  args: {
+    id: v.id("supplierOrders"),
+    cancellationReason: v.optional(v.string()),
+  },
+  handler: async (ctx, { id }) => {
+    await ctx.db.patch(id, { status: "cancelled" });
     const doc = await ctx.db.get(id);
     if (!doc) {
       throw new Error("Failed to read updated document");

@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 
 export const listByProject = query({
   args: { projectId: v.id("projects") },
@@ -63,6 +63,40 @@ export const cancel = mutation({
       throw new Error("Failed to read updated document");
     }
     return { ...doc, id: doc._id };
+  },
+});
+
+export const confirm = mutation({
+  args: { id: v.id("bookings") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, {
+      status: "confirmed",
+      expiresAt: undefined,
+    });
+    const doc = await ctx.db.get(args.id);
+    if (!doc) {
+      throw new Error("Failed to read updated document");
+    }
+    return { ...doc, id: doc._id };
+  },
+});
+
+export const checkExpired = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    const bookings = await ctx.db
+      .query("bookings")
+      .withIndex("by_status", (q) => q.eq("status", "reserved"))
+      .collect();
+    let expired = 0;
+    for (const booking of bookings) {
+      if (booking.expiresAt && booking.expiresAt < now) {
+        await ctx.db.patch(booking._id, { status: "expired" });
+        expired++;
+      }
+    }
+    return { expired };
   },
 });
 

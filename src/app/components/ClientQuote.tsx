@@ -4,15 +4,21 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  Clock,
+  Download,
   Loader2,
+  MessageSquare,
   Printer,
   Share2,
 } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { appToast } from "./AppToast";
 import { CategoryIcon } from "./CategoryIcons";
+import { ClientQuoteChangeRequest } from "./ClientQuoteChangeRequest";
+import { ClientQuoteSignature } from "./ClientQuoteSignature";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 const PLANT_IMG =
@@ -28,21 +34,27 @@ const ACTIVITY_IMAGES = [VINEYARD_IMG, LUNCH_IMG, VAN_IMG];
 
 export function ClientQuote() {
   const { id: projectId } = useParams();
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get("mode") || undefined;
+
   const [expandedTimeline, setExpandedTimeline] = useState<number | null>(null);
   const [expandedActivities, setExpandedActivities] = useState<
     Record<number, boolean>
   >({});
   const [confirmed, setConfirmed] = useState(false);
-  const [confirming, setConfirming] = useState(false);
   const [showVersions, setShowVersions] = useState(false);
+  const [showSignature, setShowSignature] = useState(false);
+  const [showChangeRequest, setShowChangeRequest] = useState(false);
 
   const quoteData = useQuery(
     api.publicQuote.getQuote,
-    projectId ? { id: projectId } : "skip"
+    projectId ? { id: projectId, mode } : "skip"
   );
-  const approveQuote = useMutation(api.publicQuote.approveQuote);
+  const toggleUpsell = useMutation(api.publicQuote.toggleUpsell);
+  const selectAlternative = useMutation(api.publicQuote.selectAlternative);
 
   const loading = quoteData === undefined;
+  const noPrices = mode === "noPrices";
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -58,7 +70,6 @@ export function ClientQuote() {
       title: "סיור כרמים, טעימות יין וגבינות בוטיק",
       subtitle: "החוויה הגלילית האולטימטיבית",
       img: VINEYARD_IMG,
-      provider: "יקב רמת נפתלי",
       bullets: [
         "סיור מודרך בכרם עין רפאל בגליל העליון, עם מדריך שמכיר כל גפן ואבן במקום.",
         "נכנסים ללב הכרם — נופים עוצרי נשימה, אדמה אדומה וסיפורים מרתקים.",
@@ -71,7 +82,6 @@ export function ClientQuote() {
       title: "ארוחת צהריים גורמה בטבע",
       subtitle: "חוויה קולינרית גלילית",
       img: LUNCH_IMG,
-      provider: 'מסעדה "החווה הגלילית"',
       bullets: [
         "ארוחה במסעדת חווה ציורית בלב הטבע, שולחנות מוצלים מתחת לעצי אלון.",
         "תפריט שף עשיר: סלטי חווה טריים, בשרים על הגריל ותבשילים ביתיים.",
@@ -83,7 +93,6 @@ export function ClientQuote() {
       title: "הסעות VIP ולוגיסטיקה מלאה",
       subtitle: "ROYAL TRANSPORT",
       img: VAN_IMG,
-      provider: "ROYAL TRANSPORT",
       bullets: [
         'איסוף מאורגן מ-3 נקודות מפגש מרכזיות (ת"א, חיפה, נתניה).',
         "3 אוטובוסים מפוארים עם מושבים מרופדים, Wi-Fi ומיזוג אוויר.",
@@ -97,11 +106,18 @@ export function ClientQuote() {
   const activities =
     quoteData?.items && quoteData.items.length > 0
       ? quoteData.items.map((item: any, idx: number) => ({
+          quoteItemId: item.quoteItemId,
           title: item.name || item.type,
           subtitle: item.type,
           img: ACTIVITY_IMAGES[idx % ACTIVITY_IMAGES.length],
-          provider: item.supplier,
           bullets: [item.description || "פרטים נוספים יתווספו בקרוב."],
+          sellingPrice: item.sellingPrice,
+          equipmentRequirements: item.equipmentRequirements,
+          grossTime: item.grossTime,
+          netTime: item.netTime,
+          selectedAddons: item.selectedAddons,
+          alternativeItems: item.alternativeItems,
+          selectedByClient: item.selectedByClient,
         }))
       : defaultActivities;
 
@@ -140,26 +156,27 @@ export function ClientQuote() {
     },
   ];
 
-  const handleApprove = async () => {
+  const handleApprove = () => {
     if (!projectId || confirmed) {
       return;
     }
-    try {
-      setConfirming(true);
-      await approveQuote({ id: projectId });
-      setConfirmed(true);
-    } catch (err) {
-      console.error("[ClientQuote] Approve failed:", err);
-      // Still show confirmed UI even if API fails
-      setConfirmed(true);
-    } finally {
-      setConfirming(false);
-    }
+    setShowSignature(true);
+  };
+
+  const handleSigned = () => {
+    setShowSignature(false);
+    setConfirmed(true);
   };
 
   const toggleActivity = (idx: number) => {
     setExpandedActivities((prev) => ({ ...prev, [idx]: !prev[idx] }));
   };
+
+  // Items list for change request modal
+  const changeRequestItems = (quoteData?.items || []).map((item: any) => ({
+    id: item.quoteItemId,
+    name: item.name || item.type,
+  }));
 
   if (loading) {
     return (
@@ -178,6 +195,13 @@ export function ClientQuote() {
       className="min-h-screen bg-white font-['Assistant',sans-serif]"
       dir="rtl"
     >
+      {/* No-prices banner */}
+      {noPrices && (
+        <div className="bg-[#fff7ed] px-4 py-2 text-center font-semibold text-[#9a3412] text-[13px]">
+          תצוגה ללא מחירים — לצפייה בלבד
+        </div>
+      )}
+
       {/* Top nav */}
       <div className="sticky top-0 z-40 flex items-center justify-between border-[#e7e1da] border-b bg-white px-4 py-3">
         <div className="flex items-center gap-3">
@@ -201,8 +225,13 @@ export function ClientQuote() {
             TravelPro
           </span>
         </div>
-        <div className="hidden text-[#8d785e] text-[13px] sm:block">
-          הצעת מחיר | {projectName}
+        <div className="hidden items-center gap-2 text-[#8d785e] text-[13px] sm:flex">
+          <span>הצעת מחיר | {projectName}</span>
+          {quoteData?.quoteVersion && (
+            <span className="rounded-full bg-[#f5f3f0] px-2 py-0.5 font-semibold text-[11px]">
+              V{quoteData.quoteVersion}
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -334,6 +363,34 @@ export function ClientQuote() {
                     >
                       {activity.title}
                     </h3>
+
+                    {/* Time display */}
+                    {(activity.grossTime || activity.netTime) && (
+                      <div className="mb-2 flex items-center gap-3 text-[#8d785e] text-[12px]">
+                        <Clock className="shrink-0" size={13} />
+                        {activity.grossTime && (
+                          <span>זמן ברוטו: {activity.grossTime}</span>
+                        )}
+                        {activity.netTime && (
+                          <span>זמן נטו: {activity.netTime}</span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Equipment requirements */}
+                    {activity.equipmentRequirements && (
+                      <div className="mb-2 rounded-lg bg-[#f5f3f0] px-3 py-1.5 text-[#8d785e] text-[12px]">
+                        ציוד נדרש: {activity.equipmentRequirements}
+                      </div>
+                    )}
+
+                    {/* Per-item price (hidden in noPrices mode) */}
+                    {!noPrices && activity.sellingPrice != null && (
+                      <div className="mb-2 font-bold text-[#ff8c00] text-[14px]">
+                        ₪{Number(activity.sellingPrice).toLocaleString()}
+                      </div>
+                    )}
+
                     <div
                       className={`space-y-1 ${expandedActivities[idx] ? "" : "relative max-h-20 overflow-hidden"}`}
                     >
@@ -366,11 +423,120 @@ export function ClientQuote() {
                         )}
                       </button>
                     )}
-                    {activity.provider && (
-                      <div className="mt-3 text-[#8d785e] text-[11px]">
-                        ספק: {activity.provider}
-                      </div>
-                    )}
+
+                    {/* Upsell addons */}
+                    {activity.selectedAddons &&
+                      activity.selectedAddons.length > 0 && (
+                        <div className="mt-3 space-y-1.5 border-[#e7e1da] border-t pt-3">
+                          <div
+                            className="text-[#181510] text-[12px]"
+                            style={{ fontWeight: 600 }}
+                          >
+                            תוספות זמינות
+                          </div>
+                          {activity.selectedAddons.map(
+                            (addon: any, aIdx: number) => (
+                              <label
+                                className="flex cursor-pointer items-center gap-2"
+                                key={aIdx}
+                              >
+                                <input
+                                  checked={addon.selected ?? false}
+                                  className="h-3.5 w-3.5 accent-[#ff8c00]"
+                                  onChange={(e) => {
+                                    if (!(projectId && activity.quoteItemId)) {
+                                      return;
+                                    }
+                                    toggleUpsell({
+                                      projectId:
+                                        projectId as unknown as Id<"projects">,
+                                      quoteItemId: activity.quoteItemId,
+                                      addonId: addon.addonId,
+                                      name: addon.name,
+                                      price: addon.price ?? 0,
+                                      selected: e.target.checked,
+                                    });
+                                  }}
+                                  type="checkbox"
+                                />
+                                <span className="text-[#8d785e] text-[12px]">
+                                  {addon.name}
+                                  {!noPrices && addon.price != null && (
+                                    <span className="mr-1 text-[#ff8c00]">
+                                      (+₪{Number(addon.price).toLocaleString()})
+                                    </span>
+                                  )}
+                                </span>
+                              </label>
+                            )
+                          )}
+                        </div>
+                      )}
+
+                    {/* Alternative items */}
+                    {activity.alternativeItems &&
+                      activity.alternativeItems.length > 0 && (
+                        <div className="mt-3 space-y-1.5 border-[#e7e1da] border-t pt-3">
+                          <div
+                            className="text-[#181510] text-[12px]"
+                            style={{ fontWeight: 600 }}
+                          >
+                            חלופות
+                          </div>
+                          <label className="flex cursor-pointer items-center gap-2">
+                            <input
+                              checked={activity.selectedByClient !== false}
+                              className="h-3.5 w-3.5 accent-[#ff8c00]"
+                              name={`alt-${activity.quoteItemId}`}
+                              onChange={() => {
+                                if (!activity.quoteItemId) {
+                                  return;
+                                }
+                                selectAlternative({
+                                  quoteItemId: activity.quoteItemId,
+                                  selectedAlternativeIndex: -1,
+                                });
+                              }}
+                              type="radio"
+                            />
+                            <span className="text-[#8d785e] text-[12px]">
+                              {activity.title} (מקורי)
+                            </span>
+                          </label>
+                          {activity.alternativeItems.map(
+                            (alt: any, altIdx: number) => (
+                              <label
+                                className="flex cursor-pointer items-center gap-2"
+                                key={altIdx}
+                              >
+                                <input
+                                  checked={false}
+                                  className="h-3.5 w-3.5 accent-[#ff8c00]"
+                                  name={`alt-${activity.quoteItemId}`}
+                                  onChange={() => {
+                                    if (!activity.quoteItemId) {
+                                      return;
+                                    }
+                                    selectAlternative({
+                                      quoteItemId: activity.quoteItemId,
+                                      selectedAlternativeIndex: altIdx,
+                                    });
+                                  }}
+                                  type="radio"
+                                />
+                                <span className="text-[#8d785e] text-[12px]">
+                                  {alt.name}
+                                  {!noPrices && alt.price != null && (
+                                    <span className="mr-1 text-[#ff8c00]">
+                                      (₪{Number(alt.price).toLocaleString()})
+                                    </span>
+                                  )}
+                                </span>
+                              </label>
+                            )
+                          )}
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -404,89 +570,129 @@ export function ClientQuote() {
           </div>
         </div>
 
-        {/* Price summary */}
-        <div className="rounded-2xl bg-gradient-to-l from-[#181510] to-[#2a2518] p-6 text-white">
-          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-            <div>
-              <h2
-                className="text-[20px] text-white"
-                style={{ fontWeight: 700 }}
-              >
-                סיכום הצעת מחיר
-              </h2>
-              <p className="mt-1 text-[#c4b89a] text-[13px]">
-                החבילה המומלצת על {participants} משתתפים
-              </p>
-            </div>
-            <div className="flex items-end gap-6">
-              <div className="text-center">
-                <div className="text-[#c4b89a] text-[11px]">מחיר לאדם</div>
-                <div
+        {/* Price summary — hidden in noPrices mode */}
+        {!noPrices && (
+          <div className="rounded-2xl bg-gradient-to-l from-[#181510] to-[#2a2518] p-6 text-white">
+            <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+              <div>
+                <h2
                   className="text-[20px] text-white"
                   style={{ fontWeight: 700 }}
                 >
-                  ₪{pricePerPerson.toLocaleString()}
-                </div>
+                  סיכום הצעת מחיר
+                </h2>
+                <p className="mt-1 text-[#c4b89a] text-[13px]">
+                  החבילה המומלצת על {participants} משתתפים
+                </p>
               </div>
-              <div className="text-center">
-                <div className="text-[#c4b89a] text-[11px]">מחיר כולל</div>
-                <div
-                  className="text-[#ff8c00] text-[32px]"
-                  style={{ fontWeight: 700 }}
-                >
-                  ₪{totalPrice.toLocaleString()}
+              <div className="flex items-end gap-6">
+                <div className="text-center">
+                  <div className="text-[#c4b89a] text-[11px]">מחיר לאדם</div>
+                  <div
+                    className="text-[20px] text-white"
+                    style={{ fontWeight: 700 }}
+                  >
+                    ₪{pricePerPerson.toLocaleString()}
+                  </div>
                 </div>
-                <div className="text-[#c4b89a] text-[11px]">
-                  כולל מע"מ על בסיס {participants} משתתפים
+                <div className="text-center">
+                  <div className="text-[#c4b89a] text-[11px]">מחיר כולל</div>
+                  <div
+                    className="text-[#ff8c00] text-[32px]"
+                    style={{ fontWeight: 700 }}
+                  >
+                    ₪{totalPrice.toLocaleString()}
+                  </div>
+                  <div className="text-[#c4b89a] text-[11px]">
+                    כולל מע"מ על בסיס {participants} משתתפים
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="mt-5 flex flex-wrap gap-3">
-            {confirmed ? (
-              <div className="flex items-center gap-2 rounded-xl bg-green-500 px-8 py-3 text-white">
-                <Check size={18} />
-                <span style={{ fontWeight: 700 }}>
-                  ההזמנה אושרה! המפיק יקבל התראה.
-                </span>
-              </div>
-            ) : (
+            <div className="mt-5 flex flex-wrap gap-3">
+              {!confirmed && (
+                <>
+                  <button
+                    className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-8 py-3 text-white shadow-[#ff8c00]/20 shadow-lg transition-all hover:bg-[#e67e00]"
+                    onClick={handleApprove}
+                    style={{ fontWeight: 700 }}
+                    type="button"
+                  >
+                    <Check size={18} />
+                    אישור הזמנה
+                  </button>
+                  <button
+                    className="flex items-center gap-2 rounded-xl border border-[#c4b89a]/40 px-6 py-3 text-[#c4b89a] transition-colors hover:bg-white/5"
+                    onClick={() => setShowChangeRequest(true)}
+                    type="button"
+                  >
+                    <MessageSquare size={16} />
+                    בקשת שינויים
+                  </button>
+                </>
+              )}
               <button
-                className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-8 py-3 text-white shadow-[#ff8c00]/20 shadow-lg transition-all hover:bg-[#e67e00]"
-                onClick={handleApprove}
-                style={{ fontWeight: 700 }}
+                className="flex items-center gap-2 rounded-xl border border-[#c4b89a]/40 px-6 py-3 text-[#c4b89a] transition-colors hover:bg-white/5"
+                onClick={async () => {
+                  try {
+                    if (navigator.share) {
+                      await navigator.share({
+                        title: `הצעת מחיר — ${projectName}`,
+                        url: window.location.href,
+                      });
+                    } else {
+                      await navigator.clipboard.writeText(window.location.href);
+                      appToast.success("קישור הועתק", "קישור ההצעה הועתק ללוח");
+                    }
+                  } catch {
+                    /* user cancelled share dialog */
+                  }
+                }}
                 type="button"
               >
-                {confirming ? (
-                  <Loader2 className="animate-spin" size={18} />
-                ) : (
-                  <Check size={18} />
-                )}
-                אישור הזמנה
+                <Share2 size={16} /> שיתוף
               </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Post-approval confirmation overlay */}
+      {confirmed && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/95 backdrop-blur-sm">
+          <div className="mx-4 max-w-md text-center">
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-100">
+              <Check className="text-green-600" size={48} />
+            </div>
+            <h2
+              className="mb-2 text-[#181510] text-[28px]"
+              style={{ fontWeight: 700 }}
+            >
+              ההזמנה אושרה!
+            </h2>
+            <p className="mb-1 text-[#8d785e] text-[16px]">{projectName}</p>
+            {quoteData?.date && (
+              <p className="mb-4 text-[#8d785e] text-[14px]">
+                {quoteData.date}
+              </p>
             )}
+            <p
+              className="mb-6 text-[#181510] text-[16px]"
+              style={{ fontWeight: 600 }}
+            >
+              נציג יצור איתך קשר בקרוב
+            </p>
             <button
-              className="flex items-center gap-2 rounded-xl border border-[#c4b89a]/40 px-6 py-3 text-[#c4b89a] transition-colors hover:bg-white/5"
-              onClick={async () => {
-                try {
-                  if (navigator.share) {
-                    await navigator.share({
-                      title: `הצעת מחיר — ${projectName}`,
-                      url: window.location.href,
-                    });
-                  } else {
-                    await navigator.clipboard.writeText(window.location.href);
-                    appToast.success("קישור הועתק", "קישור ההצעה הועתק ללוח");
-                  }
-                } catch {}
-              }}
+              className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-6 py-3 text-[#8d785e] text-[14px] opacity-50"
+              disabled
               type="button"
             >
-              <Share2 size={16} /> שיתוף
+              <Download size={16} />
+              הורד PDF
             </button>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Footer */}
       <footer className="mt-10 bg-[#181510] py-8 text-white">
@@ -607,6 +813,30 @@ export function ClientQuote() {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Signature modal */}
+      {projectId && (
+        <ClientQuoteSignature
+          isOpen={showSignature}
+          onClose={() => setShowSignature(false)}
+          onSigned={handleSigned}
+          projectId={projectId}
+        />
+      )}
+
+      {/* Change request modal */}
+      {projectId && (
+        <ClientQuoteChangeRequest
+          isOpen={showChangeRequest}
+          items={changeRequestItems}
+          onClose={() => setShowChangeRequest(false)}
+          onSubmitted={() => {
+            setShowChangeRequest(false);
+            appToast.success("הבקשה נשלחה", "המפיק יבדוק את הבקשה שלך");
+          }}
+          projectId={projectId}
+        />
       )}
     </div>
   );

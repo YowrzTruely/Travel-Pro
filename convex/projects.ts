@@ -118,6 +118,8 @@ export const update = mutation({
     pricePerPerson: v.optional(v.number()),
     profitMargin: v.optional(v.number()),
     date: v.optional(v.string()),
+    quoteVersion: v.optional(v.number()),
+    timelineHidden: v.optional(v.boolean()),
   },
   handler: async (ctx, { id, ...updates }) => {
     const project = await findProject(ctx, id);

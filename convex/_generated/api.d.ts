@@ -8,11 +8,13 @@
  * @module
  */
 
+import type * as aiSupplier from "../aiSupplier.js";
 import type * as auth from "../auth.js";
 import type * as availabilityRequests from "../availabilityRequests.js";
 import type * as bookings from "../bookings.js";
 import type * as calendarEvents from "../calendarEvents.js";
 import type * as clients from "../clients.js";
+import type * as crons from "../crons.js";
 import type * as dashboard from "../dashboard.js";
 import type * as fieldOperationStops from "../fieldOperationStops.js";
 import type * as fieldOperations from "../fieldOperations.js";
@@ -22,6 +24,7 @@ import type * as invoiceTracking from "../invoiceTracking.js";
 import type * as kanbanTasks from "../kanbanTasks.js";
 import type * as leadCommunications from "../leadCommunications.js";
 import type * as leads from "../leads.js";
+import type * as notificationSender from "../notificationSender.js";
 import type * as notifications from "../notifications.js";
 import type * as productAddons from "../productAddons.js";
 import type * as projectDocuments from "../projectDocuments.js";
@@ -48,11 +51,13 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  aiSupplier: typeof aiSupplier;
   auth: typeof auth;
   availabilityRequests: typeof availabilityRequests;
   bookings: typeof bookings;
   calendarEvents: typeof calendarEvents;
   clients: typeof clients;
+  crons: typeof crons;
   dashboard: typeof dashboard;
   fieldOperationStops: typeof fieldOperationStops;
   fieldOperations: typeof fieldOperations;
@@ -62,6 +67,7 @@ declare const fullApi: ApiFromModules<{
   kanbanTasks: typeof kanbanTasks;
   leadCommunications: typeof leadCommunications;
   leads: typeof leads;
+  notificationSender: typeof notificationSender;
   notifications: typeof notifications;
   productAddons: typeof productAddons;
   projectDocuments: typeof projectDocuments;

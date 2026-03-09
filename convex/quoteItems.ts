@@ -19,6 +19,44 @@ export const listByProjectId = query({
   },
 });
 
+const newFieldArgs = {
+  supplierId: v.optional(v.id("suppliers")),
+  productId: v.optional(v.id("supplierProducts")),
+  availabilityStatus: v.optional(
+    v.union(
+      v.literal("pending"),
+      v.literal("approved"),
+      v.literal("declined"),
+      v.literal("not_checked")
+    )
+  ),
+  selectedAddons: v.optional(
+    v.array(
+      v.object({
+        addonId: v.id("productAddons"),
+        name: v.string(),
+        price: v.number(),
+      })
+    )
+  ),
+  equipmentRequirements: v.optional(v.array(v.string())),
+  grossTime: v.optional(v.number()),
+  netTime: v.optional(v.number()),
+  alternativeItems: v.optional(
+    v.array(
+      v.object({
+        supplierId: v.id("suppliers"),
+        productId: v.optional(v.id("supplierProducts")),
+        name: v.string(),
+        price: v.number(),
+        description: v.optional(v.string()),
+        imageUrl: v.optional(v.string()),
+      })
+    )
+  ),
+  selectedByClient: v.optional(v.boolean()),
+};
+
 export const create = mutation({
   args: {
     projectId: v.id("projects"),
@@ -44,6 +82,7 @@ export const create = mutation({
       )
     ),
     notes: v.optional(v.string()),
+    ...newFieldArgs,
   },
   handler: async (ctx, args) => {
     const id = await ctx.db.insert("quoteItems", {
@@ -60,6 +99,15 @@ export const create = mutation({
       status: args.status || "pending",
       alternatives: args.alternatives || [],
       notes: args.notes,
+      supplierId: args.supplierId,
+      productId: args.productId,
+      availabilityStatus: args.availabilityStatus ?? "not_checked",
+      selectedAddons: args.selectedAddons,
+      equipmentRequirements: args.equipmentRequirements,
+      grossTime: args.grossTime,
+      netTime: args.netTime,
+      alternativeItems: args.alternativeItems,
+      selectedByClient: args.selectedByClient,
     });
     const item = await ctx.db.get(id);
     if (!item) {
@@ -103,6 +151,7 @@ export const update = mutation({
       )
     ),
     notes: v.optional(v.string()),
+    ...newFieldArgs,
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);

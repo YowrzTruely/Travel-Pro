@@ -189,6 +189,7 @@ export default defineSchema({
     digitalSignatureId: v.optional(v.string()),
     archiveBlocked: v.optional(v.boolean()),
     archiveBlockReason: v.optional(v.string()),
+    timelineHidden: v.optional(v.boolean()),
   })
     .index("by_legacyId", ["legacyId"])
     .index("by_status", ["status"]),
