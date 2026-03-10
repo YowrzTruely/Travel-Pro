@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import { internalMutation, mutation, query } from "./_generated/server";
 
 export const listByProject = query({
@@ -111,5 +112,63 @@ export const expire = mutation({
       throw new Error("Failed to read updated document");
     }
     return { ...doc, id: doc._id };
+  },
+});
+
+/**
+ * Cron job: find bookings expiring within 2 days and create notifications
+ * for the project's assigned user (or all producers).
+ */
+export const sendExpiryAlerts = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    const twoDaysFromNow = now + 2 * 24 * 60 * 60 * 1000;
+
+    // Find reserved bookings that expire within the next 2 days
+    const bookings = await ctx.db
+      .query("bookings")
+      .withIndex("by_status", (q) => q.eq("status", "reserved"))
+      .collect();
+
+    let alertCount = 0;
+
+    for (const booking of bookings) {
+      if (!booking.expiresAt) {
+        continue;
+      }
+      if (booking.expiresAt > now && booking.expiresAt <= twoDaysFromNow) {
+        // Look up the project to find the assigned user
+        const project = await ctx.db.get(booking.projectId);
+        if (!project) {
+          continue;
+        }
+
+        const supplier = await ctx.db.get(booking.supplierId);
+        const supplierName = supplier?.name ?? "ספק";
+        const projectName = project.name;
+
+        // Notify the assigned user, or find producers to notify
+        const targetUserId = project.assignedTo;
+        if (targetUserId) {
+          await ctx.scheduler.runAfter(
+            0,
+            internal.notifications.createForUser,
+            {
+              userId: targetUserId,
+              type: "booking_expiring",
+              title: "הזמנה עומדת לפוג",
+              body: `ההזמנה של ${supplierName} עבור "${projectName}" תפוג בעוד יומיים`,
+              link: `/projects/${project.legacyId ?? project._id}`,
+              channel: "in_app",
+            }
+          );
+          alertCount++;
+        }
+      }
+    }
+
+    console.log(`[sendExpiryAlerts] Sent ${alertCount} booking expiry alerts`);
+    return { alertCount };
   },
 });

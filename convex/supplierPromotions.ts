@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 
 export const listBySupplier = query({
   args: { supplierId: v.id("suppliers") },
@@ -83,5 +83,32 @@ export const deactivate = mutation({
       throw new Error("Failed to read updated document");
     }
     return { ...doc, id: doc._id };
+  },
+});
+
+/**
+ * Cron job: deactivate promotions whose expiresAt has passed.
+ */
+export const deactivateExpired = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    const active = await ctx.db
+      .query("supplierPromotions")
+      .withIndex("by_isActive", (q) => q.eq("isActive", true))
+      .collect();
+
+    let deactivatedCount = 0;
+    for (const promo of active) {
+      if (promo.expiresAt < now) {
+        await ctx.db.patch(promo._id, { isActive: false });
+        deactivatedCount++;
+      }
+    }
+
+    console.log(
+      `[deactivateExpired] Deactivated ${deactivatedCount} expired promotions`
+    );
+    return { deactivatedCount };
   },
 });

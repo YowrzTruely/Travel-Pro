@@ -49,3 +49,46 @@ export const create = mutation({
     return { ...doc, id: doc._id };
   },
 });
+
+export const createBulk = mutation({
+  args: {
+    projectId: v.id("projects"),
+    participantName: v.optional(v.string()),
+    ratings: v.array(
+      v.object({
+        supplierId: v.id("suppliers"),
+        rating: v.number(),
+        comment: v.optional(v.string()),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    const ids: string[] = [];
+    for (const r of args.ratings) {
+      const id = await ctx.db.insert("supplierRatings", {
+        supplierId: r.supplierId,
+        projectId: args.projectId,
+        participantName: args.participantName,
+        rating: r.rating,
+        comment: r.comment,
+        isProducerRating: false,
+        createdAt: Date.now(),
+      });
+      ids.push(id);
+
+      // Update supplier averageRating and totalRatings
+      const supplier = await ctx.db.get(r.supplierId);
+      if (supplier) {
+        const currentTotal = supplier.totalRatings ?? 0;
+        const currentAvg = supplier.averageRating ?? 0;
+        const newTotal = currentTotal + 1;
+        const newAvg = (currentAvg * currentTotal + r.rating) / newTotal;
+        await ctx.db.patch(r.supplierId, {
+          averageRating: Math.round(newAvg * 100) / 100,
+          totalRatings: newTotal,
+        });
+      }
+    }
+    return { success: true, count: ids.length };
+  },
+});

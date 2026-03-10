@@ -17,4 +17,18 @@ crons.cron(
   internal.supplierDocuments.sendReminders
 );
 
+// 5:00 UTC = 8:00 Israel time — alert on bookings expiring in 2 days
+crons.cron(
+  "check reservation expiry alerts",
+  "0 5 * * *",
+  internal.bookings.sendExpiryAlerts
+);
+
+// 0:00 UTC = 3:00 Israel time — deactivate expired supplier promotions
+crons.cron(
+  "deactivate expired promotions",
+  "0 0 * * *",
+  internal.supplierPromotions.deactivateExpired
+);
+
 export default crons;

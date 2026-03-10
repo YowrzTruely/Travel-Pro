@@ -5,17 +5,17 @@ import { ClientQuote } from "./components/ClientQuote";
 import { ClientsPage } from "./components/ClientsPage";
 import { LeadDetail } from "./components/crm/LeadDetail";
 import { LeadsPage } from "./components/crm/LeadsPage";
-import { Dashboard } from "./components/Dashboard";
 import { DocumentsPage } from "./components/DocumentsPage";
+import { AdminDashboard } from "./components/dashboards/AdminDashboard";
+import { ProducerDashboard } from "./components/dashboards/ProducerDashboard";
+import { SupplierDashboard } from "./components/dashboards/SupplierDashboard";
 import { RootErrorBoundary } from "./components/ErrorBoundary";
 import { FieldOperationsHQ } from "./components/field/FieldOperationsHQ";
 import { ImportWizard } from "./components/ImportWizard";
 import { Layout } from "./components/Layout";
 import { NotFoundPage, SettingsPage } from "./components/PlaceholderPage";
 import {
-  AdminDashboardPlaceholder,
   ApproveSupplierPlaceholder,
-  SupplierDashboardPlaceholder,
   SupplierRequestsPlaceholder,
   UserManagementPlaceholder,
 } from "./components/PortalPlaceholders";
@@ -42,7 +42,7 @@ export function createProducerRouter() {
       Component: Layout,
       ErrorBoundary: RootErrorBoundary,
       children: [
-        { index: true, Component: Dashboard },
+        { index: true, Component: ProducerDashboard },
         { path: "projects", Component: ProjectsList },
         { path: "projects/:id", Component: QuoteEditor },
         { path: "suppliers", Component: SupplierBank },
@@ -74,7 +74,7 @@ export function createSupplierRouter() {
       Component: Layout,
       ErrorBoundary: RootErrorBoundary,
       children: [
-        { index: true, Component: SupplierDashboardPlaceholder },
+        { index: true, Component: SupplierDashboard },
         { path: "products", Component: MyProducts },
         { path: "documents", Component: MyDocuments },
         { path: "availability", Component: AvailabilityCalendar },
@@ -98,7 +98,7 @@ export function createAdminRouter() {
       Component: Layout,
       ErrorBoundary: RootErrorBoundary,
       children: [
-        { index: true, Component: AdminDashboardPlaceholder },
+        { index: true, Component: AdminDashboard },
         { path: "approve-suppliers", Component: ApproveSupplierPlaceholder },
         { path: "users", Component: UserManagementPlaceholder },
         { path: "settings", Component: SettingsPage },

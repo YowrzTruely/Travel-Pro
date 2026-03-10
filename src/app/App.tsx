@@ -5,6 +5,8 @@ import { AuthProvider, useAuth } from "./components/AuthContext";
 import { AvailabilityInvitePage } from "./components/AvailabilityInvitePage";
 import { ClientQuote } from "./components/ClientQuote";
 import { ConvexProvider } from "./components/ConvexProvider";
+import { EventRatings } from "./components/gallery/EventRatings";
+import { PublicGallery } from "./components/gallery/PublicGallery";
 import { LoginPage } from "./components/LoginPage";
 import { ProducerOnboarding } from "./components/onboarding/ProducerOnboarding";
 import { SupplierOnboarding } from "./components/onboarding/SupplierOnboarding";
@@ -25,6 +27,8 @@ const PUBLIC_PATTERNS = [
   /^\/register\/supplier$/,
   /^\/availability-invite\/.+$/,
   /^\/supplier\/.+\/public$/,
+  /^\/gallery\/.+$/,
+  /^\/rate\/.+$/,
 ];
 
 function isPublicPage(): boolean {
@@ -38,6 +42,8 @@ const publicRouter = createBrowserRouter([
   { path: "/register/supplier", Component: SupplierSelfRegister },
   { path: "/availability-invite/:token", Component: AvailabilityInvitePage },
   { path: "/supplier/:id/public", Component: PublicSupplierProfile },
+  { path: "/gallery/:projectId", Component: PublicGallery },
+  { path: "/rate/:projectId", Component: EventRatings },
   { path: "*", Component: () => null },
 ]);
 
