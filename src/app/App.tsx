@@ -68,6 +68,7 @@ function AppInner() {
   const { user, profile, loading: authLoading, profileLoading } = useAuth();
   const isPublic = useMemo(() => isPublicPage(), []);
 
+
   // 1. Public pages — no auth required
   if (isPublic) {
     return <RouterProvider router={publicRouter} />;
@@ -122,7 +123,6 @@ function RoleRouter({ role }: { role: string }) {
         return createProducerRouter();
     }
   }, [role]);
-
   return <RouterProvider router={router} />;
 }
 

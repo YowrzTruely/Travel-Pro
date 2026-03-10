@@ -22,7 +22,8 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { useNavigate } from "react-router";
 import { api } from "../../../../convex/_generated/api";
 import { useAuth } from "../AuthContext";
@@ -325,28 +326,33 @@ function WidgetSection({
   return (
     <Collapsible onOpenChange={setIsOpen} open={isOpen}>
       <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
-        <CollapsibleTrigger asChild>
-          <button
-            className="flex w-full items-center justify-between px-6 py-4 text-right transition-colors hover:bg-[#fdfcfb]"
-            type="button"
-          >
-            <div className="flex items-center gap-2.5">
-              <Icon size={18} style={{ color: iconColor }} />
-              <h2
-                className="text-[#181510] text-[18px]"
-                style={{ fontWeight: 600 }}
-              >
-                {title}
-              </h2>
+        <div className="flex w-full items-center justify-between px-6 py-4 text-right transition-colors hover:bg-[#fdfcfb]">
+          <div className="flex items-center gap-2.5">
+            <Icon size={18} style={{ color: iconColor }} />
+            <CollapsibleTrigger asChild>
+              <button className="flex items-center gap-2.5" type="button">
+                <h2
+                  className="text-[#181510] text-[18px]"
+                  style={{ fontWeight: 600 }}
+                >
+                  {title}
+                </h2>
+              </button>
+            </CollapsibleTrigger>
+            <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
               <HelpTooltip text={helpText} />
             </div>
-            {isOpen ? (
-              <ChevronUp className="text-[#8d785e]" size={16} />
-            ) : (
-              <ChevronDown className="text-[#8d785e]" size={16} />
-            )}
-          </button>
-        </CollapsibleTrigger>
+          </div>
+          <CollapsibleTrigger asChild>
+            <button className="text-[#8d785e]" type="button">
+              {isOpen ? (
+                <ChevronUp size={16} />
+              ) : (
+                <ChevronDown size={16} />
+              )}
+            </button>
+          </CollapsibleTrigger>
+        </div>
         <CollapsibleContent>
           <div className="border-[#f5f3f0] border-t px-6 py-5">{children}</div>
         </CollapsibleContent>
@@ -764,6 +770,7 @@ export function ProducerDashboard() {
   };
 
   return (
+    <DndProvider backend={HTML5Backend}>
     <div className="w-full space-y-6 p-4 sm:space-y-8 sm:p-8" dir="rtl">
       {/* ══════════ Welcome Section ══════════ */}
       <motion.div
@@ -937,6 +944,7 @@ export function ProducerDashboard() {
         </div>
       </motion.div>
     </div>
+    </DndProvider>
   );
 }
 

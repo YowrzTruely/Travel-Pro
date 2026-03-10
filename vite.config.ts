@@ -1,7 +1,59 @@
 import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import type { Plugin } from "vite";
 import { defineConfig } from "vite";
+
+/**
+ * Vite plugin that forwards browser console.error / console.warn to the terminal.
+ * Injects a snippet into the app entry so import.meta.hot is available via Vite's HMR.
+ */
+function browserLogsPlugin(): Plugin {
+  return {
+    name: "browser-logs",
+    enforce: "post",
+    transform(code, id) {
+      // Inject into the app entry point only
+      if (!id.includes("src/main.tsx")) return;
+      const snippet = `
+;(function __browserLogs__() {
+  if (import.meta.hot) {
+    for (const level of ["error", "warn"]) {
+      const orig = console[level].bind(console);
+      console[level] = function (...args) {
+        orig(...args);
+        try {
+          const safe = args.map(a => {
+            if (a instanceof Error) return a.stack || a.message;
+            if (typeof a === "object") try { return JSON.stringify(a, null, 2); } catch { return String(a); }
+            return String(a);
+          });
+          import.meta.hot.send("browser:log", { level, args: safe });
+        } catch {}
+      };
+    }
+  }
+})();
+`;
+      return { code: snippet + code, map: null };
+    },
+    configureServer(server) {
+      const colors: Record<string, string> = {
+        error: "\x1b[31m",
+        warn: "\x1b[33m",
+        info: "\x1b[36m",
+        log: "\x1b[37m",
+      };
+      const reset = "\x1b[0m";
+
+      server.ws.on("browser:log", (data: { level: string; args: string[] }) => {
+        const color = colors[data.level] || colors.log;
+        const label = `[browser:${data.level}]`;
+        console.log(`${color}${label}${reset}`, ...data.args);
+      });
+    },
+  };
+}
 
 // Resolve figma:asset imports (Figma Make protocol) to a placeholder for local Vite dev
 function figmaAssetPlugin() {
@@ -21,6 +73,7 @@ function figmaAssetPlugin() {
 
 export default defineConfig({
   plugins: [
+    browserLogsPlugin(),
     figmaAssetPlugin(),
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used – do not remove them
