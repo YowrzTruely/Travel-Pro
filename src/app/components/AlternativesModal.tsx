@@ -34,7 +34,7 @@ export function AlternativesModal({
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const suppliers = useQuery(
-    (api.suppliers as any).findAlternatives,
+    api.suppliers.findAlternatives,
     isOpen
       ? {
           category,
@@ -42,21 +42,12 @@ export function AlternativesModal({
           region,
         }
       : "skip"
-  ) as
-    | {
-        _id: Id<"suppliers">;
-        name: string;
-        rating: number;
-        region?: string;
-        category: string;
-        notes?: string;
-      }[]
-    | undefined;
+  );
 
   const promotions = useQuery(
-    (api.supplierPromotions as any).listActive,
+    api.supplierPromotions.listActive,
     isOpen ? {} : "skip"
-  ) as { supplierId: Id<"suppliers"> }[] | undefined;
+  );
 
   const promotionSupplierIds = new Set(
     (promotions ?? []).map((p) => String(p.supplierId))

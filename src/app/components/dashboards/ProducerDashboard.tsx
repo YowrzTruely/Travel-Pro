@@ -575,7 +575,7 @@ export function ProducerDashboard() {
       </WidgetSection>
     ),
     statsCards: (
-      <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-6">
         <StatCard
           color={{
             icon: "#FF8C00",
@@ -764,7 +764,7 @@ export function ProducerDashboard() {
   };
 
   return (
-    <div className="w-full space-y-8 p-8" dir="rtl">
+    <div className="w-full space-y-6 p-4 sm:space-y-8 sm:p-8" dir="rtl">
       {/* ══════════ Welcome Section ══════════ */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
@@ -786,7 +786,7 @@ export function ProducerDashboard() {
         </div>
         <div className="flex shrink-0 gap-2">
           <button
-            className="flex items-center gap-1.5 rounded-lg border border-[#e7e1da] px-4 py-[9px] text-[#181510] text-[14px] transition-all hover:bg-[#f5f3f0]"
+            className="flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-lg border border-[#e7e1da] px-4 py-[9px] text-[#181510] text-[14px] transition-all hover:bg-[#f5f3f0]"
             onClick={() => navigate("/prd")}
             style={{ fontWeight: 600 }}
             type="button"
@@ -795,7 +795,7 @@ export function ProducerDashboard() {
             ניהול מוצר
           </button>
           <button
-            className="rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
+            className="min-h-[44px] min-w-[44px] rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
             onClick={() => navigate("/projects")}
             style={{ fontWeight: 600 }}
             type="button"

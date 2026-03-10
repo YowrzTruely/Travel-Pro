@@ -22,9 +22,16 @@ export interface UserProfile {
   avatar?: string;
   company?: string;
   createdAt: number;
+  defaultMarginPercent?: number;
   email: string;
   id: string;
   name: string;
+  notificationPreferences?: {
+    inApp?: boolean;
+    email?: boolean;
+    sms?: boolean;
+    whatsapp?: boolean;
+  };
   onboardingCompleted: boolean;
   onboardingStage?: "stage1" | "stage2" | "stage3";
   phone?: string;
@@ -215,6 +222,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         onboardingStage: profileData.onboardingStage,
         registrationSource: profileData.registrationSource,
         createdAt: profileData.createdAt ?? 0,
+        notificationPreferences: profileData.notificationPreferences,
+        defaultMarginPercent: profileData.defaultMarginPercent,
       }
     : null;
 

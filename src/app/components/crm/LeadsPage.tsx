@@ -115,7 +115,7 @@ export function LeadsPage() {
           ניהול לידים
         </h1>
         <button
-          className="flex items-center gap-2 rounded-lg bg-[#ff8c00] px-4 py-2.5 text-white transition-colors hover:bg-[#e67e00]"
+          className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-lg bg-[#ff8c00] px-4 py-2.5 text-white transition-colors hover:bg-[#e67e00]"
           onClick={() => setShowNewLead(true)}
           style={{ fontWeight: 600 }}
           type="button"
@@ -126,7 +126,7 @@ export function LeadsPage() {
       </div>
 
       {/* Kanban board */}
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch]">
         {STATUSES.map((status) => {
           const colLeads = groups[status.key] || [];
           const count = stats?.[status.key] ?? colLeads.length;
@@ -134,7 +134,7 @@ export function LeadsPage() {
 
           return (
             <div
-              className={`flex w-[260px] min-w-[260px] flex-col rounded-xl border transition-colors ${
+              className={`flex w-[260px] min-w-[260px] snap-start flex-col rounded-xl border transition-colors ${
                 isOver
                   ? "border-[#ff8c00] bg-[rgba(255,140,0,0.05)]"
                   : "border-[#e7e1da] bg-[#f8f7f5]"
@@ -177,7 +177,7 @@ export function LeadsPage() {
               <div className="flex flex-1 flex-col gap-2 p-2 pt-0">
                 {status.key === "new" && (
                   <button
-                    className="flex items-center justify-center gap-1 rounded-lg border border-[#e7e1da] border-dashed py-2 text-[#8d785e] text-[13px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                    className="flex min-h-[44px] items-center justify-center gap-1 rounded-lg border border-[#e7e1da] border-dashed py-2 text-[#8d785e] text-[13px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00]"
                     onClick={() => setShowNewLead(true)}
                     type="button"
                   >

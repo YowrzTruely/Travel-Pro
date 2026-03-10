@@ -335,9 +335,12 @@ export function ImportWizard() {
     try {
       const suppliers = suppliersData ?? [];
       setExistingSuppliers(suppliers as any);
-      const existingNames = new Set(
-        suppliers.map((s: any) => (s.name || "").trim().toLowerCase())
-      );
+
+      const normalizePhone = (p: string) =>
+        p
+          .replace(/[-\s]/g, "")
+          .replace(/^\+972/, "0")
+          .replace(/^972/, "0");
 
       const mapped: ParsedRow[] = csvData.map((row, idx) => {
         const mapped: Record<string, any> = {
@@ -349,12 +352,40 @@ export function ImportWizard() {
           const csvCol = mappings[sf.key];
           mapped[sf.key] = csvCol ? (row[csvCol] || "").toString().trim() : "";
         }
-        const name = (mapped.name || "").toLowerCase();
-        if (name && existingNames.has(name)) {
+        const name = (mapped.name || "").toLowerCase().trim();
+        const phone = mapped.phone ? normalizePhone(mapped.phone) : "";
+        const email = (mapped.email || "").toLowerCase().trim();
+
+        // Enhanced duplicate detection: name (exact + substring), phone, email
+        let bestMatch: any = null;
+        let bestScore = 0;
+        for (const s of suppliers) {
+          let score = 0;
+          const sName = (s.name || "").toLowerCase().trim();
+          const sPhone = s.phone ? normalizePhone(s.phone) : "";
+          const sEmail = (s.email || "").toLowerCase().trim();
+
+          if (name && sName === name) {
+            score += 100;
+          } else if (name && (sName.includes(name) || name.includes(sName))) {
+            score += 60;
+          }
+          if (phone && sPhone && phone === sPhone && phone.length > 3) {
+            score += 100;
+          }
+          if (email && sEmail && email === sEmail) {
+            score += 100;
+          }
+
+          if (score > bestScore) {
+            bestScore = score;
+            bestMatch = s;
+          }
+        }
+
+        if (bestScore >= 40 && bestMatch) {
           mapped._isDuplicate = true;
-          mapped._duplicateOf = suppliers.find(
-            (s: any) => s.name.toLowerCase() === name
-          )?.name;
+          mapped._duplicateOf = bestMatch.name;
           mapped._action = "skip";
         }
         return mapped as ParsedRow;

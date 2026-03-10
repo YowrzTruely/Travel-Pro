@@ -303,3 +303,13 @@ Open the ratings URL in an **incognito window** (no auth).
 - [ ] All async actions wrapped in try/catch with Hebrew toast messages
 - [ ] Network failure → error toast, no crash
 - [ ] Loading states show spinner for all data-dependent views
+│ Manual testing checklist:                                                                    │
+│ 1. npx convex dev — schema deploys without errors                                            │
+│ 2. Supplier recommendation: search suppliers in quote editor, see recommendation chips       │
+│ 3. Duplicate detection: create supplier with existing name/phone, see warning                │
+│ 4. Settings: all 4 tabs render, profile save works                                           │
+│ 5. Progressive disclosure: supplier with stage1 sees locked promotions/ratings               │
+│ 6. Activity log: admin sees log page, can filter                                             │
+│ 7. Mobile: test key pages at 375px viewport width                                            │
+│ 8. AI stubs: no errors when called (return placeholder values)
+

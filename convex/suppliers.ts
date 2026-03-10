@@ -285,6 +285,218 @@ export const bulkImport = mutation({
   },
 });
 
+function normalizePhone(phone: string): string {
+  return phone
+    .replace(/[-\s]/g, "")
+    .replace(/^\+972/, "0")
+    .replace(/^972/, "0");
+}
+
+export const findAlternatives = query({
+  args: {
+    category: v.string(),
+    region: v.optional(v.string()),
+    date: v.optional(v.string()),
+    excludeId: v.optional(v.id("suppliers")),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 6;
+    const categories = args.category.split(",").map((c) => c.trim());
+
+    const allSuppliers = await ctx.db.query("suppliers").collect();
+    const promotions = await ctx.db
+      .query("supplierPromotions")
+      .withIndex("by_isActive", (q) => q.eq("isActive", true))
+      .collect();
+    const promoSupplierIds = new Set(
+      promotions.map((p) => String(p.supplierId))
+    );
+
+    let candidates = allSuppliers.filter((s) => {
+      if (args.excludeId && s._id === args.excludeId) {
+        return false;
+      }
+      if (s.category === "ארכיון") {
+        return false;
+      }
+      const sCats = s.category.split(",").map((c) => c.trim());
+      return sCats.some((c) => categories.includes(c));
+    });
+
+    if (args.region) {
+      const regionFiltered = candidates.filter((s) => s.region === args.region);
+      if (regionFiltered.length > 0) {
+        candidates = regionFiltered;
+      }
+    }
+
+    // Check availability conflicts if date provided
+    let unavailableIds = new Set<string>();
+    if (args.date) {
+      const availEntries = await ctx.db.query("supplierAvailability").collect();
+      unavailableIds = new Set(
+        availEntries
+          .filter((a) => a.date === args.date && !a.available)
+          .map((a) => String(a.supplierId))
+      );
+    }
+
+    const scored = candidates.map((s) => {
+      let score = (s.rating || 0) * 10;
+      if (s.verificationStatus === "verified") {
+        score += 15;
+      }
+      if (promoSupplierIds.has(String(s._id))) {
+        score += 10;
+      }
+      if (unavailableIds.has(String(s._id))) {
+        score -= 50;
+      }
+      return { supplier: s, score };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+
+    return scored.slice(0, limit).map(({ supplier }) => ({
+      ...supplier,
+      id: supplier._id,
+    }));
+  },
+});
+
+export const recommend = query({
+  args: {
+    category: v.optional(v.string()),
+    region: v.optional(v.string()),
+    date: v.optional(v.string()),
+    excludeIds: v.optional(v.array(v.string())),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 3;
+    const excludeSet = new Set(args.excludeIds ?? []);
+
+    const allSuppliers = await ctx.db.query("suppliers").collect();
+    const promotions = await ctx.db
+      .query("supplierPromotions")
+      .withIndex("by_isActive", (q) => q.eq("isActive", true))
+      .collect();
+    const promoSupplierIds = new Set(
+      promotions.map((p) => String(p.supplierId))
+    );
+
+    const now = Date.now();
+    const allDocs = await ctx.db.query("supplierDocuments").collect();
+    const suppliersWithValidDocs = new Set<string>();
+    for (const doc of allDocs) {
+      if (doc.expiry && new Date(doc.expiry).getTime() > now) {
+        suppliersWithValidDocs.add(String(doc.supplierId));
+      }
+    }
+
+    const candidates = allSuppliers.filter((s) => {
+      if (excludeSet.has(String(s._id))) {
+        return false;
+      }
+      if (s.category === "ארכיון") {
+        return false;
+      }
+      if ((s.rating || 0) < 4.0) {
+        return false;
+      }
+      if (args.category) {
+        const sCats = s.category.split(",").map((c) => c.trim());
+        const filterCats = args.category.split(",").map((c) => c.trim());
+        if (!sCats.some((c) => filterCats.includes(c))) {
+          return false;
+        }
+      }
+      if (args.region && s.region !== args.region) {
+        return false;
+      }
+      return true;
+    });
+
+    const results = candidates.slice(0, limit).map((s) => {
+      const reasons: string[] = [];
+      if ((s.rating || 0) >= 4.5) {
+        reasons.push("דירוג גבוה");
+      } else if ((s.rating || 0) >= 4.0) {
+        reasons.push("דירוג טוב");
+      }
+      if (promoSupplierIds.has(String(s._id))) {
+        reasons.push("מבצע פעיל");
+      }
+      if (suppliersWithValidDocs.has(String(s._id))) {
+        reasons.push("מסמכים תקינים");
+      }
+      if (s.verificationStatus === "verified") {
+        reasons.push("מאומת");
+      }
+
+      return {
+        ...s,
+        id: s._id,
+        reason: reasons[0] || "מומלץ",
+      };
+    });
+
+    return results;
+  },
+});
+
+export const findDuplicates = query({
+  args: {
+    name: v.string(),
+    phone: v.optional(v.string()),
+    email: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const allSuppliers = await ctx.db.query("suppliers").collect();
+    const nameLower = args.name.toLowerCase().trim();
+    const normalizedPhone = args.phone ? normalizePhone(args.phone) : null;
+    const emailLower = args.email?.toLowerCase().trim() || null;
+
+    const matches = allSuppliers
+      .map((s) => {
+        let score = 0;
+        const sNameLower = s.name.toLowerCase().trim();
+
+        if (sNameLower === nameLower) {
+          score += 100;
+        } else if (
+          sNameLower.includes(nameLower) ||
+          nameLower.includes(sNameLower)
+        ) {
+          score += 60;
+        }
+
+        if (normalizedPhone && s.phone) {
+          const sPhone = normalizePhone(s.phone);
+          if (sPhone === normalizedPhone && sPhone.length > 3) {
+            score += 100;
+          }
+        }
+
+        if (
+          emailLower &&
+          s.email &&
+          s.email.toLowerCase().trim() === emailLower
+        ) {
+          score += 100;
+        }
+
+        return { ...s, id: s._id, score };
+      })
+      .filter((m) => m.score >= 40)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+
+    return matches;
+  },
+});
+
 export const bulkRollback = mutation({
   args: { supplierIds: v.array(v.id("suppliers")) },
   handler: async (ctx, { supplierIds }) => {

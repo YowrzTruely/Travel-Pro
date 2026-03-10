@@ -16,7 +16,7 @@ import {
   Star,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { api } from "../../../convex/_generated/api";
@@ -95,10 +95,30 @@ export function SupplierBank() {
     handleSubmit,
     formState: { errors, dirtyFields, isValid },
     reset: resetSupplierForm,
+    watch,
   } = useForm<NewSupplierForm>({
     mode: "onChange",
     defaultValues: { name: "", category: "תחבורה", region: "צפון", phone: "" },
   });
+
+  // Duplicate detection
+  const [debouncedName, setDebouncedName] = useState("");
+  const watchedName = watch("name");
+  const watchedPhone = watch("phone");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedName(watchedName);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [watchedName]);
+
+  const duplicates = useQuery(
+    api.suppliers.findDuplicates,
+    debouncedName.length >= 2
+      ? { name: debouncedName, phone: watchedPhone || undefined }
+      : "skip"
+  );
 
   const onSubmitSupplier = async (data: NewSupplierForm) => {
     if (newSupplierCategories.length === 0) {
@@ -655,6 +675,24 @@ export function SupplierBank() {
                 required
                 {...register("name", rules.requiredMin("שם הספק", 2))}
               />
+              {duplicates && duplicates.length > 0 && (
+                <div className="flex items-start gap-2 rounded-lg border border-yellow-300 bg-yellow-50 p-3">
+                  <AlertTriangle
+                    className="mt-0.5 shrink-0 text-yellow-600"
+                    size={16}
+                  />
+                  <div className="text-[12px] text-yellow-800">
+                    <span style={{ fontWeight: 600 }}>ספק דומה כבר קיים:</span>{" "}
+                    {duplicates.slice(0, 2).map((d: any) => (
+                      <span key={d.id}>
+                        {d.name}
+                        {d.phone ? ` (${d.phone})` : ""}{" "}
+                      </span>
+                    ))}
+                    <span className="mt-1 block text-yellow-700">להמשיך?</span>
+                  </div>
+                </div>
+              )}
               {/* קטגוריות — multi-select */}
               <fieldset>
                 <legend

@@ -206,7 +206,7 @@ export function ClientQuote() {
       <div className="sticky top-0 z-40 flex items-center justify-between border-[#e7e1da] border-b bg-white px-4 py-3">
         <div className="flex items-center gap-3">
           <button
-            className="flex items-center gap-1.5 rounded-lg bg-[#f5f3f0] py-1.5 pr-2 pl-3 text-[#8d785e] text-[13px] transition-colors hover:bg-[#ece8e3] hover:text-[#181510]"
+            className="flex min-h-[44px] items-center gap-1.5 rounded-lg bg-[#f5f3f0] py-1.5 pr-2 pl-3 text-[#8d785e] text-[13px] transition-colors hover:bg-[#ece8e3] hover:text-[#181510]"
             onClick={goBack}
             style={{ fontWeight: 600 }}
             type="button"
@@ -293,7 +293,7 @@ export function ClientQuote() {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {timelineItems.map((item: any, idx: number) => (
               <button
-                className="flex items-center gap-3 rounded-xl border-2 border-[#ff8c00]/20 bg-white p-4 transition-all hover:border-[#ff8c00]"
+                className="flex min-h-[44px] items-center gap-3 rounded-xl border-2 border-[#ff8c00]/20 bg-white p-4 transition-all hover:border-[#ff8c00]"
                 key={idx}
                 onClick={() =>
                   setExpandedTimeline(expandedTimeline === idx ? null : idx)
@@ -341,7 +341,7 @@ export function ClientQuote() {
                 key={idx}
               >
                 <div className="flex flex-col md:flex-row">
-                  <div className="h-56 shrink-0 overflow-hidden bg-[#f5f3f0] md:h-auto md:w-80">
+                  <div className="h-56 w-full shrink-0 overflow-hidden bg-[#f5f3f0] sm:w-auto md:h-auto md:w-80">
                     <ImageWithFallback
                       alt={activity.title}
                       className="h-full w-full object-cover"
@@ -410,7 +410,7 @@ export function ClientQuote() {
                     </div>
                     {activity.bullets.length > 2 && (
                       <button
-                        className="mt-2 flex items-center gap-1 text-[#ff8c00] text-[12px]"
+                        className="mt-2 flex min-h-[44px] items-center gap-1 text-[#ff8c00] text-[12px]"
                         onClick={() => toggleActivity(idx)}
                         style={{ fontWeight: 600 }}
                         type="button"
@@ -613,7 +613,7 @@ export function ClientQuote() {
               {!confirmed && (
                 <>
                   <button
-                    className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-8 py-3 text-white shadow-[#ff8c00]/20 shadow-lg transition-all hover:bg-[#e67e00]"
+                    className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-8 py-3 text-white shadow-[#ff8c00]/20 shadow-lg transition-all hover:bg-[#e67e00]"
                     onClick={handleApprove}
                     style={{ fontWeight: 700 }}
                     type="button"
@@ -622,7 +622,7 @@ export function ClientQuote() {
                     אישור הזמנה
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl border border-[#c4b89a]/40 px-6 py-3 text-[#c4b89a] transition-colors hover:bg-white/5"
+                    className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl border border-[#c4b89a]/40 px-6 py-3 text-[#c4b89a] transition-colors hover:bg-white/5"
                     onClick={() => setShowChangeRequest(true)}
                     type="button"
                   >
@@ -632,7 +632,7 @@ export function ClientQuote() {
                 </>
               )}
               <button
-                className="flex items-center gap-2 rounded-xl border border-[#c4b89a]/40 px-6 py-3 text-[#c4b89a] transition-colors hover:bg-white/5"
+                className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl border border-[#c4b89a]/40 px-6 py-3 text-[#c4b89a] transition-colors hover:bg-white/5"
                 onClick={async () => {
                   try {
                     if (navigator.share) {

@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react";
-import { Search, X } from "lucide-react";
+import { Search, Star, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 
@@ -22,6 +22,7 @@ export function SupplierSearch({
 
   const allSuppliers = useQuery(api.suppliers.list);
   const activePromotions = useQuery(api.supplierPromotions.listActive, {});
+  const recommendations = useQuery(api.suppliers.recommend, { limit: 3 });
 
   const promotionSupplierIds = useMemo(() => {
     if (!activePromotions) {
@@ -174,6 +175,38 @@ export function SupplierSearch({
           <p className="text-[#8d785e] text-[13px]">
             לא נמצאו ספקים. ניתן להקליד שם ידנית.
           </p>
+        </div>
+      )}
+
+      {/* Recommendation chips when search is empty */}
+      {!query.trim() && recommendations && recommendations.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          <span
+            className="text-[#8d785e] text-[11px]"
+            style={{ fontWeight: 600 }}
+          >
+            מומלצים:
+          </span>
+          {recommendations.map((rec: any) => (
+            <button
+              className="flex items-center gap-1.5 rounded-full border border-[#e7e1da] bg-white px-3 py-1 text-[12px] transition-all hover:border-[#ff8c00] hover:bg-[#ff8c00]/5"
+              key={rec.id}
+              onClick={() => selectSupplier(rec)}
+              type="button"
+            >
+              <span style={{ fontWeight: 600 }}>{rec.name}</span>
+              <span className="flex items-center gap-0.5 text-[#ff8c00]">
+                <Star fill="#ff8c00" size={10} />
+                {rec.rating}
+              </span>
+              <span
+                className="rounded-full bg-[#ff8c00]/10 px-1.5 py-0.5 text-[#ff8c00] text-[10px]"
+                style={{ fontWeight: 600 }}
+              >
+                {rec.reason}
+              </span>
+            </button>
+          ))}
         </div>
       )}
     </div>

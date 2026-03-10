@@ -196,6 +196,15 @@ export const updateProfile = mutation({
       v.union(v.literal("stage1"), v.literal("stage2"), v.literal("stage3"))
     ),
     supplierId: v.optional(v.id("suppliers")),
+    notificationPreferences: v.optional(
+      v.object({
+        inApp: v.optional(v.boolean()),
+        email: v.optional(v.boolean()),
+        sms: v.optional(v.boolean()),
+        whatsapp: v.optional(v.boolean()),
+      })
+    ),
+    defaultMarginPercent: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { id, ...updates } = args;

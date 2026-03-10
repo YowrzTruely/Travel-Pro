@@ -53,16 +53,6 @@ export function PlaceholderPage({
   );
 }
 
-export function SettingsPage() {
-  return (
-    <PlaceholderPage
-      description="הגדרות מערכת, פרופיל משתמש והתאמות אישיות."
-      icon="⚙️"
-      title="הגדרות"
-    />
-  );
-}
-
 export function NotFoundPage() {
   return (
     <PlaceholderPage

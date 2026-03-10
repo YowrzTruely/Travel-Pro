@@ -118,7 +118,7 @@ export function MyProducts() {
           {/* View toggle */}
           <div className="flex overflow-hidden rounded-lg border border-[#e7e1da]">
             <button
-              className={`px-3 py-2 transition-colors ${
+              className={`min-h-[44px] min-w-[44px] px-3 py-2 transition-colors ${
                 viewMode === "grid"
                   ? "bg-[#ff8c00] text-white"
                   : "bg-white text-[#8d785e] hover:bg-[#f5f3f0]"
@@ -129,7 +129,7 @@ export function MyProducts() {
               <Grid3X3 size={16} />
             </button>
             <button
-              className={`px-3 py-2 transition-colors ${
+              className={`min-h-[44px] min-w-[44px] px-3 py-2 transition-colors ${
                 viewMode === "list"
                   ? "bg-[#ff8c00] text-white"
                   : "bg-white text-[#8d785e] hover:bg-[#f5f3f0]"
@@ -143,7 +143,7 @@ export function MyProducts() {
 
           {/* Add button */}
           <button
-            className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white shadow-[#ff8c00]/25 shadow-lg transition-colors hover:bg-[#e67e00]"
+            className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white shadow-[#ff8c00]/25 shadow-lg transition-colors hover:bg-[#e67e00]"
             onClick={handleAdd}
             style={{ fontWeight: 600 }}
             type="button"
@@ -168,7 +168,7 @@ export function MyProducts() {
             הוסף את המוצרים והשירותים שלך
           </p>
           <button
-            className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+            className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
             onClick={handleAdd}
             style={{ fontWeight: 600 }}
             type="button"
@@ -279,7 +279,7 @@ function ProductCard({
 
         <div className="flex gap-2">
           <button
-            className="flex-1 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#181510] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+            className="min-h-[44px] flex-1 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#181510] text-[13px] transition-colors hover:bg-[#f5f3f0]"
             onClick={onEdit}
             style={{ fontWeight: 600 }}
             type="button"
@@ -287,7 +287,7 @@ function ProductCard({
             עריכה
           </button>
           <button
-            className="rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+            className="min-h-[44px] min-w-[44px] rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500"
             onClick={onDelete}
             type="button"
           >
@@ -370,7 +370,7 @@ function ProductListItem({
       {/* Actions */}
       <div className="flex gap-2">
         <button
-          className="rounded-lg border border-[#e7e1da] px-3 py-2 text-[#181510] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+          className="min-h-[44px] rounded-lg border border-[#e7e1da] px-3 py-2 text-[#181510] text-[13px] transition-colors hover:bg-[#f5f3f0]"
           onClick={onEdit}
           style={{ fontWeight: 600 }}
           type="button"
@@ -378,7 +378,7 @@ function ProductListItem({
           עריכה
         </button>
         <button
-          className="rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+          className="min-h-[44px] min-w-[44px] rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500"
           onClick={onDelete}
           type="button"
         >

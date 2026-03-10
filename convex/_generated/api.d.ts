@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as activityLog from "../activityLog.js";
 import type * as aiSupplier from "../aiSupplier.js";
 import type * as auth from "../auth.js";
 import type * as availabilityRequests from "../availabilityRequests.js";
@@ -53,6 +54,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  activityLog: typeof activityLog;
   aiSupplier: typeof aiSupplier;
   auth: typeof auth;
   availabilityRequests: typeof availabilityRequests;

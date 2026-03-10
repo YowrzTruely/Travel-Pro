@@ -6,6 +6,7 @@ import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
 import { useAuth } from "../AuthContext";
+import { FeatureGate } from "./FeatureGate";
 
 interface PromotionFormValues {
   description: string;
@@ -115,149 +116,153 @@ export function SupplierPromotions() {
     : null;
 
   return (
-    <div className="min-h-screen bg-[#f8f7f5] p-6" dir="rtl">
-      <div className="mx-auto max-w-4xl">
-        {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1
-              className="text-[#181510] text-[24px]"
-              style={{ fontWeight: 700 }}
-            >
-              מבצעים והנחות
-            </h1>
-            <p className="mt-1 text-[#8d785e] text-[14px]">
-              נהל מבצעים מוגבלים בזמן עבור המוצרים שלך
-            </p>
-          </div>
-          <button
-            className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
-            onClick={openCreate}
-            style={{ fontWeight: 600 }}
-            type="button"
-          >
-            <Plus size={16} />
-            הוסף מבצע
-          </button>
-        </div>
-
-        {/* Promotions list */}
-        {promotions.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-[#e7e1da] bg-white py-16">
-            <Tag className="mb-4 text-[#e7e1da]" size={48} />
-            <p
-              className="text-[#181510] text-[16px]"
+    <FeatureGate featureName="מבצעים" requiredStage="stage2">
+      <div className="min-h-screen bg-[#f8f7f5] p-6" dir="rtl">
+        <div className="mx-auto max-w-4xl">
+          {/* Header */}
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h1
+                className="text-[#181510] text-[24px]"
+                style={{ fontWeight: 700 }}
+              >
+                מבצעים והנחות
+              </h1>
+              <p className="mt-1 text-[#8d785e] text-[14px]">
+                נהל מבצעים מוגבלים בזמן עבור המוצרים שלך
+              </p>
+            </div>
+            <button
+              className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
+              onClick={openCreate}
               style={{ fontWeight: 600 }}
+              type="button"
             >
-              אין מבצעים עדיין
-            </p>
-            <p className="mt-1 text-[#8d785e] text-[13px]">
-              צור מבצע ראשון כדי למשוך יותר לקוחות
-            </p>
+              <Plus size={16} />
+              הוסף מבצע
+            </button>
           </div>
-        ) : (
-          <div className="space-y-3">
-            {promotions.map((promo) => {
-              const status = getStatus(promo);
-              const badge = getStatusBadge(status);
-              const productName = products.find(
-                (p) => p.id === promo.productId
-              )?.name;
 
-              return (
-                <div
-                  className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm transition-colors hover:border-[#ff8c00]/30"
-                  key={promo.id}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="text-[#181510] text-[16px]"
-                          style={{ fontWeight: 700 }}
-                        >
-                          {promo.title}
-                        </span>
-                        <span
-                          className={`rounded-full border px-2 py-0.5 text-[11px] ${badge.className}`}
-                          style={{ fontWeight: 600 }}
-                        >
-                          {badge.label}
-                        </span>
-                      </div>
-                      {promo.description && (
-                        <p className="mt-1 text-[#8d785e] text-[13px]">
-                          {promo.description}
-                        </p>
-                      )}
-                      <div className="mt-2 flex flex-wrap items-center gap-3 text-[#8d785e] text-[12px]">
-                        {productName && (
-                          <span className="flex items-center gap-1">
-                            <Tag size={12} />
-                            {productName}
+          {/* Promotions list */}
+          {promotions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-[#e7e1da] bg-white py-16">
+              <Tag className="mb-4 text-[#e7e1da]" size={48} />
+              <p
+                className="text-[#181510] text-[16px]"
+                style={{ fontWeight: 600 }}
+              >
+                אין מבצעים עדיין
+              </p>
+              <p className="mt-1 text-[#8d785e] text-[13px]">
+                צור מבצע ראשון כדי למשוך יותר לקוחות
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {promotions.map((promo) => {
+                const status = getStatus(promo);
+                const badge = getStatusBadge(status);
+                const productName = products.find(
+                  (p) => p.id === promo.productId
+                )?.name;
+
+                return (
+                  <div
+                    className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm transition-colors hover:border-[#ff8c00]/30"
+                    key={promo.id}
+                  >
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="text-[#181510] text-[16px]"
+                            style={{ fontWeight: 700 }}
+                          >
+                            {promo.title}
                           </span>
+                          <span
+                            className={`rounded-full border px-2 py-0.5 text-[11px] ${badge.className}`}
+                            style={{ fontWeight: 600 }}
+                          >
+                            {badge.label}
+                          </span>
+                        </div>
+                        {promo.description && (
+                          <p className="mt-1 text-[#8d785e] text-[13px]">
+                            {promo.description}
+                          </p>
                         )}
-                        <span className="flex items-center gap-1">
-                          <Percent size={12} />
-                          {promo.discountPercent
-                            ? `${promo.discountPercent}% הנחה`
-                            : `₪${promo.discountAmount} הנחה`}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <CalendarDays size={12} />
-                          {new Date(promo.startsAt).toLocaleDateString("he-IL")}{" "}
-                          -{" "}
-                          {new Date(promo.expiresAt).toLocaleDateString(
-                            "he-IL"
+                        <div className="mt-2 flex flex-wrap items-center gap-3 text-[#8d785e] text-[12px]">
+                          {productName && (
+                            <span className="flex items-center gap-1">
+                              <Tag size={12} />
+                              {productName}
+                            </span>
                           )}
-                        </span>
+                          <span className="flex items-center gap-1">
+                            <Percent size={12} />
+                            {promo.discountPercent
+                              ? `${promo.discountPercent}% הנחה`
+                              : `₪${promo.discountAmount} הנחה`}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <CalendarDays size={12} />
+                            {new Date(promo.startsAt).toLocaleDateString(
+                              "he-IL"
+                            )}{" "}
+                            -{" "}
+                            {new Date(promo.expiresAt).toLocaleDateString(
+                              "he-IL"
+                            )}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex gap-2">
-                      {status !== "expired" && (
-                        <>
-                          <button
-                            className="rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
-                            onClick={() => openEdit(promo.id)}
-                            style={{ fontWeight: 600 }}
-                            type="button"
-                          >
-                            ערוך
-                          </button>
-                          <button
-                            className="rounded-lg border border-red-200 px-3 py-1.5 text-[12px] text-red-500 transition-colors hover:bg-red-50"
-                            onClick={() => handleDeactivate(promo.id)}
-                            style={{ fontWeight: 600 }}
-                            type="button"
-                          >
-                            בטל
-                          </button>
-                        </>
-                      )}
+                      <div className="flex shrink-0 gap-2">
+                        {status !== "expired" && (
+                          <>
+                            <button
+                              className="min-h-[44px] min-w-[44px] rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
+                              onClick={() => openEdit(promo.id)}
+                              style={{ fontWeight: 600 }}
+                              type="button"
+                            >
+                              ערוך
+                            </button>
+                            <button
+                              className="min-h-[44px] min-w-[44px] rounded-lg border border-red-200 px-3 py-1.5 text-[12px] text-red-500 transition-colors hover:bg-red-50"
+                              onClick={() => handleDeactivate(promo.id)}
+                              style={{ fontWeight: 600 }}
+                              type="button"
+                            >
+                              בטל
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Modal */}
+        {showModal && (
+          <PromotionModal
+            editingPromo={editingPromo ?? null}
+            onClose={() => {
+              setShowModal(false);
+              setEditingId(null);
+            }}
+            onCreate={createPromotion}
+            onUpdate={updatePromotion}
+            products={products}
+            supplierId={supplierId}
+          />
         )}
       </div>
-
-      {/* Modal */}
-      {showModal && (
-        <PromotionModal
-          editingPromo={editingPromo ?? null}
-          onClose={() => {
-            setShowModal(false);
-            setEditingId(null);
-          }}
-          onCreate={createPromotion}
-          onUpdate={updatePromotion}
-          products={products}
-          supplierId={supplierId}
-        />
-      )}
-    </div>
+    </FeatureGate>
   );
 }
 
@@ -542,7 +547,7 @@ function PromotionModal({
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
             <button
-              className="rounded-xl border border-[#e7e1da] px-5 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+              className="min-h-[44px] rounded-xl border border-[#e7e1da] px-5 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
               onClick={onClose}
               style={{ fontWeight: 600 }}
               type="button"
@@ -550,7 +555,7 @@ function PromotionModal({
               ביטול
             </button>
             <button
-              className="rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
+              className="min-h-[44px] rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
               style={{ fontWeight: 600 }}
               type="submit"
             >

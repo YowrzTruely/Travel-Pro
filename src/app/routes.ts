@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import { ActivityLog } from "./components/admin/ActivityLog";
 import { CalendarPage } from "./components/CalendarPage";
 import { ClassificationWizard } from "./components/ClassificationWizard";
 import { ClientQuote } from "./components/ClientQuote";
@@ -13,7 +14,7 @@ import { RootErrorBoundary } from "./components/ErrorBoundary";
 import { FieldOperationsHQ } from "./components/field/FieldOperationsHQ";
 import { ImportWizard } from "./components/ImportWizard";
 import { Layout } from "./components/Layout";
-import { NotFoundPage, SettingsPage } from "./components/PlaceholderPage";
+import { NotFoundPage } from "./components/PlaceholderPage";
 import {
   ApproveSupplierPlaceholder,
   SupplierRequestsPlaceholder,
@@ -26,6 +27,7 @@ import { ScannedProducts } from "./components/ScannedProducts";
 import { SupplierArchive } from "./components/SupplierArchive";
 import { SupplierBank } from "./components/SupplierBank";
 import { SupplierDetail } from "./components/SupplierDetail";
+import { SettingsPage } from "./components/settings/SettingsPage";
 import { AvailabilityCalendar } from "./components/supplier/AvailabilityCalendar";
 import { MyDocuments } from "./components/supplier/MyDocuments";
 import { MyProducts } from "./components/supplier/MyProducts";
@@ -101,6 +103,7 @@ export function createAdminRouter() {
         { index: true, Component: AdminDashboard },
         { path: "approve-suppliers", Component: ApproveSupplierPlaceholder },
         { path: "users", Component: UserManagementPlaceholder },
+        { path: "activity", Component: ActivityLog },
         { path: "settings", Component: SettingsPage },
         { path: "*", Component: NotFoundPage },
       ],

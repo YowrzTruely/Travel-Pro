@@ -35,6 +35,15 @@ export default defineSchema({
     ),
     invitedBy: v.optional(v.id("users")),
     createdAt: v.optional(v.number()),
+    notificationPreferences: v.optional(
+      v.object({
+        inApp: v.optional(v.boolean()),
+        email: v.optional(v.boolean()),
+        sms: v.optional(v.boolean()),
+        whatsapp: v.optional(v.boolean()),
+      })
+    ),
+    defaultMarginPercent: v.optional(v.number()),
   })
     .index("by_authId", ["authId"])
     .index("by_email", ["email"])
@@ -704,4 +713,18 @@ export default defineSchema({
   })
     .index("by_supplierId", ["supplierId"])
     .index("by_projectId", ["projectId"]),
+
+  // ─── Activity Log ───
+  activityLog: defineTable({
+    userId: v.optional(v.id("users")),
+    action: v.string(),
+    entityType: v.string(),
+    entityId: v.string(),
+    details: v.optional(v.string()),
+    metadata: v.optional(v.any()),
+    createdAt: v.number(),
+  })
+    .index("by_createdAt", ["createdAt"])
+    .index("by_userId", ["userId"])
+    .index("by_entityType", ["entityType"]),
 });

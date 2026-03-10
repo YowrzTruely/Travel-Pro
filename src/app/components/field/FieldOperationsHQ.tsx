@@ -215,12 +215,12 @@ export function FieldOperationsHQ() {
         </div>
       </div>
 
-      {/* Action buttons */}
-      <div className="mx-auto max-w-lg px-4 py-3">
-        <div className="flex gap-2">
+      {/* Action buttons — fixed on mobile */}
+      <div className="fixed inset-x-0 bottom-0 z-20 border-[#e7e1da] border-t bg-white px-4 py-3 shadow-lg sm:static sm:z-auto sm:mx-auto sm:max-w-lg sm:border-t-0 sm:bg-transparent sm:shadow-none">
+        <div className="mx-auto flex max-w-lg gap-2">
           {fieldOperation.status === "planned" && (
             <button
-              className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+              className="flex min-h-[44px] min-w-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
               disabled={actionLoading}
               onClick={handleStart}
               style={{ fontWeight: 700 }}
@@ -236,7 +236,7 @@ export function FieldOperationsHQ() {
           )}
           {fieldOperation.status === "in_progress" && (
             <button
-              className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-green-700 disabled:opacity-50"
+              className="flex min-h-[44px] min-w-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-green-700 disabled:opacity-50"
               disabled={actionLoading}
               onClick={handleComplete}
               style={{ fontWeight: 700 }}
@@ -251,7 +251,7 @@ export function FieldOperationsHQ() {
             </button>
           )}
           <button
-            className="flex min-h-11 items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#181510] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+            className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#181510] text-[14px] transition-colors hover:bg-[#f5f3f0]"
             onClick={() => setShowExpenseForm(true)}
             style={{ fontWeight: 600 }}
             type="button"
@@ -263,7 +263,7 @@ export function FieldOperationsHQ() {
       </div>
 
       {/* Timeline of stops */}
-      <div className="mx-auto max-w-lg space-y-3 px-4 pb-24">
+      <div className="mx-auto max-w-lg space-y-3 px-4 pb-32 sm:pb-24">
         {sortedStops.length === 0 ? (
           <div className="rounded-xl border border-[#e7e1da] border-dashed p-8 text-center">
             <MapPin className="mx-auto mb-2 text-[#8d785e]" size={24} />
@@ -288,7 +288,7 @@ export function FieldOperationsHQ() {
       {/* Floating action button for time shift */}
       {fieldOperation.status !== "completed" && sortedStops.length > 0 && (
         <button
-          className="fixed bottom-6 left-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#181510] text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+          className="fixed bottom-20 left-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#181510] text-white shadow-lg transition-transform hover:scale-105 active:scale-95 sm:bottom-6"
           onClick={() => setShowTimeShift(true)}
           title="הזזת לוח זמנים"
           type="button"

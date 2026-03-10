@@ -3,6 +3,7 @@ import imgLogo from "figma:asset/b655d2164f14a54b258c6a8a069f10a88a1c4640.png";
 import { useMutation } from "convex/react";
 import type { LucideIcon } from "lucide-react";
 import {
+  Activity,
   Box,
   Calendar,
   CheckCircle,
@@ -12,6 +13,7 @@ import {
   HelpCircle,
   LayoutDashboard,
   Loader2,
+  Lock,
   LogOut,
   Menu,
   Settings,
@@ -47,6 +49,7 @@ interface NewProjectForm {
 interface NavItem {
   icon: LucideIcon;
   label: string;
+  locked?: boolean;
   path: string;
 }
 
@@ -60,29 +63,43 @@ const producerNavItems: NavItem[] = [
   { path: "/calendar", label: "יומן", icon: Calendar },
 ];
 
-const supplierNavItems: NavItem[] = [
+const supplierNavStage1: NavItem[] = [
   { path: "/", label: "דשבורד", icon: LayoutDashboard },
   { path: "/products", label: "מוצרים", icon: Box },
   { path: "/documents", label: "מסמכים", icon: FileText },
-  { path: "/availability", label: "זמינות", icon: Calendar },
-  { path: "/requests", label: "בקשות", icon: ClipboardList },
   { path: "/profile", label: "פרופיל", icon: UserCircle },
+];
+
+const supplierNavStage2: NavItem[] = [
+  { path: "/promotions", label: "מבצעים", icon: Box },
+  { path: "/ratings", label: "דירוגים", icon: CheckCircle },
+  { path: "/availability", label: "זמינות", icon: Calendar },
+  { path: "/preview", label: "תצוגה מקדימה", icon: FileText },
+  { path: "/requests", label: "בקשות", icon: ClipboardList },
 ];
 
 const adminNavItems: NavItem[] = [
   { path: "/", label: "דשבורד", icon: Shield },
   { path: "/approve-suppliers", label: "אישור ספקים", icon: CheckCircle },
   { path: "/users", label: "משתמשים", icon: Users },
+  { path: "/activity", label: "יומן פעילות", icon: Activity },
 ];
 
 const bottomNavItems: NavItem[] = [
   { path: "/settings", label: "הגדרות", icon: Settings },
 ];
 
-function getNavItemsForRole(role?: string): NavItem[] {
+function getNavItemsForRole(role?: string, supplierStage?: string): NavItem[] {
   switch (role) {
-    case "supplier":
-      return supplierNavItems;
+    case "supplier": {
+      const stageLevel =
+        supplierStage === "stage2" ? 2 : supplierStage === "stage3" ? 3 : 1;
+      const stage2Items =
+        stageLevel >= 2
+          ? supplierNavStage2
+          : supplierNavStage2.map((item) => ({ ...item, locked: true }));
+      return [...supplierNavStage1, ...stage2Items];
+    }
     case "admin":
       return adminNavItems;
     default:
@@ -95,7 +112,10 @@ export function Layout() {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { logout, user, profile } = useAuth();
-  const mainNavItems = getNavItemsForRole(profile?.role);
+  const mainNavItems = getNavItemsForRole(
+    profile?.role,
+    profile?.onboardingStage
+  );
   const isProducer = !profile?.role || profile.role === "producer";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showNewProject, setShowNewProject] = useState(false);
@@ -227,25 +247,32 @@ export function Layout() {
             {mainNavItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
+              const locked = item.locked;
               return (
                 <button
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] transition-all ${
-                    active
-                      ? "bg-[rgba(255,140,0,0.1)] text-[#ff8c00]"
-                      : "text-[#181510] hover:bg-[#f5f3f0]"
+                    locked
+                      ? "cursor-not-allowed text-[#b8a990]"
+                      : active
+                        ? "bg-[rgba(255,140,0,0.1)] text-[#ff8c00]"
+                        : "text-[#181510] hover:bg-[#f5f3f0]"
                   }
                   `}
                   dir="rtl"
                   key={item.path}
                   onClick={() => {
+                    if (locked) {
+                      return;
+                    }
                     navigate(item.path);
                     setSidebarOpen(false);
                   }}
-                  style={{ fontWeight: active ? 600 : 400 }}
+                  style={{ fontWeight: active && !locked ? 600 : 400 }}
                   type="button"
                 >
                   <Icon size={18} />
                   <span>{item.label}</span>
+                  {locked && <Lock className="mr-auto" size={14} />}
                 </button>
               );
             })}
