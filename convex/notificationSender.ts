@@ -1,8 +1,10 @@
+"use node";
+
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { action, internalAction } from "./_generated/server";
 
-// ─── WhatsApp Business API stub ───
+// ─── WhatsApp via wa.me links ───
 
 export const sendWhatsApp = internalAction({
   args: {
@@ -11,18 +13,19 @@ export const sendWhatsApp = internalAction({
     templateId: v.optional(v.string()),
   },
   handler: async (_ctx, args) => {
-    console.log(
-      `[WhatsApp STUB] To: ${args.phone}, Message: ${args.message}${args.templateId ? `, Template: ${args.templateId}` : ""}`
-    );
+    const phone = args.phone.replace(/^0/, "972").replace(/[^0-9]/g, "");
+    const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(args.message)}`;
+    console.log(`[WhatsApp] wa.me link generated: ${waLink}`);
     return {
       sent: true,
       channel: "whatsapp" as const,
       deliveryId: `wa_${Date.now()}`,
+      waLink,
     };
   },
 });
 
-// ─── SMS via Twilio stub ───
+// ─── SMS via SLNG ───
 
 export const sendSMS = internalAction({
   args: {
@@ -30,16 +33,68 @@ export const sendSMS = internalAction({
     message: v.string(),
   },
   handler: async (_ctx, args) => {
-    console.log(`[SMS STUB] To: ${args.phone}, Message: ${args.message}`);
-    return {
-      sent: true,
-      channel: "sms" as const,
-      deliveryId: `sms_${Date.now()}`,
-    };
+    const username = process.env.SLNG_USERNAME;
+    const password = process.env.SLNG_PASSWORD;
+    const fromMobile = process.env.SLNG_FROM_MOBILE ?? "TravelPro";
+
+    if (!(username && password)) {
+      console.warn("[SMS] SLNG not configured – missing env vars");
+      return {
+        sent: false,
+        channel: "sms" as const,
+        deliveryId: "",
+        error: "SLNG not configured",
+      };
+    }
+
+    try {
+      const response = await fetch(
+        "https://slng5.com/Api/SendSmsJsonBody.ashx",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            Username: username,
+            Password: password,
+            MsgName: "TravelPro SMS",
+            MsgBody: args.message,
+            FromMobile: fromMobile,
+            DeliveryAckUrl: null,
+            MsgScheduleTime: null,
+            Mobiles: [{ Mobile: args.phone }],
+          }),
+        }
+      );
+
+      const result = (await response.json()) as {
+        Status: boolean;
+        Description: string;
+        GeneralGUID: string;
+      };
+
+      console.log(
+        `[SMS] SLNG response: Status=${result.Status}, Desc=${result.Description}, GUID=${result.GeneralGUID}`
+      );
+
+      return {
+        sent: result.Status,
+        channel: "sms" as const,
+        deliveryId: result.GeneralGUID ?? "",
+        error: result.Status ? undefined : result.Description,
+      };
+    } catch (error) {
+      console.error("[SMS] SLNG request failed:", error);
+      return {
+        sent: false,
+        channel: "sms" as const,
+        deliveryId: "",
+        error: String(error),
+      };
+    }
   },
 });
 
-// ─── Email stub ───
+// ─── Email via Resend ───
 
 export const sendEmail = internalAction({
   args: {
@@ -48,14 +103,69 @@ export const sendEmail = internalAction({
     body: v.string(),
   },
   handler: async (_ctx, args) => {
-    console.log(
-      `[Email STUB] To: ${args.email}, Subject: ${args.subject}, Body: ${args.body}`
-    );
-    return {
-      sent: true,
-      channel: "email" as const,
-      deliveryId: `email_${Date.now()}`,
-    };
+    const apiKey = process.env.RESEND_API_KEY;
+
+    if (!apiKey) {
+      console.warn("[Email] Resend not configured – missing RESEND_API_KEY");
+      return {
+        sent: false,
+        channel: "email" as const,
+        deliveryId: "",
+        error: "Email not configured",
+      };
+    }
+
+    const fromAddress =
+      process.env.EMAIL_FROM_ADDRESS ?? "TravelPro <noreply@travelpro.co.il>";
+
+    const html = `<div dir="rtl" style="font-family: Assistant, sans-serif; direction: rtl; text-align: right;">${args.body}</div>`;
+
+    try {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: fromAddress,
+          to: [args.email],
+          subject: args.subject,
+          html,
+        }),
+      });
+
+      const result = (await response.json()) as {
+        id?: string;
+        error?: { message: string };
+      };
+
+      if (!response.ok || result.error) {
+        const errorMsg = result.error?.message ?? `HTTP ${response.status}`;
+        console.error(`[Email] Resend error: ${errorMsg}`);
+        return {
+          sent: false,
+          channel: "email" as const,
+          deliveryId: "",
+          error: errorMsg,
+        };
+      }
+
+      console.log(`[Email] Sent via Resend, id=${result.id}`);
+      return {
+        sent: true,
+        channel: "email" as const,
+        deliveryId: result.id ?? "",
+      };
+    } catch (error) {
+      console.error("[Email] Resend request failed:", error);
+      return {
+        sent: false,
+        channel: "email" as const,
+        deliveryId: "",
+        error: String(error),
+      };
+    }
   },
 });
 

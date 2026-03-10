@@ -223,6 +223,33 @@ export const updateProfile = mutation({
   },
 });
 
+export const updateUserAdmin = mutation({
+  args: {
+    id: v.id("users"),
+    role: v.optional(
+      v.union(v.literal("admin"), v.literal("producer"), v.literal("supplier"))
+    ),
+    status: v.optional(
+      v.union(v.literal("active"), v.literal("pending"), v.literal("suspended"))
+    ),
+  },
+  handler: async (ctx, args) => {
+    const { id, ...updates } = args;
+    const filteredUpdates: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(updates)) {
+      if (value !== undefined) {
+        filteredUpdates[key] = value;
+      }
+    }
+    await ctx.db.patch(id, filteredUpdates);
+    const user = await ctx.db.get(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return { ...user, id: user._id };
+  },
+});
+
 export const approveSupplier = mutation({
   args: { id: v.id("users") },
   handler: async (ctx, args) => {

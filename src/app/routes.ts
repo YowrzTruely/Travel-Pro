@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import { ActivityLog } from "./components/admin/ActivityLog";
+import { ApproveSuppliers } from "./components/admin/ApproveSuppliers";
+import { UserManagement } from "./components/admin/UserManagement";
 import { CalendarPage } from "./components/CalendarPage";
 import { ClassificationWizard } from "./components/ClassificationWizard";
 import { ClientQuote } from "./components/ClientQuote";
@@ -15,10 +17,6 @@ import { FieldOperationsHQ } from "./components/field/FieldOperationsHQ";
 import { ImportWizard } from "./components/ImportWizard";
 import { Layout } from "./components/Layout";
 import { NotFoundPage } from "./components/PlaceholderPage";
-import {
-  ApproveSupplierPlaceholder,
-  UserManagementPlaceholder,
-} from "./components/PortalPlaceholders";
 import { PRDDocument } from "./components/PRDDocument";
 import { ProjectsList } from "./components/ProjectsList";
 import { QuoteEditor } from "./components/QuoteEditor";
@@ -101,8 +99,8 @@ export function createAdminRouter() {
       ErrorBoundary: RootErrorBoundary,
       children: [
         { index: true, Component: AdminDashboard },
-        { path: "approve-suppliers", Component: ApproveSupplierPlaceholder },
-        { path: "users", Component: UserManagementPlaceholder },
+        { path: "approve-suppliers", Component: ApproveSuppliers },
+        { path: "users", Component: UserManagement },
         { path: "activity", Component: ActivityLog },
         { path: "settings", Component: SettingsPage },
         { path: "*", Component: NotFoundPage },

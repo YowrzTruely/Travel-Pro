@@ -1,4 +1,4 @@
-import { useAction, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import {
   Camera,
   Clock,
@@ -22,22 +22,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import {
+  generateClientTripFile,
+  generateDriverTripFile,
+  generateEquipmentPdf,
+  generateQuotePdf,
+} from "../utils/pdfGenerator";
 
 export function DigitalAssetsPanel({
   projectId,
 }: {
   projectId: Id<"projects">;
 }) {
-  const generateQuotePdf = useAction(api.pdfExport.generateQuotePdf);
-  const generateEquipmentPdf = useAction(api.pdfExport.generateEquipmentPdf);
-  const generateDriverTripFile = useAction(
-    api.pdfExport.generateDriverTripFile
-  );
-  const generateClientTripFile = useAction(
-    api.pdfExport.generateClientTripFile
-  );
-
   const project = useQuery(api.projects.get, { id: projectId });
+  const items = useQuery(api.quoteItems.listByProjectId, { projectId });
+  const timeline = useQuery(api.timelineEvents.listByProjectId, { projectId });
 
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [showSaveTheDate, setShowSaveTheDate] = useState(false);
@@ -45,18 +44,11 @@ export function DigitalAssetsPanel({
   const galleryUrl = `/gallery/${projectId}`;
   const ratingsUrl = `/rate/${projectId}`;
 
-  async function handlePdfAction(
-    actionName: string,
-    actionFn: (args: { projectId: Id<"projects"> }) => Promise<{
-      success: boolean;
-      message: string;
-      url: string | null;
-    }>
-  ) {
+  async function handlePdfAction(actionName: string, generator: () => void) {
     setLoadingAction(actionName);
     try {
-      const result = await actionFn({ projectId });
-      appToast.info(result.message);
+      generator();
+      appToast.success("PDF הופק בהצלחה", "הקובץ הורד למחשב");
     } catch {
       appToast.error("שגיאה בהפקת המסמך");
     } finally {
@@ -64,20 +56,79 @@ export function DigitalAssetsPanel({
     }
   }
 
+  const pdfProject = project
+    ? {
+        name: project.name,
+        client: project.client ?? undefined,
+        company: project.company ?? undefined,
+        region: project.region ?? undefined,
+        date: project.date ?? undefined,
+        participants: project.participants,
+        totalPrice: project.totalPrice,
+        pricePerPerson: project.pricePerPerson,
+        tripName: project.tripName ?? undefined,
+        openingParagraph: project.openingParagraph ?? undefined,
+      }
+    : null;
+
+  const pdfItems = (items || []).map(
+    (item: {
+      type?: string | null;
+      name: string;
+      supplier?: string | null;
+      description?: string | null;
+      sellingPrice: number;
+      cost: number;
+      equipmentRequirements?: string[] | null;
+      grossTime?: number | null;
+      netTime?: number | null;
+    }) => ({
+      type: item.type ?? undefined,
+      name: item.name,
+      supplier: item.supplier ?? undefined,
+      description: item.description ?? undefined,
+      sellingPrice: item.sellingPrice,
+      cost: item.cost,
+      equipmentRequirements: item.equipmentRequirements ?? undefined,
+      grossTime: item.grossTime ?? undefined,
+      netTime: item.netTime ?? undefined,
+    })
+  );
+
+  const pdfTimeline = (timeline || []).map(
+    (event: { time: string; title: string; description?: string | null }) => ({
+      time: event.time,
+      title: event.title,
+      description: event.description ?? undefined,
+    })
+  );
+
   const pdfActions = [
     {
       id: "quote",
       label: "הצעת מחיר PDF",
       description: "מסמך ממותג ללקוח",
       icon: <FileText size={18} />,
-      action: () => handlePdfAction("quote", generateQuotePdf),
+      action: () =>
+        handlePdfAction("quote", () => {
+          if (!pdfProject) {
+            return;
+          }
+          generateQuotePdf(pdfProject, pdfItems, pdfTimeline);
+        }),
     },
     {
       id: "equipment",
       label: "רשימת ציוד PDF",
       description: "רשימת כל הציוד הנדרש",
       icon: <Wrench size={18} />,
-      action: () => handlePdfAction("equipment", generateEquipmentPdf),
+      action: () =>
+        handlePdfAction("equipment", () => {
+          if (!pdfProject) {
+            return;
+          }
+          generateEquipmentPdf(pdfProject, pdfItems);
+        }),
     },
     {
       id: "driver",
@@ -85,16 +136,25 @@ export function DigitalAssetsPanel({
       description: "מסלול וכתובות לנהג",
       icon: <Truck size={18} />,
       action: () =>
-        handlePdfAction("driver", (args) =>
-          generateDriverTripFile({ ...args, includePhones: true })
-        ),
+        handlePdfAction("driver", () => {
+          if (!pdfProject) {
+            return;
+          }
+          generateDriverTripFile(pdfProject, pdfItems, pdfTimeline, true);
+        }),
     },
     {
       id: "client",
       label: "קובץ לקוח",
       description: "לוח זמנים ופרטים ללקוח",
       icon: <MapIcon size={18} />,
-      action: () => handlePdfAction("client", generateClientTripFile),
+      action: () =>
+        handlePdfAction("client", () => {
+          if (!pdfProject) {
+            return;
+          }
+          generateClientTripFile(pdfProject, pdfItems, pdfTimeline);
+        }),
     },
   ];
 
@@ -149,7 +209,7 @@ export function DigitalAssetsPanel({
           {pdfActions.map((item) => (
             <button
               className="flex items-center gap-3 rounded-xl border border-[#e7e1da] bg-white p-4 text-right transition-colors hover:bg-[#f8f7f5] disabled:opacity-50"
-              disabled={loadingAction === item.id}
+              disabled={loadingAction === item.id || !project}
               key={item.id}
               onClick={item.action}
               type="button"

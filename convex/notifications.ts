@@ -197,6 +197,18 @@ export const createForUser = internalMutation({
   },
 });
 
+export const updateDeliveryStatus = internalMutation({
+  args: {
+    notificationId: v.id("notifications"),
+    status: v.union(v.literal("sent"), v.literal("failed")),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.notificationId, {
+      externalDeliveryStatus: args.status,
+    });
+  },
+});
+
 export const createBulk = internalMutation({
   args: {
     userIds: v.array(v.id("users")),

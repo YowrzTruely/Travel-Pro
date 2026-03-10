@@ -46,6 +46,7 @@ import { CategoryIcon } from "./CategoryIcons";
 import { useConfirmDelete } from "./ConfirmDeleteModal";
 import { FormField, rules } from "./FormField";
 import { ItemEditor } from "./ItemEditor";
+import { QuoteSendDialog } from "./QuoteSendDialog";
 import { SupplierSearch } from "./SupplierSearch";
 
 // ─── Types (previously from api.ts) ───
@@ -346,6 +347,7 @@ export function QuoteEditor() {
   const directPriceInputRef = useRef<HTMLInputElement>(null);
 
   const [showDirectPriceTooltip, setShowDirectPriceTooltip] = useState(false);
+  const [showSendDialog, setShowSendDialog] = useState(false);
 
   const scrollToSection = (sectionId: string) => {
     setActiveTab(sectionId);
@@ -1640,11 +1642,7 @@ export function QuoteEditor() {
       <div className="fixed right-0 bottom-0 left-0 z-30 mt-8 flex flex-wrap items-center gap-2 border-[#e7e1da] border-t bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md md:sticky md:rounded-xl md:border">
         <button
           className="flex min-h-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[13px] text-white shadow-sm transition-colors hover:bg-[#e67e00]"
-          onClick={() => {
-            const url = `${window.location.origin}/quote/${projectId}`;
-            navigator.clipboard.writeText(url);
-            appToast.success("קישור הועתק", url);
-          }}
+          onClick={() => setShowSendDialog(true)}
           style={{ fontWeight: 600 }}
           type="button"
         >
@@ -1950,6 +1948,15 @@ export function QuoteEditor() {
 
       {/* Delete confirmation modal */}
       {deleteModal}
+
+      {/* Send quote dialog */}
+      {projectId && (
+        <QuoteSendDialog
+          onOpenChange={setShowSendDialog}
+          open={showSendDialog}
+          projectId={projectId}
+        />
+      )}
     </div>
   );
 }

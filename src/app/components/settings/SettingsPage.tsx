@@ -1,6 +1,6 @@
-import { useMutation } from "convex/react";
-import { Camera, LogOut, Save } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useAction, useMutation } from "convex/react";
+import { Camera, Loader2, LogOut, Save } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
@@ -193,10 +193,33 @@ export function SettingsPage() {
     },
   });
 
-  const onChangePassword = (_data: PasswordFormData) => {
-    console.log("Password change requested");
-    appToast.info("שינוי סיסמה יהיה זמין בקרוב");
-    passwordForm.reset();
+  const changePassword = useAction(api.passwordChange.changePassword);
+  const [changingPassword, setChangingPassword] = useState(false);
+
+  const onChangePassword = async (data: PasswordFormData) => {
+    if (data.newPassword !== data.confirmPassword) {
+      appToast.error("שגיאה", "הסיסמאות אינן תואמות");
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      const result = await changePassword({
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      });
+
+      if (result.success) {
+        appToast.success("סיסמה שונתה", "הסיסמה עודכנה בהצלחה");
+        passwordForm.reset();
+      } else {
+        appToast.error("שגיאה", result.error || "לא ניתן לשנות את הסיסמה");
+      }
+    } catch {
+      appToast.error("שגיאה", "לא ניתן לשנות את הסיסמה");
+    } finally {
+      setChangingPassword(false);
+    }
   };
 
   if (!profile) {
@@ -520,9 +543,17 @@ export function SettingsPage() {
                   </div>
 
                   <div className="flex justify-start pt-2">
-                    <button className={btnPrimaryClass} type="submit">
-                      <Save size={16} />
-                      שנה סיסמה
+                    <button
+                      className={btnPrimaryClass}
+                      disabled={changingPassword}
+                      type="submit"
+                    >
+                      {changingPassword ? (
+                        <Loader2 className="animate-spin" size={16} />
+                      ) : (
+                        <Save size={16} />
+                      )}
+                      {changingPassword ? "משנה סיסמה..." : "שנה סיסמה"}
                     </button>
                   </div>
                 </form>
