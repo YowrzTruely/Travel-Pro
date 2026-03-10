@@ -15,6 +15,7 @@ import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
 import { useAuth } from "../AuthContext";
 import { useConfirmDelete } from "../ConfirmDeleteModal";
+import { FeatureGate } from "./FeatureGate";
 import { SupplierProductEditor } from "./SupplierProductEditor";
 
 type ViewMode = "grid" | "list";
@@ -155,51 +156,53 @@ export function MyProducts() {
       </div>
 
       {/* Products */}
-      {products.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-[#e7e1da] border-dashed bg-white py-16">
-          <Package className="mb-4 text-[#b8a990]" size={48} />
-          <p
-            className="mb-2 text-[#181510] text-[16px]"
-            style={{ fontWeight: 600 }}
-          >
-            אין מוצרים עדיין
-          </p>
-          <p className="mb-4 text-[#8d785e] text-[13px]">
-            הוסף את המוצרים והשירותים שלך
-          </p>
-          <button
-            className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
-            onClick={handleAdd}
-            style={{ fontWeight: 600 }}
-            type="button"
-          >
-            <Plus size={16} />
-            הוסף מוצר ראשון
-          </button>
-        </div>
-      ) : viewMode === "grid" ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              onDelete={() => handleDelete(product as ProductData)}
-              onEdit={() => handleEdit(product as ProductData)}
-              product={product as ProductData}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {products.map((product) => (
-            <ProductListItem
-              key={product.id}
-              onDelete={() => handleDelete(product as ProductData)}
-              onEdit={() => handleEdit(product as ProductData)}
-              product={product as ProductData}
-            />
-          ))}
-        </div>
-      )}
+      <FeatureGate featureName="ניהול מוצרים מורחב" requiredStage="stage2">
+        {products.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-[#e7e1da] border-dashed bg-white py-16">
+            <Package className="mb-4 text-[#b8a990]" size={48} />
+            <p
+              className="mb-2 text-[#181510] text-[16px]"
+              style={{ fontWeight: 600 }}
+            >
+              אין מוצרים עדיין
+            </p>
+            <p className="mb-4 text-[#8d785e] text-[13px]">
+              הוסף את המוצרים והשירותים שלך
+            </p>
+            <button
+              className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+              onClick={handleAdd}
+              style={{ fontWeight: 600 }}
+              type="button"
+            >
+              <Plus size={16} />
+              הוסף מוצר ראשון
+            </button>
+          </div>
+        ) : viewMode === "grid" ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                onDelete={() => handleDelete(product as ProductData)}
+                onEdit={() => handleEdit(product as ProductData)}
+                product={product as ProductData}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {products.map((product) => (
+              <ProductListItem
+                key={product.id}
+                onDelete={() => handleDelete(product as ProductData)}
+                onEdit={() => handleEdit(product as ProductData)}
+                product={product as ProductData}
+              />
+            ))}
+          </div>
+        )}
+      </FeatureGate>
 
       {/* Editor drawer */}
       <SupplierProductEditor

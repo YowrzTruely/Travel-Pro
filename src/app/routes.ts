@@ -17,7 +17,6 @@ import { Layout } from "./components/Layout";
 import { NotFoundPage } from "./components/PlaceholderPage";
 import {
   ApproveSupplierPlaceholder,
-  SupplierRequestsPlaceholder,
   UserManagementPlaceholder,
 } from "./components/PortalPlaceholders";
 import { PRDDocument } from "./components/PRDDocument";
@@ -31,6 +30,7 @@ import { SettingsPage } from "./components/settings/SettingsPage";
 import { AvailabilityCalendar } from "./components/supplier/AvailabilityCalendar";
 import { MyDocuments } from "./components/supplier/MyDocuments";
 import { MyProducts } from "./components/supplier/MyProducts";
+import { RequestsPage } from "./components/supplier/RequestsPage";
 import { SupplierPreview } from "./components/supplier/SupplierPreview";
 import { SupplierProfile } from "./components/supplier/SupplierProfile";
 import { SupplierPromotions } from "./components/supplier/SupplierPromotions";
@@ -80,7 +80,7 @@ export function createSupplierRouter() {
         { path: "products", Component: MyProducts },
         { path: "documents", Component: MyDocuments },
         { path: "availability", Component: AvailabilityCalendar },
-        { path: "requests", Component: SupplierRequestsPlaceholder },
+        { path: "requests", Component: RequestsPage },
         { path: "profile", Component: SupplierProfile },
         { path: "preview", Component: SupplierPreview },
         { path: "promotions", Component: SupplierPromotions },

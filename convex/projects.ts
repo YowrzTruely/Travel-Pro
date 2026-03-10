@@ -75,6 +75,8 @@ export const create = mutation({
     pricePerPerson: v.optional(v.number()),
     profitMargin: v.optional(v.number()),
     date: v.optional(v.string()),
+    tripName: v.optional(v.string()),
+    openingParagraph: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const year = new Date().getFullYear().toString().slice(2);
@@ -95,6 +97,10 @@ export const create = mutation({
       pricePerPerson: args.pricePerPerson ?? 0,
       profitMargin: args.profitMargin ?? 0,
       date: args.date || new Date().toISOString().split("T")[0],
+      ...(args.tripName ? { tripName: args.tripName } : {}),
+      ...(args.openingParagraph
+        ? { openingParagraph: args.openingParagraph }
+        : {}),
     });
     const project = await ctx.db.get(id);
     if (!project) {
@@ -120,6 +126,8 @@ export const update = mutation({
     date: v.optional(v.string()),
     quoteVersion: v.optional(v.number()),
     timelineHidden: v.optional(v.boolean()),
+    tripName: v.optional(v.string()),
+    openingParagraph: v.optional(v.string()),
   },
   handler: async (ctx, { id, ...updates }) => {
     const project = await findProject(ctx, id);

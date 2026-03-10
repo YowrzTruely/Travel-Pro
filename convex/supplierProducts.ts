@@ -1,6 +1,17 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
+export const get = query({
+  args: { id: v.id("supplierProducts") },
+  handler: async (ctx, { id }) => {
+    const product = await ctx.db.get(id);
+    if (!product) {
+      return null;
+    }
+    return { ...product, id: product._id };
+  },
+});
+
 export const listBySupplierId = query({
   args: { supplierId: v.id("suppliers") },
   handler: async (ctx, { supplierId }) => {

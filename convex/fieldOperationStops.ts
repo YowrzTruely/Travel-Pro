@@ -73,7 +73,26 @@ export const updateQuantity = mutation({
   handler: async (ctx, args) => {
     await ctx.db.patch(args.id, { actualQuantity: args.actualQuantity });
     const doc = await ctx.db.get(args.id);
-    return { ...doc, id: doc?._id };
+    if (!doc) {
+      return { id: args.id };
+    }
+
+    // Auto-notify food suppliers on quantity change (Fix 7)
+    const supplier = await ctx.db.get(doc.supplierId);
+    if (supplier) {
+      const category = (supplier.category || "").toLowerCase();
+      if (
+        category.includes("מסעדות ואוכל") ||
+        category.includes("מזון") ||
+        category.includes("קייטרינג")
+      ) {
+        console.log(
+          `[NotificationStub] Food supplier "${supplier.name}" quantity updated to ${args.actualQuantity} (was ${doc.plannedQuantity}). Would send multi-channel notification.`
+        );
+      }
+    }
+
+    return { ...doc, id: doc._id };
   },
 });
 
@@ -113,6 +132,7 @@ export const shiftTimes = mutation({
       )
       .collect();
 
+    const affectedStops: typeof stops = [];
     for (const stop of stops) {
       if (stop.orderIndex >= args.fromOrderIndex) {
         await ctx.db.patch(stop._id, {
@@ -125,7 +145,17 @@ export const shiftTimes = mutation({
             args.minutesShift
           ),
         });
+        if (stop.status === "upcoming") {
+          affectedStops.push(stop);
+        }
       }
+    }
+
+    // Notify upcoming suppliers about time shift (Fix 8)
+    for (const stop of affectedStops) {
+      console.log(
+        `[NotificationStub] Time shift: supplier "${stop.supplierName}" (stop #${stop.orderIndex}) shifted by ${args.minutesShift} minutes. Would send WhatsApp/multi-channel notification.`
+      );
     }
   },
 });

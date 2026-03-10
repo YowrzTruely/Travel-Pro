@@ -122,6 +122,8 @@ export function ClientQuote() {
       : defaultActivities;
 
   const projectName = quoteData?.name || "נופש שנתי גליל עליון";
+  const tripName = quoteData?.tripName || "";
+  const openingParagraph = quoteData?.openingParagraph || "";
   const participants = quoteData?.participants || 50;
   const totalPrice = quoteData?.totalPrice || 42_500;
   const pricePerPerson =
@@ -235,14 +237,14 @@ export function ClientQuote() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            className="rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
+            className="min-h-[44px] min-w-[44px] rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
             onClick={() => setShowVersions(true)}
             type="button"
           >
             גרסאות
           </button>
           <button
-            className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#e67e00]"
+            className="flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#e67e00]"
             onClick={() => window.print()}
             style={{ fontWeight: 600 }}
             type="button"
@@ -272,11 +274,11 @@ export function ClientQuote() {
             className="mt-2 max-w-lg text-[32px] text-white md:text-[44px]"
             style={{ fontWeight: 700, lineHeight: 1.2 }}
           >
-            החוויה הגלילית שלכם מתחילה כאן
+            {tripName || "החוויה הגלילית שלכם מתחילה כאן"}
           </h1>
           <p className="mt-3 max-w-md text-[14px] text-white/80">
-            יום נופש מושלם בגליל העליון: סיור ביקב, טעימות יין, ארוחת שף בטבע
-            והסעות מפנקות. חוויה שתיזכר לאורך זמן.
+            {openingParagraph ||
+              "יום נופש מושלם בגליל העליון: סיור ביקב, טעימות יין, ארוחת שף בטבע והסעות מפנקות. חוויה שתיזכר לאורך זמן."}
           </p>
         </div>
       </div>

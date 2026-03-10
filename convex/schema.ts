@@ -199,6 +199,8 @@ export default defineSchema({
     archiveBlocked: v.optional(v.boolean()),
     archiveBlockReason: v.optional(v.string()),
     timelineHidden: v.optional(v.boolean()),
+    tripName: v.optional(v.string()),
+    openingParagraph: v.optional(v.string()),
   })
     .index("by_legacyId", ["legacyId"])
     .index("by_status", ["status"]),

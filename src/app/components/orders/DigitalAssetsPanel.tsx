@@ -1,4 +1,4 @@
-import { useAction } from "convex/react";
+import { useAction, useQuery } from "convex/react";
 import {
   Camera,
   Clock,
@@ -14,6 +14,14 @@ import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
+import { SaveTheDate } from "../gallery/SaveTheDate";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 
 export function DigitalAssetsPanel({
   projectId,
@@ -29,7 +37,10 @@ export function DigitalAssetsPanel({
     api.pdfExport.generateClientTripFile
   );
 
+  const project = useQuery(api.projects.get, { id: projectId });
+
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
+  const [showSaveTheDate, setShowSaveTheDate] = useState(false);
 
   const galleryUrl = `/gallery/${projectId}`;
   const ratingsUrl = `/rate/${projectId}`;
@@ -105,12 +116,6 @@ export function DigitalAssetsPanel({
   ];
 
   const comingSoon = [
-    {
-      id: "save-the-date",
-      label: "Save the Date",
-      description: "הזמנה דיגיטלית לאירוע",
-      icon: <Clock size={18} />,
-    },
     {
       id: "b2c-lead",
       label: "B2C Lead Capture",
@@ -207,6 +212,54 @@ export function DigitalAssetsPanel({
           ))}
         </div>
       </div>
+
+      {/* Save the Date */}
+      <div>
+        <h3
+          className="mb-3 text-[#8d785e] text-[13px]"
+          style={{ fontWeight: 600 }}
+        >
+          הזמנות
+        </h3>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button
+            className="flex items-center gap-3 rounded-xl border border-[#e7e1da] bg-white p-4 text-right transition-colors hover:bg-[#f8f7f5]"
+            onClick={() => setShowSaveTheDate(true)}
+            type="button"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#ff8c00]/10 text-[#ff8c00]">
+              <Clock size={18} />
+            </div>
+            <div className="min-w-0">
+              <div
+                className="text-[#181510] text-[14px]"
+                style={{ fontWeight: 600 }}
+              >
+                Save the Date
+              </div>
+              <div className="text-[#8d785e] text-[12px]">
+                הזמנה דיגיטלית לאירוע
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Save the Date Dialog */}
+      <Dialog onOpenChange={setShowSaveTheDate} open={showSaveTheDate}>
+        <DialogContent className="sm:max-w-[500px]" dir="rtl">
+          <DialogHeader>
+            <DialogTitle>Save the Date</DialogTitle>
+            <DialogDescription>תצוגה מקדימה של ההזמנה</DialogDescription>
+          </DialogHeader>
+          <SaveTheDate
+            date={project?.date || "תאריך לא נקבע"}
+            participants={project?.participants}
+            region={project?.region}
+            tripName={project?.tripName || project?.name || ""}
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* Coming Soon */}
       <div>

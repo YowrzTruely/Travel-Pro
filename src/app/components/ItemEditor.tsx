@@ -1,4 +1,4 @@
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import {
   Banknote,
   BedDouble,
@@ -24,6 +24,7 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { appToast } from "./AppToast";
 import { useImageUpload } from "./hooks/useImageUpload";
 
@@ -43,8 +44,10 @@ interface QuoteItem {
   images?: { id: string; url: string; name: string }[];
   name: string;
   notes?: string;
+  productId?: Id<"supplierProducts">;
   profitWeight: number;
   projectId: string;
+  selectedAddons?: { addonId: string; name: string; price: number }[];
   sellingPrice: number;
   status: string;
   supplier: string;
@@ -80,6 +83,7 @@ interface ItemEditorProps {
   item: QuoteItem;
   onClose: () => void;
   onUpdate: (updated: QuoteItem) => void;
+  participants?: number;
 }
 
 export function ItemEditor({
@@ -87,9 +91,25 @@ export function ItemEditor({
   isOpen,
   onClose,
   onUpdate,
+  participants,
 }: ItemEditorProps) {
   const updateItem = useMutation(api.quoteItems.update);
   const { upload } = useImageUpload();
+
+  // Volume pricing + addons queries (Fix 5 & 6)
+  const product = useQuery(
+    api.supplierProducts.get,
+    item.productId ? { id: item.productId } : "skip"
+  );
+  const productAddons = useQuery(
+    api.productAddons.listByProductId,
+    item.productId ? { productId: item.productId } : "skip"
+  );
+
+  const isVolumePrice =
+    product?.volumeThreshold &&
+    participants &&
+    participants >= product.volumeThreshold;
 
   // ─── Editable fields ───
   const [name, setName] = useState(item.name);
@@ -820,6 +840,189 @@ export function ItemEditor({
                     </fieldset>
                   </div>
                 </motion.div>
+
+                {/* Volume pricing indicator (Fix 5) */}
+                {isVolumePrice && product && (
+                  <motion.div
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-xl border border-blue-200 bg-blue-50 p-4"
+                    initial={{ opacity: 0, y: 15 }}
+                    transition={{ delay: 0.38 }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="rounded-md bg-blue-500 px-2 py-0.5 text-[11px] text-white"
+                        style={{ fontWeight: 600 }}
+                      >
+                        מחיר כמות
+                      </span>
+                      <span className="text-[#8d785e] text-[12px]">
+                        {participants} משתתפים ≥ סף כמות (
+                        {product.volumeThreshold})
+                      </span>
+                    </div>
+                    <div className="mt-2 grid grid-cols-2 gap-3 text-[12px]">
+                      <div>
+                        <span className="text-[#8d785e]">מחירון כמות: </span>
+                        <span
+                          className="text-[#181510]"
+                          style={{ fontWeight: 600 }}
+                        >
+                          ₪
+                          {(
+                            product.volumeListPrice ??
+                            product.listPrice ??
+                            product.price
+                          )?.toLocaleString()}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[#8d785e]">ישיר כמות: </span>
+                        <span
+                          className="text-[#181510]"
+                          style={{ fontWeight: 600 }}
+                        >
+                          ₪
+                          {(
+                            product.volumeDirectPrice ??
+                            product.directPrice ??
+                            0
+                          )?.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      className="mt-2 rounded-lg bg-blue-500 px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-blue-600"
+                      onClick={() => {
+                        const volCost =
+                          product.volumeProducerPrice ??
+                          product.producerPrice ??
+                          cost;
+                        const volDirect =
+                          product.volumeDirectPrice ??
+                          product.directPrice ??
+                          directPrice;
+                        setCost(volCost);
+                        setDirectPrice(volDirect);
+                        appToast.success(
+                          "מחיר כמות הוחל",
+                          `עלות: ₪${volCost} | ישיר: ₪${volDirect}`
+                        );
+                      }}
+                      style={{ fontWeight: 600 }}
+                      type="button"
+                    >
+                      החל מחירי כמות
+                    </button>
+                  </motion.div>
+                )}
+
+                {/* Product addons / upsells (Fix 6) */}
+                {productAddons && productAddons.length > 0 && (
+                  <motion.div
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-xl border border-[#e7e1da] bg-white p-4"
+                    initial={{ opacity: 0, y: 15 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <div
+                      className="mb-3 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                      style={{ fontWeight: 600 }}
+                    >
+                      <Package className="text-[#ff8c00]" size={14} />
+                      תוספות זמינות
+                    </div>
+                    <div className="space-y-2">
+                      {productAddons.map((addon) => {
+                        const isSelected = (item.selectedAddons ?? []).some(
+                          (a) => a.addonId === addon.id
+                        );
+                        return (
+                          <label
+                            className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-all ${
+                              isSelected
+                                ? "border-[#ff8c00] bg-[#ff8c00]/5"
+                                : "border-[#e7e1da] hover:border-[#ff8c00]/50"
+                            }`}
+                            key={addon.id}
+                          >
+                            <div className="flex items-center gap-3">
+                              <input
+                                checked={isSelected}
+                                className="h-4 w-4 accent-[#ff8c00]"
+                                onChange={async () => {
+                                  const currentAddons = [
+                                    ...(item.selectedAddons ?? []),
+                                  ];
+                                  let newAddons: typeof currentAddons;
+                                  if (isSelected) {
+                                    newAddons = currentAddons.filter(
+                                      (a) => a.addonId !== addon.id
+                                    );
+                                  } else {
+                                    newAddons = [
+                                      ...currentAddons,
+                                      {
+                                        addonId: addon.id,
+                                        name: addon.name,
+                                        price: addon.listPrice,
+                                      },
+                                    ];
+                                  }
+                                  try {
+                                    await updateItem({
+                                      id: item.id as any,
+                                      selectedAddons: newAddons.map((a) => ({
+                                        addonId:
+                                          a.addonId as Id<"productAddons">,
+                                        name: a.name,
+                                        price: a.price,
+                                      })),
+                                    });
+                                    onUpdate({
+                                      ...item,
+                                      selectedAddons: newAddons,
+                                    });
+                                  } catch {
+                                    appToast.error(
+                                      "שגיאה",
+                                      "לא ניתן לעדכן תוספות"
+                                    );
+                                  }
+                                }}
+                                type="checkbox"
+                              />
+                              <div>
+                                <span
+                                  className="text-[#181510] text-[13px]"
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  {addon.name}
+                                </span>
+                                {addon.description && (
+                                  <p className="text-[#8d785e] text-[11px]">
+                                    {addon.description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <span
+                              className="text-[#181510] text-[13px]"
+                              style={{ fontWeight: 600 }}
+                            >
+                              ₪{addon.listPrice.toLocaleString()}
+                              {addon.unit && (
+                                <span className="text-[#8d785e] text-[11px]">
+                                  /{addon.unit}
+                                </span>
+                              )}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
 
                 {/* Section: Notes */}
                 <motion.div

@@ -6,6 +6,7 @@ import {
   Loader2,
   Save,
   User,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -46,6 +47,7 @@ export function SupplierProfile() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [showApprovalModal, setShowApprovalModal] = useState(false);
 
   const {
     register,
@@ -91,14 +93,16 @@ export function SupplierProfile() {
         return prev.filter((c) => c !== value);
       }
       if (prev.length >= MAX_CATEGORIES_WITHOUT_APPROVAL) {
-        appToast.warning(
-          "מקסימום קטגוריות",
-          `ניתן לבחור עד ${MAX_CATEGORIES_WITHOUT_APPROVAL} קטגוריות`
-        );
+        setShowApprovalModal(true);
         return prev;
       }
       return [...prev, value];
     });
+  };
+
+  const handleApprovalRequest = () => {
+    setShowApprovalModal(false);
+    appToast.success("בקשת אישור", "בקשת האישור נשלחה");
   };
 
   const toggleRegion = (value: string) => {
@@ -442,7 +446,7 @@ export function SupplierProfile() {
         {/* Save button */}
         <div className="sticky bottom-6">
           <button
-            className={`flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-[15px] transition-all ${
+            className={`flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl py-3.5 text-[15px] transition-all ${
               saveSuccess
                 ? "bg-green-500 text-white"
                 : hasFormChanges
@@ -469,6 +473,54 @@ export function SupplierProfile() {
           </button>
         </div>
       </form>
+
+      {/* Category approval modal */}
+      {showApprovalModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div
+            className="relative mx-4 w-full max-w-md rounded-xl border border-[#e7e1da] bg-white p-6 shadow-xl"
+            dir="rtl"
+          >
+            <button
+              className="absolute top-3 left-3 rounded-lg p-1 text-[#8d785e] transition-colors hover:bg-[#f8f7f5]"
+              onClick={() => setShowApprovalModal(false)}
+              type="button"
+            >
+              <X size={18} />
+            </button>
+
+            <h2
+              className="mb-2 text-[#181510] text-[18px]"
+              style={{ fontWeight: 700 }}
+            >
+              נדרש אישור מנהל
+            </h2>
+            <p className="mb-5 text-[#8d785e] text-[14px] leading-relaxed">
+              הגעת למקסימום של {MAX_CATEGORIES_WITHOUT_APPROVAL} קטגוריות.
+              להוספת קטגוריות נוספות נדרש אישור מנהל המערכת.
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                className="flex-1 rounded-xl bg-[#ff8c00] py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+                onClick={handleApprovalRequest}
+                style={{ fontWeight: 600 }}
+                type="button"
+              >
+                שלח בקשת אישור
+              </button>
+              <button
+                className="flex-1 rounded-xl border border-[#e7e1da] bg-white py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f8f7f5]"
+                onClick={() => setShowApprovalModal(false)}
+                style={{ fontWeight: 600 }}
+                type="button"
+              >
+                ביטול
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

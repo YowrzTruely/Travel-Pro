@@ -17,6 +17,7 @@ import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
 import { useAuth } from "../AuthContext";
 import { useImageUpload } from "../hooks/useImageUpload";
+import { FeatureGate } from "./FeatureGate";
 
 const DOCUMENT_TYPES = [
   {
@@ -288,233 +289,239 @@ export function MyDocuments() {
       </div>
 
       {/* Document checklist */}
-      <div className="space-y-3">
-        {visibleDocTypes.map((docType) => {
-          const existingDoc = docsByType[docType.key];
-          const hasFile = existingDoc?.storageId;
-          const isAcknowledged = existingDoc?.acknowledged && !hasFile;
-          const statusInfo = hasFile
-            ? getStatusColor(existingDoc?.status, existingDoc?.expiry)
-            : isAcknowledged
-              ? { color: "text-gray-400", label: 'סומן "אין לי"', icon: Clock }
-              : { color: "text-gray-400", label: "חסר", icon: Clock };
+      <FeatureGate featureName="ניהול מסמכים ותקינות" requiredStage="stage3">
+        <div className="space-y-3">
+          {visibleDocTypes.map((docType) => {
+            const existingDoc = docsByType[docType.key];
+            const hasFile = existingDoc?.storageId;
+            const isAcknowledged = existingDoc?.acknowledged && !hasFile;
+            const statusInfo = hasFile
+              ? getStatusColor(existingDoc?.status, existingDoc?.expiry)
+              : isAcknowledged
+                ? {
+                    color: "text-gray-400",
+                    label: 'סומן "אין לי"',
+                    icon: Clock,
+                  }
+                : { color: "text-gray-400", label: "חסר", icon: Clock };
 
-          const StatusIcon = statusInfo.icon;
-          const isUploading = uploading === docType.key;
+            const StatusIcon = statusInfo.icon;
+            const isUploading = uploading === docType.key;
 
-          return (
-            <div
-              className="rounded-xl border border-[#e7e1da] bg-white p-4 transition-shadow hover:shadow-sm"
-              key={docType.key}
-            >
-              <div className="flex items-center justify-between">
-                {/* Left: Status + Name */}
-                <div className="flex items-center gap-3">
-                  <StatusIcon className={`h-5 w-5 ${statusInfo.color}`} />
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="text-[#181510] text-[14px]"
-                        style={{ fontWeight: 600 }}
-                      >
-                        {docType.label}
+            return (
+              <div
+                className="rounded-xl border border-[#e7e1da] bg-white p-4 transition-shadow hover:shadow-sm"
+                key={docType.key}
+              >
+                <div className="flex items-center justify-between">
+                  {/* Left: Status + Name */}
+                  <div className="flex items-center gap-3">
+                    <StatusIcon className={`h-5 w-5 ${statusInfo.color}`} />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="text-[#181510] text-[14px]"
+                          style={{ fontWeight: 600 }}
+                        >
+                          {docType.label}
+                        </span>
+                        {"mandatory" in docType && docType.mandatory && (
+                          <span className="rounded bg-red-50 px-1.5 py-0.5 text-[10px] text-red-600">
+                            חובה
+                          </span>
+                        )}
+                        {"recommended" in docType && docType.recommended && (
+                          <span className="rounded bg-yellow-50 px-1.5 py-0.5 text-[10px] text-yellow-700">
+                            מומלץ
+                          </span>
+                        )}
+                      </div>
+                      <span className={`text-[11px] ${statusInfo.color}`}>
+                        {statusInfo.label}
                       </span>
-                      {"mandatory" in docType && docType.mandatory && (
-                        <span className="rounded bg-red-50 px-1.5 py-0.5 text-[10px] text-red-600">
-                          חובה
-                        </span>
-                      )}
-                      {"recommended" in docType && docType.recommended && (
-                        <span className="rounded bg-yellow-50 px-1.5 py-0.5 text-[10px] text-yellow-700">
-                          מומלץ
-                        </span>
-                      )}
                     </div>
-                    <span className={`text-[11px] ${statusInfo.color}`}>
-                      {statusInfo.label}
-                    </span>
                   </div>
-                </div>
 
-                {/* Right: Actions */}
-                <div className="flex items-center gap-2">
-                  {hasFile && existingDoc && (
-                    <>
-                      {/* Expiry date */}
-                      {editingExpiry === docType.key ? (
-                        <div className="flex items-center gap-1">
-                          <input
-                            className="rounded border border-[#e7e1da] px-2 py-1 text-[12px]"
-                            onChange={(e) => setExpiryValue(e.target.value)}
-                            type="date"
-                            value={expiryValue}
-                          />
+                  {/* Right: Actions */}
+                  <div className="flex items-center gap-2">
+                    {hasFile && existingDoc && (
+                      <>
+                        {/* Expiry date */}
+                        {editingExpiry === docType.key ? (
+                          <div className="flex items-center gap-1">
+                            <input
+                              className="rounded border border-[#e7e1da] px-2 py-1 text-[12px]"
+                              onChange={(e) => setExpiryValue(e.target.value)}
+                              type="date"
+                              value={expiryValue}
+                            />
+                            <button
+                              className="rounded bg-[#ff8c00] px-2 py-1 text-[11px] text-white"
+                              onClick={() => handleSaveExpiry(existingDoc.id)}
+                              type="button"
+                            >
+                              שמור
+                            </button>
+                            <button
+                              className="rounded px-2 py-1 text-[#8d785e] text-[11px]"
+                              onClick={() => setEditingExpiry(null)}
+                              type="button"
+                            >
+                              ביטול
+                            </button>
+                          </div>
+                        ) : (
                           <button
-                            className="rounded bg-[#ff8c00] px-2 py-1 text-[11px] text-white"
-                            onClick={() => handleSaveExpiry(existingDoc.id)}
+                            className="text-[#8d785e] text-[11px] hover:text-[#181510]"
+                            onClick={() => {
+                              setEditingExpiry(docType.key);
+                              setExpiryValue(existingDoc.expiry ?? "");
+                            }}
                             type="button"
                           >
-                            שמור
+                            {existingDoc.expiry
+                              ? `תוקף: ${existingDoc.expiry}`
+                              : "הגדר תוקף"}
                           </button>
-                          <button
-                            className="rounded px-2 py-1 text-[#8d785e] text-[11px]"
-                            onClick={() => setEditingExpiry(null)}
-                            type="button"
-                          >
-                            ביטול
-                          </button>
-                        </div>
-                      ) : (
+                        )}
+
+                        {/* File name */}
+                        <span className="flex items-center gap-1 text-[#8d785e] text-[11px]">
+                          <FileText size={12} />
+                          {existingDoc.fileName ?? "קובץ"}
+                        </span>
+
+                        {/* Download */}
                         <button
-                          className="text-[#8d785e] text-[11px] hover:text-[#181510]"
-                          onClick={() => {
-                            setEditingExpiry(docType.key);
-                            setExpiryValue(existingDoc.expiry ?? "");
-                          }}
+                          className="rounded-lg p-1.5 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+                          title="הורדה"
                           type="button"
                         >
-                          {existingDoc.expiry
-                            ? `תוקף: ${existingDoc.expiry}`
-                            : "הגדר תוקף"}
+                          <Download size={14} />
                         </button>
-                      )}
 
-                      {/* File name */}
-                      <span className="flex items-center gap-1 text-[#8d785e] text-[11px]">
-                        <FileText size={12} />
-                        {existingDoc.fileName ?? "קובץ"}
-                      </span>
-
-                      {/* Download */}
-                      <button
-                        className="rounded-lg p-1.5 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
-                        title="הורדה"
-                        type="button"
-                      >
-                        <Download size={14} />
-                      </button>
-
-                      {/* Delete */}
-                      <button
-                        className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-red-50"
-                        onClick={() => handleDeleteDoc(existingDoc.id)}
-                        title="מחק"
-                        type="button"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </>
-                  )}
-
-                  {!hasFile && (
-                    <>
-                      {/* Upload button */}
-                      <input
-                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            handleFileSelected(
-                              docType.key as DocumentTypeKey,
-                              docType.label,
-                              file
-                            );
-                          }
-                          e.target.value = "";
-                        }}
-                        ref={(el) => {
-                          fileInputRefs.current[docType.key] = el;
-                        }}
-                        type="file"
-                      />
-                      <button
-                        className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#e07d00] disabled:opacity-50"
-                        disabled={isUploading}
-                        onClick={() =>
-                          handleUpload(
-                            docType.key as DocumentTypeKey,
-                            docType.label
-                          )
-                        }
-                        type="button"
-                      >
-                        {isUploading ? (
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <Upload size={14} />
-                        )}
-                        העלאה
-                      </button>
-
-                      {/* "אין לי" button */}
-                      {!isAcknowledged && (
+                        {/* Delete */}
                         <button
-                          className="rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
+                          className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-red-50"
+                          onClick={() => handleDeleteDoc(existingDoc.id)}
+                          title="מחק"
+                          type="button"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </>
+                    )}
+
+                    {!hasFile && (
+                      <>
+                        {/* Upload button */}
+                        <input
+                          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleFileSelected(
+                                docType.key as DocumentTypeKey,
+                                docType.label,
+                                file
+                              );
+                            }
+                            e.target.value = "";
+                          }}
+                          ref={(el) => {
+                            fileInputRefs.current[docType.key] = el;
+                          }}
+                          type="file"
+                        />
+                        <button
+                          className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#e07d00] disabled:opacity-50"
+                          disabled={isUploading}
                           onClick={() =>
-                            handleMarkMissing(
+                            handleUpload(
                               docType.key as DocumentTypeKey,
                               docType.label
                             )
                           }
                           type="button"
                         >
-                          אין לי
+                          {isUploading ? (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          ) : (
+                            <Upload size={14} />
+                          )}
+                          העלאה
                         </button>
-                      )}
-                    </>
-                  )}
+
+                        {/* "אין לי" button */}
+                        {!isAcknowledged && (
+                          <button
+                            className="rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
+                            onClick={() =>
+                              handleMarkMissing(
+                                docType.key as DocumentTypeKey,
+                                docType.label
+                              )
+                            }
+                            type="button"
+                          >
+                            אין לי
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Other documents (not matching predefined types) */}
-      {documents && documents.filter((d) => !d.documentType).length > 0 && (
-        <div className="mt-8">
-          <h2
-            className="mb-3 text-[#181510] text-[16px]"
-            style={{ fontWeight: 600 }}
-          >
-            מסמכים נוספים
-          </h2>
-          <div className="space-y-2">
-            {documents
-              .filter((d) => !d.documentType)
-              .map((doc) => {
-                const statusInfo = getStatusColor(doc.status, doc.expiry);
-                const StatusIcon = statusInfo.icon;
-                return (
-                  <div
-                    className="flex items-center justify-between rounded-lg border border-[#e7e1da] bg-white px-4 py-3"
-                    key={doc.id}
-                  >
-                    <div className="flex items-center gap-3">
-                      <StatusIcon className={`h-4 w-4 ${statusInfo.color}`} />
-                      <span className="text-[#181510] text-[13px]">
-                        {doc.name}
-                      </span>
-                      {doc.expiry && (
-                        <span className="text-[#8d785e] text-[11px]">
-                          תוקף: {doc.expiry}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-red-50"
-                      onClick={() => handleDeleteDoc(doc.id)}
-                      type="button"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                );
-              })}
-          </div>
+            );
+          })}
         </div>
-      )}
+
+        {/* Other documents (not matching predefined types) */}
+        {documents && documents.filter((d) => !d.documentType).length > 0 && (
+          <div className="mt-8">
+            <h2
+              className="mb-3 text-[#181510] text-[16px]"
+              style={{ fontWeight: 600 }}
+            >
+              מסמכים נוספים
+            </h2>
+            <div className="space-y-2">
+              {documents
+                .filter((d) => !d.documentType)
+                .map((doc) => {
+                  const statusInfo = getStatusColor(doc.status, doc.expiry);
+                  const StatusIcon = statusInfo.icon;
+                  return (
+                    <div
+                      className="flex items-center justify-between rounded-lg border border-[#e7e1da] bg-white px-4 py-3"
+                      key={doc.id}
+                    >
+                      <div className="flex items-center gap-3">
+                        <StatusIcon className={`h-4 w-4 ${statusInfo.color}`} />
+                        <span className="text-[#181510] text-[13px]">
+                          {doc.name}
+                        </span>
+                        {doc.expiry && (
+                          <span className="text-[#8d785e] text-[11px]">
+                            תוקף: {doc.expiry}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-red-50"
+                        onClick={() => handleDeleteDoc(doc.id)}
+                        type="button"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        )}
+      </FeatureGate>
     </div>
   );
 }

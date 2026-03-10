@@ -30,6 +30,20 @@ export const generateTripName = action({
   },
 });
 
+export const generateOpeningParagraph = action({
+  args: {
+    activities: v.array(v.string()),
+    region: v.optional(v.string()),
+    participants: v.optional(v.number()),
+  },
+  handler: async (_ctx, args) => {
+    const region = args.region || "ישראל";
+    const count = args.participants ? `${args.participants} משתתפים` : "הקבוצה";
+    const activities = args.activities.slice(0, 3).join(", ");
+    return `יום מושלם מחכה ל${count} באזור ${region}! תוכנית עשירה הכוללת ${activities} — חוויה בלתי נשכחת שתחזק את הצוות ותיצור זכרונות משותפים.`;
+  },
+});
+
 export const analyzeInvoice = action({
   args: { fileId: v.string() },
   handler: async (_ctx, _args) => {

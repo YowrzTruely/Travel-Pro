@@ -86,6 +86,8 @@ export const getQuote = query({
           }),
       quoteVersion: project.quoteVersion,
       timelineHidden: project.timelineHidden,
+      tripName: project.tripName,
+      openingParagraph: project.openingParagraph,
       date: project.date,
       status: project.status,
       items,

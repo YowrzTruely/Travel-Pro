@@ -227,21 +227,25 @@ export function AdminDashboard() {
             <KPICard
               color="#3B82F6"
               label="ספקים רשומים"
+              target="200+"
               value={adminKPIs.registeredSuppliers.toString()}
             />
             <KPICard
               color="#22C55E"
               label="מפיקים"
+              target="50+"
               value={adminKPIs.producers.toString()}
             />
             <KPICard
               color="#F59E0B"
               label="הצעות שנבנו"
+              target="100+"
               value={adminKPIs.quotesBuilt.toString()}
             />
             <KPICard
               color="#8B5CF6"
               label="השלמת פרופילים"
+              target="60%+"
               value={`${adminKPIs.profileCompletionRate}%`}
             />
           </div>
@@ -297,10 +301,12 @@ function KPICard({
   label,
   value,
   color,
+  target,
 }: {
   label: string;
   value: string;
   color: string;
+  target?: string;
 }) {
   return (
     <div className="rounded-lg border border-[#f5f3f0] bg-[#fdfcfb] p-4 text-center">
@@ -316,6 +322,9 @@ function KPICard({
       >
         {label}
       </p>
+      {target && (
+        <p className="mt-1 text-[#b8a990] text-[10px]">יעד: {target}</p>
+      )}
     </div>
   );
 }

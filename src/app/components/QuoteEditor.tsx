@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import {
   ArrowRight,
   BedDouble,
@@ -27,6 +27,7 @@ import {
   Plus,
   Receipt,
   Save,
+  Sparkles,
   Star,
   Trash2,
   User,
@@ -312,6 +313,9 @@ export function QuoteEditor() {
   const updateItem = useMutation(api.quoteItems.update);
   const removeItem = useMutation(api.quoteItems.remove);
   const updateProject = useMutation(api.projects.update);
+  const generateOpeningParagraph = useAction(
+    api.aiSupplier.generateOpeningParagraph
+  );
 
   // Loading: any query still returning undefined
   const loading =
@@ -319,6 +323,11 @@ export function QuoteEditor() {
     (project !== null && (items === undefined || timeline === undefined));
 
   const [saving, setSaving] = useState(false);
+  const [tripName, setTripName] = useState(project?.tripName ?? "");
+  const [openingParagraph, setOpeningParagraph] = useState(
+    project?.openingParagraph ?? ""
+  );
+  const [generatingParagraph, setGeneratingParagraph] = useState(false);
 
   const [showPreview, setShowPreview] = useState(false);
   const [showAddComponent, setShowAddComponent] = useState(false);
@@ -345,6 +354,16 @@ export function QuoteEditor() {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  // Sync trip name / opening paragraph when project loads
+  useEffect(() => {
+    if (project?.tripName !== undefined) {
+      setTripName(project.tripName ?? "");
+    }
+    if (project?.openingParagraph !== undefined) {
+      setOpeningParagraph(project.openingParagraph ?? "");
+    }
+  }, [project?.tripName, project?.openingParagraph]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -747,6 +766,110 @@ export function QuoteEditor() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Trip name + Opening paragraph (PRD §4.2) */}
+      <div className="mb-4 rounded-xl border border-[#e7e1da] bg-white p-4">
+        <div className="mb-3 flex items-center gap-2">
+          <SectionIcon size="sm">
+            <FileText size={14} />
+          </SectionIcon>
+          <span
+            className="text-[#181510] text-[14px]"
+            style={{ fontWeight: 600 }}
+          >
+            שם טיול ופסקת פתיחה
+          </span>
+        </div>
+        <div className="space-y-3">
+          <div>
+            <label
+              className="mb-1 block text-[#8d785e] text-[12px]"
+              htmlFor="trip-name"
+              style={{ fontWeight: 600 }}
+            >
+              שם הטיול
+            </label>
+            <input
+              className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              id="trip-name"
+              onBlur={async () => {
+                if (projectId && tripName !== (project?.tripName ?? "")) {
+                  await updateProject({ id: projectId, tripName });
+                }
+              }}
+              onChange={(e) => setTripName(e.target.value)}
+              placeholder='למשל: "יום כיף בגליל העליון"'
+              value={tripName}
+            />
+          </div>
+          <div>
+            <div className="mb-1 flex items-center justify-between">
+              <label
+                className="text-[#8d785e] text-[12px]"
+                htmlFor="opening-paragraph"
+                style={{ fontWeight: 600 }}
+              >
+                פסקת פתיחה
+              </label>
+              <button
+                className="flex items-center gap-1 rounded-lg bg-gradient-to-l from-[#ff8c00] to-[#e67e00] px-2.5 py-1 text-[11px] text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                disabled={generatingParagraph}
+                onClick={async () => {
+                  setGeneratingParagraph(true);
+                  try {
+                    const activities = currentItems.map(
+                      (i) => i.name || i.type
+                    );
+                    const result = await generateOpeningParagraph({
+                      activities:
+                        activities.length > 0 ? activities : ["פעילות"],
+                      region: project?.region || undefined,
+                      participants: project?.participants || undefined,
+                    });
+                    setOpeningParagraph(result);
+                    if (projectId) {
+                      await updateProject({
+                        id: projectId,
+                        openingParagraph: result,
+                      });
+                    }
+                    appToast.success("פסקת פתיחה נוצרה", "");
+                  } catch {
+                    appToast.error("שגיאה", "לא ניתן לייצר פסקת פתיחה");
+                  } finally {
+                    setGeneratingParagraph(false);
+                  }
+                }}
+                style={{ fontWeight: 600 }}
+                type="button"
+              >
+                {generatingParagraph ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <Sparkles size={12} />
+                )}
+                צור עם AI
+              </button>
+            </div>
+            <textarea
+              className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] leading-relaxed transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              id="opening-paragraph"
+              onBlur={async () => {
+                if (
+                  projectId &&
+                  openingParagraph !== (project?.openingParagraph ?? "")
+                ) {
+                  await updateProject({ id: projectId, openingParagraph });
+                }
+              }}
+              onChange={(e) => setOpeningParagraph(e.target.value)}
+              placeholder="פסקת פתיחה שיווקית שתופיע בראש ההצעה ללקוח..."
+              rows={3}
+              value={openingParagraph}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Summary bar */}
@@ -1510,10 +1633,13 @@ export function QuoteEditor() {
         )}
       </div>
 
+      {/* Spacer for mobile fixed bottom bar */}
+      <div className="h-16 md:h-0" />
+
       {/* Bottom sticky action bar */}
-      <div className="sticky bottom-0 z-30 mt-8 flex flex-wrap items-center gap-2 rounded-xl border border-[#e7e1da] bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md">
+      <div className="fixed right-0 bottom-0 left-0 z-30 mt-8 flex flex-wrap items-center gap-2 border-[#e7e1da] border-t bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md md:sticky md:rounded-xl md:border">
         <button
-          className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[13px] text-white shadow-sm transition-colors hover:bg-[#e67e00]"
+          className="flex min-h-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[13px] text-white shadow-sm transition-colors hover:bg-[#e67e00]"
           onClick={() => {
             const url = `${window.location.origin}/quote/${projectId}`;
             navigator.clipboard.writeText(url);
@@ -1526,7 +1652,7 @@ export function QuoteEditor() {
           שלח הצעה ללקוח
         </button>
         <button
-          className="flex items-center gap-2 rounded-xl bg-[#181510] px-5 py-2.5 text-[13px] text-white transition-colors hover:bg-[#2a2518] disabled:opacity-50"
+          className="flex min-h-[44px] items-center gap-2 rounded-xl bg-[#181510] px-5 py-2.5 text-[13px] text-white transition-colors hover:bg-[#2a2518] disabled:opacity-50"
           disabled={saving}
           onClick={saveDraft}
           style={{ fontWeight: 600 }}
@@ -1540,7 +1666,7 @@ export function QuoteEditor() {
           {saving ? "שומר..." : "שמור טיוטה"}
         </button>
         <button
-          className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+          className="flex min-h-[44px] items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
           onClick={() => {
             const printWin = window.open("", "_blank");
             if (!printWin) {
@@ -1818,6 +1944,7 @@ export function QuoteEditor() {
           item={editingItem as any}
           onClose={() => setEditingItem(null)}
           onUpdate={handleItemUpdate}
+          participants={participants}
         />
       )}
 
