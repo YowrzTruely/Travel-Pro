@@ -550,6 +550,15 @@ const ICON_COMPONENTS: Record<string, (props: IconProps) => JSX.Element> = {
   "שיווק ופרסום": MarketingIcon,
   ביטוח: InsuranceIcon,
   הדרכה: GuidanceIcon,
+  // English enum keys (from Convex schema)
+  transport: TransportIcon,
+  food: FoodIcon,
+  attractions: AttractionsIcon,
+  accommodation: AccommodationIcon,
+  photography: PhotographyIcon,
+  entertainment: EntertainmentIcon,
+  workshops: EquipmentIcon,
+  other: GeneralIcon,
   // Legacy emoji mappings (from existing seed data)
   "🚌": TransportIcon,
   "🍽️": FoodIcon,

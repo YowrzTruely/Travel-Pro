@@ -18,13 +18,15 @@ import { Input } from "./ui/input";
 type Channel = "whatsapp" | "sms" | "email";
 
 interface QuoteSendDialogProps {
+  legacyId: string;
   onOpenChange: (open: boolean) => void;
   open: boolean;
-  projectId: string;
+  projectId: Id<"projects">;
 }
 
 export function QuoteSendDialog({
   projectId,
+  legacyId,
   open,
   onOpenChange,
 }: QuoteSendDialogProps) {
@@ -34,7 +36,7 @@ export function QuoteSendDialog({
   const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
 
-  const quoteUrl = `${window.location.origin}/quote/${projectId}`;
+  const quoteUrl = `${window.location.origin}/quote/${legacyId}`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(quoteUrl);
@@ -55,7 +57,7 @@ export function QuoteSendDialog({
     setSending(true);
     try {
       const result = await sendQuote({
-        projectId: projectId as Id<"projects">,
+        projectId,
         channel,
         recipient,
       });

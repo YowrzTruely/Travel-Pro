@@ -17,7 +17,11 @@ export const changePassword = action({
       return { success: false, error: "לא מחובר" };
     }
 
-    const email = identity.email;
+    // Look up email from users table (identity.email may not be set in the JWT)
+    const email = await ctx.runQuery(
+      internal.passwordChangeHelpers.getUserEmailByTokenIdentifier,
+      { tokenIdentifier: identity.tokenIdentifier }
+    );
     if (!email) {
       return { success: false, error: "לא נמצא אימייל" };
     }

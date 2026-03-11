@@ -550,6 +550,14 @@ export function SettingsPage() {
                               required: "שדה חובה",
                             })}
                           />
+                          {passwordForm.formState.errors.currentPassword && (
+                            <p className="mt-1 text-red-500 text-xs">
+                              {
+                                passwordForm.formState.errors.currentPassword
+                                  .message
+                              }
+                            </p>
+                          )}
                         </div>
 
                         <div>
@@ -563,11 +571,19 @@ export function SettingsPage() {
                             {...passwordForm.register("newPassword", {
                               required: "שדה חובה",
                               minLength: {
-                                value: 6,
-                                message: "סיסמה חייבת להכיל לפחות 6 תווים",
+                                value: 8,
+                                message: "הסיסמה חייבת להכיל לפחות 8 תווים",
                               },
                             })}
                           />
+                          {passwordForm.formState.errors.newPassword && (
+                            <p className="mt-1 text-red-500 text-xs">
+                              {
+                                passwordForm.formState.errors.newPassword
+                                  .message
+                              }
+                            </p>
+                          )}
                         </div>
 
                         <div>
@@ -585,6 +601,14 @@ export function SettingsPage() {
                               required: "שדה חובה",
                             })}
                           />
+                          {passwordForm.formState.errors.confirmPassword && (
+                            <p className="mt-1 text-red-500 text-xs">
+                              {
+                                passwordForm.formState.errors.confirmPassword
+                                  .message
+                              }
+                            </p>
+                          )}
                         </div>
 
                         <div className="flex justify-start pt-2">

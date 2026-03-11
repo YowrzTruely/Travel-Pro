@@ -25,7 +25,7 @@ export const sendWhatsApp = internalAction({
   },
 });
 
-// ─── SMS via SLNG ───
+// ─── SMS via Twilio ───
 
 export const sendSMS = internalAction({
   args: {
@@ -33,57 +33,73 @@ export const sendSMS = internalAction({
     message: v.string(),
   },
   handler: async (_ctx, args) => {
-    const username = process.env.SLNG_USERNAME;
-    const password = process.env.SLNG_PASSWORD;
-    const fromMobile = process.env.SLNG_FROM_MOBILE ?? "TravelPro";
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const fromNumber = process.env.TWILIO_FROM_NUMBER;
 
-    if (!(username && password)) {
-      console.warn("[SMS] SLNG not configured – missing env vars");
+    if (!(accountSid && authToken && fromNumber)) {
+      console.warn("[SMS] Twilio not configured – missing env vars");
       return {
         sent: false,
         channel: "sms" as const,
         deliveryId: "",
-        error: "SLNG not configured",
+        error: "Twilio not configured",
       };
     }
 
+    // Normalize Israeli phone: 050… → +97250…
+    const to = args.phone.startsWith("+")
+      ? args.phone
+      : `+972${args.phone.replace(/^0/, "").replace(/[^0-9]/g, "")}`;
+
     try {
       const response = await fetch(
-        "https://slng5.com/Api/SendSmsJsonBody.ashx",
+        `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            Username: username,
-            Password: password,
-            MsgName: "TravelPro SMS",
-            MsgBody: args.message,
-            FromMobile: fromMobile,
-            DeliveryAckUrl: null,
-            MsgScheduleTime: null,
-            Mobiles: [{ Mobile: args.phone }],
-          }),
+          headers: {
+            Authorization: `Basic ${btoa(`${accountSid}:${authToken}`)}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            To: to,
+            From: fromNumber,
+            Body: args.message,
+          }).toString(),
         }
       );
 
       const result = (await response.json()) as {
-        Status: boolean;
-        Description: string;
-        GeneralGUID: string;
+        sid?: string;
+        status?: string;
+        error_code?: number;
+        error_message?: string;
+        message?: string;
       };
 
+      if (!response.ok) {
+        const errMsg =
+          result.error_message ?? result.message ?? `HTTP ${response.status}`;
+        console.error(`[SMS] Twilio error (${response.status}):`, errMsg);
+        return {
+          sent: false,
+          channel: "sms" as const,
+          deliveryId: "",
+          error: errMsg,
+        };
+      }
+
       console.log(
-        `[SMS] SLNG response: Status=${result.Status}, Desc=${result.Description}, GUID=${result.GeneralGUID}`
+        `[SMS] Twilio success: sid=${result.sid}, status=${result.status}`
       );
 
       return {
-        sent: result.Status,
+        sent: true,
         channel: "sms" as const,
-        deliveryId: result.GeneralGUID ?? "",
-        error: result.Status ? undefined : result.Description,
+        deliveryId: result.sid ?? "",
       };
     } catch (error) {
-      console.error("[SMS] SLNG request failed:", error);
+      console.error("[SMS] Twilio request failed:", error);
       return {
         sent: false,
         channel: "sms" as const,
@@ -111,14 +127,14 @@ export const sendEmail = internalAction({
         sent: false,
         channel: "email" as const,
         deliveryId: "",
-        error: "Email not configured",
+        error: "Resend not configured",
       };
     }
 
-    const fromAddress =
-      process.env.EMAIL_FROM_ADDRESS ?? "TravelPro <noreply@travelpro.co.il>";
+    const fromEmail =
+      process.env.RESEND_FROM_EMAIL ?? "TravelPro <onboarding@resend.dev>";
 
-    const html = `<div dir="rtl" style="font-family: Assistant, sans-serif; direction: rtl; text-align: right;">${args.body}</div>`;
+    const html = `<html><head><title></title></head><body dir="rtl" style="font-family: Assistant, sans-serif; direction: rtl; text-align: right;">${args.body}</body></html>`;
 
     try {
       const response = await fetch("https://api.resend.com/emails", {
@@ -128,7 +144,7 @@ export const sendEmail = internalAction({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: fromAddress,
+          from: fromEmail,
           to: [args.email],
           subject: args.subject,
           html,
@@ -138,20 +154,24 @@ export const sendEmail = internalAction({
       const result = (await response.json()) as {
         id?: string;
         error?: { message: string };
+        message?: string;
+        statusCode?: number;
       };
 
-      if (!response.ok || result.error) {
-        const errorMsg = result.error?.message ?? `HTTP ${response.status}`;
-        console.error(`[Email] Resend error: ${errorMsg}`);
+      if (!response.ok) {
+        const errMsg =
+          result.error?.message ?? result.message ?? `HTTP ${response.status}`;
+        console.error(`[Email] Resend error (${response.status}):`, errMsg);
         return {
           sent: false,
           channel: "email" as const,
           deliveryId: "",
-          error: errorMsg,
+          error: errMsg,
         };
       }
 
-      console.log(`[Email] Sent via Resend, id=${result.id}`);
+      console.log(`[Email] Resend success: id=${result.id}`);
+
       return {
         sent: true,
         channel: "email" as const,

@@ -25,6 +25,40 @@ export const getAuthAccount = internalQuery({
   },
 });
 
+export const getUserEmailByTokenIdentifier = internalQuery({
+  args: {
+    tokenIdentifier: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // tokenIdentifier is "{issuer}|{userId}|{sessionId}"
+    const parts = args.tokenIdentifier.split("|");
+    if (parts.length >= 2) {
+      try {
+        const userId = ctx.db.normalizeId("users", parts[1]);
+        if (userId) {
+          const user = await ctx.db.get(userId);
+          if (user?.email) {
+            return user.email;
+          }
+        }
+      } catch {
+        // normalizeId may throw if the string isn't a valid ID
+      }
+    }
+
+    // Fallback: try by authId index
+    const byAuthId = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", args.tokenIdentifier))
+      .first();
+    if (byAuthId?.email) {
+      return byAuthId.email;
+    }
+
+    return null;
+  },
+});
+
 export const updateAuthAccountSecret = internalMutation({
   args: {
     accountId: v.id("authAccounts"),

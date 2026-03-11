@@ -33,7 +33,7 @@ export const sendQuoteToClient = action({
       process.env.CONVEX_SITE_URL
         ? process.env.CONVEX_SITE_URL.replace(".convex.site", ".vercel.app")
         : "https://travelpro.co.il"
-    }/quote/${args.projectId}`;
+    }/quote/${project.legacyId}`;
     const message: string = `שלום,\nהצעת המחיר עבור "${project.name}" מוכנה!\n${quoteUrl}`;
 
     if (args.channel === "whatsapp") {

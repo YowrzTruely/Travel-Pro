@@ -46,6 +46,7 @@ import { CategoryIcon } from "./CategoryIcons";
 import { useConfirmDelete } from "./ConfirmDeleteModal";
 import { FormField, rules } from "./FormField";
 import { ItemEditor } from "./ItemEditor";
+import { DigitalAssetsPanel } from "./orders/DigitalAssetsPanel";
 import { InvoiceTracker } from "./orders/InvoiceTracker";
 import { ProjectOrders } from "./orders/ProjectOrders";
 import { QuoteSendDialog } from "./QuoteSendDialog";
@@ -317,6 +318,7 @@ export function QuoteEditor() {
     { id: "pricing", label: "תמחור ורווח יעד" },
     { id: "timeline", label: 'לו"ז הפעילות' },
     ...(showOrders ? [{ id: "orders", label: "הזמנות וחשבוניות" }] : []),
+    ...(showOrders ? [{ id: "digital-assets", label: "נכסים דיגיטליים" }] : []),
   ];
 
   // ─── Convex mutations ───
@@ -1747,6 +1749,19 @@ export function QuoteEditor() {
         </div>
       )}
 
+      {/* ═══ Digital Assets section ═══ */}
+      {showOrders && project?._id && (
+        <div
+          className="mt-8 scroll-mt-4 space-y-5"
+          data-section="digital-assets"
+          ref={(el) => {
+            sectionRefs.current["digital-assets"] = el;
+          }}
+        >
+          <DigitalAssetsPanel projectId={project._id} />
+        </div>
+      )}
+
       {/* ═══ Create version modal ═══ */}
       {showPreview && (
         <div
@@ -1996,11 +2011,12 @@ export function QuoteEditor() {
       {deleteModal}
 
       {/* Send quote dialog */}
-      {projectId && (
+      {project?._id && projectId && (
         <QuoteSendDialog
+          legacyId={projectId}
           onOpenChange={setShowSendDialog}
           open={showSendDialog}
-          projectId={projectId}
+          projectId={project._id}
         />
       )}
     </div>

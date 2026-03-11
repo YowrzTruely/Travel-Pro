@@ -22,6 +22,10 @@ import { useNavigate } from "react-router";
 import { api } from "../../../convex/_generated/api";
 import { appToast } from "./AppToast";
 import { CategoryIcon } from "./CategoryIcons";
+import {
+  OPERATING_REGIONS,
+  SUPPLIER_CATEGORIES,
+} from "./constants/supplierConstants";
 import type { Supplier } from "./data";
 import { FormField, FormSelect, rules } from "./FormField";
 import { SupplierMap } from "./SupplierMap";
@@ -35,22 +39,11 @@ interface NewSupplierForm {
   region: string;
 }
 
-const categories = [
-  "כל הקטגוריות",
-  "תחבורה",
-  "מזון",
-  "אטרקציות",
-  "לינה",
-  "אולמות וגנים",
-  "צילום",
-  "מוזיקה",
-  "ציוד",
-  "כללי",
-  "בידור",
-];
-const regions = ["כל הארץ", "צפון", "מרכז", "ירושלים", "דרום"];
+const categories = ["כל הקטגוריות", ...SUPPLIER_CATEGORIES.map((c) => c.label)];
+const regions = ["כל הארץ", ...OPERATING_REGIONS.map((r) => r.label)];
 
 const CATEGORY_COLOR_MAP: Record<string, { color: string }> = {
+  // Hebrew short labels (legacy data)
   תחבורה: { color: "#3b82f6" },
   מזון: { color: "#22c55e" },
   אטרקציות: { color: "#a855f7" },
@@ -61,7 +54,40 @@ const CATEGORY_COLOR_MAP: Record<string, { color: string }> = {
   ציוד: { color: "#64748b" },
   כללי: { color: "#8d785e" },
   בידור: { color: "#e11d48" },
+  // Hebrew full labels (from SUPPLIER_CATEGORIES)
+  "אטרקציות ופעילויות": { color: "#a855f7" },
+  "מסעדות ואוכל": { color: "#22c55e" },
+  "הסעות ותחבורה": { color: "#3b82f6" },
+  "צילום ומגנטים": { color: "#06b6d4" },
+  "בידור ומוזיקה": { color: "#e11d48" },
+  "סדנאות יצירה ולמידה": { color: "#8b5cf6" },
+  אחר: { color: "#8d785e" },
+  // English enum keys (from Convex schema)
+  transport: { color: "#3b82f6" },
+  food: { color: "#22c55e" },
+  attractions: { color: "#a855f7" },
+  accommodation: { color: "#ec4899" },
+  photography: { color: "#06b6d4" },
+  entertainment: { color: "#e11d48" },
+  workshops: { color: "#8b5cf6" },
+  other: { color: "#8d785e" },
 };
+
+/** Map an English or Hebrew category value to its Hebrew display label */
+function categoryToHebrew(val: string): string {
+  const match = SUPPLIER_CATEGORIES.find(
+    (c) => c.value === val || c.label === val
+  );
+  return match?.label ?? val;
+}
+
+/** Map an English or Hebrew region value to its Hebrew display label */
+function regionToHebrew(val: string): string {
+  const match = OPERATING_REGIONS.find(
+    (r) => r.value === val || r.label === val
+  );
+  return match?.label ?? val;
+}
 const statuses = ["הכל", "מאומת", "ממתין", "לא מאומת"];
 
 export function SupplierBank() {
@@ -98,7 +124,12 @@ export function SupplierBank() {
     watch,
   } = useForm<NewSupplierForm>({
     mode: "onChange",
-    defaultValues: { name: "", category: "תחבורה", region: "צפון", phone: "" },
+    defaultValues: {
+      name: "",
+      category: "תחבורה",
+      region: "גליל עליון",
+      phone: "",
+    },
   });
 
   // Duplicate detection
@@ -159,15 +190,23 @@ export function SupplierBank() {
       return false;
     }
     const cats = s.category.split(",").map((c) => c.trim());
+    const hebrewCats = cats.map(categoryToHebrew);
+    const hebrewRegion = regionToHebrew(s.region);
     const matchesSearch =
       !search ||
       s.name.includes(search) ||
       s.category.includes(search) ||
-      s.region.includes(search);
+      hebrewCats.some((c) => c.includes(search)) ||
+      s.region.includes(search) ||
+      hebrewRegion.includes(search);
     const matchesCategory =
-      selectedCategory === "כל הקטגוריות" || cats.includes(selectedCategory);
+      selectedCategory === "כל הקטגוריות" ||
+      cats.includes(selectedCategory) ||
+      hebrewCats.includes(selectedCategory);
     const matchesRegion =
-      selectedRegion === "כל הארץ" || s.region === selectedRegion;
+      selectedRegion === "כל הארץ" ||
+      s.region === selectedRegion ||
+      hebrewRegion === selectedRegion;
     const matchesStatus =
       selectedStatus === "הכל" ||
       (selectedStatus === "מאומת" && s.verificationStatus === "verified") ||
@@ -416,14 +455,14 @@ export function SupplierBank() {
                                     color={color}
                                     size={12}
                                   />
-                                  {cat}
+                                  {categoryToHebrew(cat)}
                                 </span>
                               );
                             })}
                         </div>
                       </td>
                       <td className="p-3 text-[#6b5d45] text-[13px]">
-                        {supplier.region}
+                        {regionToHebrew(supplier.region)}
                       </td>
                       <td className="p-3">
                         <div className="flex items-center gap-1">
@@ -534,10 +573,10 @@ export function SupplierBank() {
                             onClick={() => {
                               const text = `${supplier.name}\nקטגוריות: ${supplier.category
                                 .split(",")
-                                .map((c) => c.trim())
+                                .map((c) => categoryToHebrew(c.trim()))
                                 .join(
                                   ", "
-                                )}\nאזור: ${supplier.region}\nטלפון: ${supplier.phone}\nדירוג: ${supplier.rating}`;
+                                )}\nאזור: ${regionToHebrew(supplier.region)}\nטלפון: ${supplier.phone}\nדירוג: ${supplier.rating}`;
                               navigator.clipboard
                                 .writeText(text)
                                 .then(() => {
