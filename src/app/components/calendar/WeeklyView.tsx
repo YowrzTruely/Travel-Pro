@@ -71,35 +71,36 @@ export function WeeklyView({
 
   return (
     <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
-      {/* Day headers */}
-      <div className="grid grid-cols-[50px_repeat(7,1fr)] border-[#e7e1da] border-b">
-        <div className="border-[#e7e1da] border-l" />
-        {weekDays.map((day, i) => {
-          const today = isToday(day);
-          return (
-            <div
-              className={`border-[#e7e1da] border-l py-3 text-center ${today ? "bg-[#ff8c00]/5" : ""}`}
-              key={i}
-            >
-              <div
-                className="text-[#8d785e] text-[12px]"
-                style={{ fontWeight: 500 }}
-              >
-                {format(day, "EEEE", { locale: he })}
-              </div>
-              <div
-                className={`mt-0.5 text-[18px] ${today ? "text-[#ff8c00]" : "text-[#181510]"}`}
-                style={{ fontWeight: 700 }}
-              >
-                {format(day, "d")}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Time grid */}
+      {/* Scrollable container for both header and grid */}
       <div className="max-h-[calc(100vh-280px)] overflow-y-auto">
+        {/* Day headers — sticky at top */}
+        <div className="sticky top-0 z-20 grid grid-cols-[50px_repeat(7,1fr)] border-[#e7e1da] border-b bg-white">
+          <div className="border-[#e7e1da] border-l" />
+          {weekDays.map((day, i) => {
+            const today = isToday(day);
+            return (
+              <div
+                className={`border-[#e7e1da] border-l py-3 text-center ${today ? "bg-[#ff8c00]/5" : ""}`}
+                key={i}
+              >
+                <div
+                  className="text-[#8d785e] text-[12px]"
+                  style={{ fontWeight: 500 }}
+                >
+                  {format(day, "EEEE", { locale: he })}
+                </div>
+                <div
+                  className={`mt-0.5 text-[18px] ${today ? "text-[#ff8c00]" : "text-[#181510]"}`}
+                  style={{ fontWeight: 700 }}
+                >
+                  {format(day, "d")}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Time grid */}
         <div
           className="relative grid grid-cols-[50px_repeat(7,1fr)]"
           style={{ height: `${totalHeight}px` }}

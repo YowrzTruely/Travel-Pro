@@ -21,7 +21,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { api } from "../../../convex/_generated/api";
 import { appToast } from "./AppToast";
@@ -77,6 +77,8 @@ export function CalendarPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("month");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  // 1 = forward (next), -1 = backward (prev), used for carousel direction
+  const [slideDirection, setSlideDirection] = useState(0);
 
   // Convex queries — auto-updating, no manual refetch needed
   const calendarEvents = useQuery(api.calendarEvents.list);
@@ -144,6 +146,7 @@ export function CalendarPage() {
   // ─── Navigation ───────────────────────────────
 
   const navigatePrev = () => {
+    setSlideDirection(-1);
     if (viewMode === "month") {
       setCurrentDate((d) => subMonths(d, 1));
     } else if (viewMode === "week") {
@@ -154,6 +157,7 @@ export function CalendarPage() {
   };
 
   const navigateNext = () => {
+    setSlideDirection(1);
     if (viewMode === "month") {
       setCurrentDate((d) => addMonths(d, 1));
     } else if (viewMode === "week") {
@@ -164,6 +168,7 @@ export function CalendarPage() {
   };
 
   const goToToday = () => {
+    setSlideDirection(0);
     setCurrentDate(new Date());
     setSelectedDate(new Date());
   };
@@ -283,24 +288,12 @@ export function CalendarPage() {
 
       {/* Controls row */}
       <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        {/* View toggle */}
-        <div className="flex rounded-lg border border-[#e7e1da] bg-white p-1 shadow-sm">
-          {VIEW_TABS.map((tab) => (
-            <button
-              className={`rounded-md px-4 py-1.5 text-[13px] transition-all ${
-                viewMode === tab.key
-                  ? "bg-[#ff8c00] text-white shadow-sm"
-                  : "text-[#8d785e] hover:bg-[#f5f3f0] hover:text-[#181510]"
-              }`}
-              key={tab.key}
-              onClick={() => setViewMode(tab.key)}
-              style={{ fontWeight: 600 }}
-              type="button"
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        {/* View toggle with glass animation */}
+        <CalendarViewToggle
+          activeView={viewMode}
+          onViewChange={setViewMode}
+          tabs={VIEW_TABS}
+        />
 
         {/* Date navigation */}
         <div className="flex items-center gap-3">
@@ -342,45 +335,68 @@ export function CalendarPage() {
         </div>
       )}
 
-      {/* Views */}
+      {/* Views — carousel slide on date nav, fade on view switch */}
       {!loading && (
-        <AnimatePresence mode="wait">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            initial={{ opacity: 0, y: 10 }}
-            key={viewMode}
-            transition={{ duration: 0.2 }}
-          >
-            {viewMode === "month" && (
-              <MonthlyView
-                currentDate={currentDate}
-                events={displayEvents}
-                onEventClick={handleEditEvent}
-                onNewEvent={handleNewEvent}
-                onSelectDate={setSelectedDate}
-                selectedDate={selectedDate}
-              />
-            )}
-            {viewMode === "week" && (
-              <WeeklyView
-                currentDate={currentDate}
-                events={displayEvents}
-                onEventClick={handleEditEvent}
-                onNewEvent={handleNewEvent}
-              />
-            )}
-            {viewMode === "day" && (
-              <DailyView
-                currentDate={currentDate}
-                events={displayEvents}
-                onDeleteEvent={setDeletingEvent}
-                onEventClick={handleEditEvent}
-                onNewEvent={handleNewEvent}
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
+        <div className="relative overflow-hidden">
+          <AnimatePresence initial={false} mode="popLayout">
+            <motion.div
+              animate={{ opacity: 1, x: 0 }}
+              exit={{
+                opacity: 0,
+                x:
+                  slideDirection === 0
+                    ? 0
+                    : slideDirection > 0
+                      ? "30%"
+                      : "-30%",
+              }}
+              initial={{
+                opacity: 0,
+                x:
+                  slideDirection === 0
+                    ? 0
+                    : slideDirection > 0
+                      ? "-30%"
+                      : "30%",
+              }}
+              key={`${viewMode}-${currentDate.toISOString()}`}
+              transition={{
+                type: "spring",
+                stiffness: 350,
+                damping: 32,
+                mass: 0.8,
+              }}
+            >
+              {viewMode === "month" && (
+                <MonthlyView
+                  currentDate={currentDate}
+                  events={displayEvents}
+                  onEventClick={handleEditEvent}
+                  onNewEvent={handleNewEvent}
+                  onSelectDate={setSelectedDate}
+                  selectedDate={selectedDate}
+                />
+              )}
+              {viewMode === "week" && (
+                <WeeklyView
+                  currentDate={currentDate}
+                  events={displayEvents}
+                  onEventClick={handleEditEvent}
+                  onNewEvent={handleNewEvent}
+                />
+              )}
+              {viewMode === "day" && (
+                <DailyView
+                  currentDate={currentDate}
+                  events={displayEvents}
+                  onDeleteEvent={setDeletingEvent}
+                  onEventClick={handleEditEvent}
+                  onNewEvent={handleNewEvent}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       )}
 
       {/* Event form modal */}
@@ -462,6 +478,78 @@ export function CalendarPage() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ─── Glass View Toggle ────────────────────────── */
+
+function CalendarViewToggle({
+  tabs,
+  activeView,
+  onViewChange,
+}: {
+  tabs: { key: ViewMode; label: string }[];
+  activeView: ViewMode;
+  onViewChange: (v: ViewMode) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const [indicator, setIndicator] = useState({ width: 0, right: 0 });
+
+  useEffect(() => {
+    const el = tabRefs.current.get(activeView);
+    const container = containerRef.current;
+    if (!(el && container)) {
+      return;
+    }
+    const cRect = container.getBoundingClientRect();
+    const eRect = el.getBoundingClientRect();
+    setIndicator({
+      width: eRect.width,
+      right: cRect.right - eRect.right,
+    });
+  }, [activeView]);
+
+  return (
+    <div
+      className="relative flex rounded-xl border border-[#e7e1da] bg-white p-1 shadow-sm"
+      ref={containerRef}
+    >
+      <motion.div
+        animate={{ right: indicator.right, width: indicator.width }}
+        className="absolute top-1 bottom-1 rounded-lg"
+        initial={false}
+        style={{
+          background: "#ff8c00",
+          boxShadow: "0 2px 8px rgba(255,140,0,0.3)",
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 350,
+          damping: 30,
+          mass: 0.7,
+        }}
+      />
+      {tabs.map((tab) => (
+        <button
+          className="relative z-10 cursor-pointer rounded-md px-4 py-1.5 text-[13px] transition-colors duration-200"
+          key={tab.key}
+          onClick={() => onViewChange(tab.key)}
+          ref={(el) => {
+            if (el) {
+              tabRefs.current.set(tab.key, el);
+            }
+          }}
+          style={{
+            fontWeight: 600,
+            color: activeView === tab.key ? "#fff" : "#8d785e",
+          }}
+          type="button"
+        >
+          {tab.label}
+        </button>
+      ))}
     </div>
   );
 }
