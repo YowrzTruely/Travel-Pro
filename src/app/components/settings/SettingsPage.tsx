@@ -496,18 +496,16 @@ export function SettingsPage() {
                             },
                           })}
                         />
-                        {pricingForm.formState.errors
-                          .defaultMarginPercent && (
+                        {pricingForm.formState.errors.defaultMarginPercent && (
                           <p className="mt-1 text-red-500 text-xs">
                             {
-                              pricingForm.formState.errors
-                                .defaultMarginPercent.message
+                              pricingForm.formState.errors.defaultMarginPercent
+                                .message
                             }
                           </p>
                         )}
                         <p className="mt-2 text-[#8d785e] text-xs">
-                          אחוז הרווח שיוחל כברירת מחדל על פריטי הצעת מחיר
-                          חדשים
+                          אחוז הרווח שיוחל כברירת מחדל על פריטי הצעת מחיר חדשים
                         </p>
                       </div>
 
@@ -555,10 +553,7 @@ export function SettingsPage() {
                         </div>
 
                         <div>
-                          <label
-                            className={labelClass}
-                            htmlFor="newPassword"
-                          >
+                          <label className={labelClass} htmlFor="newPassword">
                             סיסמה חדשה
                           </label>
                           <input
@@ -569,8 +564,7 @@ export function SettingsPage() {
                               required: "שדה חובה",
                               minLength: {
                                 value: 6,
-                                message:
-                                  "סיסמה חייבת להכיל לפחות 6 תווים",
+                                message: "סיסמה חייבת להכיל לפחות 6 תווים",
                               },
                             })}
                           />
@@ -600,16 +594,11 @@ export function SettingsPage() {
                             type="submit"
                           >
                             {changingPassword ? (
-                              <Loader2
-                                className="animate-spin"
-                                size={16}
-                              />
+                              <Loader2 className="animate-spin" size={16} />
                             ) : (
                               <Save size={16} />
                             )}
-                            {changingPassword
-                              ? "משנה סיסמה..."
-                              : "שנה סיסמה"}
+                            {changingPassword ? "משנה סיסמה..." : "שנה סיסמה"}
                           </button>
                         </div>
                       </form>

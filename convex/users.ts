@@ -1,6 +1,18 @@
 import { v } from "convex/values";
-import type { Doc } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
+
+/** Map category value to Hebrew label for supplier display */
+const CATEGORY_LABELS: Record<string, string> = {
+  attractions: "אטרקציות ופעילויות",
+  food: "מסעדות ואוכל",
+  transport: "תחבורה",
+  photography: "צילום ומגנטים",
+  entertainment: "בידור ומוזיקה",
+  workshops: "סדנאות יצירה ולמידה",
+  accommodation: "לינה",
+  other: "אחר",
+};
 
 export const getCurrent = query({
   args: {},
@@ -105,6 +117,16 @@ export const listPendingSuppliers = query({
   },
 });
 
+const SUPPLIER_SEED_VALIDATOR = v.optional(
+  v.object({
+    businessName: v.string(),
+    category: v.string(),
+    firstProduct: v.string(),
+    phone: v.optional(v.string()),
+    region: v.string(),
+  })
+);
+
 export const createProfile = mutation({
   args: {
     authId: v.string(),
@@ -124,6 +146,7 @@ export const createProfile = mutation({
         v.literal("availability_invite")
       )
     ),
+    supplierSeed: SUPPLIER_SEED_VALIDATOR,
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -150,13 +173,14 @@ export const createProfile = mutation({
       return { ...existingUser, id: existingUser._id };
     }
 
+    const seed = args.supplierSeed;
     const profileFields = {
       authId: identity.tokenIdentifier,
       email: args.email,
       name: args.name,
       role: args.role,
-      phone: args.phone,
-      company: args.company,
+      phone: args.phone ?? seed?.phone,
+      company: args.company ?? seed?.businessName,
       registrationSource: args.registrationSource,
       status:
         args.role === "supplier" ? ("pending" as const) : ("active" as const),
@@ -164,19 +188,55 @@ export const createProfile = mutation({
       createdAt: Date.now(),
     };
 
+    let userId: Id<"users">;
+
     if (existingUser) {
-      // Patch existing auth-only record with profile fields
       await ctx.db.patch(existingUser._id, profileFields);
       const patched = await ctx.db.get(existingUser._id);
       if (!patched) {
         throw new Error("Failed to update user profile");
       }
-      return { ...patched, id: patched._id };
+      userId = patched._id;
+    } else {
+      userId = await ctx.db.insert("users", profileFields);
     }
 
-    // No existing record — insert new
-    const docId = await ctx.db.insert("users", profileFields);
-    const user = await ctx.db.get(docId);
+    // Create supplier record and first product when role is supplier and seed provided
+    if (
+      args.role === "supplier" &&
+      seed?.businessName &&
+      seed?.category &&
+      seed?.region
+    ) {
+      const categoryLabel = CATEGORY_LABELS[seed.category] || seed.category;
+      const supplierId = await ctx.db.insert("suppliers", {
+        name: seed.businessName,
+        phone: seed.phone ?? "",
+        email: args.email,
+        category: categoryLabel,
+        categoryColor: "#8d785e",
+        region: seed.region,
+        rating: 0,
+        verificationStatus: "pending",
+        notes: "-",
+        icon: "📦",
+        userId,
+        registrationStatus: "pending",
+        profileCompletionStage: "stage1",
+      });
+      await ctx.db.patch(userId, { supplierId });
+      if (seed.firstProduct?.trim()) {
+        await ctx.db.insert("supplierProducts", {
+          supplierId,
+          name: seed.firstProduct.trim(),
+          price: 0,
+          description: "",
+          unit: "אדם",
+        });
+      }
+    }
+
+    const user = await ctx.db.get(userId);
     if (!user) {
       throw new Error("Failed to create user profile");
     }

@@ -49,6 +49,14 @@ interface AuthState {
   user: { email?: string } | null;
 }
 
+export interface SupplierSignupSeed {
+  businessName: string;
+  category: string;
+  firstProduct: string;
+  phone?: string;
+  region: string;
+}
+
 interface AuthActions {
   createProfileIfNeeded: (args: {
     role: UserRole;
@@ -64,7 +72,8 @@ interface AuthActions {
     email: string,
     password: string,
     name: string,
-    role?: UserRole
+    role?: UserRole,
+    supplierSeed?: SupplierSignupSeed
   ) => Promise<{ error: string | null }>;
 }
 
@@ -88,6 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     name: string;
     email: string;
     role: UserRole;
+    supplierSeed?: SupplierSignupSeed;
   } | null>(null);
 
   // Auto-create/complete profile after signup when authenticated but
@@ -106,7 +116,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const pending = pendingSignupRef.current;
     const profileArgs = pending
-      ? { email: pending.email, name: pending.name, role: pending.role }
+      ? {
+          email: pending.email,
+          name: pending.name,
+          role: pending.role,
+          supplierSeed: pending.supplierSeed,
+        }
       : {
           email: profileData?.email ?? "",
           name: profileData?.email?.split("@")[0] || "משתמש",
@@ -118,14 +133,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     let retryTimer: number | undefined;
 
+    const seed = profileArgs.supplierSeed;
     createProfile({
       authId: "",
       email: profileArgs.email,
       name: profileArgs.name,
       role: profileArgs.role,
-      registrationSource: "manual",
+      registrationSource: seed ? "self_registration" : "manual",
+      phone: seed?.phone,
+      company: seed?.businessName,
+      supplierSeed: seed,
     }).catch((err) => {
-      console.error("[Auth] Auto-create profile failed:", err);
+      if (!String(err).includes("Not authenticated")) {
+        console.error("[Auth] Auto-create profile failed:", err);
+      }
       autoCreateFiredRef.current = false;
       // Schedule a state-based retry so the effect re-runs
       if (profileRetry < 3) {
@@ -140,7 +161,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         window.clearTimeout(retryTimer);
       }
     };
-  }, [isAuthenticated, profileIncomplete, profileData, createProfile, profileRetry]);
+  }, [
+    isAuthenticated,
+    profileIncomplete,
+    profileData,
+    createProfile,
+    profileRetry,
+  ]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -160,10 +187,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: string,
       password: string,
       name: string,
-      role: UserRole = "producer"
+      role: UserRole = "producer",
+      supplierSeed?: SupplierSignupSeed
     ) => {
       try {
-        pendingSignupRef.current = { name, email, role };
+        pendingSignupRef.current = { name, email, role, supplierSeed };
         await signIn("password", { email, password, name, flow: "signUp" });
         // Directly create profile after successful signIn rather than
         // relying solely on the useEffect, which can miss retries when
@@ -174,16 +202,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             email,
             name,
             role,
-            registrationSource: "manual",
+            registrationSource: supplierSeed ? "self_registration" : "manual",
+            phone: supplierSeed?.phone,
+            company: supplierSeed?.businessName,
+            supplierSeed,
           });
           pendingSignupRef.current = null;
           autoCreateFiredRef.current = true;
         } catch (profileErr) {
           // Auth token may not be ready yet; the useEffect will retry
-          console.warn(
-            "[Auth] Direct profile creation deferred to effect:",
-            profileErr
-          );
+          pendingSignupRef.current = { name, email, role, supplierSeed };
+          // Avoid noisy logs for expected race when auth token not yet ready
+          if (
+            !(
+              String(profileErr).includes("Not authenticated") ||
+              String(profileErr).includes("InvalidSecret")
+            )
+          ) {
+            console.warn(
+              "[Auth] Direct profile creation deferred to effect:",
+              profileErr
+            );
+          }
         }
         return { error: null };
       } catch (err: any) {

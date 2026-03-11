@@ -14,7 +14,9 @@ function browserLogsPlugin(): Plugin {
     enforce: "post",
     transform(code, id) {
       // Inject into the app entry point only
-      if (!id.includes("src/main.tsx")) return;
+      if (!id.includes("src/main.tsx")) {
+        return;
+      }
       const snippet = `
 ;(function __browserLogs__() {
   if (import.meta.hot) {

@@ -38,6 +38,7 @@ import type * as publicQuote from "../publicQuote.js";
 import type * as quoteItems from "../quoteItems.js";
 import type * as roadExpenses from "../roadExpenses.js";
 import type * as seed from "../seed.js";
+import type * as seedAuthUsers from "../seedAuthUsers.js";
 import type * as sendQuote from "../sendQuote.js";
 import type * as supplierAvailability from "../supplierAvailability.js";
 import type * as supplierContacts from "../supplierContacts.js";
@@ -87,6 +88,7 @@ declare const fullApi: ApiFromModules<{
   quoteItems: typeof quoteItems;
   roadExpenses: typeof roadExpenses;
   seed: typeof seed;
+  seedAuthUsers: typeof seedAuthUsers;
   sendQuote: typeof sendQuote;
   supplierAvailability: typeof supplierAvailability;
   supplierContacts: typeof supplierContacts;

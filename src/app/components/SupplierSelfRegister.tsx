@@ -55,7 +55,14 @@ export function SupplierSelfRegister() {
       data.email,
       data.password,
       data.fullName,
-      "supplier"
+      "supplier",
+      {
+        businessName: data.businessName,
+        category: data.category,
+        firstProduct: data.firstProduct,
+        phone: data.phone || undefined,
+        region: data.region,
+      }
     );
     if (result.error) {
       setError(result.error);

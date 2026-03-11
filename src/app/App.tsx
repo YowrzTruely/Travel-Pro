@@ -35,7 +35,7 @@ function isPublicPage(): boolean {
   return PUBLIC_PATTERNS.some((re) => re.test(path));
 }
 
-/** Public router for unauthenticated pages */
+/** Public router for unauthenticated pages; "/" renders login so back-from-success works */
 const publicRouter = createBrowserRouter([
   { path: "/quote/:id", Component: ClientQuote },
   { path: "/register/supplier", Component: SupplierSelfRegister },
@@ -43,7 +43,8 @@ const publicRouter = createBrowserRouter([
   { path: "/supplier/:id/public", Component: PublicSupplierProfile },
   { path: "/gallery/:projectId", Component: PublicGallery },
   { path: "/rate/:projectId", Component: EventRatings },
-  { path: "*", Component: () => null },
+  { path: "/", Component: LoginPage },
+  { path: "*", Component: LoginPage },
 ]);
 
 /** Loading spinner */
@@ -92,14 +93,14 @@ function AppInner() {
     return <LoadingSpinner message="יוצר פרופיל..." />;
   }
 
-  // 6. Supplier with pending status → waiting screen
-  if (profile.role === "supplier" && profile.status === "pending") {
-    return <SupplierPending />;
-  }
-
-  // 7. Onboarding not completed → supplier-specific onboarding
+  // 6. Onboarding not completed → supplier-specific onboarding (before pending)
   if (!profile.onboardingCompleted && profile.role === "supplier") {
     return <SupplierOnboarding />;
+  }
+
+  // 7. Supplier with pending status → waiting screen
+  if (profile.role === "supplier" && profile.status === "pending") {
+    return <SupplierPending />;
   }
 
   // 8–10. Role-based routing

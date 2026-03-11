@@ -19,7 +19,13 @@
    npx convex run seed:seedAll
    ```
 
-3. **Environment variables configured** (Convex Dashboard → Settings → Environment Variables):
+3. **If login fails with `InvalidSecret`**, reset test user passwords:
+   ```bash
+   bun run seed:auth
+   ```
+   This re-hashes the three test accounts (Admin, Producer, Supplier) with their correct passwords.
+
+4. **Environment variables configured** (Convex Dashboard → Settings → Environment Variables):
    | Variable | Required For |
    |---|---|
    | `SLNG_USERNAME` | SMS sending |
@@ -31,7 +37,7 @@
 
    > **Note:** WhatsApp, PDF export, password change, and admin pages work without any API keys.
 
-4. **Test accounts needed:**
+5. **Test accounts needed:**
    - 1 Admin account
    - 1 Producer account
    - 1 Supplier account (approved)

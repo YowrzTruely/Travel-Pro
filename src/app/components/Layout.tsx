@@ -348,7 +348,7 @@ export function Layout() {
           <GlobalSearch />
           <div className="flex-1" />
           <div className="flex shrink-0 items-center gap-1">
-<NotificationsPanel />
+            <NotificationsPanel />
           </div>
         </header>
 

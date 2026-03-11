@@ -1,5 +1,5 @@
-import { useMutation } from "convex/react";
-import { useState } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
@@ -25,28 +25,98 @@ const STEPS = [
   { label: "מסמכים", index: 2 },
 ];
 
+/** Map category label back to value for form */
+function categoryLabelToValue(label: string): string {
+  const found = SUPPLIER_CATEGORIES.find((c) => c.label === label);
+  return found?.value ?? "";
+}
+
+/** Map category value to label for supplier */
+function categoryValueToLabel(value: string): string {
+  const found = SUPPLIER_CATEGORIES.find((c) => c.value === value);
+  return found?.label ?? value;
+}
+
 export function SupplierOnboarding() {
   const { profile } = useAuth();
   const updateProfile = useMutation(api.users.updateProfile);
+  const updateSupplier = useMutation(api.suppliers.update);
+  const createProduct = useMutation(api.supplierProducts.create);
+  const updateProduct = useMutation(api.supplierProducts.update);
+  const listProducts = useQuery(
+    api.supplierProducts.listBySupplierId,
+    profile?.supplierId
+      ? { supplierId: profile.supplierId as Id<"suppliers"> }
+      : "skip"
+  );
+  const supplier = useQuery(
+    api.suppliers.get,
+    profile?.supplierId ? { id: profile.supplierId as Id<"suppliers"> } : "skip"
+  );
   const [activeStep, setActiveStep] = useState(0);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Stage1Form>();
 
-  const onSubmitStage1 = async (_data: Stage1Form) => {
+  useEffect(() => {
+    if (!(profile && supplier)) {
+      return;
+    }
+    const firstProduct = Array.isArray(listProducts)
+      ? (listProducts[0]?.name ?? "")
+      : "";
+    reset({
+      businessName: profile.company ?? supplier.name ?? "",
+      phone: profile.phone ?? supplier.phone ?? "",
+      email: profile.email ?? supplier.email ?? "",
+      category: categoryLabelToValue(supplier.category ?? ""),
+      region: supplier.region ?? "",
+      firstProduct,
+    });
+  }, [profile, supplier, listProducts, reset]);
+
+  const onSubmitStage1 = async (data: Stage1Form) => {
     if (!profile?.id) {
       return;
     }
+
     await updateProfile({
       id: profile.id as Id<"users">,
+      company: data.businessName,
+      phone: data.phone,
       onboardingCompleted: true,
       onboardingStage: "stage1",
     });
-    // Profile update triggers re-render in AuthContext, which will
-    // switch to the role-based router automatically.
+
+    if (profile.supplierId) {
+      const supplierId = profile.supplierId as Id<"suppliers">;
+      await updateSupplier({
+        id: supplierId,
+        name: data.businessName,
+        phone: data.phone,
+        email: data.email,
+        category: categoryValueToLabel(data.category),
+        region: data.region,
+      });
+      const products = Array.isArray(listProducts) ? listProducts : [];
+      if (data.firstProduct.trim()) {
+        if (products.length > 0) {
+          await updateProduct({
+            id: products[0].id,
+            name: data.firstProduct.trim(),
+          });
+        } else {
+          await createProduct({
+            supplierId,
+            name: data.firstProduct.trim(),
+          });
+        }
+      }
+    }
   };
 
   return (

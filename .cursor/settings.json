@@ -1,0 +1,19 @@
+{
+  "plugins": {
+    "convex": {
+      "enabled": true
+    },
+    "context7-plugin": {
+      "enabled": true
+    },
+    "vercel": {
+      "enabled": true
+    },
+    "superpowers": {
+      "enabled": true
+    },
+    "continual-learning": {
+      "enabled": true
+    }
+  }
+}

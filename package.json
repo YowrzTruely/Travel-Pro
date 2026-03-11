@@ -11,7 +11,8 @@
     "format": "bunx biome format --write src convex",
     "typecheck": "tsc --noEmit",
     "tsc": "tsc --noEmit",
-    "ultracite": "bunx ultracite check"
+    "ultracite": "bunx ultracite check",
+    "seed:auth": "npx convex run seedAuthUsers:run '{\"secretKey\": \"dev-seed-allow-local-only\"}'"
   },
   "dependencies": {
     "@convex-dev/auth": "^0.0.91",

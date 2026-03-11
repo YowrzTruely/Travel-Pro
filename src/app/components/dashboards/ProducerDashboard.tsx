@@ -790,7 +790,7 @@ export function ProducerDashboard() {
             </p>
           </div>
           <div className="flex shrink-0 gap-2">
-<button
+            <button
               className="min-h-[44px] min-w-[44px] rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
               onClick={() => navigate("/projects")}
               style={{ fontWeight: 600 }}
