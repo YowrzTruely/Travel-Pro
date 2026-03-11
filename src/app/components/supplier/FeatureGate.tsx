@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { appConfig } from "../../../appConfig";
 import { useAuth } from "../AuthContext";
 
 const STAGE_LEVELS: Record<string, number> = {
@@ -36,7 +35,7 @@ export function FeatureGate({
   const currentLevel = STAGE_LEVELS[currentStage] ?? 1;
   const requiredLevel = STAGE_LEVELS[requiredStage] ?? 1;
 
-  if (appConfig.supplierPermissionsUnlocked || currentLevel >= requiredLevel) {
+  if (currentLevel >= requiredLevel) {
     return <>{children}</>;
   }
 
