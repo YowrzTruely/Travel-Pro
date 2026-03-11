@@ -1,5 +1,6 @@
 import { useAction, useMutation } from "convex/react";
 import { Camera, Loader2, LogOut, Save } from "lucide-react";
+import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../../../convex/_generated/api";
@@ -7,7 +8,7 @@ import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
 import { useAuth } from "../AuthContext";
 import { useImageUpload } from "../hooks/useImageUpload";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Tabs, TabsContent } from "../ui/tabs";
 
 /* ─── Types ─────────────────────────────────────────────────── */
 
@@ -37,10 +38,11 @@ interface PasswordFormData {
 
 /* ─── Shared styles ─────────────────────────────────────────── */
 
-const cardClass = "rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-sm";
-const labelClass = "mb-1 block text-sm font-semibold text-[#181510]";
+const cardClass =
+  "rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-sm text-right";
+const labelClass = "mb-1 block text-sm font-semibold text-[#181510] text-right";
 const inputClass =
-  "w-full rounded-xl border border-[#e7e1da] bg-[#f8f7f5] px-4 py-2.5 text-sm text-[#181510] outline-none transition focus:border-[#ff8c00] focus:ring-2 focus:ring-[#ff8c00]/20 font-['Assistant',sans-serif]";
+  "w-full rounded-xl border border-[#e7e1da] bg-[#f8f7f5] px-4 py-2.5 text-sm text-[#181510] text-right outline-none transition focus:border-[#ff8c00] focus:ring-2 focus:ring-[#ff8c00]/20 font-['Assistant',sans-serif]";
 const btnPrimaryClass =
   "inline-flex items-center gap-2 rounded-xl bg-[#ff8c00] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#e07b00] disabled:opacity-50";
 const btnDangerClass =
@@ -53,6 +55,16 @@ export function SettingsPage() {
   const updateProfile = useMutation(api.users.updateProfile);
   const { upload } = useImageUpload();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeTab, setActiveTab] = useState("profile");
+
+  const tabItems = [
+    { value: "profile", label: "פרופיל" },
+    { value: "notifications", label: "התראות" },
+    ...(profile?.role === "producer"
+      ? [{ value: "pricing", label: "תמחור" }]
+      : []),
+    { value: "account", label: "חשבון" },
+  ];
 
   /* ── Profile form ── */
   const profileForm = useForm<ProfileFormData>({
@@ -241,15 +253,17 @@ export function SettingsPage() {
         {/* Header */}
         <h1 className="mb-6 font-bold text-2xl text-[#181510]">הגדרות</h1>
 
-        <Tabs defaultValue="profile">
-          <TabsList className="mb-6 w-full">
-            <TabsTrigger value="profile">פרופיל</TabsTrigger>
-            <TabsTrigger value="notifications">התראות</TabsTrigger>
-            {profile.role === "producer" && (
-              <TabsTrigger value="pricing">תמחור</TabsTrigger>
-            )}
-            <TabsTrigger value="account">חשבון</TabsTrigger>
-          </TabsList>
+        <Tabs
+          defaultValue="profile"
+          dir="rtl"
+          onValueChange={setActiveTab}
+          value={activeTab}
+        >
+          <GlassTabBar
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            tabs={tabItems}
+          />
 
           {/* ── Tab 1: Profile ── */}
           <TabsContent value="profile">
@@ -580,6 +594,89 @@ export function SettingsPage() {
           </TabsContent>
         </Tabs>
       </div>
+    </div>
+  );
+}
+
+/* ─── GlassTabBar ──────────────────────────────────────────── */
+
+function GlassTabBar({
+  tabs,
+  activeTab,
+  onTabChange,
+}: {
+  tabs: { value: string; label: string }[];
+  activeTab: string;
+  onTabChange: (value: string) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const [indicatorStyle, setIndicatorStyle] = useState({
+    width: 0,
+    right: 0,
+  });
+
+  useEffect(() => {
+    const activeEl = tabRefs.current.get(activeTab);
+    const container = containerRef.current;
+    if (!(activeEl && container)) {
+      return;
+    }
+    const containerRect = container.getBoundingClientRect();
+    const elRect = activeEl.getBoundingClientRect();
+    setIndicatorStyle({
+      width: elRect.width,
+      right: containerRect.right - elRect.right,
+    });
+  }, [activeTab, tabs]);
+
+  return (
+    <div
+      className="relative mb-6 flex rounded-2xl bg-[#eae6e0]/60 p-1.5 backdrop-blur-sm"
+      ref={containerRef}
+    >
+      {/* Sliding glass indicator */}
+      <motion.div
+        animate={{
+          right: indicatorStyle.right,
+          width: indicatorStyle.width,
+        }}
+        className="absolute top-1.5 bottom-1.5 rounded-xl"
+        initial={false}
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.75) 100%)",
+          boxShadow:
+            "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
+          backdropFilter: "blur(12px)",
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 28,
+          mass: 0.8,
+        }}
+      />
+
+      {/* Tab buttons */}
+      {tabs.map((tab) => (
+        <button
+          className="relative z-10 flex-1 cursor-pointer rounded-xl px-4 py-2.5 font-semibold text-sm transition-colors duration-200"
+          key={tab.value}
+          onClick={() => onTabChange(tab.value)}
+          ref={(el) => {
+            if (el) {
+              tabRefs.current.set(tab.value, el);
+            }
+          }}
+          style={{
+            color: activeTab === tab.value ? "#181510" : "#8d785e",
+          }}
+          type="button"
+        >
+          {tab.label}
+        </button>
+      ))}
     </div>
   );
 }

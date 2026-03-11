@@ -8,7 +8,6 @@ import { ConvexProvider } from "./components/ConvexProvider";
 import { EventRatings } from "./components/gallery/EventRatings";
 import { PublicGallery } from "./components/gallery/PublicGallery";
 import { LoginPage } from "./components/LoginPage";
-import { ProducerOnboarding } from "./components/onboarding/ProducerOnboarding";
 import { SupplierOnboarding } from "./components/onboarding/SupplierOnboarding";
 import { SupplierPending } from "./components/onboarding/SupplierPending";
 import { SupplierSelfRegister } from "./components/SupplierSelfRegister";
@@ -68,7 +67,6 @@ function AppInner() {
   const { user, profile, loading: authLoading, profileLoading } = useAuth();
   const isPublic = useMemo(() => isPublicPage(), []);
 
-
   // 1. Public pages — no auth required
   if (isPublic) {
     return <RouterProvider router={publicRouter} />;
@@ -99,12 +97,9 @@ function AppInner() {
     return <SupplierPending />;
   }
 
-  // 7. Onboarding not completed → role-specific onboarding
-  if (!profile.onboardingCompleted) {
-    if (profile.role === "supplier") {
-      return <SupplierOnboarding />;
-    }
-    return <ProducerOnboarding />;
+  // 7. Onboarding not completed → supplier-specific onboarding
+  if (!profile.onboardingCompleted && profile.role === "supplier") {
+    return <SupplierOnboarding />;
   }
 
   // 8–10. Role-based routing

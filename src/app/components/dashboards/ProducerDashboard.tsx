@@ -339,17 +339,16 @@ function WidgetSection({
                 </h2>
               </button>
             </CollapsibleTrigger>
-            <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.stopPropagation()}
+            >
               <HelpTooltip text={helpText} />
             </div>
           </div>
           <CollapsibleTrigger asChild>
             <button className="text-[#8d785e]" type="button">
-              {isOpen ? (
-                <ChevronUp size={16} />
-              ) : (
-                <ChevronDown size={16} />
-              )}
+              {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </button>
           </CollapsibleTrigger>
         </div>
@@ -771,179 +770,179 @@ export function ProducerDashboard() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-    <div className="w-full space-y-6 p-4 sm:space-y-8 sm:p-8" dir="rtl">
-      {/* ══════════ Welcome Section ══════════ */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
-        initial={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div>
-          <h1
-            className="text-[#181510] text-[30px] tracking-[-0.75px]"
-            style={{ fontWeight: 600 }}
-          >
-            לוח בקרה - מפיק אירועים
-          </h1>
-          <p className="mt-1 text-[#8d785e] text-[16px]">
-            בוקר טוב, {user?.email?.split("@")[0] || "משתמש"}. הנה מה שקורה היום
-            בפרויקטים שלך.
-          </p>
-        </div>
-        <div className="flex shrink-0 gap-2">
-          <button
-            className="flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-lg border border-[#e7e1da] px-4 py-[9px] text-[#181510] text-[14px] transition-all hover:bg-[#f5f3f0]"
-            onClick={() => navigate("/prd")}
-            style={{ fontWeight: 600 }}
-            type="button"
-          >
-            <BookOpen size={15} />
-            ניהול מוצר
-          </button>
-          <button
-            className="min-h-[44px] min-w-[44px] rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
-            onClick={() => navigate("/projects")}
-            style={{ fontWeight: 600 }}
-            type="button"
-          >
-            הוספת ליד
-          </button>
-        </div>
-      </motion.div>
-
-      {/* ══════════ Ticker / Marquee ══════════ */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="relative flex h-[44px] items-center overflow-hidden rounded-xl border border-[#e7e1da] bg-gradient-to-l from-[#fffaf3] via-white to-[#fffaf3]"
-        dir="ltr"
-        initial={{ opacity: 0, y: 6 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <div className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-14 bg-gradient-to-r from-white to-transparent" />
-        <div className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-14 bg-gradient-to-l from-white to-transparent" />
-        <div className="z-20 flex h-full shrink-0 items-center gap-1.5 border-[#e7e1da] border-l px-4">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff8c00] opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff8c00]" />
-          </span>
-          <span
-            className="whitespace-nowrap text-[#ff8c00] text-[11px] tracking-wider"
-            style={{ fontWeight: 800 }}
-          >
-            LIVE
-          </span>
-        </div>
-        <div className="flex-1 overflow-hidden">
-          <div
-            className="flex items-center whitespace-nowrap"
-            style={{
-              animation: "tickerScroll 80s linear infinite",
-              direction: "rtl",
-            }}
-          >
-            {[...tickerMessages, ...tickerMessages].map((msg, i) => (
-              <span className="inline-flex items-center" key={`ticker-${i}`}>
-                <span
-                  className="px-5 text-[#3d3426] text-[13px]"
-                  style={{ fontWeight: 500 }}
-                >
-                  {msg}
-                </span>
-                <span className="h-1 w-1 shrink-0 rounded-full bg-[#ddd6cb]" />
-              </span>
-            ))}
+      <div className="w-full space-y-6 p-4 sm:space-y-8 sm:p-8" dir="rtl">
+        {/* ══════════ Welcome Section ══════════ */}
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
+          initial={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div>
+            <h1
+              className="text-[#181510] text-[30px] tracking-[-0.75px]"
+              style={{ fontWeight: 600 }}
+            >
+              לוח בקרה - מפיק אירועים
+            </h1>
+            <p className="mt-1 text-[#8d785e] text-[16px]">
+              בוקר טוב, {user?.email?.split("@")[0] || "משתמש"}. הנה מה שקורה
+              היום בפרויקטים שלך.
+            </p>
           </div>
-        </div>
-        <style>{`
+          <div className="flex shrink-0 gap-2">
+            <button
+              className="flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-lg border border-[#e7e1da] px-4 py-[9px] text-[#181510] text-[14px] transition-all hover:bg-[#f5f3f0]"
+              onClick={() => navigate("/prd")}
+              style={{ fontWeight: 600 }}
+              type="button"
+            >
+              <BookOpen size={15} />
+              ניהול מוצר
+            </button>
+            <button
+              className="min-h-[44px] min-w-[44px] rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
+              onClick={() => navigate("/projects")}
+              style={{ fontWeight: 600 }}
+              type="button"
+            >
+              הוספת ליד
+            </button>
+          </div>
+        </motion.div>
+
+        {/* ══════════ Ticker / Marquee ══════════ */}
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="relative flex h-[44px] items-center overflow-hidden rounded-xl border border-[#e7e1da] bg-gradient-to-l from-[#fffaf3] via-white to-[#fffaf3]"
+          dir="ltr"
+          initial={{ opacity: 0, y: 6 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-14 bg-gradient-to-r from-white to-transparent" />
+          <div className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-14 bg-gradient-to-l from-white to-transparent" />
+          <div className="z-20 flex h-full shrink-0 items-center gap-1.5 border-[#e7e1da] border-l px-4">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff8c00] opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff8c00]" />
+            </span>
+            <span
+              className="whitespace-nowrap text-[#ff8c00] text-[11px] tracking-wider"
+              style={{ fontWeight: 800 }}
+            >
+              LIVE
+            </span>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <div
+              className="flex items-center whitespace-nowrap"
+              style={{
+                animation: "tickerScroll 80s linear infinite",
+                direction: "rtl",
+              }}
+            >
+              {[...tickerMessages, ...tickerMessages].map((msg, i) => (
+                <span className="inline-flex items-center" key={`ticker-${i}`}>
+                  <span
+                    className="px-5 text-[#3d3426] text-[13px]"
+                    style={{ fontWeight: 500 }}
+                  >
+                    {msg}
+                  </span>
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-[#ddd6cb]" />
+                </span>
+              ))}
+            </div>
+          </div>
+          <style>{`
           @keyframes tickerScroll {
             0% { transform: translateX(50%); }
             100% { transform: translateX(-50%); }
           }
         `}</style>
-      </motion.div>
+        </motion.div>
 
-      {/* ══════════ Draggable Widget Grid ══════════ */}
-      {widgetOrder.map((widgetId, index) => {
-        const widget = widgets[widgetId];
-        if (!widget) {
-          return null;
-        }
-        return (
-          <DraggableWidget
-            id={widgetId}
-            index={index}
-            key={widgetId}
-            moveWidget={moveWidget}
-          >
-            {widget}
-          </DraggableWidget>
-        );
-      })}
+        {/* ══════════ Draggable Widget Grid ══════════ */}
+        {widgetOrder.map((widgetId, index) => {
+          const widget = widgets[widgetId];
+          if (!widget) {
+            return null;
+          }
+          return (
+            <DraggableWidget
+              id={widgetId}
+              index={index}
+              key={widgetId}
+              moveWidget={moveWidget}
+            >
+              {widget}
+            </DraggableWidget>
+          );
+        })}
 
-      {/* ══════════ Bottom: Activity Feed ══════════ */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="min-w-0 space-y-4"
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.5, delay: 1.0 }}
-      >
-        <div className="flex items-center gap-2 px-1">
-          <h2
-            className="text-[#181510] text-[20px]"
-            style={{ fontWeight: 600 }}
-          >
-            פעילות אחרונה
-          </h2>
-        </div>
-
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
-          <div className="space-y-6">
-            {activityItems.map((item, idx) => {
-              const ActivityIcon = item.icon;
-              return (
-                <motion.div
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex items-start gap-3"
-                  initial={{ opacity: 0, x: 16 }}
-                  key={item.id}
-                  transition={{ duration: 0.35, delay: 1.05 + idx * 0.1 }}
-                >
-                  <div className="flex shrink-0 flex-col items-center">
-                    <div
-                      className="flex h-8 w-8 items-center justify-center rounded-full"
-                      style={{ backgroundColor: item.iconBg }}
-                    >
-                      <ActivityIcon
-                        size={15}
-                        style={{ color: item.iconColor }}
-                      />
-                    </div>
-                    {idx < activityItems.length - 1 && (
-                      <div className="mt-1.5 min-h-[24px] w-0.5 flex-1 bg-[#f5f3f0]" />
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <p
-                      className="text-[#181510] text-[14px]"
-                      style={{ fontWeight: 600 }}
-                    >
-                      {item.title}
-                    </p>
-                    <p className="truncate text-[#8d785e] text-[12px]">
-                      {item.subtitle}
-                    </p>
-                    <p className="mt-0.5 text-[#c4b89a] text-[11px]">
-                      {item.time}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
+        {/* ══════════ Bottom: Activity Feed ══════════ */}
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="min-w-0 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5, delay: 1.0 }}
+        >
+          <div className="flex items-center gap-2 px-1">
+            <h2
+              className="text-[#181510] text-[20px]"
+              style={{ fontWeight: 600 }}
+            >
+              פעילות אחרונה
+            </h2>
           </div>
-        </div>
-      </motion.div>
-    </div>
+
+          <div className="rounded-xl border border-[#e7e1da] bg-white p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+            <div className="space-y-6">
+              {activityItems.map((item, idx) => {
+                const ActivityIcon = item.icon;
+                return (
+                  <motion.div
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-start gap-3"
+                    initial={{ opacity: 0, x: 16 }}
+                    key={item.id}
+                    transition={{ duration: 0.35, delay: 1.05 + idx * 0.1 }}
+                  >
+                    <div className="flex shrink-0 flex-col items-center">
+                      <div
+                        className="flex h-8 w-8 items-center justify-center rounded-full"
+                        style={{ backgroundColor: item.iconBg }}
+                      >
+                        <ActivityIcon
+                          size={15}
+                          style={{ color: item.iconColor }}
+                        />
+                      </div>
+                      {idx < activityItems.length - 1 && (
+                        <div className="mt-1.5 min-h-[24px] w-0.5 flex-1 bg-[#f5f3f0]" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p
+                        className="text-[#181510] text-[14px]"
+                        style={{ fontWeight: 600 }}
+                      >
+                        {item.title}
+                      </p>
+                      <p className="truncate text-[#8d785e] text-[12px]">
+                        {item.subtitle}
+                      </p>
+                      <p className="mt-0.5 text-[#c4b89a] text-[11px]">
+                        {item.time}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </DndProvider>
   );
 }
