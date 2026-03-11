@@ -32,6 +32,7 @@ import {
   useSearchParams,
 } from "react-router";
 import { api } from "../../../convex/_generated/api";
+import { appConfig } from "../../appConfig";
 import { appToast } from "./AppToast";
 import { useAuth } from "./AuthContext";
 import { Breadcrumbs } from "./Breadcrumbs";
@@ -92,6 +93,9 @@ const bottomNavItems: NavItem[] = [
 function getNavItemsForRole(role?: string, supplierStage?: string): NavItem[] {
   switch (role) {
     case "supplier": {
+      if (appConfig.supplierPermissionsUnlocked) {
+        return [...supplierNavStage1, ...supplierNavStage2];
+      }
       const stageLevel =
         supplierStage === "stage2" ? 2 : supplierStage === "stage3" ? 3 : 1;
       const stage2Items =

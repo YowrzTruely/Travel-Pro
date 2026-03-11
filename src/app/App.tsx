@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
+import { appConfig } from "../appConfig";
 import { AuthProvider, useAuth } from "./components/AuthContext";
 import { AvailabilityInvitePage } from "./components/AvailabilityInvitePage";
 import { ClientQuote } from "./components/ClientQuote";
@@ -94,12 +95,19 @@ function AppInner() {
   }
 
   // 6. Onboarding not completed → supplier-specific onboarding (before pending)
-  if (!profile.onboardingCompleted && profile.role === "supplier") {
+  if (
+    !(appConfig.supplierPermissionsUnlocked || profile.onboardingCompleted) &&
+    profile.role === "supplier"
+  ) {
     return <SupplierOnboarding />;
   }
 
   // 7. Supplier with pending status → waiting screen
-  if (profile.role === "supplier" && profile.status === "pending") {
+  if (
+    !appConfig.supplierPermissionsUnlocked &&
+    profile.role === "supplier" &&
+    profile.status === "pending"
+  ) {
     return <SupplierPending />;
   }
 
