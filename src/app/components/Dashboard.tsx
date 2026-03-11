@@ -1,6 +1,5 @@
 import { useQuery } from "convex/react";
 import {
-  BookOpen,
   Briefcase,
   Calendar,
   CalendarDays,
@@ -634,16 +633,7 @@ export function Dashboard() {
           </p>
         </div>
         <div className="flex shrink-0 gap-2">
-          <button
-            className="flex items-center gap-1.5 rounded-lg border border-[#e7e1da] px-4 py-[9px] text-[#181510] text-[14px] transition-all hover:bg-[#f5f3f0]"
-            onClick={() => navigate("/prd")}
-            style={{ fontWeight: 600 }}
-            type="button"
-          >
-            <BookOpen size={15} />
-            ניהול מוצר
-          </button>
-          <button
+<button
             className="rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
             onClick={() => navigate("/projects")}
             style={{ fontWeight: 600 }}

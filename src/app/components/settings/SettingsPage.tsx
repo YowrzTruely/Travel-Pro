@@ -1,6 +1,6 @@
 import { useAction, useMutation } from "convex/react";
 import { Camera, Loader2, LogOut, Save } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../../../convex/_generated/api";
@@ -8,7 +8,7 @@ import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
 import { useAuth } from "../AuthContext";
 import { useImageUpload } from "../hooks/useImageUpload";
-import { Tabs, TabsContent } from "../ui/tabs";
+import { Tabs } from "../ui/tabs";
 
 /* ─── Types ─────────────────────────────────────────────────── */
 
@@ -56,6 +56,8 @@ export function SettingsPage() {
   const { upload } = useImageUpload();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeTab, setActiveTab] = useState("profile");
+  const [slideDirection, setSlideDirection] = useState(0);
+  const prevTabIndexRef = useRef(0);
 
   const tabItems = [
     { value: "profile", label: "פרופיל" },
@@ -65,6 +67,14 @@ export function SettingsPage() {
       : []),
     { value: "account", label: "חשבון" },
   ];
+
+  const handleTabChange = (value: string) => {
+    const newIndex = tabItems.findIndex((t) => t.value === value);
+    // In RTL, moving to a higher index = moving left visually
+    setSlideDirection(newIndex > prevTabIndexRef.current ? -1 : 1);
+    prevTabIndexRef.current = newIndex;
+    setActiveTab(value);
+  };
 
   /* ── Profile form ── */
   const profileForm = useForm<ProfileFormData>({
@@ -256,342 +266,377 @@ export function SettingsPage() {
         <Tabs
           defaultValue="profile"
           dir="rtl"
-          onValueChange={setActiveTab}
+          onValueChange={handleTabChange}
           value={activeTab}
         >
           <GlassTabBar
             activeTab={activeTab}
-            onTabChange={setActiveTab}
+            onTabChange={handleTabChange}
             tabs={tabItems}
           />
 
-          {/* ── Tab 1: Profile ── */}
-          <TabsContent value="profile">
-            <div className={cardClass}>
-              <h2 className="mb-4 font-bold text-[#181510] text-lg">
-                פרטי פרופיל
-              </h2>
+          {/* Animated tab content */}
+          <div className="relative overflow-hidden">
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.div
+                animate={{ opacity: 1, x: 0 }}
+                exit={{
+                  opacity: 0,
+                  x: slideDirection > 0 ? "30%" : "-30%",
+                }}
+                initial={{
+                  opacity: 0,
+                  x: slideDirection > 0 ? "-30%" : "30%",
+                }}
+                key={activeTab}
+                transition={{
+                  type: "spring",
+                  stiffness: 350,
+                  damping: 32,
+                  mass: 0.8,
+                }}
+              >
+                {activeTab === "profile" && (
+                  <div className={cardClass}>
+                    <h2 className="mb-4 font-bold text-[#181510] text-lg">
+                      פרטי פרופיל
+                    </h2>
 
-              {/* Avatar */}
-              <div className="mb-6 flex items-center gap-4">
-                <button
-                  className="group relative h-20 w-20 overflow-hidden rounded-full border-2 border-[#e7e1da] bg-[#f8f7f5] transition hover:border-[#ff8c00]"
-                  onClick={handleAvatarClick}
-                  type="button"
-                >
-                  {profile.avatar ? (
-                    <img
-                      alt="avatar"
-                      className="h-full w-full object-cover"
-                      height={80}
-                      src={profile.avatar}
-                      width={80}
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center font-bold text-2xl text-[#8d785e]">
-                      {profile.name.charAt(0)}
+                    {/* Avatar */}
+                    <div className="mb-6 flex items-center gap-4">
+                      <button
+                        className="group relative h-20 w-20 overflow-hidden rounded-full border-2 border-[#e7e1da] bg-[#f8f7f5] transition hover:border-[#ff8c00]"
+                        onClick={handleAvatarClick}
+                        type="button"
+                      >
+                        {profile.avatar ? (
+                          <img
+                            alt="avatar"
+                            className="h-full w-full object-cover"
+                            height={80}
+                            src={profile.avatar}
+                            width={80}
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center font-bold text-2xl text-[#8d785e]">
+                            {profile.name.charAt(0)}
+                          </div>
+                        )}
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
+                          <Camera className="text-white" size={20} />
+                        </div>
+                      </button>
+                      <div>
+                        <p className="font-semibold text-[#181510] text-sm">
+                          תמונת פרופיל
+                        </p>
+                        <p className="text-[#8d785e] text-xs">
+                          לחץ על התמונה כדי לשנות
+                        </p>
+                      </div>
+                      <input
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleAvatarChange}
+                        ref={fileInputRef}
+                        type="file"
+                      />
                     </div>
-                  )}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
-                    <Camera className="text-white" size={20} />
-                  </div>
-                </button>
-                <div>
-                  <p className="font-semibold text-[#181510] text-sm">
-                    תמונת פרופיל
-                  </p>
-                  <p className="text-[#8d785e] text-xs">
-                    לחץ על התמונה כדי לשנות
-                  </p>
-                </div>
-                <input
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleAvatarChange}
-                  ref={fileInputRef}
-                  type="file"
-                />
-              </div>
 
-              {/* Profile fields */}
-              <form
-                className="space-y-4"
-                onSubmit={profileForm.handleSubmit(onSaveProfile)}
-              >
-                <div>
-                  <label className={labelClass} htmlFor="name">
-                    שם מלא
-                  </label>
-                  <input
-                    className={inputClass}
-                    id="name"
-                    {...profileForm.register("name", {
-                      required: "שם הוא שדה חובה",
-                    })}
-                  />
-                  {profileForm.formState.errors.name && (
-                    <p className="mt-1 text-red-500 text-xs">
-                      {profileForm.formState.errors.name.message}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className={labelClass} htmlFor="email">
-                    אימייל
-                  </label>
-                  <input
-                    className={`${inputClass} cursor-not-allowed opacity-60`}
-                    id="email"
-                    readOnly
-                    {...profileForm.register("email")}
-                  />
-                </div>
-
-                <div>
-                  <label className={labelClass} htmlFor="phone">
-                    טלפון
-                  </label>
-                  <input
-                    className={inputClass}
-                    id="phone"
-                    type="tel"
-                    {...profileForm.register("phone")}
-                  />
-                </div>
-
-                <div>
-                  <label className={labelClass} htmlFor="company">
-                    חברה
-                  </label>
-                  <input
-                    className={inputClass}
-                    id="company"
-                    {...profileForm.register("company")}
-                  />
-                </div>
-
-                <div className="flex justify-start pt-2">
-                  <button
-                    className={btnPrimaryClass}
-                    disabled={profileForm.formState.isSubmitting}
-                    type="submit"
-                  >
-                    <Save size={16} />
-                    שמור שינויים
-                  </button>
-                </div>
-              </form>
-            </div>
-          </TabsContent>
-
-          {/* ── Tab 2: Notifications ── */}
-          <TabsContent value="notifications">
-            <div className={cardClass}>
-              <h2 className="mb-4 font-bold text-[#181510] text-lg">
-                העדפות התראות
-              </h2>
-
-              <form
-                className="space-y-4"
-                onSubmit={notifForm.handleSubmit(onSaveNotifications)}
-              >
-                <NotificationToggle
-                  description="קבל התראות בתוך המערכת"
-                  label="בתוך האפליקציה"
-                  register={notifForm.register("inApp")}
-                />
-                <NotificationToggle
-                  description="קבל התראות באימייל"
-                  label="אימייל"
-                  register={notifForm.register("email")}
-                />
-                <NotificationToggle
-                  description="קבל התראות ב-SMS"
-                  label="SMS"
-                  register={notifForm.register("sms")}
-                />
-                <NotificationToggle
-                  description="קבל התראות בוואטסאפ"
-                  label="וואטסאפ"
-                  register={notifForm.register("whatsapp")}
-                />
-
-                <div className="flex justify-start pt-2">
-                  <button
-                    className={btnPrimaryClass}
-                    disabled={notifForm.formState.isSubmitting}
-                    type="submit"
-                  >
-                    <Save size={16} />
-                    שמור העדפות
-                  </button>
-                </div>
-              </form>
-            </div>
-          </TabsContent>
-
-          {/* ── Tab 3: Pricing (producer only) ── */}
-          {profile.role === "producer" && (
-            <TabsContent value="pricing">
-              <div className={cardClass}>
-                <h2 className="mb-4 font-bold text-[#181510] text-lg">
-                  הגדרות תמחור
-                </h2>
-
-                <form
-                  className="space-y-4"
-                  onSubmit={pricingForm.handleSubmit(onSavePricing)}
-                >
-                  <div>
-                    <label
-                      className={labelClass}
-                      htmlFor="defaultMarginPercent"
+                    {/* Profile fields */}
+                    <form
+                      className="space-y-4"
+                      onSubmit={profileForm.handleSubmit(onSaveProfile)}
                     >
-                      אחוז רווח ברירת מחדל (%)
-                    </label>
-                    <input
-                      className={`${inputClass} max-w-[200px]`}
-                      id="defaultMarginPercent"
-                      max={100}
-                      min={0}
-                      step={0.5}
-                      type="number"
-                      {...pricingForm.register("defaultMarginPercent", {
-                        valueAsNumber: true,
-                        min: {
-                          value: 0,
-                          message: "אחוז הרווח חייב להיות חיובי",
-                        },
-                        max: {
-                          value: 100,
-                          message: "אחוז הרווח לא יכול לעלות על 100",
-                        },
-                      })}
-                    />
-                    {pricingForm.formState.errors.defaultMarginPercent && (
-                      <p className="mt-1 text-red-500 text-xs">
-                        {
-                          pricingForm.formState.errors.defaultMarginPercent
-                            .message
-                        }
+                      <div>
+                        <label className={labelClass} htmlFor="name">
+                          שם מלא
+                        </label>
+                        <input
+                          className={inputClass}
+                          id="name"
+                          {...profileForm.register("name", {
+                            required: "שם הוא שדה חובה",
+                          })}
+                        />
+                        {profileForm.formState.errors.name && (
+                          <p className="mt-1 text-red-500 text-xs">
+                            {profileForm.formState.errors.name.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className={labelClass} htmlFor="email">
+                          אימייל
+                        </label>
+                        <input
+                          className={`${inputClass} cursor-not-allowed opacity-60`}
+                          id="email"
+                          readOnly
+                          {...profileForm.register("email")}
+                        />
+                      </div>
+
+                      <div>
+                        <label className={labelClass} htmlFor="phone">
+                          טלפון
+                        </label>
+                        <input
+                          className={inputClass}
+                          id="phone"
+                          type="tel"
+                          {...profileForm.register("phone")}
+                        />
+                      </div>
+
+                      <div>
+                        <label className={labelClass} htmlFor="company">
+                          חברה
+                        </label>
+                        <input
+                          className={inputClass}
+                          id="company"
+                          {...profileForm.register("company")}
+                        />
+                      </div>
+
+                      <div className="flex justify-start pt-2">
+                        <button
+                          className={btnPrimaryClass}
+                          disabled={profileForm.formState.isSubmitting}
+                          type="submit"
+                        >
+                          <Save size={16} />
+                          שמור שינויים
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {activeTab === "notifications" && (
+                  <div className={cardClass}>
+                    <h2 className="mb-4 font-bold text-[#181510] text-lg">
+                      העדפות התראות
+                    </h2>
+
+                    <form
+                      className="space-y-4"
+                      onSubmit={notifForm.handleSubmit(onSaveNotifications)}
+                    >
+                      <NotificationToggle
+                        description="קבל התראות בתוך המערכת"
+                        label="בתוך האפליקציה"
+                        register={notifForm.register("inApp")}
+                      />
+                      <NotificationToggle
+                        description="קבל התראות באימייל"
+                        label="אימייל"
+                        register={notifForm.register("email")}
+                      />
+                      <NotificationToggle
+                        description="קבל התראות ב-SMS"
+                        label="SMS"
+                        register={notifForm.register("sms")}
+                      />
+                      <NotificationToggle
+                        description="קבל התראות בוואטסאפ"
+                        label="וואטסאפ"
+                        register={notifForm.register("whatsapp")}
+                      />
+
+                      <div className="flex justify-start pt-2">
+                        <button
+                          className={btnPrimaryClass}
+                          disabled={notifForm.formState.isSubmitting}
+                          type="submit"
+                        >
+                          <Save size={16} />
+                          שמור העדפות
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {activeTab === "pricing" && profile.role === "producer" && (
+                  <div className={cardClass}>
+                    <h2 className="mb-4 font-bold text-[#181510] text-lg">
+                      הגדרות תמחור
+                    </h2>
+
+                    <form
+                      className="space-y-4"
+                      onSubmit={pricingForm.handleSubmit(onSavePricing)}
+                    >
+                      <div>
+                        <label
+                          className={labelClass}
+                          htmlFor="defaultMarginPercent"
+                        >
+                          אחוז רווח ברירת מחדל (%)
+                        </label>
+                        <input
+                          className={`${inputClass} max-w-[200px]`}
+                          id="defaultMarginPercent"
+                          max={100}
+                          min={0}
+                          step={0.5}
+                          type="number"
+                          {...pricingForm.register("defaultMarginPercent", {
+                            valueAsNumber: true,
+                            min: {
+                              value: 0,
+                              message: "אחוז הרווח חייב להיות חיובי",
+                            },
+                            max: {
+                              value: 100,
+                              message: "אחוז הרווח לא יכול לעלות על 100",
+                            },
+                          })}
+                        />
+                        {pricingForm.formState.errors
+                          .defaultMarginPercent && (
+                          <p className="mt-1 text-red-500 text-xs">
+                            {
+                              pricingForm.formState.errors
+                                .defaultMarginPercent.message
+                            }
+                          </p>
+                        )}
+                        <p className="mt-2 text-[#8d785e] text-xs">
+                          אחוז הרווח שיוחל כברירת מחדל על פריטי הצעת מחיר
+                          חדשים
+                        </p>
+                      </div>
+
+                      <div className="flex justify-start pt-2">
+                        <button
+                          className={btnPrimaryClass}
+                          disabled={pricingForm.formState.isSubmitting}
+                          type="submit"
+                        >
+                          <Save size={16} />
+                          שמור תמחור
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {activeTab === "account" && (
+                  <div className="space-y-6">
+                    {/* Change password */}
+                    <div className={cardClass}>
+                      <h2 className="mb-4 font-bold text-[#181510] text-lg">
+                        שינוי סיסמה
+                      </h2>
+
+                      <form
+                        className="space-y-4"
+                        onSubmit={passwordForm.handleSubmit(onChangePassword)}
+                      >
+                        <div>
+                          <label
+                            className={labelClass}
+                            htmlFor="currentPassword"
+                          >
+                            סיסמה נוכחית
+                          </label>
+                          <input
+                            className={inputClass}
+                            id="currentPassword"
+                            type="password"
+                            {...passwordForm.register("currentPassword", {
+                              required: "שדה חובה",
+                            })}
+                          />
+                        </div>
+
+                        <div>
+                          <label
+                            className={labelClass}
+                            htmlFor="newPassword"
+                          >
+                            סיסמה חדשה
+                          </label>
+                          <input
+                            className={inputClass}
+                            id="newPassword"
+                            type="password"
+                            {...passwordForm.register("newPassword", {
+                              required: "שדה חובה",
+                              minLength: {
+                                value: 6,
+                                message:
+                                  "סיסמה חייבת להכיל לפחות 6 תווים",
+                              },
+                            })}
+                          />
+                        </div>
+
+                        <div>
+                          <label
+                            className={labelClass}
+                            htmlFor="confirmPassword"
+                          >
+                            אימות סיסמה חדשה
+                          </label>
+                          <input
+                            className={inputClass}
+                            id="confirmPassword"
+                            type="password"
+                            {...passwordForm.register("confirmPassword", {
+                              required: "שדה חובה",
+                            })}
+                          />
+                        </div>
+
+                        <div className="flex justify-start pt-2">
+                          <button
+                            className={btnPrimaryClass}
+                            disabled={changingPassword}
+                            type="submit"
+                          >
+                            {changingPassword ? (
+                              <Loader2
+                                className="animate-spin"
+                                size={16}
+                              />
+                            ) : (
+                              <Save size={16} />
+                            )}
+                            {changingPassword
+                              ? "משנה סיסמה..."
+                              : "שנה סיסמה"}
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+
+                    {/* Logout */}
+                    <div className={cardClass}>
+                      <h2 className="mb-2 font-bold text-[#181510] text-lg">
+                        התנתקות
+                      </h2>
+                      <p className="mb-4 text-[#8d785e] text-sm">
+                        לחץ כדי להתנתק מהמערכת
                       </p>
-                    )}
-                    <p className="mt-2 text-[#8d785e] text-xs">
-                      אחוז הרווח שיוחל כברירת מחדל על פריטי הצעת מחיר חדשים
-                    </p>
+                      <button
+                        className={btnDangerClass}
+                        onClick={() => logout()}
+                        type="button"
+                      >
+                        <LogOut size={16} />
+                        התנתק
+                      </button>
+                    </div>
                   </div>
-
-                  <div className="flex justify-start pt-2">
-                    <button
-                      className={btnPrimaryClass}
-                      disabled={pricingForm.formState.isSubmitting}
-                      type="submit"
-                    >
-                      <Save size={16} />
-                      שמור תמחור
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </TabsContent>
-          )}
-
-          {/* ── Tab 4: Account ── */}
-          <TabsContent value="account">
-            <div className="space-y-6">
-              {/* Change password (stub) */}
-              <div className={cardClass}>
-                <h2 className="mb-4 font-bold text-[#181510] text-lg">
-                  שינוי סיסמה
-                </h2>
-
-                <form
-                  className="space-y-4"
-                  onSubmit={passwordForm.handleSubmit(onChangePassword)}
-                >
-                  <div>
-                    <label className={labelClass} htmlFor="currentPassword">
-                      סיסמה נוכחית
-                    </label>
-                    <input
-                      className={inputClass}
-                      id="currentPassword"
-                      type="password"
-                      {...passwordForm.register("currentPassword", {
-                        required: "שדה חובה",
-                      })}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={labelClass} htmlFor="newPassword">
-                      סיסמה חדשה
-                    </label>
-                    <input
-                      className={inputClass}
-                      id="newPassword"
-                      type="password"
-                      {...passwordForm.register("newPassword", {
-                        required: "שדה חובה",
-                        minLength: {
-                          value: 6,
-                          message: "סיסמה חייבת להכיל לפחות 6 תווים",
-                        },
-                      })}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={labelClass} htmlFor="confirmPassword">
-                      אימות סיסמה חדשה
-                    </label>
-                    <input
-                      className={inputClass}
-                      id="confirmPassword"
-                      type="password"
-                      {...passwordForm.register("confirmPassword", {
-                        required: "שדה חובה",
-                      })}
-                    />
-                  </div>
-
-                  <div className="flex justify-start pt-2">
-                    <button
-                      className={btnPrimaryClass}
-                      disabled={changingPassword}
-                      type="submit"
-                    >
-                      {changingPassword ? (
-                        <Loader2 className="animate-spin" size={16} />
-                      ) : (
-                        <Save size={16} />
-                      )}
-                      {changingPassword ? "משנה סיסמה..." : "שנה סיסמה"}
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              {/* Logout */}
-              <div className={cardClass}>
-                <h2 className="mb-2 font-bold text-[#181510] text-lg">
-                  התנתקות
-                </h2>
-                <p className="mb-4 text-[#8d785e] text-sm">
-                  לחץ כדי להתנתק מהמערכת
-                </p>
-                <button
-                  className={btnDangerClass}
-                  onClick={() => logout()}
-                  type="button"
-                >
-                  <LogOut size={16} />
-                  התנתק
-                </button>
-              </div>
-            </div>
-          </TabsContent>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </Tabs>
       </div>
     </div>

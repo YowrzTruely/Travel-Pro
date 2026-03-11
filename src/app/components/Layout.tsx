@@ -10,7 +10,6 @@ import {
   ClipboardList,
   FileText,
   FolderOpen,
-  HelpCircle,
   LayoutDashboard,
   Loader2,
   Lock,
@@ -23,7 +22,8 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Outlet,
@@ -116,10 +116,37 @@ export function Layout() {
     profile?.role,
     profile?.onboardingStage
   );
+  const allNavItems = [...mainNavItems, ...bottomNavItems];
   const isProducer = !profile?.role || profile.role === "producer";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showNewProject, setShowNewProject] = useState(false);
   const [npSaving, setNpSaving] = useState(false);
+
+  // Track navigation direction for vertical carousel
+  const [slideDirection, setSlideDirection] = useState(0);
+  const prevPathRef = useRef(location.pathname);
+
+  useEffect(() => {
+    const prevPath = prevPathRef.current;
+    if (prevPath !== location.pathname) {
+      const prevIdx = allNavItems.findIndex(
+        (item) =>
+          prevPath === item.path ||
+          (item.path !== "/" && prevPath.startsWith(item.path))
+      );
+      const newIdx = allNavItems.findIndex(
+        (item) =>
+          location.pathname === item.path ||
+          (item.path !== "/" && location.pathname.startsWith(item.path))
+      );
+      if (prevIdx >= 0 && newIdx >= 0) {
+        setSlideDirection(newIdx > prevIdx ? 1 : -1);
+      } else {
+        setSlideDirection(0);
+      }
+      prevPathRef.current = location.pathname;
+    }
+  }, [location.pathname, allNavItems]);
 
   const createProject = useMutation(api.projects.create);
 
@@ -147,7 +174,7 @@ export function Layout() {
   }, [searchParams, setSearchParams]);
 
   // Don't show layout for client quote pages
-  if (location.pathname.startsWith("/quote/") || location.pathname === "/prd") {
+  if (location.pathname.startsWith("/quote/")) {
     return <Outlet />;
   }
 
@@ -243,68 +270,22 @@ export function Layout() {
 
         {/* Nav items */}
         <nav className="flex flex-1 flex-col px-4 py-4">
-          <div className="space-y-1">
-            {mainNavItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.path);
-              const locked = item.locked;
-              return (
-                <button
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] transition-all ${
-                    locked
-                      ? "cursor-not-allowed text-[#b8a990]"
-                      : active
-                        ? "bg-[rgba(255,140,0,0.1)] text-[#ff8c00]"
-                        : "text-[#181510] hover:bg-[#f5f3f0]"
-                  }
-                  `}
-                  dir="rtl"
-                  key={item.path}
-                  onClick={() => {
-                    if (locked) {
-                      return;
-                    }
-                    navigate(item.path);
-                    setSidebarOpen(false);
-                  }}
-                  style={{ fontWeight: active && !locked ? 600 : 400 }}
-                  type="button"
-                >
-                  <Icon size={18} />
-                  <span>{item.label}</span>
-                  {locked && <Lock className="mr-auto" size={14} />}
-                </button>
-              );
-            })}
-          </div>
+          <SidebarNavGroup
+            isActive={isActive}
+            items={mainNavItems}
+            navigate={navigate}
+            onItemClick={() => setSidebarOpen(false)}
+          />
 
           <div className="flex-1" />
 
           <div className="border-[#f5f3f0] border-t pt-4">
-            {bottomNavItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.path);
-              return (
-                <button
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] transition-all ${
-                    active
-                      ? "bg-[rgba(255,140,0,0.1)] text-[#ff8c00]"
-                      : "text-[#181510] hover:bg-[#f5f3f0]"
-                  }
-                  `}
-                  key={item.path}
-                  onClick={() => {
-                    navigate(item.path);
-                    setSidebarOpen(false);
-                  }}
-                  style={{ fontWeight: active ? 600 : 400 }}
-                  type="button"
-                >
-                  <Icon size={18} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
+            <SidebarNavGroup
+              isActive={isActive}
+              items={bottomNavItems}
+              navigate={navigate}
+              onItemClick={() => setSidebarOpen(false)}
+            />
           </div>
         </nav>
 
@@ -367,22 +348,19 @@ export function Layout() {
           <GlobalSearch />
           <div className="flex-1" />
           <div className="flex shrink-0 items-center gap-1">
-            <button
-              className="flex h-10 w-10 items-center justify-center rounded-lg text-[#181510] transition-colors hover:bg-[#f5f3f0]"
-              onClick={() => navigate("/prd")}
-              title="עזרה ומידע"
-              type="button"
-            >
-              <HelpCircle size={20} />
-            </button>
-            <NotificationsPanel />
+<NotificationsPanel />
           </div>
         </header>
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto">
           <Breadcrumbs />
-          <Outlet />
+          <PageTransition
+            locationKey={location.pathname}
+            slideDirection={slideDirection}
+          >
+            <Outlet />
+          </PageTransition>
         </main>
       </div>
 
@@ -474,6 +452,156 @@ export function Layout() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ─── Page Transition (desktop only) ───────────── */
+
+function PageTransition({
+  children,
+  locationKey,
+  slideDirection,
+}: {
+  children: React.ReactNode;
+  locationKey: string;
+  slideDirection: number;
+}) {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  if (!isDesktop) {
+    return <>{children}</>;
+  }
+
+  return (
+    <AnimatePresence initial={false} mode="popLayout">
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        exit={{
+          opacity: 0,
+          y: slideDirection === 0 ? 0 : slideDirection > 0 ? "-15%" : "15%",
+        }}
+        initial={{
+          opacity: 0,
+          y: slideDirection === 0 ? 0 : slideDirection > 0 ? "15%" : "-15%",
+        }}
+        key={locationKey}
+        transition={{
+          type: "spring",
+          stiffness: 350,
+          damping: 34,
+          mass: 0.8,
+        }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+/* ─── Sidebar Nav Group with Glass Indicator ───── */
+
+function SidebarNavGroup({
+  items,
+  isActive,
+  navigate,
+  onItemClick,
+}: {
+  items: NavItem[];
+  isActive: (path: string) => boolean;
+  navigate: (path: string) => void;
+  onItemClick: () => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const [indicator, setIndicator] = useState({ top: 0, height: 0 });
+  const activeItem = items.find((item) => isActive(item.path));
+
+  useEffect(() => {
+    if (!activeItem) {
+      return;
+    }
+    const el = itemRefs.current.get(activeItem.path);
+    const container = containerRef.current;
+    if (!(el && container)) {
+      return;
+    }
+    const cRect = container.getBoundingClientRect();
+    const eRect = el.getBoundingClientRect();
+    setIndicator({
+      top: eRect.top - cRect.top,
+      height: eRect.height,
+    });
+  }, [activeItem]);
+
+  return (
+    <div className="relative space-y-1" ref={containerRef}>
+      {/* Glass indicator — desktop only */}
+      {activeItem && (
+        <motion.div
+          animate={{ top: indicator.top, height: indicator.height }}
+          className="pointer-events-none absolute right-0 left-0 hidden rounded-lg lg:block"
+          initial={false}
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(255,140,0,0.12) 0%, rgba(255,140,0,0.06) 100%)",
+            boxShadow:
+              "0 1px 6px rgba(255,140,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5)",
+            backdropFilter: "blur(8px)",
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 30,
+            mass: 0.6,
+          }}
+        />
+      )}
+
+      {items.map((item) => {
+        const Icon = item.icon;
+        const active = isActive(item.path);
+        const locked = item.locked;
+        return (
+          <button
+            className={`relative z-10 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] transition-colors duration-200 ${
+              locked
+                ? "cursor-not-allowed text-[#b8a990]"
+                : active
+                  ? "text-[#ff8c00]"
+                  : "text-[#181510] hover:bg-[#f5f3f0]"
+            }`}
+            dir="rtl"
+            key={item.path}
+            onClick={() => {
+              if (locked) {
+                return;
+              }
+              navigate(item.path);
+              onItemClick();
+            }}
+            ref={(el) => {
+              if (el) {
+                itemRefs.current.set(item.path, el);
+              }
+            }}
+            style={{ fontWeight: active && !locked ? 600 : 400 }}
+            type="button"
+          >
+            <Icon size={18} />
+            <span>{item.label}</span>
+            {locked && <Lock className="mr-auto" size={14} />}
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -17,7 +17,6 @@ import { FieldOperationsHQ } from "./components/field/FieldOperationsHQ";
 import { ImportWizard } from "./components/ImportWizard";
 import { Layout } from "./components/Layout";
 import { NotFoundPage } from "./components/PlaceholderPage";
-import { PRDDocument } from "./components/PRDDocument";
 import { ProjectsList } from "./components/ProjectsList";
 import { QuoteEditor } from "./components/QuoteEditor";
 import { ScannedProducts } from "./components/ScannedProducts";
@@ -59,7 +58,6 @@ export function createProducerRouter() {
         { path: "calendar", Component: CalendarPage },
         { path: "quote/:id", Component: ClientQuote },
         { path: "field/:projectId", Component: FieldOperationsHQ },
-        { path: "prd", Component: PRDDocument },
         { path: "*", Component: NotFoundPage },
       ],
     },
