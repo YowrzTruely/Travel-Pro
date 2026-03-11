@@ -111,7 +111,8 @@ export function SupplierSearch({
         {query && (
           <button
             className="absolute top-1/2 left-3 -translate-y-1/2 text-[#b8a990] hover:text-[#181510]"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setQuery("");
               onChange("");
             }}
@@ -128,7 +129,10 @@ export function SupplierSearch({
             <button
               className="flex w-full items-center gap-3 border-[#f5f3f0] border-b px-4 py-3 text-right transition-colors last:border-b-0 hover:bg-[#f5f3f0]"
               key={s._id}
-              onClick={() => selectSupplier(s)}
+              onClick={(e) => {
+                e.stopPropagation();
+                selectSupplier(s);
+              }}
               type="button"
             >
               <div
@@ -191,7 +195,10 @@ export function SupplierSearch({
             <button
               className="flex items-center gap-1.5 rounded-full border border-[#e7e1da] bg-white px-3 py-1 text-[12px] transition-all hover:border-[#ff8c00] hover:bg-[#ff8c00]/5"
               key={rec.id}
-              onClick={() => selectSupplier(rec)}
+              onClick={(e) => {
+                e.stopPropagation();
+                selectSupplier(rec);
+              }}
               type="button"
             >
               <span style={{ fontWeight: 600 }}>{rec.name}</span>

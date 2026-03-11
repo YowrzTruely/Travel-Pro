@@ -46,6 +46,8 @@ import { CategoryIcon } from "./CategoryIcons";
 import { useConfirmDelete } from "./ConfirmDeleteModal";
 import { FormField, rules } from "./FormField";
 import { ItemEditor } from "./ItemEditor";
+import { InvoiceTracker } from "./orders/InvoiceTracker";
+import { ProjectOrders } from "./orders/ProjectOrders";
 import { QuoteSendDialog } from "./QuoteSendDialog";
 import { SupplierSearch } from "./SupplierSearch";
 
@@ -272,11 +274,7 @@ const STATUS_LABELS: Record<
   pending: { label: "● ממתין", color: "#8b5cf6", bg: "#f5f3ff" },
 };
 
-const tabs = [
-  { id: "components", label: "רכיבים וספקים" },
-  { id: "pricing", label: "תמחור ורווח יעד" },
-  { id: "timeline", label: 'לו"ז הפעילות' },
-];
+// tabs moved inside QuoteEditor() — depends on project.status
 
 interface AddItemForm {
   cost: string;
@@ -308,6 +306,18 @@ export function QuoteEditor() {
     api.timelineEvents.listByProjectId,
     project?._id ? { projectId: project._id } : "skip"
   ) as TimelineEvent[] | undefined;
+
+  const approvedStatuses = ["אושר", "בביצוע"];
+  const showOrders = project
+    ? approvedStatuses.includes(project.status)
+    : false;
+
+  const tabs = [
+    { id: "components", label: "רכיבים וספקים" },
+    { id: "pricing", label: "תמחור ורווח יעד" },
+    { id: "timeline", label: 'לו"ז הפעילות' },
+    ...(showOrders ? [{ id: "orders", label: "הזמנות וחשבוניות" }] : []),
+  ];
 
   // ─── Convex mutations ───
   const createItem = useMutation(api.quoteItems.create);
@@ -387,7 +397,7 @@ export function QuoteEditor() {
       }
     });
     return () => observer.disconnect();
-  }, []);
+  }, [showOrders]);
 
   const addForm = useForm<AddItemForm>({
     mode: "onChange",
@@ -1136,6 +1146,7 @@ export function QuoteEditor() {
                           onConfirm: () => deleteItem(item.id),
                         })
                       }
+                      title="מחק רכיב"
                       type="button"
                     >
                       {deletingItemId === item.id ? (
@@ -1295,6 +1306,7 @@ export function QuoteEditor() {
                         }
                         onMouseEnter={() => setShowDirectPriceTooltip(true)}
                         onMouseLeave={() => setShowDirectPriceTooltip(false)}
+                        title="מידע על תמחור ישיר"
                         type="button"
                       >
                         <Info size={13} />
@@ -1370,6 +1382,7 @@ export function QuoteEditor() {
                             <button
                               className="p-0.5 text-green-600 hover:text-green-700"
                               onClick={() => saveDirectPrice(item)}
+                              title="שמור מחיר ישיר"
                               type="button"
                             >
                               <Check size={14} />
@@ -1377,6 +1390,7 @@ export function QuoteEditor() {
                             <button
                               className="p-0.5 text-[#8d785e] hover:text-red-500"
                               onClick={cancelEditDirectPrice}
+                              title="בטל עריכה"
                               type="button"
                             >
                               <X size={14} />
@@ -1427,6 +1441,7 @@ export function QuoteEditor() {
                               className="transition-colors"
                               key={w}
                               onClick={() => updateProfitWeight(item, w)}
+                              title={`משקל רווח ${w}`}
                               type="button"
                             >
                               <Star
@@ -1711,12 +1726,37 @@ export function QuoteEditor() {
         </button>
       </div>
 
+      {/* ═══ Orders & Invoices section ═══ */}
+      {showOrders && project?._id && (
+        <div
+          className="mt-8 scroll-mt-4 space-y-5"
+          data-section="orders"
+          ref={(el) => {
+            sectionRefs.current.orders = el;
+          }}
+        >
+          <h2
+            className="flex items-center gap-2 text-[#181510] text-[18px]"
+            style={{ fontWeight: 700 }}
+          >
+            <Receipt size={15} />
+            הזמנות וחשבוניות
+          </h2>
+          <ProjectOrders projectId={project._id} />
+          <InvoiceTracker projectId={project._id} />
+        </div>
+      )}
+
       {/* ═══ Create version modal ═══ */}
       {showPreview && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          onClick={() => setShowPreview(false)}
-          onKeyDown={(e) => e.key === "Escape" && e.currentTarget.click()}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowPreview(false);
+            }
+          }}
+          onKeyDown={(e) => e.key === "Escape" && setShowPreview(false)}
           role="presentation"
         >
           <div
@@ -1792,8 +1832,12 @@ export function QuoteEditor() {
       {showAddComponent && !showAddForm && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          onClick={() => setShowAddComponent(false)}
-          onKeyDown={(e) => e.key === "Escape" && e.currentTarget.click()}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowAddComponent(false);
+            }
+          }}
+          onKeyDown={(e) => e.key === "Escape" && setShowAddComponent(false)}
           role="presentation"
         >
           <div
@@ -1836,9 +1880,11 @@ export function QuoteEditor() {
       {showAddForm && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          onClick={() => {
-            setShowAddForm(null);
-            addForm.reset();
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowAddForm(null);
+              addForm.reset();
+            }
           }}
           role="presentation"
         >

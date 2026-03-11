@@ -1,0 +1,88 @@
+[    2226ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5173/favicon.ico:0
+[  791603ms] ReferenceError: tabs is not defined
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773255726115:1405:105)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:11596:26)
+    at updateFunctionComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:14630:28)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19190:13)
+[  791613ms] ReferenceError: tabs is not defined
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773255726115:1405:105)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:11596:26)
+    at updateFunctionComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:14630:28)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19190:13)
+[  791615ms] [ERROR] The above error occurred in the <QuoteEditor> component:
+
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773255726115:277:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:5474:26)
+    at Outlet (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:6138:26)
+    at PageTransition (http://localhost:5173/src/app/components/Layout.tsx:809:3)
+    at main
+    at div
+    at div
+    at Layout (http://localhost:5173/src/app/components/Layout.tsx:103:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:5474:26)
+    at RenderErrorBoundary (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:5433:5)
+    at DataRoutes (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:6062:3)
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:6147:13)
+    at RouterProvider (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:5892:3)
+    at RoleRouter (http://localhost:5173/src/app/App.tsx:158:23)
+    at AppInner (http://localhost:5173/src/app/App.tsx:97:67)
+    at AuthProvider (http://localhost:5173/src/app/components/AuthContext.tsx:30:32)
+    at ConvexProvider (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=bc038f88:4111:25)
+    at ConvexProviderWithAuth (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=bc038f88:4905:3)
+    at AuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=bc038f88:77:25)
+    at ConvexAuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=bc038f88:390:11)
+    at ConvexProvider (http://localhost:5173/src/app/components/ConvexProvider.tsx:21:34)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary. @ http://localhost:5173/src/main.tsx:6
+[  791615ms] [ERROR] React Router caught the following error during render ReferenceError: tabs is not defined
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773255726115:1405:105)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:11596:26)
+    at updateFunctionComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:14630:28)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:15972:22)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19806:22)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19190:13)
+    at renderRootSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:19169:15)
+    at recoverFromConcurrentError (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:18786:28)
+    at performSyncWorkOnRoot (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=bc038f88:18932:28) {componentStack: 
+    at QuoteEditor (http://localhost:5173/src/app…p/components/ConvexProvider.tsx:21:34)
+    at App} @ http://localhost:5173/src/main.tsx:6
+[  812066ms] [ERROR] Warning: The final argument passed to %s changed size between renders. The order and size of this array must remain constant.
+
+Previous: %s
+Incoming: %s%s useEffect [] [false] 
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773255746665:277:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:5474:26)
+    at Outlet (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:6138:26)
+    at PageTransition (http://localhost:5173/src/app/components/Layout.tsx:809:3)
+    at main
+    at div
+    at div
+    at Layout (http://localhost:5173/src/app/components/Layout.tsx:103:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:5474:26)
+    at RenderErrorBoundary (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:5433:5)
+    at DataRoutes (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:6062:3)
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:6147:13)
+    at RouterProvider (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=bc038f88:5892:3)
+    at RoleRouter (http://localhost:5173/src/app/App.tsx:158:23)
+    at AppInner (http://localhost:5173/src/app/App.tsx:97:67)
+    at AuthProvider (http://localhost:5173/src/app/components/AuthContext.tsx:30:32)
+    at ConvexProvider (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=bc038f88:4111:25)
+    at ConvexProviderWithAuth (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=bc038f88:4905:3)
+    at AuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=bc038f88:77:25)
+    at ConvexAuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=bc038f88:390:11)
+    at ConvexProvider (http://localhost:5173/src/app/components/ConvexProvider.tsx:21:34)
+    at App @ http://localhost:5173/src/main.tsx:6
