@@ -180,6 +180,9 @@ export const update = mutation({
     operatingHours: v.optional(v.string()),
     seasonalAvailability: v.optional(v.string()),
     defaultMarginPercent: v.optional(v.number()),
+    profileCompletionStage: v.optional(
+      v.union(v.literal("stage1"), v.literal("stage2"), v.literal("stage3"))
+    ),
   },
   handler: async (ctx, { id, ...updates }) => {
     const existing = await ctx.db.get(id);

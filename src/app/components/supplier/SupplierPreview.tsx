@@ -13,6 +13,10 @@ import { Link } from "react-router";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { useAuth } from "../AuthContext";
+import {
+  categoryDisplayLabel,
+  regionDisplayLabel,
+} from "../constants/supplierConstants";
 import { FeatureGate } from "./FeatureGate";
 
 type ViewMode = "producer" | "client";
@@ -162,12 +166,12 @@ export function SupplierPreview() {
                 <div className="mt-1 flex flex-wrap items-center gap-3 text-[#8d785e] text-[13px]">
                   <span className="flex items-center gap-1">
                     <Tag size={12} />
-                    {supplier.category}
+                    {categoryDisplayLabel(supplier.category)}
                   </span>
                   {supplier.region && (
                     <span className="flex items-center gap-1">
                       <MapPin size={12} />
-                      {supplier.region}
+                      {regionDisplayLabel(supplier.region)}
                     </span>
                   )}
                   <span className="flex items-center gap-1">

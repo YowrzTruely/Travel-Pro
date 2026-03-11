@@ -1,9 +1,13 @@
 import { useQuery } from "convex/react";
-import { MapPin, Package, Star, Tag } from "lucide-react";
+import { MapPin, MessageCircle, Package, Phone, Star, Tag } from "lucide-react";
 import { useMemo } from "react";
 import { useParams } from "react-router";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
+import {
+  categoryDisplayLabel,
+  regionDisplayLabel,
+} from "../constants/supplierConstants";
 
 export function PublicSupplierProfile() {
   const { id } = useParams<{ id: string }>();
@@ -97,12 +101,12 @@ export function PublicSupplierProfile() {
               <div className="mt-1 flex flex-wrap items-center gap-3 text-[#8d785e] text-[14px]">
                 <span className="flex items-center gap-1">
                   <Tag size={14} />
-                  {supplier.category}
+                  {categoryDisplayLabel(supplier.category)}
                 </span>
                 {supplier.region && (
                   <span className="flex items-center gap-1">
                     <MapPin size={14} />
-                    {supplier.region}
+                    {regionDisplayLabel(supplier.region)}
                   </span>
                 )}
                 {avgData && avgData.count > 0 && (
@@ -274,6 +278,30 @@ export function PublicSupplierProfile() {
                 </p>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Contact buttons */}
+        {supplier.phone && (
+          <div className="mt-8 flex justify-center gap-3">
+            <a
+              className="flex items-center gap-2 rounded-xl bg-green-500 px-6 py-3 text-[14px] text-white shadow-lg transition-colors hover:bg-green-600"
+              href={`https://wa.me/972${supplier.phone.replace(/^0/, "")}`}
+              rel="noopener noreferrer"
+              style={{ fontWeight: 600 }}
+              target="_blank"
+            >
+              <MessageCircle size={18} />
+              WhatsApp
+            </a>
+            <a
+              className="flex items-center gap-2 rounded-xl border border-[#e7e1da] bg-white px-6 py-3 text-[#181510] text-[14px] shadow-sm transition-colors hover:bg-[#f5f3f0]"
+              href={`tel:${supplier.phone}`}
+              style={{ fontWeight: 600 }}
+            >
+              <Phone size={18} />
+              התקשר
+            </a>
           </div>
         )}
 

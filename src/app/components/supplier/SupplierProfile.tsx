@@ -20,6 +20,20 @@ import {
   SUPPLIER_CATEGORIES,
 } from "../constants/supplierConstants";
 
+/** Normalise a DB value (which may be a Hebrew label or an English code) to its English code */
+function normaliseCategoryValue(raw: string): string {
+  const match = SUPPLIER_CATEGORIES.find(
+    (c) => c.value === raw || c.label === raw
+  );
+  return match?.value ?? raw;
+}
+function normaliseRegionValue(raw: string): string {
+  const match = OPERATING_REGIONS.find(
+    (r) => r.value === raw || r.label === raw
+  );
+  return match?.value ?? raw;
+}
+
 interface ProfileFormValues {
   address: string;
   defaultMarginPercent: string;
@@ -62,15 +76,19 @@ export function SupplierProfile() {
       return;
     }
 
-    // Parse category (may be comma-separated)
+    // Parse category (may be comma-separated) — normalise legacy Hebrew labels to English codes
     const cats = supplier.category
-      ? supplier.category.split(",").map((c: string) => c.trim())
+      ? supplier.category
+          .split(",")
+          .map((c: string) => normaliseCategoryValue(c.trim()))
       : [];
     setSelectedCategories(cats);
 
-    // Parse region (may be comma-separated)
+    // Parse region (may be comma-separated) — normalise legacy Hebrew labels to English codes
     const regs = supplier.region
-      ? supplier.region.split(",").map((r: string) => r.trim())
+      ? supplier.region
+          .split(",")
+          .map((r: string) => normaliseRegionValue(r.trim()))
       : [];
     setSelectedRegions(regs);
 

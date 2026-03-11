@@ -40,3 +40,37 @@ export const MAX_CATEGORIES_WITHOUT_APPROVAL = 3;
 export type SupplierCategoryValue =
   (typeof SUPPLIER_CATEGORIES)[number]["value"];
 export type OperatingRegionValue = (typeof OPERATING_REGIONS)[number]["value"];
+
+/** Map a comma-separated string of category codes (or legacy Hebrew labels) to Hebrew display labels */
+export function categoryDisplayLabel(raw: string | undefined): string {
+  if (!raw) {
+    return "";
+  }
+  return raw
+    .split(",")
+    .map((v) => {
+      const trimmed = v.trim();
+      const match = SUPPLIER_CATEGORIES.find(
+        (c) => c.value === trimmed || c.label === trimmed
+      );
+      return match?.label ?? trimmed;
+    })
+    .join(", ");
+}
+
+/** Map a comma-separated string of region codes (or legacy Hebrew labels) to Hebrew display labels */
+export function regionDisplayLabel(raw: string | undefined): string {
+  if (!raw) {
+    return "";
+  }
+  return raw
+    .split(",")
+    .map((v) => {
+      const trimmed = v.trim();
+      const match = OPERATING_REGIONS.find(
+        (r) => r.value === trimmed || r.label === trimmed
+      );
+      return match?.label ?? trimmed;
+    })
+    .join(", ");
+}
