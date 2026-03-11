@@ -12,6 +12,7 @@ import {
   useContext,
   useEffect,
   useRef,
+  useState,
 } from "react";
 import { api } from "../../../convex/_generated/api";
 
@@ -96,46 +97,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     (profileData === null || !profileData.role || !profileData.name);
 
   const autoCreateFiredRef = useRef(false);
+  const [profileRetry, setProfileRetry] = useState(0);
 
   useEffect(() => {
     if (!(isAuthenticated && profileIncomplete) || autoCreateFiredRef.current) {
       return;
     }
 
-    if (pendingSignupRef.current) {
-      // Fresh signup — use the role/name from the signup form
-      const { name, email, role } = pendingSignupRef.current;
-      pendingSignupRef.current = null;
-      autoCreateFiredRef.current = true;
-      createProfile({
-        authId: "",
-        email,
-        name,
-        role,
-        registrationSource: "manual",
-      }).catch((err) => {
-        console.error("[Auth] Auto-create profile failed:", err);
-        autoCreateFiredRef.current = false;
-      });
-    } else {
-      // Pre-existing user without a complete profile (page refresh).
-      // profileData is either null or an auth-only record without role.
-      // Default to producer. The mutation resolves the user from the identity.
-      const email = profileData?.email ?? "";
-      const name = email.split("@")[0] || "משתמש";
-      autoCreateFiredRef.current = true;
-      createProfile({
-        authId: "",
-        email,
-        name,
-        role: "producer",
-        registrationSource: "manual",
-      }).catch((err) => {
-        console.error("[Auth] Auto-complete profile failed:", err);
-        autoCreateFiredRef.current = false;
-      });
-    }
-  }, [isAuthenticated, profileIncomplete, profileData, createProfile]);
+    const pending = pendingSignupRef.current;
+    const profileArgs = pending
+      ? { email: pending.email, name: pending.name, role: pending.role }
+      : {
+          email: profileData?.email ?? "",
+          name: profileData?.email?.split("@")[0] || "משתמש",
+          role: "producer" as UserRole,
+        };
+
+    pendingSignupRef.current = null;
+    autoCreateFiredRef.current = true;
+
+    let retryTimer: number | undefined;
+
+    createProfile({
+      authId: "",
+      email: profileArgs.email,
+      name: profileArgs.name,
+      role: profileArgs.role,
+      registrationSource: "manual",
+    }).catch((err) => {
+      console.error("[Auth] Auto-create profile failed:", err);
+      autoCreateFiredRef.current = false;
+      // Schedule a state-based retry so the effect re-runs
+      if (profileRetry < 3) {
+        retryTimer = window.setTimeout(() => {
+          setProfileRetry((n) => n + 1);
+        }, 2000);
+      }
+    });
+
+    return () => {
+      if (retryTimer) {
+        window.clearTimeout(retryTimer);
+      }
+    };
+  }, [isAuthenticated, profileIncomplete, profileData, createProfile, profileRetry]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -160,6 +165,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         pendingSignupRef.current = { name, email, role };
         await signIn("password", { email, password, name, flow: "signUp" });
+        // Directly create profile after successful signIn rather than
+        // relying solely on the useEffect, which can miss retries when
+        // createProfile fails but deps don't change.
+        try {
+          await createProfile({
+            authId: "",
+            email,
+            name,
+            role,
+            registrationSource: "manual",
+          });
+          pendingSignupRef.current = null;
+          autoCreateFiredRef.current = true;
+        } catch (profileErr) {
+          // Auth token may not be ready yet; the useEffect will retry
+          console.warn(
+            "[Auth] Direct profile creation deferred to effect:",
+            profileErr
+          );
+        }
         return { error: null };
       } catch (err: any) {
         pendingSignupRef.current = null;
@@ -167,7 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: err?.message || String(err) };
       }
     },
-    [signIn]
+    [signIn, createProfile]
   );
 
   const logout = useCallback(async () => {

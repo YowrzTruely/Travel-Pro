@@ -56,7 +56,12 @@ export function LoginPage() {
 
   /** Map known English error strings to Hebrew. */
   const translateError = (error: string): string => {
-    if (error.includes("Invalid login") || error.includes("Could not verify")) {
+    if (
+      error.includes("Invalid login") ||
+      error.includes("Could not verify") ||
+      error.includes("InvalidSecret") ||
+      error.includes("InvalidAccountId")
+    ) {
       return "אימייל או סיסמה שגויים";
     }
     if (error.includes("Invalid password")) {
@@ -76,6 +81,10 @@ export function LoginPage() {
     }
     if (error.includes("Too many requests") || error.includes("rate limit")) {
       return "יותר מדי ניסיונות, נסה שוב מאוחר יותר";
+    }
+    // Catch-all: never show raw stack traces or technical errors to users
+    if (error.includes("[CONVEX") || error.includes("Uncaught Error")) {
+      return "שגיאה בהתחברות, נסה שוב מאוחר יותר";
     }
     return error;
   };
