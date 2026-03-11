@@ -92,7 +92,8 @@ export function UserManagement() {
           {users && (
             <span className="inline-flex items-center gap-1 rounded-full bg-[#ff8c00]/10 px-3 py-1 font-medium text-[#ff8c00] text-sm">
               <Users className="h-4 w-4" />
-              {users.length} משתמשים
+              {searchQuery ? (filteredUsers?.length ?? 0) : users.length}{" "}
+              משתמשים
             </span>
           )}
         </div>

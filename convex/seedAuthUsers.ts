@@ -8,15 +8,27 @@
  * or pass --no-push and run locally (dev deployment only).
  */
 
-import { Scrypt } from "lucia";
 import { v } from "convex/values";
-import { action } from "./_generated/server";
+import { Scrypt } from "lucia";
 import { internal } from "./_generated/api";
+import { action } from "./_generated/server";
 
 const TEST_USERS = [
-  { email: "ro.levin@icloud.com", password: "Inacce551bleEncrypt10n", role: "admin" },
-  { email: "orangeayx@gmail.com", password: "Inacce551bleEncrypt10n", role: "producer" },
-  { email: "head0.25s@gmail.com", password: "Unbre4k4ble4m4t10n", role: "supplier" },
+  {
+    email: "ro.levin@icloud.com",
+    password: "Inacce551bleEncrypt10n",
+    role: "admin",
+  },
+  {
+    email: "orangeayx@gmail.com",
+    password: "Inacce551bleEncrypt10n",
+    role: "producer",
+  },
+  {
+    email: "head0.25s@gmail.com",
+    password: "Unbre4k4ble4m4t10n",
+    role: "supplier",
+  },
 ] as const;
 
 export const run = action({
