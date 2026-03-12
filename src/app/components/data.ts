@@ -1,4 +1,4 @@
-// Mock data for TravelPro application
+// Mock data for Eventos application
 
 export interface Supplier {
   address?: string;

@@ -132,7 +132,7 @@ export const sendEmail = internalAction({
     }
 
     const fromEmail =
-      process.env.RESEND_FROM_EMAIL ?? "TravelPro <onboarding@resend.dev>";
+      process.env.RESEND_FROM_EMAIL ?? "Eventos <onboarding@resend.dev>";
 
     const html = `<html><head><title></title></head><body dir="rtl" style="font-family: Assistant, sans-serif; direction: rtl; text-align: right;">${args.body}</body></html>`;
 

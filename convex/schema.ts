@@ -716,6 +716,25 @@ export default defineSchema({
     .index("by_supplierId", ["supplierId"])
     .index("by_projectId", ["projectId"]),
 
+  // ─── Availability Invite Tokens (Path 3 registration) ───
+  availabilityInviteTokens: defineTable({
+    token: v.string(),
+    availabilityRequestId: v.id("availabilityRequests"),
+    supplierId: v.id("suppliers"),
+    supplierPhone: v.string(),
+    createdBy: v.id("users"),
+    createdAt: v.number(),
+    expiresAt: v.number(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("registered"),
+      v.literal("expired")
+    ),
+    registeredUserId: v.optional(v.id("users")),
+  })
+    .index("by_token", ["token"])
+    .index("by_supplierId", ["supplierId"]),
+
   // ─── Activity Log ───
   activityLog: defineTable({
     userId: v.optional(v.id("users")),

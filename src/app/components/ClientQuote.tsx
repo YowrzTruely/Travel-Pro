@@ -224,7 +224,7 @@ export function ClientQuote() {
             className="text-[#181510] text-[16px]"
             style={{ fontWeight: 700 }}
           >
-            TravelPro
+            Eventos
           </span>
         </div>
         <div className="hidden items-center gap-2 text-[#8d785e] text-[13px] sm:flex">
@@ -705,11 +705,11 @@ export function ClientQuote() {
                 <span className="text-[14px] text-white">✈</span>
               </div>
               <span className="text-[16px]" style={{ fontWeight: 700 }}>
-                TravelPro
+                Eventos
               </span>
             </div>
             <div className="text-[#8d785e] text-[12px]">
-              &copy; 2026 TravelPro Productions
+              &copy; 2026 Eventos Productions
             </div>
             <div className="flex gap-4 text-[#8d785e] text-[12px]">
               <span>info@travelpro.co.il</span>

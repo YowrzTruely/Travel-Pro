@@ -73,7 +73,7 @@ function addHeader(doc: jsPDF, title: string, subtitle?: string) {
   // Title
   doc.setFontSize(10);
   doc.setTextColor(255, 255, 255);
-  doc.text("TravelPro", 105, 8, { align: "center" });
+  doc.text("Eventos", 105, 8, { align: "center" });
 
   // Main title below bar
   doc.setFontSize(20);
@@ -95,7 +95,7 @@ function addFooter(doc: jsPDF) {
     doc.setFontSize(8);
     doc.setTextColor(184, 169, 144);
     doc.text(
-      `TravelPro | ${new Date().toLocaleDateString("he-IL")} | ${reverseHebrew("עמוד")} ${i}/${pageCount}`,
+      `Eventos | ${new Date().toLocaleDateString("he-IL")} | ${reverseHebrew("עמוד")} ${i}/${pageCount}`,
       105,
       290,
       { align: "center" }

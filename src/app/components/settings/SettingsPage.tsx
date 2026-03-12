@@ -686,7 +686,7 @@ function GlassTabBar({
       width: elRect.width,
       right: containerRect.right - elRect.right,
     });
-  }, [activeTab, tabs]);
+  }, [activeTab]);
 
   return (
     <div

@@ -115,7 +115,7 @@ export function SupplierSelfRegister() {
           <h1 className="mb-1 font-bold text-2xl" style={{ color: "#181510" }}>
             הרשמה כספק
           </h1>
-          <p style={{ color: "#8d785e" }}>הצטרף לרשת הספקים של TravelPro</p>
+          <p style={{ color: "#8d785e" }}>הצטרף לרשת הספקים של Eventos</p>
         </div>
 
         {error && (

@@ -1,7 +1,7 @@
 # QA Review Plan — Sections 4–10
 
 ## Context
-Full QA pass of TravelPro sections 4-10 (Quote Editor, Availability & Booking, Client Proposal, Orders & Invoicing, CRM Pipeline, Field Operations, Integrations) using Playwright browser automation against `localhost:5173`.
+Full QA pass of Eventos sections 4-10 (Quote Editor, Availability & Booking, Client Proposal, Orders & Invoicing, CRM Pipeline, Field Operations, Integrations) using Playwright browser automation against `localhost:5173`.
 
 ## Test Accounts
 - **Producer**: orangeayx@gmail.com / Inacce551bleEncrypt10n

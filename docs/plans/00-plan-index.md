@@ -1,6 +1,6 @@
-# TravelPro — Implementation Plan Index
+# Eventos — Implementation Plan Index
 
-Master plan to bring TravelPro to full MVP spec per `YOMKEF PRD.docx.md`.
+Master plan to bring Eventos to full MVP spec per `YOMKEF PRD.docx.md`.
 
 Plans are ordered by **business priority** (not just technical dependency), matching the PRD's development priorities:
 1. Supplier Module (Critical)

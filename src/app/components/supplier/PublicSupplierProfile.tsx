@@ -9,6 +9,8 @@ import {
   regionDisplayLabel,
 } from "../constants/supplierConstants";
 
+const PHONE_LEADING_ZERO_RE = /^0/;
+
 export function PublicSupplierProfile() {
   const { id } = useParams<{ id: string }>();
 
@@ -286,7 +288,7 @@ export function PublicSupplierProfile() {
           <div className="mt-8 flex justify-center gap-3">
             <a
               className="flex items-center gap-2 rounded-xl bg-green-500 px-6 py-3 text-[14px] text-white shadow-lg transition-colors hover:bg-green-600"
-              href={`https://wa.me/972${supplier.phone.replace(/^0/, "")}`}
+              href={`https://wa.me/972${supplier.phone.replace(PHONE_LEADING_ZERO_RE, "")}`}
               rel="noopener noreferrer"
               style={{ fontWeight: 600 }}
               target="_blank"
@@ -307,7 +309,7 @@ export function PublicSupplierProfile() {
 
         {/* Footer */}
         <div className="mt-12 text-center text-[#8d785e] text-[12px]">
-          מופעל ע״י TravelPro
+          מופעל ע״י Eventos
         </div>
       </div>
     </div>

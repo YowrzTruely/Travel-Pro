@@ -29,6 +29,10 @@ import { api } from "../../../convex/_generated/api";
 import { appToast } from "./AppToast";
 import type { Supplier } from "./data";
 
+const PHONE_STRIP_RE = /[-\s]/g;
+const PHONE_PLUS972_RE = /^\+972/;
+const PHONE_972_RE = /^972/;
+
 // ═══════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════
@@ -338,9 +342,9 @@ export function ImportWizard() {
 
       const normalizePhone = (p: string) =>
         p
-          .replace(/[-\s]/g, "")
-          .replace(/^\+972/, "0")
-          .replace(/^972/, "0");
+          .replace(PHONE_STRIP_RE, "")
+          .replace(PHONE_PLUS972_RE, "0")
+          .replace(PHONE_972_RE, "0");
 
       const mapped: ParsedRow[] = csvData.map((row, idx) => {
         const mapped: Record<string, any> = {
@@ -1522,7 +1526,7 @@ export function ImportWizard() {
 
         {/* Footer */}
         <div className="py-4 text-center text-[#8d785e] text-[12px]">
-          &copy; 2026 TravelPro — מערכת ניהול ספקים למפיקי טיולים. כל הזכויות
+          &copy; 2026 Eventos — מערכת ניהול ספקים למפיקי טיולים. כל הזכויות
           שמורות.
         </div>
       </div>

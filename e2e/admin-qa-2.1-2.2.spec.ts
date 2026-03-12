@@ -19,7 +19,7 @@ const RE_REJECTED = /נדחה/;
 
 async function loginAsAdmin(page: import("@playwright/test").Page) {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "TravelPro" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Eventos" })).toBeVisible();
   await page.getByPlaceholder("name@company.com").fill(ADMIN_EMAIL);
   await page.getByPlaceholder("הזן סיסמה").fill(ADMIN_PASSWORD);
   await page.getByRole("button", { name: "התחבר", exact: true }).click();

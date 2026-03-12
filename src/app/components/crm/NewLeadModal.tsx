@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../../../convex/_generated/api";
 import { appToast } from "../AppToast";
+import { OPERATING_REGIONS } from "../constants/supplierConstants";
 import { FormField, FormSelect, FormTextarea, rules } from "../FormField";
 
 interface NewLeadForm {
@@ -194,18 +195,25 @@ export function NewLeadModal({ onClose }: NewLeadModalProps) {
               error={errors.dateRequested}
               isDirty={dirtyFields.dateRequested}
               label="תאריך מבוקש"
+              style={{ direction: "rtl" }}
               type="date"
               {...register("dateRequested")}
             />
           </div>
 
-          <FormField
+          <FormSelect
             error={errors.region}
             isDirty={dirtyFields.region}
             label="אזור"
-            placeholder="צפון, מרכז, דרום..."
             {...register("region")}
-          />
+          >
+            <option value="">בחר אזור...</option>
+            {OPERATING_REGIONS.map((r) => (
+              <option key={r.value} value={r.value}>
+                {r.label}
+              </option>
+            ))}
+          </FormSelect>
 
           <FormTextarea
             error={errors.preferences}

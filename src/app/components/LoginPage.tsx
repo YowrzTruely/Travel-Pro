@@ -1,6 +1,6 @@
 /**
  * LoginPage — combined login + signup with tab toggle.
- * Hebrew RTL, warm palette matching TravelPro design.
+ * Hebrew RTL, warm palette matching Eventos design.
  */
 
 import imgLogo from "figma:asset/b655d2164f14a54b258c6a8a069f10a88a1c4640.png";
@@ -140,7 +140,7 @@ export function LoginPage() {
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center">
           <img
-            alt="TravelPro"
+            alt="Eventos"
             className="mb-3 h-16 w-16 rounded-2xl object-contain shadow-lg"
             height="600"
             src={imgLogo}
@@ -150,7 +150,7 @@ export function LoginPage() {
             className="text-[#181510] text-[28px]"
             style={{ fontWeight: 700 }}
           >
-            TravelPro
+            Eventos
           </h1>
           <p className="mt-1 text-[#8d785e] text-[14px]">
             ניהול פרויקטים למפיקי טיולים
@@ -397,7 +397,7 @@ export function LoginPage() {
         </div>
 
         <p className="mt-6 text-center text-[#b8a990] text-[12px]">
-          TravelPro &copy; 2026 — כל הזכויות שמורות
+          Eventos &copy; 2026 — כל הזכויות שמורות
         </p>
       </motion.div>
     </div>

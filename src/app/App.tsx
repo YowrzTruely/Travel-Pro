@@ -1,6 +1,9 @@
-import { useMemo } from "react";
+import { useMutation } from "convex/react";
+import { useEffect, useMemo, useRef } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
+import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 import { AuthProvider, useAuth } from "./components/AuthContext";
 import { AvailabilityInvitePage } from "./components/AvailabilityInvitePage";
 import { ClientQuote } from "./components/ClientQuote";
@@ -9,7 +12,6 @@ import { EventRatings } from "./components/gallery/EventRatings";
 import { PublicGallery } from "./components/gallery/PublicGallery";
 import { LoginPage } from "./components/LoginPage";
 import { SupplierOnboarding } from "./components/onboarding/SupplierOnboarding";
-import { SupplierPending } from "./components/onboarding/SupplierPending";
 import { SupplierSelfRegister } from "./components/SupplierSelfRegister";
 import { PublicSupplierProfile } from "./components/supplier/PublicSupplierProfile";
 import {
@@ -67,6 +69,30 @@ function LoadingSpinner({ message }: { message: string }) {
 function AppInner() {
   const { user, profile, loading: authLoading, profileLoading } = useAuth();
   const isPublic = useMemo(() => isPublicPage(), []);
+  const linkRegisteredUser = useMutation(
+    api.publicAvailabilityInvite.linkRegisteredUser
+  );
+  const inviteLinkFiredRef = useRef(false);
+
+  // Link invite token after registration (Path 3: availability invite flow)
+  useEffect(() => {
+    if (!profile?.id || inviteLinkFiredRef.current) {
+      return;
+    }
+    const pendingToken = sessionStorage.getItem("pendingInviteToken");
+    if (!pendingToken) {
+      return;
+    }
+    inviteLinkFiredRef.current = true;
+    sessionStorage.removeItem("pendingInviteToken");
+    linkRegisteredUser({
+      token: pendingToken,
+      userId: profile.id as Id<"users">,
+    }).catch((err) => {
+      console.warn("[App] Failed to link invite token:", err);
+      inviteLinkFiredRef.current = false;
+    });
+  }, [profile?.id, linkRegisteredUser]);
 
   // 1. Public pages — no auth required
   if (isPublic) {
@@ -98,12 +124,7 @@ function AppInner() {
     return <SupplierOnboarding />;
   }
 
-  // 7. Supplier with pending status → waiting screen
-  if (profile.role === "supplier" && profile.status === "pending") {
-    return <SupplierPending />;
-  }
-
-  // 8–10. Role-based routing
+  // 7. Role-based routing (suppliers can access portal even while pending)
   return <RoleRouter role={profile.role} />;
 }
 

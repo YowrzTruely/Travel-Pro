@@ -44,7 +44,25 @@ export const create = mutation({
     if (!doc) {
       throw new Error("Failed to read inserted document");
     }
-    return { ...doc, id: doc._id };
+
+    // Generate invite token if supplier has no linked user account
+    let inviteToken: string | undefined;
+    const supplier = await ctx.db.get(args.supplierId);
+    if (supplier && !supplier.userId) {
+      inviteToken = crypto.randomUUID();
+      await ctx.db.insert("availabilityInviteTokens", {
+        token: inviteToken,
+        availabilityRequestId: id,
+        supplierId: args.supplierId,
+        supplierPhone: supplier.phone ?? "",
+        createdBy: args.requestedBy,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
+        status: "pending",
+      });
+    }
+
+    return { ...doc, id: doc._id, inviteToken };
   },
 });
 

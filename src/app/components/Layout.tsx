@@ -23,7 +23,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Outlet,
@@ -89,17 +89,10 @@ const bottomNavItems: NavItem[] = [
   { path: "/settings", label: "הגדרות", icon: Settings },
 ];
 
-function getNavItemsForRole(role?: string, supplierStage?: string): NavItem[] {
+function getNavItemsForRole(role?: string): NavItem[] {
   switch (role) {
-    case "supplier": {
-      const stageLevel =
-        supplierStage === "stage2" ? 2 : supplierStage === "stage3" ? 3 : 1;
-      const stage2Items =
-        stageLevel >= 2
-          ? supplierNavStage2
-          : supplierNavStage2.map((item) => ({ ...item, locked: true }));
-      return [...supplierNavStage1, ...stage2Items];
-    }
+    case "supplier":
+      return [...supplierNavStage1, ...supplierNavStage2];
     case "admin":
       return adminNavItems;
     default:
@@ -112,11 +105,11 @@ export function Layout() {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { logout, user, profile } = useAuth();
-  const mainNavItems = getNavItemsForRole(
-    profile?.role,
-    profile?.onboardingStage
+  const mainNavItems = getNavItemsForRole(profile?.role);
+  const allNavItems = useMemo(
+    () => [...mainNavItems, ...bottomNavItems],
+    [mainNavItems]
   );
-  const allNavItems = [...mainNavItems, ...bottomNavItems];
   const isProducer = !profile?.role || profile.role === "producer";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showNewProject, setShowNewProject] = useState(false);

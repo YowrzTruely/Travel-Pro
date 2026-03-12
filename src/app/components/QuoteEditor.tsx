@@ -399,7 +399,7 @@ export function QuoteEditor() {
       }
     });
     return () => observer.disconnect();
-  }, [showOrders]);
+  }, []);
 
   const addForm = useForm<AddItemForm>({
     mode: "onChange",
@@ -1615,38 +1615,112 @@ export function QuoteEditor() {
           </div>
         ) : (
           <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+            {/* Visual time span header */}
+            <div className="mb-4 flex items-center gap-2 rounded-lg bg-[#f5f3f0] px-4 py-2.5">
+              <Clock className="text-[#ff8c00]" size={14} />
+              <span
+                className="text-[#8d785e] text-[12px]"
+                style={{ fontWeight: 600 }}
+              >
+                {currentTimeline[0]?.time}
+              </span>
+              <div className="flex flex-1 items-center gap-1 px-2">
+                <div className="h-0.5 flex-1 bg-gradient-to-l from-[#ff8c00]/40 via-[#ff8c00]/20 to-[#ff8c00]/40" />
+                <ArrowRight className="text-[#ff8c00]/50" size={12} />
+              </div>
+              <span
+                className="text-[#8d785e] text-[12px]"
+                style={{ fontWeight: 600 }}
+              >
+                {/* biome-ignore lint/style/useAtIndex: TS target doesn't support .at() */}
+                {currentTimeline[currentTimeline.length - 1]?.time}
+              </span>
+              <span
+                className="mr-2 rounded-full bg-[#ff8c00]/10 px-2 py-0.5 text-[#ff8c00] text-[11px]"
+                style={{ fontWeight: 600 }}
+              >
+                {currentTimeline.length} פעילויות
+              </span>
+            </div>
+
+            {/* Visual timeline */}
             <div className="space-y-0">
-              {currentTimeline.map((event, idx) => (
-                <div className="flex gap-4" key={event.id}>
-                  <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ff8c00]/10 text-[#b8a990]">
-                      {getItemIcon(event.icon)}
-                    </div>
-                    {idx < currentTimeline.length - 1 && (
-                      <div className="my-1 w-0.5 flex-1 bg-[#e7e1da]" />
-                    )}
-                  </div>
-                  <div className="pb-6">
-                    <div className="mb-1 flex items-center gap-2">
-                      <span
-                        className="text-[#181510] text-[14px]"
-                        style={{ fontWeight: 700 }}
+              {currentTimeline.map((event, idx) => {
+                const ICON_COLORS: Record<
+                  string,
+                  { bg: string; text: string; border: string }
+                > = {
+                  תחבורה: { bg: "#EFF6FF", text: "#3B82F6", border: "#3B82F6" },
+                  לינה: { bg: "#F5F3FF", text: "#8B5CF6", border: "#8B5CF6" },
+                  פעילות: { bg: "#FFF7ED", text: "#EA580C", border: "#EA580C" },
+                  ארוחה: { bg: "#F0FDF4", text: "#16A34A", border: "#16A34A" },
+                  בידור: { bg: "#FDF2F8", text: "#EC4899", border: "#EC4899" },
+                };
+                const colors = ICON_COLORS[event.icon] ?? {
+                  bg: "#FFF7ED",
+                  text: "#ff8c00",
+                  border: "#ff8c00",
+                };
+
+                return (
+                  <div className="flex gap-4" key={event.id}>
+                    {/* Timeline rail */}
+                    <div className="flex flex-col items-center">
+                      <div
+                        className="flex h-11 w-11 items-center justify-center rounded-xl shadow-sm"
+                        style={{
+                          backgroundColor: colors.bg,
+                          border: `1.5px solid ${colors.border}30`,
+                        }}
                       >
-                        {event.time}
-                      </span>
-                      <span
-                        className="text-[#181510] text-[14px]"
-                        style={{ fontWeight: 600 }}
-                      >
-                        &bull; {event.title}
-                      </span>
+                        <span style={{ color: colors.text }}>
+                          {getItemIcon(event.icon)}
+                        </span>
+                      </div>
+                      {idx < currentTimeline.length - 1 && (
+                        <div
+                          className="relative my-0.5 w-0.5 flex-1"
+                          style={{ minHeight: 24 }}
+                        >
+                          <div
+                            className="absolute inset-0 w-0.5 bg-gradient-to-b"
+                            style={{
+                              backgroundImage: `linear-gradient(${colors.border}40, #e7e1da)`,
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
-                    <p className="text-[#8d785e] text-[13px]">
-                      {event.description}
-                    </p>
+
+                    {/* Event card */}
+                    <div className="mb-3 flex-1 rounded-xl border border-[#e7e1da] bg-[#fdfcfb] px-4 py-3 transition-colors hover:bg-[#f5f3f0]">
+                      <div className="mb-1 flex items-center gap-2">
+                        <span
+                          className="rounded-md px-2 py-0.5 text-[13px]"
+                          style={{
+                            backgroundColor: `${colors.border}15`,
+                            color: colors.text,
+                            fontWeight: 700,
+                          }}
+                        >
+                          {event.time}
+                        </span>
+                        <span
+                          className="text-[#181510] text-[14px]"
+                          style={{ fontWeight: 600 }}
+                        >
+                          {event.title}
+                        </span>
+                      </div>
+                      {event.description && (
+                        <p className="text-[#8d785e] text-[13px]">
+                          {event.description}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -1701,7 +1775,7 @@ export function QuoteEditor() {
               )
               .join("");
             printWin.document.write(
-              `<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>הצעת מחיר — ${project?.name || ""}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Assistant,Helvetica,Arial,sans-serif;color:#181510;padding:40px;max-width:800px;margin:0 auto}h1{font-size:24px;margin-bottom:4px}h2{font-size:18px;margin:24px 0 12px;border-bottom:2px solid #ff8c00;padding-bottom:6px}table{width:100%;border-collapse:collapse;margin-bottom:20px}th{text-align:right;padding:10px;background:#f5f3f0;border-bottom:2px solid #e7e1da;font-size:13px}.summary{display:flex;gap:24px;background:#f8f7f5;padding:16px;border-radius:12px;margin:16px 0}.summary div{text-align:center}.summary .value{font-size:22px;font-weight:700}.summary .label{font-size:12px;color:#8d785e}@media print{body{padding:20px}}</style></head><body><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h1>הצעת מחיר</h1><p style="color:#8d785e;font-size:14px">${project?.name} — ${project?.company || ""}</p></div><div style="text-align:left"><p style="font-size:13px;color:#8d785e">מזהה: #${projectId}</p><p style="font-size:13px;color:#8d785e">${new Date().toLocaleDateString("he-IL")}</p></div></div><div class="summary"><div><div class="label">משתתפים</div><div class="value">${participants}</div></div><div><div class="label">מחיר לאדם</div><div class="value">₪${pricePerPerson.toLocaleString()}</div></div><div><div class="label">סה"כ</div><div class="value">₪${totalSelling.toLocaleString()}</div></div><div><div class="label">אזור</div><div class="value">${project?.region || ""}</div></div></div><h2>פירוט רכיבים</h2><table><thead><tr><th>סוג</th><th>רכיב</th><th>ספק</th><th>מחיר</th></tr></thead><tbody>${rows}</tbody><tfoot><tr style="background:#181510;color:white"><td colspan="3" style="padding:10px;font-weight:600">סה"כ</td><td style="padding:10px;font-weight:700">₪${totalSelling.toLocaleString()}</td></tr></tfoot></table>${tlRows ? `<h2>לו"ז הפעילות</h2>${tlRows}` : ""}<div style="margin-top:40px;text-align:center;color:#b8a990;font-size:12px"><p>הופק ע"י TravelPro &bull; ${new Date().toLocaleDateString("he-IL")}</p></div></body></html>`
+              `<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>הצעת מחיר — ${project?.name || ""}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Assistant,Helvetica,Arial,sans-serif;color:#181510;padding:40px;max-width:800px;margin:0 auto}h1{font-size:24px;margin-bottom:4px}h2{font-size:18px;margin:24px 0 12px;border-bottom:2px solid #ff8c00;padding-bottom:6px}table{width:100%;border-collapse:collapse;margin-bottom:20px}th{text-align:right;padding:10px;background:#f5f3f0;border-bottom:2px solid #e7e1da;font-size:13px}.summary{display:flex;gap:24px;background:#f8f7f5;padding:16px;border-radius:12px;margin:16px 0}.summary div{text-align:center}.summary .value{font-size:22px;font-weight:700}.summary .label{font-size:12px;color:#8d785e}@media print{body{padding:20px}}</style></head><body><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><h1>הצעת מחיר</h1><p style="color:#8d785e;font-size:14px">${project?.name} — ${project?.company || ""}</p></div><div style="text-align:left"><p style="font-size:13px;color:#8d785e">מזהה: #${projectId}</p><p style="font-size:13px;color:#8d785e">${new Date().toLocaleDateString("he-IL")}</p></div></div><div class="summary"><div><div class="label">משתתפים</div><div class="value">${participants}</div></div><div><div class="label">מחיר לאדם</div><div class="value">₪${pricePerPerson.toLocaleString()}</div></div><div><div class="label">סה"כ</div><div class="value">₪${totalSelling.toLocaleString()}</div></div><div><div class="label">אזור</div><div class="value">${project?.region || ""}</div></div></div><h2>פירוט רכיבים</h2><table><thead><tr><th>סוג</th><th>רכיב</th><th>ספק</th><th>מחיר</th></tr></thead><tbody>${rows}</tbody><tfoot><tr style="background:#181510;color:white"><td colspan="3" style="padding:10px;font-weight:600">סה"כ</td><td style="padding:10px;font-weight:700">₪${totalSelling.toLocaleString()}</td></tr></tfoot></table>${tlRows ? `<h2>לו"ז הפעילות</h2>${tlRows}` : ""}<div style="margin-top:40px;text-align:center;color:#b8a990;font-size:12px"><p>הופק ע"י Eventos &bull; ${new Date().toLocaleDateString("he-IL")}</p></div></body></html>`
             );
             printWin.document.close();
             setTimeout(() => {

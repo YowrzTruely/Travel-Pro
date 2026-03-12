@@ -362,6 +362,7 @@ function WidgetSection({
 // ─── Widget Order ───
 const DEFAULT_WIDGET_ORDER = [
   "morningHQ",
+  "weeklyCalendar",
   "quoteHeat",
   "urgentAlerts",
   "openReservations",
@@ -413,36 +414,84 @@ const tickerMessages = [
   '  פרויקט "כנס מכירות Q1" עבר לסטטוס ביצוע',
 ];
 
-// ─── Activity Feed (static) ───
-const activityItems = [
-  {
-    id: "1",
-    title: "תשלום התקבל",
-    subtitle: "חברת סולארו - 45,000 ₪",
-    time: "לפני שעה",
+// ─── Activity Feed Helpers ───
+const ACTION_DISPLAY: Record<
+  string,
+  { label: string; icon: typeof CheckCircle; iconColor: string; iconBg: string }
+> = {
+  created: {
+    label: "נוצר",
+    icon: CheckCircle,
     iconColor: "#16A34A",
     iconBg: "#f0fdf4",
-    icon: CheckCircle,
   },
-  {
-    id: "2",
-    title: "הודעה חדשה מהספק",
-    subtitle: 'מלון דן - "אישרנו את כמות החדרים"',
-    time: "לפני שעתיים",
+  updated: {
+    label: "עודכן",
+    icon: FileText,
+    iconColor: "#3B82F6",
+    iconBg: "#eff6ff",
+  },
+  deleted: {
+    label: "נמחק",
+    icon: AlertTriangle,
+    iconColor: "#EF4444",
+    iconBg: "#fef2f2",
+  },
+  imported: {
+    label: "יובא",
+    icon: UserPlus,
+    iconColor: "#8B5CF6",
+    iconBg: "#f5f3ff",
+  },
+  sent: {
+    label: "נשלח",
+    icon: MessageSquare,
     iconColor: "#2563EB",
     iconBg: "#eff6ff",
-    icon: MessageSquare,
   },
-  {
-    id: "3",
-    title: 'עדכון לו"ז',
-    subtitle: "פרויקט גיבוש דרום - שונה ליום ד'",
-    time: "אתמול",
+  approved: {
+    label: "אושר",
+    icon: CheckCircle,
+    iconColor: "#16A34A",
+    iconBg: "#f0fdf4",
+  },
+  status_change: {
+    label: "שינוי סטטוס",
+    icon: Clock,
     iconColor: "#EA580C",
     iconBg: "#fff7ed",
-    icon: Clock,
   },
-];
+};
+
+function formatRelativeTime(timestamp: number): string {
+  const diff = Date.now() - timestamp;
+  const minutes = Math.floor(diff / 60_000);
+  if (minutes < 1) {
+    return "עכשיו";
+  }
+  if (minutes < 60) {
+    return `לפני ${minutes} דקות`;
+  }
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return `לפני ${hours === 1 ? "שעה" : `${hours} שעות`}`;
+  }
+  const days = Math.floor(hours / 24);
+  if (days === 1) {
+    return "אתמול";
+  }
+  return `לפני ${days} ימים`;
+}
+
+const ENTITY_TYPE_LABEL: Record<string, string> = {
+  project: "פרויקט",
+  supplier: "ספק",
+  lead: "ליד",
+  quote: "הצעה",
+  document: "מסמך",
+  booking: "שריון",
+  invoice: "חשבונית",
+};
 
 // ━━━━━━━━━━━━━━━━━━━━ PRODUCER DASHBOARD ━━━━━━━━━━━━━━━━━━━━
 export function ProducerDashboard() {
@@ -455,6 +504,8 @@ export function ProducerDashboard() {
   const quoteHeat = useQuery(api.dashboard.quoteHeatMeter);
   const alerts = useQuery(api.dashboard.urgentAlerts);
   const reservations = useQuery(api.dashboard.openReservations);
+  const weeklyCalendar = useQuery(api.dashboard.weeklyCalendar);
+  const recentActivity = useQuery(api.dashboard.recentActivity);
 
   const loading = stats === undefined;
 
@@ -576,6 +627,16 @@ export function ProducerDashboard() {
           navigate={navigate}
           reservations={reservations}
         />
+      </WidgetSection>
+    ),
+    weeklyCalendar: (
+      <WidgetSection
+        helpText="תצוגת לוח שנה שבועית עם אירועים ופרויקטים מתוכננים."
+        icon={CalendarDays}
+        iconColor="#3b82f6"
+        title="לוח שבועי"
+      >
+        <WeeklyCalendarContent data={weeklyCalendar} navigate={navigate} />
       </WidgetSection>
     ),
     statsCards: (
@@ -791,11 +852,12 @@ export function ProducerDashboard() {
           </div>
           <div className="flex shrink-0 gap-2">
             <button
-              className="min-h-[44px] min-w-[44px] rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
-              onClick={() => navigate("/projects")}
+              className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
+              onClick={() => navigate("/crm?newLead=true")}
               style={{ fontWeight: 600 }}
               type="button"
             >
+              <UserPlus size={16} />
               הוספת ליד
             </button>
           </div>
@@ -887,49 +949,70 @@ export function ProducerDashboard() {
           </div>
 
           <div className="rounded-xl border border-[#e7e1da] bg-white p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
-            <div className="space-y-6">
-              {activityItems.map((item, idx) => {
-                const ActivityIcon = item.icon;
-                return (
-                  <motion.div
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-start gap-3"
-                    initial={{ opacity: 0, x: 16 }}
-                    key={item.id}
-                    transition={{ duration: 0.35, delay: 1.05 + idx * 0.1 }}
-                  >
-                    <div className="flex shrink-0 flex-col items-center">
-                      <div
-                        className="flex h-8 w-8 items-center justify-center rounded-full"
-                        style={{ backgroundColor: item.iconBg }}
-                      >
-                        <ActivityIcon
-                          size={15}
-                          style={{ color: item.iconColor }}
-                        />
+            {recentActivity === undefined ? (
+              <div className="flex items-center justify-center py-6">
+                <Loader2 className="animate-spin text-[#8d785e]" size={20} />
+              </div>
+            ) : recentActivity.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8">
+                <Clock className="mb-2 text-[#e7e1da]" size={24} />
+                <p className="text-[#8d785e] text-[14px]">אין פעילות אחרונה</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {recentActivity.map((item, idx) => {
+                  const display = ACTION_DISPLAY[item.action] ?? {
+                    label: item.action,
+                    icon: Clock,
+                    iconColor: "#8d785e",
+                    iconBg: "#f5f3f0",
+                  };
+                  const ActivityIcon = display.icon;
+                  const entityLabel =
+                    ENTITY_TYPE_LABEL[item.entityType] ?? item.entityType;
+                  return (
+                    <motion.div
+                      animate={{ opacity: 1, x: 0 }}
+                      className="flex items-start gap-3"
+                      initial={{ opacity: 0, x: 16 }}
+                      key={item.id}
+                      transition={{ duration: 0.35, delay: 1.05 + idx * 0.1 }}
+                    >
+                      <div className="flex shrink-0 flex-col items-center">
+                        <div
+                          className="flex h-8 w-8 items-center justify-center rounded-full"
+                          style={{ backgroundColor: display.iconBg }}
+                        >
+                          <ActivityIcon
+                            size={15}
+                            style={{ color: display.iconColor }}
+                          />
+                        </div>
+                        {idx < recentActivity.length - 1 && (
+                          <div className="mt-1.5 min-h-[24px] w-0.5 flex-1 bg-[#f5f3f0]" />
+                        )}
                       </div>
-                      {idx < activityItems.length - 1 && (
-                        <div className="mt-1.5 min-h-[24px] w-0.5 flex-1 bg-[#f5f3f0]" />
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <p
-                        className="text-[#181510] text-[14px]"
-                        style={{ fontWeight: 600 }}
-                      >
-                        {item.title}
-                      </p>
-                      <p className="truncate text-[#8d785e] text-[12px]">
-                        {item.subtitle}
-                      </p>
-                      <p className="mt-0.5 text-[#c4b89a] text-[11px]">
-                        {item.time}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+                      <div className="min-w-0">
+                        <p
+                          className="text-[#181510] text-[14px]"
+                          style={{ fontWeight: 600 }}
+                        >
+                          {display.label} {entityLabel}
+                        </p>
+                        {item.details && (
+                          <p className="truncate text-[#8d785e] text-[12px]">
+                            {item.details}
+                          </p>
+                        )}
+                        <p className="mt-0.5 text-[#c4b89a] text-[11px]">
+                          {formatRelativeTime(item.createdAt)}
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </motion.div>
       </div>
@@ -1247,6 +1330,120 @@ function UrgentAlertsContent({
           </button>
         );
       })}
+    </div>
+  );
+}
+
+function WeeklyCalendarContent({
+  data,
+  navigate,
+}: {
+  data:
+    | {
+        weekStart: string;
+        weekEnd: string;
+        days: {
+          date: string;
+          dayName: string;
+          events: {
+            id: string;
+            title: string;
+            startTime: string | null;
+            type: string | null;
+            projectName: string | null;
+          }[];
+        }[];
+      }
+    | undefined;
+  navigate: (path: string) => void;
+}) {
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center py-6">
+        <Loader2 className="animate-spin text-[#8d785e]" size={20} />
+      </div>
+    );
+  }
+
+  const today = new Date().toISOString().split("T")[0];
+
+  return (
+    <div className="grid grid-cols-7 gap-1">
+      {data.days.map((day) => {
+        const isToday = day.date === today;
+        const hasEvents = day.events.length > 0;
+        return (
+          <button
+            className={`flex flex-col items-center rounded-lg px-1 py-2 transition-colors ${
+              isToday
+                ? "border border-[#ff8c00] bg-[#ff8c00]/5"
+                : "border border-transparent hover:bg-[#f5f3f0]"
+            }`}
+            key={day.date}
+            onClick={() => navigate("/calendar")}
+            type="button"
+          >
+            <span
+              className={`text-[11px] ${isToday ? "text-[#ff8c00]" : "text-[#8d785e]"}`}
+              style={{ fontWeight: 600 }}
+            >
+              {day.dayName}
+            </span>
+            <span
+              className={`mt-0.5 flex h-7 w-7 items-center justify-center rounded-full text-[13px] ${
+                isToday ? "bg-[#ff8c00] text-white" : "text-[#181510]"
+              }`}
+              style={{ fontWeight: isToday ? 700 : 500 }}
+            >
+              {Number.parseInt(day.date.split("-")[2], 10)}
+            </span>
+            <div className="mt-1 flex gap-0.5">
+              {hasEvents ? (
+                day.events.slice(0, 3).map((ev) => (
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    key={ev.id}
+                    style={{
+                      backgroundColor:
+                        ev.type === "project" ? "#ff8c00" : "#3B82F6",
+                    }}
+                  />
+                ))
+              ) : (
+                <span className="h-1.5 w-1.5" />
+              )}
+            </div>
+          </button>
+        );
+      })}
+      {/* Event summary below the calendar strip */}
+      {data.days.some((d) => d.events.length > 0) && (
+        <div className="col-span-7 mt-2 space-y-1 border-[#f5f3f0] border-t pt-2">
+          {data.days
+            .filter((d) => d.events.length > 0)
+            .flatMap((d) =>
+              d.events.slice(0, 2).map((ev) => (
+                <div
+                  className="flex items-center gap-2 rounded-md px-2 py-1 text-[12px]"
+                  key={ev.id}
+                >
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#ff8c00]" />
+                  <span className="text-[#8d785e]">{d.dayName}</span>
+                  {ev.startTime && (
+                    <span className="text-[#b8a990]">{ev.startTime}</span>
+                  )}
+                  <span
+                    className="truncate text-[#181510]"
+                    style={{ fontWeight: 500 }}
+                  >
+                    {ev.title}
+                  </span>
+                </div>
+              ))
+            )
+            .slice(0, 5)}
+        </div>
+      )}
     </div>
   );
 }

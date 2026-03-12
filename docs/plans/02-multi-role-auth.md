@@ -87,7 +87,7 @@ Add role selection to signup form:
 
 ```
 ┌──────────────────────────────────┐
-│  הרשמה ל-TravelPro              │
+│  הרשמה ל-Eventos              │
 │                                  │
 │  אני:                            │
 │  ◉ מפיק טיולים                   │
@@ -140,7 +140,7 @@ Add role selection to signup form:
 **File: `src/app/components/onboarding/ProducerOnboarding.tsx`** (new)
 
 Simple welcome screen for producers:
-- "Welcome to TravelPro" message
+- "Welcome to Eventos" message
 - Brief feature tour (3-4 slides)
 - "Go to Dashboard" button
 - Sets `onboardingCompleted: true`

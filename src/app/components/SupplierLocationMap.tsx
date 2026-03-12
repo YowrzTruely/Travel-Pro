@@ -155,7 +155,7 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
       const encoded = encodeURIComponent(query.trim());
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encoded}&limit=5&accept-language=he&countrycodes=il`,
-        { headers: { "User-Agent": "TravelPro/1.0" } }
+        { headers: { "User-Agent": "Eventos/1.0" } }
       );
       const data: GeoResult[] = await res.json();
       setSuggestions(data);

@@ -9,6 +9,7 @@ import {
   CheckCircle,
   Clock,
   FileText,
+  History,
   Loader2,
   Mail,
   Package,
@@ -80,6 +81,7 @@ const tabItems = [
   { id: "products", label: "מוצרים ושירותים" },
   { id: "docs", label: "מסמכים" },
   { id: "contacts", label: "אנשי קשר" },
+  { id: "history", label: "היסטוריה" },
 ];
 
 const statusLabel: Record<string, string> = {
@@ -217,6 +219,10 @@ export function SupplierDetail() {
   const insuranceCompliance = useQuery(
     api.supplierDocuments.checkInsuranceCompliance,
     supplierId ? { supplierId: supplierId as any } : "skip"
+  );
+  const activityHistory = useQuery(
+    api.activityLog.listByEntity,
+    supplier?._id ? { entityType: "supplier", entityId: supplier._id } : "skip"
   );
 
   // ─── Convex Mutations ───
@@ -1653,6 +1659,116 @@ export function SupplierDetail() {
             </div>
           );
         })()}
+
+      {/* ═══ History Tab ═══ */}
+      {activeTab === "history" && (
+        <div className="rounded-xl border border-[#e7e1da] bg-white p-6">
+          <h3
+            className="mb-6 text-[#181510] text-[20px]"
+            style={{ fontWeight: 700 }}
+          >
+            היסטוריית פעילות
+          </h3>
+          {activityHistory ? (
+            activityHistory.length === 0 ? (
+              <div className="flex flex-col items-center justify-center gap-3 py-12">
+                <History className="text-[#e7e1da]" size={48} />
+                <p
+                  className="text-[#8d785e] text-[15px]"
+                  style={{ fontWeight: 500 }}
+                >
+                  אין היסטוריה עדיין
+                </p>
+              </div>
+            ) : (
+              <div className="relative space-y-0">
+                {/* Vertical timeline line */}
+                <div className="absolute top-2 right-[19px] bottom-2 w-[2px] bg-[#e7e1da]" />
+                {activityHistory.map((entry) => {
+                  const ActionIcon =
+                    entry.action === "created"
+                      ? CheckCircle
+                      : entry.action === "updated"
+                        ? Pencil
+                        : entry.action === "document_uploaded"
+                          ? FileText
+                          : Clock;
+
+                  const actionColor =
+                    entry.action === "created"
+                      ? "bg-green-100 text-green-600"
+                      : entry.action === "updated"
+                        ? "bg-[#fff3e0] text-[#ff8c00]"
+                        : entry.action === "document_uploaded"
+                          ? "bg-blue-100 text-blue-600"
+                          : "bg-[#f5f3f0] text-[#8d785e]";
+
+                  const relativeTime = (() => {
+                    const now = Date.now();
+                    const diff = now - entry.createdAt;
+                    const minutes = Math.floor(diff / 60_000);
+                    const hours = Math.floor(diff / 3_600_000);
+                    const days = Math.floor(diff / 86_400_000);
+                    if (minutes < 1) {
+                      return "עכשיו";
+                    }
+                    if (minutes < 60) {
+                      return `לפני ${minutes} דקות`;
+                    }
+                    if (hours < 24) {
+                      return `לפני ${hours} שעות`;
+                    }
+                    if (days < 30) {
+                      return `לפני ${days} ימים`;
+                    }
+                    return new Date(entry.createdAt).toLocaleDateString(
+                      "he-IL",
+                      {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      }
+                    );
+                  })();
+
+                  return (
+                    <div
+                      className="relative flex items-start gap-4 py-3"
+                      key={entry.id}
+                    >
+                      <div
+                        className={`relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${actionColor}`}
+                      >
+                        <ActionIcon size={16} />
+                      </div>
+                      <div className="min-w-0 flex-1 pt-1">
+                        <p
+                          className="text-[#181510] text-[14px]"
+                          style={{ fontWeight: 600 }}
+                        >
+                          {entry.action}
+                        </p>
+                        {entry.details && (
+                          <p className="mt-0.5 text-[#8d785e] text-[13px]">
+                            {entry.details}
+                          </p>
+                        )}
+                        <p className="mt-1 text-[#b5a99a] text-[12px]">
+                          {relativeTime}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )
+          ) : (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="animate-spin text-[#8d785e]" size={24} />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ═══ Add Contact Modal ═══ */}
       {showAddContact && (

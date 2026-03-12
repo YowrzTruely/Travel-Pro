@@ -1,8 +1,8 @@
-# TravelPro — Project Overview & MVP Completion Status
+# Eventos — Project Overview & MVP Completion Status
 
 ## What This Project Is About
 
-**TravelPro** is a **SaaS platform for Israeli event producers** (מפיקים) who organize group trips, team-building days, and retreats. The core problem it solves: event producers currently build quotes manually (spreadsheets, Word docs) and have no organized supplier database. Everything is scattered across WhatsApp messages, phone contacts, and memory.
+**Eventos** is a **SaaS platform for Israeli event producers** (מפיקים) who organize group trips, team-building days, and retreats. The core problem it solves: event producers currently build quotes manually (spreadsheets, Word docs) and have no organized supplier database. Everything is scattered across WhatsApp messages, phone contacts, and memory.
 
 ### The product does 3 key things:
 

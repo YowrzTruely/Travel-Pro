@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## What is TravelPro
+## What is Eventos
 
 A SaaS platform for Israeli event producers who organize group trips, team-building days, and retreats. Core features: client-facing quote builder, supplier database management, and project pipeline tracking. The entire UI is **Hebrew RTL** (`dir="rtl"`).
 
@@ -19,6 +19,7 @@ bun tsc              # TypeScript type-check (standalone)
 bun ultracite        # Ultracite check
 npx convex dev       # Start Convex dev server (syncs schema + functions)
 npx convex run seed:seedAll  # Seed initial data (idempotent)
+bun run seed:auth    # Reset test user passwords (run when login fails with InvalidSecret)
 ```
 
 Development requires **two terminals**: `bun run dev` (frontend) and `npx convex dev` (backend). The Convex dev server watches `convex/` and hot-deploys function/schema changes.
@@ -102,6 +103,14 @@ VITE_CONVEX_SITE_URL=https://unique-ermine-475.convex.site
 - **Drag & drop**: `react-dnd` for Kanban board and timeline
 - **Charts**: Recharts for dashboard analytics
 - **Calendar views**: `src/app/components/calendar/` — DailyView, WeeklyView, MonthlyView, EventFormModal
+- **CRM/Leads**: `src/app/components/crm/` — LeadsPage, LeadDetail, NewLeadModal. Lead pipeline with status tracking
+- **Field operations**: `src/app/components/field/FieldOperationsHQ` — per-project field day management
+
+## Deployment (Vercel)
+
+- Ensure only `bun.lock` exists as lockfile; remove stale `pnpm-lock.yaml` or `package-lock.json`
+- `convex/_generated/` is committed to git so Vercel build resolves Convex imports without `CONVEX_DEPLOY_KEY`
+- Exclude Playwright output from linting: `!test-results` is in biome `files.includes`
 
 ## Testing
 

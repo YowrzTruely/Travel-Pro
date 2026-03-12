@@ -1851,7 +1851,7 @@ function Container63() {
       data-name="Container"
     >
       <div className="relative flex h-[28px] w-[90.41px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[20px] text-white leading-[0]">
-        <p className="whitespace-pre-wrap leading-[28px]">TravelPro</p>
+        <p className="whitespace-pre-wrap leading-[28px]">Eventos</p>
       </div>
     </div>
   );
@@ -2035,7 +2035,7 @@ function Container73() {
     >
       <div className="relative flex h-[16px] w-[260.88px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Regular','Arimo:Regular',sans-serif] font-normal text-[#94a3b8] text-[12px] leading-[0]">
         <p className="whitespace-pre-wrap leading-[16px]">
-          © 2024 TravelPro Production. כל הזכויות שמורות.
+          © 2024 Eventos Production. כל הזכויות שמורות.
         </p>
       </div>
     </div>
@@ -2148,7 +2148,7 @@ function Container78() {
       data-name="Container"
     >
       <div className="relative flex h-[32px] w-[103.09px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#ff8c00] text-[24px] leading-[0] tracking-[-0.6px]">
-        <p className="whitespace-pre-wrap leading-[32px]">TravelPro</p>
+        <p className="whitespace-pre-wrap leading-[32px]">Eventos</p>
       </div>
     </div>
   );

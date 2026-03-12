@@ -2724,7 +2724,7 @@ export function KanbanBoard() {
                   </h1>
                   <div className="flex items-center gap-2">
                     <p className="text-[#8d785e] text-[12px]">
-                      ניהול משימות פיתוח TravelPro
+                      ניהול משימות פיתוח Eventos
                     </p>
                     {/* Sync status indicator */}
                     {isSyncing ? (

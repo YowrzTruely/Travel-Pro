@@ -1,4 +1,4 @@
-# QA Guide — TravelPro Full Application Testing
+# QA Guide — Eventos Full Application Testing
 
 **Date:** 2026-03-10
 **Scope:** End-to-end testing of all implemented features (Plans 01–15 + External Integrations)

@@ -323,7 +323,7 @@ function Container9() {
     >
       <div className="relative flex h-[20px] w-[263.56px] shrink-0 flex-col justify-center text-right font-['Assistant:Regular',sans-serif] font-normal text-[#475569] text-[14px] leading-[0]">
         <p className="whitespace-pre-wrap leading-[20px]">
-          ביקור ביקב בוטיק וחלוקת מזכרות מצוות TravelPro.
+          ביקור ביקב בוטיק וחלוקת מזכרות מצוות Eventos.
         </p>
       </div>
     </div>
@@ -514,7 +514,7 @@ function Container13() {
       <div className="relative flex h-[78px] w-[312.8px] shrink-0 flex-col justify-center whitespace-pre-wrap text-right font-['Assistant:Regular',sans-serif] font-normal text-[#475569] text-[16px] leading-[26px]">
         <p className="mb-0">{`נצא למסע מרתק בין נחלים ותצפיות מרהיבות. הג'יפים`}</p>
         <p className="mb-0">הם בנהיגה עצמית (לבעלי רישיון) בליווי מדריכים</p>
-        <p>מקצועיים של TravelPro. כולל עצירה לקפה בטבע.</p>
+        <p>מקצועיים של Eventos. כולל עצירה לקפה בטבע.</p>
       </div>
     </div>
   );
@@ -846,7 +846,7 @@ function Container22() {
     >
       <div className="relative flex h-[24px] w-[219.39px] shrink-0 flex-col justify-center text-right font-['Assistant:Regular',sans-serif] font-normal text-[#cbd5e1] text-[16px] leading-[0]">
         <p className="whitespace-pre-wrap leading-[24px]">
-          ליווי של 2 מדריכי TravelPro מוסמכים
+          ליווי של 2 מדריכי Eventos מוסמכים
         </p>
       </div>
     </div>

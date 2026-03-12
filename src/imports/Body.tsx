@@ -2046,7 +2046,7 @@ function Heading() {
       data-name="Heading 1"
     >
       <div className="relative flex h-[18px] w-[81.38px] shrink-0 flex-col justify-center text-right font-['Plus_Jakarta_Sans:Bold',sans-serif] font-bold text-[#181510] text-[18px] leading-[0]">
-        <p className="whitespace-pre-wrap leading-[18px]">TravelPro</p>
+        <p className="whitespace-pre-wrap leading-[18px]">Eventos</p>
       </div>
     </div>
   );

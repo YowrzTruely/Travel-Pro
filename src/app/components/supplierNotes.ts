@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════
-// TravelPro — Supplier Auto-Notes System
+// Eventos — Supplier Auto-Notes System
 // Generates prioritized notes based on supplier state
 // ═══════════════════════════════════════════════════
 

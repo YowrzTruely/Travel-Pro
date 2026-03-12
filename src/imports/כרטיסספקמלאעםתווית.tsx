@@ -2294,7 +2294,7 @@ function Heading11() {
       data-name="Heading 1"
     >
       <div className="relative flex h-[18px] w-[82.78px] shrink-0 flex-col justify-center text-right font-['Public_Sans:Bold',sans-serif] font-bold text-[#1e293b] text-[18px] leading-[0]">
-        <p className="whitespace-pre-wrap leading-[18px]">TravelPro</p>
+        <p className="whitespace-pre-wrap leading-[18px]">Eventos</p>
       </div>
     </div>
   );

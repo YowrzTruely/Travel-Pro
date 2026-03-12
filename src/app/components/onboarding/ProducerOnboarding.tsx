@@ -36,7 +36,7 @@ export function ProducerOnboarding() {
         </div>
 
         <h1 className="font-bold text-3xl" style={{ color: "#181510" }}>
-          ברוכים הבאים ל-TravelPro!
+          ברוכים הבאים ל-Eventos!
         </h1>
 
         <p className="text-center text-lg" style={{ color: "#8d785e" }}>

@@ -12,7 +12,7 @@ function Heading() {
       />
       <div className="relative flex h-[36px] w-[477.09px] shrink-0 flex-col justify-center text-center font-['Assistant:Bold',sans-serif] font-bold text-[#1e293b] text-[30px] leading-[0]">
         <p className="whitespace-pre-wrap leading-[36px]">
-          מפת מסכים וזרימת משתמש - TravelPro
+          מפת מסכים וזרימת משתמש - Eventos
         </p>
       </div>
     </div>

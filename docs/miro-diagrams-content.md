@@ -1,4 +1,4 @@
-# TravelPro - Miro Flow Diagrams Content
+# Eventos - Miro Flow Diagrams Content
 *Ready to create in Miro once MCP is connected*
 
 ---

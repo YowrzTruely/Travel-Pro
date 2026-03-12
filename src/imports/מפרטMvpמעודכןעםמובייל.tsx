@@ -123,7 +123,7 @@ function Container6() {
     >
       <div className="relative flex h-[28px] w-[367.53px] shrink-0 flex-col justify-center text-right font-['Assistant:Regular',sans-serif] font-normal text-[#cbd5e1] text-[18px] leading-[0]">
         <p className="whitespace-pre-wrap leading-[28px]">
-          TravelPro SaaS - פלטפורמה למפיקי טיולים ונופש עסקי
+          Eventos SaaS - פלטפורמה למפיקי טיולים ונופש עסקי
         </p>
       </div>
     </div>
@@ -2071,7 +2071,7 @@ function Container56() {
     >
       <div className="relative flex h-[20px] w-[380.34px] shrink-0 flex-col justify-center text-right font-['Assistant:Regular',sans-serif] font-normal text-[#64748b] text-[14px] leading-[0]">
         <p className="whitespace-pre-wrap leading-[20px]">
-          © 2024 TravelPro Production. כל הזכויות שמורות למחלקת פיתוח מוצר.
+          © 2024 Eventos Production. כל הזכויות שמורות למחלקת פיתוח מוצר.
         </p>
       </div>
     </div>
@@ -2085,7 +2085,7 @@ function Container58() {
       data-name="Container"
     >
       <div className="relative flex h-[28px] w-[79.98px] shrink-0 flex-col justify-center text-right font-['Assistant:Bold',sans-serif] font-bold text-[20px] text-white leading-[0] tracking-[-0.5px]">
-        <p className="whitespace-pre-wrap leading-[28px]">TravelPro</p>
+        <p className="whitespace-pre-wrap leading-[28px]">Eventos</p>
       </div>
     </div>
   );

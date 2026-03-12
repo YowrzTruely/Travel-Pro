@@ -418,3 +418,122 @@ export const adminKPIs = query({
     };
   },
 });
+
+export const recentActivity = query({
+  args: {},
+  handler: async (ctx) => {
+    const entries = await ctx.db.query("activityLog").order("desc").take(10);
+
+    return entries.map((entry) => ({
+      id: entry._id,
+      action: entry.action,
+      entityType: entry.entityType,
+      entityId: entry.entityId,
+      details: entry.details,
+      createdAt: entry.createdAt,
+    }));
+  },
+});
+
+// ─── Weekly Calendar (Sunday–Saturday) ───
+export const weeklyCalendar = query({
+  args: {},
+  handler: async (ctx) => {
+    const hebrewDays = [
+      "ראשון",
+      "שני",
+      "שלישי",
+      "רביעי",
+      "חמישי",
+      "שישי",
+      "שבת",
+    ];
+
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 = Sunday
+    const sunday = new Date(now);
+    sunday.setDate(now.getDate() - dayOfWeek);
+    sunday.setHours(0, 0, 0, 0);
+
+    const saturday = new Date(sunday);
+    saturday.setDate(sunday.getDate() + 6);
+    saturday.setHours(23, 59, 59, 999);
+
+    const weekStart = sunday.toISOString().split("T")[0];
+    const weekEnd = saturday.toISOString().split("T")[0];
+
+    const [calendarEvents, projects] = await Promise.all([
+      ctx.db.query("calendarEvents").collect(),
+      ctx.db.query("projects").collect(),
+    ]);
+
+    const projectMap = new Map(projects.map((p) => [p._id.toString(), p]));
+
+    // Filter events within the week range
+    const weekEvents = calendarEvents.filter(
+      (e) => e.date >= weekStart && e.date <= weekEnd
+    );
+
+    // Filter projects with dates in this week
+    const weekProjects = projects.filter(
+      (p) => p.date && p.date >= weekStart && p.date <= weekEnd
+    );
+
+    // Build a map of date -> events
+    const eventsByDate = new Map<
+      string,
+      {
+        id: string;
+        title: string;
+        startTime: string | null;
+        type: string | null;
+        projectName: string | null;
+      }[]
+    >();
+
+    for (const e of weekEvents) {
+      const project = e.projectId ? projectMap.get(e.projectId) : null;
+      const entry = {
+        id: e._id,
+        title: e.title,
+        startTime: e.startTime ?? null,
+        type: e.type ?? null,
+        projectName: project?.name ?? null,
+      };
+      const existing = eventsByDate.get(e.date) ?? [];
+      existing.push(entry);
+      eventsByDate.set(e.date, existing);
+    }
+
+    // Add projects that aren't already represented by a calendar event
+    for (const p of weekProjects) {
+      const date = p.date ?? "";
+      const existing = eventsByDate.get(date) ?? [];
+      const alreadyLinked = existing.some((e) => e.projectName === p.name);
+      if (!alreadyLinked) {
+        existing.push({
+          id: p._id,
+          title: p.name,
+          startTime: null,
+          type: "project",
+          projectName: p.name,
+        });
+        eventsByDate.set(date, existing);
+      }
+    }
+
+    // Build the 7-day array
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(sunday);
+      d.setDate(sunday.getDate() + i);
+      const dateStr = d.toISOString().split("T")[0];
+      return {
+        date: dateStr,
+        dayName: hebrewDays[i],
+        events: eventsByDate.get(dateStr) ?? [],
+      };
+    });
+
+    return { weekStart, weekEnd, days };
+  },
+});
