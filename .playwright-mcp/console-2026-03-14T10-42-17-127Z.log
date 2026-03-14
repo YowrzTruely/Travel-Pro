@@ -1,0 +1,7 @@
+[ 1070497ms] [ERROR] Failed to load resource: the server responded with a status of 503 () @ https://cclryroppnujybgrofaw.supabase.co/functions/v1/make-server-0045c7fc/kv/flow_diagram_notes:0
+[ 1070499ms] [WARNING] [API] GET /kv/flow_diagram_notes → 503: HTTP 503 @ https://sort-sans-92624834.figma.site/_components/v2/220f1a5d7d4b4c6b3b72391643743ba31ec217ca.js:6934
+[ 1070503ms] [WARNING] [FlowDiagrams] fetchFromSupabase failed: HTTP 503 @ https://sort-sans-92624834.figma.site/_components/v2/220f1a5d7d4b4c6b3b72391643743ba31ec217ca.js:22030
+[ 2364476ms] [ERROR] Access to fetch at 'https://cclryroppnujybgrofaw.supabase.co/functions/v1/make-server-0045c7fc/kv/flow_diagram_notes' from origin 'https://sort-sans-92624834.figma.site' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://sort-sans-92624834.figma.site/:0
+[ 2364483ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://cclryroppnujybgrofaw.supabase.co/functions/v1/make-server-0045c7fc/kv/flow_diagram_notes:0
+[ 2364486ms] [WARNING] [API] GET /kv/flow_diagram_notes → NETWORK ERROR — Edge Function may not be deployed @ https://sort-sans-92624834.figma.site/_components/v2/220f1a5d7d4b4c6b3b72391643743ba31ec217ca.js:6938
+[ 2364490ms] [WARNING] [FlowDiagrams] fetchFromSupabase failed: Failed to fetch @ https://sort-sans-92624834.figma.site/_components/v2/220f1a5d7d4b4c6b3b72391643743ba31ec217ca.js:22030

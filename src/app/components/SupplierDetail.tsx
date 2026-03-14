@@ -33,6 +33,7 @@ import type { Id } from "../../../convex/_generated/dataModel";
 import { appToast } from "./AppToast";
 import { CategoryIcon } from "./CategoryIcons";
 import { useConfirmDelete } from "./ConfirmDeleteModal";
+import { regionDisplayLabel } from "./constants/supplierConstants";
 import { FormField, FormSelect, FormTextarea, rules } from "./FormField";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { ProductEditor } from "./ProductEditor";
@@ -528,7 +529,7 @@ export function SupplierDetail() {
                 );
               })}
               <span className="text-[#8d785e] text-[13px]">
-                &bull; {supplier.region}
+                &bull; {regionDisplayLabel(supplier.region) || supplier.region}
               </span>
               {supplier.phone && (
                 <span className="text-[#8d785e] text-[13px]">

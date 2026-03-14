@@ -25,6 +25,7 @@ import { useNavigate, useParams } from "react-router";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
+import { regionDisplayLabel } from "../constants/supplierConstants";
 import { LogCommunicationModal } from "./LogCommunicationModal";
 
 const SOURCE_ICONS: Record<string, LucideIcon> = {
@@ -393,7 +394,11 @@ export function LeadDetail() {
                   label="סוג אירוע"
                   value={lead.eventType}
                 />
-                <DetailItem icon={MapPin} label="אזור" value={lead.region} />
+                <DetailItem
+                  icon={MapPin}
+                  label="אזור"
+                  value={regionDisplayLabel(lead.region) || lead.region}
+                />
                 <DetailItem
                   icon={Users}
                   label="משתתפים"

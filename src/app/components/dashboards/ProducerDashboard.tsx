@@ -26,6 +26,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useNavigate } from "react-router";
 import { api } from "../../../../convex/_generated/api";
 import { useAuth } from "../AuthContext";
+import { regionDisplayLabel } from "../constants/supplierConstants";
 import {
   Collapsible,
   CollapsibleContent,
@@ -1148,7 +1149,7 @@ function EventRow({
             {event.region && (
               <span className="flex items-center gap-1">
                 <MapPin size={11} />
-                {event.region}
+                {regionDisplayLabel(event.region) || event.region}
               </span>
             )}
           </div>

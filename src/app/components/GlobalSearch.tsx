@@ -3,6 +3,7 @@ import { Loader2, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { api } from "../../../convex/_generated/api";
+import { regionDisplayLabel } from "./constants/supplierConstants";
 
 interface SearchResult {
   icon: string;
@@ -92,7 +93,7 @@ export function GlobalSearch() {
           id: s._id,
           type: "supplier",
           title: s.name,
-          subtitle: `${s.category} • ${s.region} • ${"★".repeat(Math.round(s.rating))}`,
+          subtitle: `${s.category} • ${regionDisplayLabel(s.region) || s.region} • ${"★".repeat(Math.round(s.rating))}`,
           icon: s.icon,
           path: `/suppliers/${s._id}`,
         });

@@ -2,6 +2,7 @@ import { useQuery } from "convex/react";
 import { Search, Star, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
+import { regionDisplayLabel } from "./constants/supplierConstants";
 
 interface SupplierSearchProps {
   label?: string;
@@ -149,8 +150,8 @@ export function SupplierSearch({
                   {s.name}
                 </div>
                 <div className="text-[#8d785e] text-[11px]">
-                  {s.category} &bull; {s.region} &bull;{" "}
-                  {"★".repeat(Math.round(s.rating))}
+                  {s.category} &bull; {regionDisplayLabel(s.region) || s.region}{" "}
+                  &bull; {"★".repeat(Math.round(s.rating))}
                 </div>
               </div>
               {promotionSupplierIds.has(s._id) && (

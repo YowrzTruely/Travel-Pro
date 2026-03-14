@@ -35,6 +35,7 @@ import { api } from "../../../convex/_generated/api";
 import { appToast } from "./AppToast";
 import { useAuth } from "./AuthContext";
 import { Breadcrumbs } from "./Breadcrumbs";
+import { OPERATING_REGIONS } from "./constants/supplierConstants";
 import { FormField, FormSelect, rules } from "./FormField";
 import { GlobalSearch } from "./GlobalSearch";
 import { NotificationsPanel } from "./NotificationsPanel";
@@ -154,7 +155,7 @@ export function Layout() {
       name: "",
       client: "",
       participants: "",
-      region: "גליל עליון",
+      region: "upper_galilee",
     },
   });
 
@@ -181,13 +182,17 @@ export function Layout() {
   const onSubmitProject = async (data: NewProjectForm) => {
     try {
       setNpSaving(true);
-      const projectId = await createProject({
+      const result = await createProject({
         name: data.name.trim(),
         client: data.client.trim(),
         company: data.client.trim(),
         participants: Number.parseInt(data.participants, 10) || 0,
         region: data.region,
       });
+      const projectId =
+        typeof result === "object" && result !== null
+          ? (result as { id: string }).id
+          : result;
       appToast.success(
         "פרויקט חדש נוצר בהצלחה!",
         "תוכל להתחיל להוסיף רכיבים וספקים"
@@ -369,6 +374,7 @@ export function Layout() {
             aria-modal="true"
             className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
             dir="rtl"
+            onClick={(e) => e.stopPropagation()}
             role="dialog"
           >
             <h2
@@ -416,12 +422,11 @@ export function Layout() {
                 label="אזור"
                 {...register("region")}
               >
-                <option>גליל עליון</option>
-                <option>מרכז</option>
-                <option>ירושלים</option>
-                <option>דרום</option>
-                <option>אילת</option>
-                <option>גולן</option>
+                {OPERATING_REGIONS.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
               </FormSelect>
               <div className="flex gap-3 pt-2">
                 <button

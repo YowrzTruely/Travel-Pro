@@ -1,22 +1,31 @@
+import { useQuery } from "convex/react";
 import type { LucideIcon } from "lucide-react";
 import {
   Archive,
-  Bus,
+  Box,
   Calendar,
+  CheckCircle,
   ChevronLeft,
+  ClipboardList,
+  Eye,
   FileSpreadsheet,
   FileText,
   FolderOpen,
-  Grape,
   LayoutDashboard,
+  MapPin,
   ScanLine,
   Settings,
+  Shield,
+  Star,
+  Tag,
+  Target,
   UserCircle,
   Users,
-  UtensilsCrossed,
   Wand2,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
+import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 
 interface RouteInfo {
   color: string;
@@ -25,48 +34,51 @@ interface RouteInfo {
 }
 
 const routeMeta: Record<string, RouteInfo> = {
+  // Shared
   "": { label: "דשבורד", icon: LayoutDashboard, color: "#ff8c00" },
+  settings: { label: "הגדרות", icon: Settings, color: "#6b7280" },
+  // Producer
   projects: { label: "פרויקטים", icon: FolderOpen, color: "#3b82f6" },
   suppliers: { label: "בנק ספקים", icon: Users, color: "#8b5cf6" },
   import: { label: "ייבוא ספקים", icon: FileSpreadsheet, color: "#22c55e" },
   classify: { label: "אשף סיווג", icon: Wand2, color: "#ec4899" },
   scan: { label: "סריקת מוצרים", icon: ScanLine, color: "#14b8a6" },
   archive: { label: "ארכיון", icon: Archive, color: "#94a3b8" },
-  settings: { label: "הגדרות", icon: Settings, color: "#6b7280" },
   calendar: { label: "יומן", icon: Calendar, color: "#f59e0b" },
   clients: { label: "לקוחות", icon: UserCircle, color: "#06b6d4" },
   documents: { label: "מסמכים", icon: FileText, color: "#8d785e" },
+  crm: { label: "ניהול לידים", icon: Target, color: "#ef4444" },
+  field: { label: 'חמ"ל שטח', icon: MapPin, color: "#16a34a" },
   quote: { label: "תצוגת לקוח", icon: FileText, color: "#ff8c00" },
+  // Supplier
+  products: { label: "מוצרים", icon: Box, color: "#8b5cf6" },
+  profile: { label: "פרופיל", icon: UserCircle, color: "#3b82f6" },
+  availability: { label: "זמינות", icon: Calendar, color: "#f59e0b" },
+  requests: { label: "בקשות", icon: ClipboardList, color: "#ff8c00" },
+  ratings: { label: "דירוגים", icon: Star, color: "#eab308" },
+  promotions: { label: "מבצעים", icon: Tag, color: "#ec4899" },
+  preview: { label: "תצוגה מקדימה", icon: Eye, color: "#6b7280" },
+  // Admin
+  "approve-suppliers": {
+    label: "אישור ספקים",
+    icon: CheckCircle,
+    color: "#22c55e",
+  },
+  users: { label: "משתמשים", icon: Users, color: "#3b82f6" },
+  activity: { label: "יומן פעילות", icon: Shield, color: "#8b5cf6" },
 };
 
-// Known entity IDs → display info
-const entityMeta: Record<
+/** Labels for dynamic ID segments based on their parent route */
+const parentLabels: Record<
   string,
   { label: string; icon: LucideIcon; color: string }
 > = {
-  "4829-24": {
-    label: "נופש שנתי גליל עליון",
-    icon: FolderOpen,
-    color: "#3b82f6",
-  },
-  "4830-24": { label: "כנס מכירות Q1", icon: FolderOpen, color: "#3b82f6" },
-  "4831-24": {
-    label: "יום כיף צוות פיתוח",
-    icon: FolderOpen,
-    color: "#8b5cf6",
-  },
-  "4832-24": { label: "אירוע חברה שנתי", icon: FolderOpen, color: "#22c55e" },
-  "4833-24": { label: "סדנת גיבוש הנהלה", icon: FolderOpen, color: "#eab308" },
-  "1": { label: "הסעות מסיילי הצפון", icon: Bus, color: "#3b82f6" },
-  "2": {
-    label: "קייטרינג סאמי המזרח",
-    icon: UtensilsCrossed,
-    color: "#22c55e",
-  },
-  "3": { label: "ספורט אתגרי בנגב", icon: FolderOpen, color: "#a855f7" },
-  "4": { label: "מלון פלאזה - מרכז", icon: FolderOpen, color: "#ec4899" },
-  "5": { label: "יקב רמת נפתלי", icon: Grape, color: "#7c3aed" },
-  "6": { label: "אוטובוסים הגליל", icon: Bus, color: "#0ea5e9" },
+  projects: { label: "פרטי פרויקט", icon: FolderOpen, color: "#3b82f6" },
+  suppliers: { label: "פרטי ספק", icon: Users, color: "#8b5cf6" },
+  crm: { label: "פרטי ליד", icon: Target, color: "#ef4444" },
+  clients: { label: "פרטי לקוח", icon: UserCircle, color: "#06b6d4" },
+  field: { label: 'חמ"ל שטח', icon: MapPin, color: "#16a34a" },
+  quote: { label: "תצוגת לקוח", icon: FileText, color: "#ff8c00" },
 };
 
 interface BreadcrumbItem {
@@ -79,12 +91,54 @@ interface BreadcrumbItem {
 export function Breadcrumbs() {
   const location = useLocation();
   const navigate = useNavigate();
+  const segments = location.pathname.split("/").filter(Boolean);
+
+  // Determine which dynamic entity to resolve
+  const projectSegment =
+    segments[0] === "projects"
+      ? segments[1]
+      : segments[0] === "field"
+        ? segments[1]
+        : undefined;
+  const supplierSegment = segments[0] === "suppliers" ? segments[1] : undefined;
+  const leadSegment = segments[0] === "crm" ? segments[1] : undefined;
+
+  // Only query when we have a dynamic segment to resolve
+  const project = useQuery(
+    api.projects.get,
+    projectSegment && !routeMeta[projectSegment]
+      ? { id: projectSegment }
+      : "skip"
+  );
+  const supplier = useQuery(
+    api.suppliers.get,
+    supplierSegment && !routeMeta[supplierSegment]
+      ? { id: supplierSegment as Id<"suppliers"> }
+      : "skip"
+  );
+  const lead = useQuery(
+    api.leads.get,
+    leadSegment && !routeMeta[leadSegment]
+      ? { id: leadSegment as Id<"leads"> }
+      : "skip"
+  );
 
   if (location.pathname === "/") {
     return null;
   }
 
-  const segments = location.pathname.split("/").filter(Boolean);
+  // Map dynamic IDs to resolved names
+  const resolvedNames: Record<string, string> = {};
+  if (projectSegment && project?.name) {
+    resolvedNames[projectSegment] = project.name;
+  }
+  if (supplierSegment && supplier?.name) {
+    resolvedNames[supplierSegment] = supplier.name;
+  }
+  if (leadSegment && lead?.name) {
+    resolvedNames[leadSegment] = lead.name;
+  }
+
   const items: BreadcrumbItem[] = [
     { label: "דשבורד", path: "/", icon: LayoutDashboard, color: "#ff8c00" },
   ];
@@ -92,7 +146,7 @@ export function Breadcrumbs() {
   let currentPath = "";
   segments.forEach((segment, idx) => {
     currentPath += `/${segment}`;
-    const meta = routeMeta[segment] || entityMeta[segment];
+    const meta = routeMeta[segment];
     if (meta) {
       items.push({
         label: meta.label,
@@ -101,30 +155,15 @@ export function Breadcrumbs() {
         color: meta.color,
       });
     } else {
-      // For dynamic IDs under known parents, show a friendly label
       const parentSegment = idx > 0 ? segments[idx - 1] : "";
-      if (parentSegment === "suppliers") {
-        items.push({
-          label: "פרטי ספק",
-          path: currentPath,
-          icon: Users,
-          color: "#8b5cf6",
-        });
-      } else if (parentSegment === "projects") {
-        items.push({
-          label: "פרטי פרויקט",
-          path: currentPath,
-          icon: FolderOpen,
-          color: "#3b82f6",
-        });
-      } else {
-        items.push({
-          label: `#${segment}`,
-          path: currentPath,
-          icon: FileText,
-          color: "#8d785e",
-        });
-      }
+      const parentInfo = parentLabels[parentSegment];
+      const resolvedName = resolvedNames[segment];
+      items.push({
+        label: resolvedName || parentInfo?.label || "פרטים",
+        path: currentPath,
+        icon: parentInfo?.icon || FileText,
+        color: parentInfo?.color || "#8d785e",
+      });
     }
   });
 

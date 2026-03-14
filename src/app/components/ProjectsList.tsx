@@ -21,6 +21,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { api } from "../../../convex/_generated/api";
 import { appToast } from "./AppToast";
 import { useConfirmDelete } from "./ConfirmDeleteModal";
+import { regionDisplayLabel } from "./constants/supplierConstants";
 import type { Project } from "./data";
 import { FormField, rules } from "./FormField";
 
@@ -343,7 +344,7 @@ export function ProjectsList() {
                 onClick={() => navigate(`/projects/${project.id}`)}
                 type="button"
               >
-                <div className="mb-3 flex items-center justify-between">
+                <div className="mb-3 flex items-center justify-between pl-9">
                   <span
                     className="rounded-full px-2.5 py-1 text-[11px]"
                     style={{
@@ -372,7 +373,8 @@ export function ProjectsList() {
                     <Users size={12} /> {project.participants}
                   </span>
                   <span className="flex items-center gap-1">
-                    <MapPin size={12} /> {project.region}
+                    <MapPin size={12} />{" "}
+                    {regionDisplayLabel(project.region) || project.region}
                   </span>
                   {project.totalPrice > 0 && (
                     <span className="flex items-center gap-1">

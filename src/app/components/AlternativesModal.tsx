@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+import { regionDisplayLabel } from "./constants/supplierConstants";
 
 interface AlternativeItem {
   description?: string;
@@ -118,7 +119,9 @@ export function AlternativesModal({
                   </h2>
                   <p className="text-[#8d785e] text-[12px]">
                     בחר עד 4 ספקים חלופיים
-                    {region ? ` באזור ${region}` : ""}
+                    {region
+                      ? ` באזור ${regionDisplayLabel(region) || region}`
+                      : ""}
                   </p>
                 </div>
                 <button
@@ -210,7 +213,7 @@ export function AlternativesModal({
                               {s.region && (
                                 <span className="flex items-center gap-1">
                                   <MapPin size={11} />
-                                  {s.region}
+                                  {regionDisplayLabel(s.region) || s.region}
                                 </span>
                               )}
                               <span>{s.category}</span>

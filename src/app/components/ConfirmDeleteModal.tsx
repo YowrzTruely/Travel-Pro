@@ -66,6 +66,7 @@ export function ConfirmDeleteModal({
             dir="rtl"
             exit={{ opacity: 0, scale: 0.92, y: 20 }}
             initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            onClick={(e) => e.stopPropagation()}
             transition={{ type: "spring", damping: 28, stiffness: 350 }}
           >
             {/* Header */}
