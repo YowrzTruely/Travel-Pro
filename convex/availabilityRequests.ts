@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import { mutation, query } from "./_generated/server";
 
 export const listByProject = query({
@@ -60,6 +61,56 @@ export const create = mutation({
         expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
         status: "pending",
       });
+    }
+
+    // Notify supplier of availability request via multi-channel
+    if (supplier) {
+      const project = await ctx.db.get(args.projectId);
+      let productName = "";
+      if (args.productId) {
+        const product = await ctx.db.get(args.productId);
+        productName = product?.name ?? "";
+      }
+      const requestor = await ctx.db.get(args.requestedBy);
+      const producerName = requestor?.name ?? requestor?.company ?? "מפיק";
+
+      const siteUrl = process.env.CONVEX_SITE_URL
+        ? process.env.CONVEX_SITE_URL.replace(".convex.site", ".vercel.app")
+        : "https://travelpro.co.il";
+
+      const link = inviteToken
+        ? `${siteUrl}/availability-invite/${inviteToken}`
+        : `${siteUrl}/requests`;
+
+      const body = [
+        `${producerName} בודק איתך זמינות לאירוע "${project?.name ?? ""}" ב-${args.date}.`,
+        args.participants ? `${args.participants} משתתפים` : "",
+        productName ? `מוצר: ${productName}` : "",
+        args.notes ? `הערות: ${args.notes}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      const channels: string[] = ["in_app"];
+      if (supplier.phone) {
+        channels.push("sms", "whatsapp");
+      }
+      if (supplier.email) {
+        channels.push("email");
+      }
+
+      await ctx.scheduler.runAfter(
+        0,
+        internal.notificationSender.sendMultiChannel,
+        {
+          phone: supplier.phone,
+          email: supplier.email,
+          title: "בקשת זמינות חדשה",
+          body,
+          link,
+          channels,
+        }
+      );
     }
 
     return { ...doc, id: doc._id, inviteToken };

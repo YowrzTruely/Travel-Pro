@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { internalMutation, mutation, query } from "./_generated/server";
 
@@ -160,10 +161,46 @@ export const sendOrder = mutation({
     if (!order) {
       throw new Error("Order not found");
     }
-    console.log(
-      `[SupplierOrders] Sending order ${id} to supplier ${order.supplierId}`
-    );
     await ctx.db.patch(id, { status: "sent" });
+
+    // Notify supplier
+    const supplier = await ctx.db.get(order.supplierId);
+    const project = await ctx.db.get(order.projectId);
+    let productName = "";
+    if (order.productId) {
+      const product = await ctx.db.get(order.productId);
+      productName = product?.name ?? "";
+    }
+
+    if (supplier && (supplier.phone || supplier.email)) {
+      const channels: string[] = ["in_app"];
+      if (supplier.phone) {
+        channels.push("sms", "whatsapp");
+      }
+      if (supplier.email) {
+        channels.push("email");
+      }
+
+      await ctx.scheduler.runAfter(
+        0,
+        internal.notificationSender.sendMultiChannel,
+        {
+          phone: supplier.phone,
+          email: supplier.email,
+          title: "הזמנה חדשה",
+          body: [
+            `הזמנה עבור אירוע "${project?.name ?? ""}" ב-${order.date}.`,
+            productName ? `מוצר: ${productName}` : "",
+            `כמות: ${order.participants} משתתפים`,
+            `מחיר מוסכם: ₪${order.agreedPrice.toLocaleString()}`,
+          ]
+            .filter(Boolean)
+            .join("\n"),
+          channels,
+        }
+      );
+    }
+
     const doc = await ctx.db.get(id);
     if (!doc) {
       throw new Error("Failed to read updated document");
@@ -189,8 +226,39 @@ export const cancelOrder = mutation({
     id: v.id("supplierOrders"),
     cancellationReason: v.optional(v.string()),
   },
-  handler: async (ctx, { id }) => {
+  handler: async (ctx, { id, cancellationReason }) => {
+    const order = await ctx.db.get(id);
+    if (!order) {
+      throw new Error("Order not found");
+    }
     await ctx.db.patch(id, { status: "cancelled" });
+
+    // Notify supplier of cancellation
+    const supplier = await ctx.db.get(order.supplierId);
+    const project = await ctx.db.get(order.projectId);
+
+    if (supplier && (supplier.phone || supplier.email)) {
+      const channels: string[] = ["in_app"];
+      if (supplier.phone) {
+        channels.push("sms", "whatsapp");
+      }
+      if (supplier.email) {
+        channels.push("email");
+      }
+
+      await ctx.scheduler.runAfter(
+        0,
+        internal.notificationSender.sendMultiChannel,
+        {
+          phone: supplier.phone,
+          email: supplier.email,
+          title: "ביטול הזמנה",
+          body: `ההזמנה עבור "${project?.name ?? ""}" ב-${order.date} בוטלה.${cancellationReason ? `\nסיבה: ${cancellationReason}` : ""}`,
+          channels,
+        }
+      );
+    }
+
     const doc = await ctx.db.get(id);
     if (!doc) {
       throw new Error("Failed to read updated document");

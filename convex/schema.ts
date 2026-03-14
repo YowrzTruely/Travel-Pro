@@ -201,6 +201,8 @@ export default defineSchema({
     timelineHidden: v.optional(v.boolean()),
     tripName: v.optional(v.string()),
     openingParagraph: v.optional(v.string()),
+    lastClientCoordinationAt: v.optional(v.number()),
+    lastSupplierCoordinationAt: v.optional(v.number()),
   })
     .index("by_legacyId", ["legacyId"])
     .index("by_status", ["status"]),

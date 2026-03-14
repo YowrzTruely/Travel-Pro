@@ -32,6 +32,7 @@ import type * as notifications from "../notifications.js";
 import type * as passwordChange from "../passwordChange.js";
 import type * as passwordChangeHelpers from "../passwordChangeHelpers.js";
 import type * as pdfExport from "../pdfExport.js";
+import type * as preEventCoordination from "../preEventCoordination.js";
 import type * as productAddons from "../productAddons.js";
 import type * as projectDocuments from "../projectDocuments.js";
 import type * as projects from "../projects.js";
@@ -84,6 +85,7 @@ declare const fullApi: ApiFromModules<{
   passwordChange: typeof passwordChange;
   passwordChangeHelpers: typeof passwordChangeHelpers;
   pdfExport: typeof pdfExport;
+  preEventCoordination: typeof preEventCoordination;
   productAddons: typeof productAddons;
   projectDocuments: typeof projectDocuments;
   projects: typeof projects;

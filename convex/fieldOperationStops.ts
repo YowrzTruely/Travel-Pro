@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import { mutation, query } from "./_generated/server";
 
 export const listByOperation = query({
@@ -77,7 +78,7 @@ export const updateQuantity = mutation({
       return { id: args.id };
     }
 
-    // Auto-notify food suppliers on quantity change (Fix 7)
+    // Auto-notify food suppliers on quantity change
     const supplier = await ctx.db.get(doc.supplierId);
     if (supplier) {
       const category = (supplier.category || "").toLowerCase();
@@ -86,9 +87,30 @@ export const updateQuantity = mutation({
         category.includes("מזון") ||
         category.includes("קייטרינג")
       ) {
-        console.log(
-          `[NotificationStub] Food supplier "${supplier.name}" quantity updated to ${args.actualQuantity} (was ${doc.plannedQuantity}). Would send multi-channel notification.`
-        );
+        const fieldOp = await ctx.db.get(doc.fieldOperationId);
+        const project = fieldOp ? await ctx.db.get(fieldOp.projectId) : null;
+
+        if (supplier.phone || supplier.email) {
+          const channels: string[] = [];
+          if (supplier.phone) {
+            channels.push("sms", "whatsapp");
+          }
+          if (supplier.email) {
+            channels.push("email");
+          }
+
+          await ctx.scheduler.runAfter(
+            0,
+            internal.notificationSender.sendMultiChannel,
+            {
+              phone: supplier.phone,
+              email: supplier.email,
+              title: "עדכון כמות משתתפים",
+              body: `עדכון דחוף — ${project?.name ?? "אירוע"}\nכמות משתתפים עודכנה: ${doc.plannedQuantity} → ${args.actualQuantity}`,
+              channels,
+            }
+          );
+        }
       }
     }
 
@@ -151,11 +173,34 @@ export const shiftTimes = mutation({
       }
     }
 
-    // Notify upcoming suppliers about time shift (Fix 8)
+    // Notify upcoming suppliers about time shift
     for (const stop of affectedStops) {
-      console.log(
-        `[NotificationStub] Time shift: supplier "${stop.supplierName}" (stop #${stop.orderIndex}) shifted by ${args.minutesShift} minutes. Would send WhatsApp/multi-channel notification.`
-      );
+      const supplier = await ctx.db.get(stop.supplierId);
+      if (supplier && (supplier.phone || supplier.email)) {
+        const channels: string[] = [];
+        if (supplier.phone) {
+          channels.push("sms", "whatsapp");
+        }
+        if (supplier.email) {
+          channels.push("email");
+        }
+
+        const newStart = addMinutesToTime(
+          stop.plannedStartTime,
+          args.minutesShift
+        );
+        await ctx.scheduler.runAfter(
+          0,
+          internal.notificationSender.sendMultiChannel,
+          {
+            phone: supplier.phone,
+            email: supplier.email,
+            title: "עדכון לוח זמנים",
+            body: `שעת ההגעה החדשה שלך: ${newStart} (הוזז ב-${args.minutesShift} דקות)`,
+            channels,
+          }
+        );
+      }
     }
   },
 });

@@ -1895,6 +1895,36 @@ export function QuoteEditor() {
             סגור פרויקט
           </button>
         )}
+        {project?.status !== "בוטל" && (
+          <button
+            className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-[13px] text-red-600 transition-colors hover:bg-red-100"
+            onClick={async () => {
+              // biome-ignore lint/suspicious/noAlert: intentional confirmation dialog for destructive action
+              const confirmed = window.confirm(
+                "האם אתה בטוח שברצונך לבטל את הפרויקט? כל ההזמנות והשריונות יבוטלו והספקים יקבלו הודעה."
+              );
+              if (!confirmed) {
+                return;
+              }
+              try {
+                if (!project) {
+                  return;
+                }
+                await updateProject({
+                  id: project._id,
+                  status: "בוטל",
+                });
+                appToast.success("הפרויקט בוטל", "כל הספקים קיבלו הודעת ביטול");
+              } catch {
+                appToast.error("שגיאה בביטול הפרויקט");
+              }
+            }}
+            type="button"
+          >
+            <X size={15} />
+            בטל פרויקט
+          </button>
+        )}
       </div>
 
       {/* ═══ Orders & Invoices section ═══ */}

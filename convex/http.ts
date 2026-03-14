@@ -104,4 +104,110 @@ http.route({
   }),
 });
 
+// ─── WhatsApp Business Incoming Webhook ───
+
+// GET: Verification endpoint for Meta webhook setup
+http.route({
+  path: "/api/whatsapp/webhook",
+  method: "GET",
+  handler: httpAction(async (_ctx, request) => {
+    const url = new URL(request.url);
+    const mode = url.searchParams.get("hub.mode");
+    const token = url.searchParams.get("hub.verify_token");
+    const challenge = url.searchParams.get("hub.challenge");
+    const expectedToken = process.env.WHATSAPP_VERIFY_TOKEN;
+
+    if (mode === "subscribe" && token && token === expectedToken) {
+      console.log("[WhatsApp Webhook] Verification successful");
+      return new Response(challenge ?? "", { status: 200 });
+    }
+    console.warn("[WhatsApp Webhook] Verification failed");
+    return new Response("Forbidden", { status: 403 });
+  }),
+});
+
+// POST: Receive incoming WhatsApp messages and create leads
+http.route({
+  path: "/api/whatsapp/webhook",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    try {
+      // Validate X-Hub-Signature-256
+      const signature = request.headers.get("x-hub-signature-256");
+      const appSecret = process.env.WHATSAPP_APP_SECRET;
+      const bodyText = await request.text();
+
+      if (appSecret && signature) {
+        const encoder = new TextEncoder();
+        const key = await crypto.subtle.importKey(
+          "raw",
+          encoder.encode(appSecret),
+          { name: "HMAC", hash: "SHA-256" },
+          false,
+          ["sign"]
+        );
+        const sig = await crypto.subtle.sign(
+          "HMAC",
+          key,
+          encoder.encode(bodyText)
+        );
+        const expectedSig = `sha256=${Array.from(new Uint8Array(sig))
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("")}`;
+        if (signature !== expectedSig) {
+          console.warn("[WhatsApp Webhook] Invalid signature");
+          return new Response("Unauthorized", { status: 401 });
+        }
+      }
+
+      const body = JSON.parse(bodyText);
+
+      // Parse Meta Cloud API format
+      const entry = body?.entry?.[0];
+      const changes = entry?.changes?.[0];
+      const value = changes?.value;
+      const messages = value?.messages;
+      const contacts = value?.contacts;
+
+      if (!messages || messages.length === 0) {
+        // Not a message event (could be status update) — acknowledge
+        return new Response(JSON.stringify({ ok: true }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      const msg = messages[0];
+      const contact = contacts?.[0];
+      const phone = msg.from ?? "";
+      const text = msg.text?.body ?? "";
+      const name = contact?.profile?.name ?? phone;
+
+      // Create lead from incoming WhatsApp message
+      await ctx.runMutation(internal.leads.createFromWebhook, {
+        source: "whatsapp",
+        name,
+        phone,
+        email: "",
+        notes: text,
+      });
+
+      console.log(
+        `[WhatsApp Webhook] Lead created from ${name} (${phone}): "${text.slice(0, 50)}"`
+      );
+
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error("[WhatsApp Webhook] Failed:", error);
+      return new Response(JSON.stringify({ ok: false }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }),
+});
+
 export default http;

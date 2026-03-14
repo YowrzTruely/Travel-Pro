@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 
@@ -171,6 +172,29 @@ export const update = mutation({
           await ctx.db.patch(order._id, {
             status: "cancelled",
           });
+          // Notify supplier of cancellation
+          const supplier = await ctx.db.get(order.supplierId);
+          if (supplier && (supplier.phone || supplier.email)) {
+            const channels: string[] = [];
+            if (supplier.phone) {
+              channels.push("sms", "whatsapp");
+            }
+            if (supplier.email) {
+              channels.push("email");
+            }
+
+            await ctx.scheduler.runAfter(
+              0,
+              internal.notificationSender.sendMultiChannel,
+              {
+                phone: supplier.phone,
+                email: supplier.email,
+                title: "ביטול הזמנה",
+                body: `ההזמנה עבור "${project.name}" בוטלה.\nסיבה: פרויקט בוטל`,
+                channels,
+              }
+            );
+          }
         }
       }
     }

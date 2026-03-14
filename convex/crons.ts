@@ -38,4 +38,18 @@ crons.cron(
   internal.supplierOrders.sendUpcomingReminders
 );
 
+// 6:00 UTC = 9:00 Israel time — send client coordination 4 days before event
+crons.cron(
+  "client coordination 4 days before",
+  "0 6 * * *",
+  internal.preEventCoordination.sendClientCoordination
+);
+
+// 6:30 UTC = 9:30 Israel time — send supplier quantity update 2 days before event
+crons.cron(
+  "supplier coordination 2 days before",
+  "30 6 * * *",
+  internal.preEventCoordination.sendSupplierQuantityUpdate
+);
+
 export default crons;
