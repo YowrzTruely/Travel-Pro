@@ -34,6 +34,34 @@ export const create = mutation({
       status: "planned",
       createdAt: Date.now(),
     });
+
+    // Auto-populate stops from quote items that have a linked supplier
+    const quoteItems = await ctx.db
+      .query("quoteItems")
+      .withIndex("by_projectId", (q) => q.eq("projectId", args.projectId))
+      .collect();
+
+    const project = await ctx.db.get(args.projectId);
+    const participants = project?.participants ?? 0;
+    let orderIndex = 0;
+
+    for (const item of quoteItems) {
+      if (item.supplierId) {
+        await ctx.db.insert("fieldOperationStops", {
+          fieldOperationId: id,
+          quoteItemId: item._id,
+          supplierId: item.supplierId,
+          supplierName: item.supplier || item.name,
+          orderIndex,
+          plannedStartTime: "08:00",
+          plannedEndTime: "09:00",
+          plannedQuantity: participants,
+          status: "upcoming",
+        });
+        orderIndex++;
+      }
+    }
+
     const doc = await ctx.db.get(id);
     return { ...doc, id: doc?._id };
   },

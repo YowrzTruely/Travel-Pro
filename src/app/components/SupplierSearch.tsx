@@ -6,7 +6,7 @@ import { regionDisplayLabel } from "./constants/supplierConstants";
 
 interface SupplierSearchProps {
   label?: string;
-  onChange: (name: string) => void;
+  onChange: (name: string, supplierId?: string) => void;
   placeholder?: string;
   value: string;
 }
@@ -71,13 +71,13 @@ export function SupplierSearch({
 
   const selectSupplier = (supplier: any) => {
     setQuery(supplier.name);
-    onChange(supplier.name);
+    onChange(supplier.name, supplier._id || supplier.id);
     setOpen(false);
   };
 
   const handleInputChange = (val: string) => {
     setQuery(val);
-    onChange(val);
+    onChange(val, undefined);
     if (!open) {
       setOpen(true);
     }
@@ -115,7 +115,7 @@ export function SupplierSearch({
             onClick={(e) => {
               e.stopPropagation();
               setQuery("");
-              onChange("");
+              onChange("", undefined);
             }}
             type="button"
           >

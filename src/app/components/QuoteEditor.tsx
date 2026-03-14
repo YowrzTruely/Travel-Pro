@@ -6,6 +6,7 @@ import {
   Bus,
   Camera,
   Check,
+  CheckCircle,
   CheckSquare,
   ChevronDown,
   CircleDot,
@@ -43,6 +44,7 @@ import { useNavigate, useParams } from "react-router";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { appToast } from "./AppToast";
+import { AvailabilityCheckPanel } from "./AvailabilityCheckPanel";
 import { CategoryIcon } from "./CategoryIcons";
 import { useConfirmDelete } from "./ConfirmDeleteModal";
 import { regionDisplayLabel } from "./constants/supplierConstants";
@@ -286,6 +288,7 @@ interface AddItemForm {
   name: string;
   sellingPrice: string;
   supplier: string;
+  supplierId: string;
   type: string;
 }
 
@@ -313,10 +316,14 @@ export function QuoteEditor() {
     ? approvedStatuses.includes(project.status)
     : false;
 
+  const hasLinkedSuppliers = (items ?? []).some((i: any) => i.supplierId);
   const tabs = [
     { id: "components", label: "רכיבים וספקים" },
     { id: "pricing", label: "תמחור ורווח יעד" },
     { id: "timeline", label: 'לו"ז הפעילות' },
+    ...(hasLinkedSuppliers
+      ? [{ id: "availability", label: "בדיקת זמינות" }]
+      : []),
     ...(showOrders ? [{ id: "orders", label: "הזמנות וחשבוניות" }] : []),
     ...(showOrders ? [{ id: "digital-assets", label: "נכסים דיגיטליים" }] : []),
   ];
@@ -377,6 +384,7 @@ export function QuoteEditor() {
       type: "",
       name: "",
       supplier: "",
+      supplierId: "",
       description: "",
       cost: "",
       directPrice: "",
@@ -505,6 +513,9 @@ export function QuoteEditor() {
         icon: showAddForm || "אחר",
         name: data.name.trim(),
         supplier: data.supplier.trim(),
+        ...(data.supplierId
+          ? { supplierId: data.supplierId as Id<"suppliers"> }
+          : {}),
         description: data.description.trim(),
         cost,
         directPrice,
@@ -1776,6 +1787,16 @@ export function QuoteEditor() {
         </div>
       )}
 
+      {/* ═══ Availability Check Section ═══ */}
+      {activeTab === "availability" && project?._id && (
+        <AvailabilityCheckPanel
+          date={project.date || ""}
+          items={currentItems as any}
+          participants={participants}
+          projectId={project._id}
+        />
+      )}
+
       {/* Spacer for mobile fixed bottom bar */}
       <div className="h-16 md:h-0" />
 
@@ -1850,6 +1871,27 @@ export function QuoteEditor() {
           <Copy size={15} />
           שתף ללא מחירים
         </button>
+        {project?.status === "בביצוע" && (
+          <button
+            className="flex items-center gap-2 rounded-xl bg-[#22c55e] px-4 py-2.5 text-[13px] text-white transition-colors hover:bg-[#16a34a]"
+            onClick={async () => {
+              if (!projectId) {
+                return;
+              }
+              try {
+                await updateProject({ id: projectId, status: "הושלם" });
+                appToast.success("פרויקט הושלם", "הפרויקט סומן כהושלם בהצלחה");
+              } catch {
+                appToast.error("שגיאה", "לא ניתן לסגור את הפרויקט");
+              }
+            }}
+            style={{ fontWeight: 600 }}
+            type="button"
+          >
+            <CheckCircle size={15} />
+            סגור פרויקט
+          </button>
+        )}
       </div>
 
       {/* ═══ Orders & Invoices section ═══ */}
@@ -2039,9 +2081,12 @@ export function QuoteEditor() {
                 {...addForm.register("name", rules.requiredMin("שם רכיב", 2))}
               />
               <SupplierSearch
-                onChange={(name) =>
-                  addForm.setValue("supplier", name, { shouldDirty: true })
-                }
+                onChange={(name, supplierId) => {
+                  addForm.setValue("supplier", name, { shouldDirty: true });
+                  addForm.setValue("supplierId", supplierId || "", {
+                    shouldDirty: true,
+                  });
+                }}
                 value={addForm.watch("supplier")}
               />
               <FormField

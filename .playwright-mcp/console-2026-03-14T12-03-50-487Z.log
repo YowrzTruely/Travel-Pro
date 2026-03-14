@@ -1,0 +1,250 @@
+[  587928ms] ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490417886:299:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at updateFunctionComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14630:28)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+[  587959ms] ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490417886:299:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at updateFunctionComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14630:28)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+[  587930ms] [ERROR] The above error occurred in the <QuoteEditor> component:
+
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490417886:282:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5474:26)
+    at Outlet (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6138:26)
+    at div
+    at MotionDOMComponent (http://localhost:5173/node_modules/.vite/deps/motion_react.js?v=a2b3ea5f:1274:40)
+    at PopChildMeasure (http://localhost:5173/node_modules/.vite/deps/motion_react.js?v=a2b3ea5f:420:23)
+    at PopChild (http://localhost:5173/node_modules/.vite/deps/motion_react.js?v=a2b3ea5f:446:21)
+    at PresenceChild (http://localhost:5173/node_modules/.vite/deps/motion_react.js?v=a2b3ea5f:494:24)
+    at AnimatePresence (http://localhost:5173/node_modules/.vite/deps/motion_react.js?v=a2b3ea5f:571:26)
+    at PageTransition (http://localhost:5173/src/app/components/Layout.tsx?t=1773489482464:784:3)
+    at main
+    at div
+    at div
+    at Layout (http://localhost:5173/src/app/components/Layout.tsx?t=1773489482464:101:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5474:26)
+    at RenderErrorBoundary (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5433:5)
+    at DataRoutes (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6062:3)
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6147:13)
+    at RouterProvider (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5892:3)
+    at RoleRouter (http://localhost:5173/src/app/App.tsx?t=1773489551835:174:23)
+    at AppInner (http://localhost:5173/src/app/App.tsx?t=1773489551835:98:67)
+    at AuthProvider (http://localhost:5173/src/app/components/AuthContext.tsx:30:32)
+    at ConvexProvider (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=a2b3ea5f:4111:25)
+    at ConvexProviderWithAuth (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=a2b3ea5f:4905:3)
+    at AuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=a2b3ea5f:77:25)
+    at ConvexAuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=a2b3ea5f:390:11)
+    at ConvexProvider (http://localhost:5173/src/app/components/ConvexProvider.tsx:21:34)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary. @ http://localhost:5173/src/main.tsx?t=1773489551835:6
+[  587930ms] [ERROR] React Router caught the following error during render ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490417886:299:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at updateFunctionComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14630:28)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15972:22)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19806:22)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+    at renderRootSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19169:15)
+    at recoverFromConcurrentError (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:18786:28)
+    at performSyncWorkOnRoot (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:18932:28) {componentStack: 
+    at QuoteEditor (http://localhost:5173/src/app…p/components/ConvexProvider.tsx:21:34)
+    at App} @ http://localhost:5173/src/main.tsx?t=1773489551835:6
+[  595605ms] ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490425817:299:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at mountIndeterminateComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14974:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15962:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+[  595620ms] ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490425817:299:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at mountIndeterminateComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14974:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15962:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+[  595619ms] [ERROR] The above error occurred in the <QuoteEditor> component:
+
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490425817:282:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5474:26)
+    at Outlet (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6138:26)
+    at PageTransition (http://localhost:5173/src/app/components/Layout.tsx?t=1773489482464:784:3)
+    at main
+    at div
+    at div
+    at Layout (http://localhost:5173/src/app/components/Layout.tsx?t=1773489482464:101:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5474:26)
+    at RenderErrorBoundary (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5433:5)
+    at DataRoutes (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6062:3)
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6147:13)
+    at RouterProvider (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5892:3)
+    at RoleRouter (http://localhost:5173/src/app/App.tsx?t=1773489551835:174:23)
+    at AppInner (http://localhost:5173/src/app/App.tsx?t=1773489551835:98:67)
+    at AuthProvider (http://localhost:5173/src/app/components/AuthContext.tsx:30:32)
+    at ConvexProvider (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=a2b3ea5f:4111:25)
+    at ConvexProviderWithAuth (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=a2b3ea5f:4905:3)
+    at AuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=a2b3ea5f:77:25)
+    at ConvexAuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=a2b3ea5f:390:11)
+    at ConvexProvider (http://localhost:5173/src/app/components/ConvexProvider.tsx:21:34)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary. @ http://localhost:5173/src/main.tsx?t=1773489551835:6
+[  595619ms] [ERROR] React Router caught the following error during render ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490425817:299:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at mountIndeterminateComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14974:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15962:22)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19806:22)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+    at renderRootSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19169:15)
+    at recoverFromConcurrentError (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:18786:28)
+    at performSyncWorkOnRoot (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:18932:28) {componentStack: 
+    at QuoteEditor (http://localhost:5173/src/app…p/components/ConvexProvider.tsx:21:34)
+    at App} @ http://localhost:5173/src/main.tsx?t=1773489551835:6
+[  612118ms] ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490442265:300:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at mountIndeterminateComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14974:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15962:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+[  612120ms] ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490442265:300:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at mountIndeterminateComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14974:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15962:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+[  612121ms] [ERROR] The above error occurred in the <QuoteEditor> component:
+
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490442265:283:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5474:26)
+    at Outlet (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6138:26)
+    at PageTransition (http://localhost:5173/src/app/components/Layout.tsx?t=1773489482464:784:3)
+    at main
+    at div
+    at div
+    at Layout (http://localhost:5173/src/app/components/Layout.tsx?t=1773489482464:101:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5474:26)
+    at RenderErrorBoundary (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5433:5)
+    at DataRoutes (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6062:3)
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6147:13)
+    at RouterProvider (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5892:3)
+    at RoleRouter (http://localhost:5173/src/app/App.tsx?t=1773489551835:174:23)
+    at AppInner (http://localhost:5173/src/app/App.tsx?t=1773489551835:98:67)
+    at AuthProvider (http://localhost:5173/src/app/components/AuthContext.tsx:30:32)
+    at ConvexProvider (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=a2b3ea5f:4111:25)
+    at ConvexProviderWithAuth (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=a2b3ea5f:4905:3)
+    at AuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=a2b3ea5f:77:25)
+    at ConvexAuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=a2b3ea5f:390:11)
+    at ConvexProvider (http://localhost:5173/src/app/components/ConvexProvider.tsx:21:34)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary. @ http://localhost:5173/src/main.tsx?t=1773489551835:6
+[  612121ms] [ERROR] React Router caught the following error during render ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490442265:300:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at mountIndeterminateComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14974:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15962:22)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19806:22)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+    at renderRootSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19169:15)
+    at recoverFromConcurrentError (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:18786:28)
+    at performSyncWorkOnRoot (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:18932:28) {componentStack: 
+    at QuoteEditor (http://localhost:5173/src/app…p/components/ConvexProvider.tsx:21:34)
+    at App} @ http://localhost:5173/src/main.tsx?t=1773489551835:6
+[  657650ms] ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490442265:300:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at mountIndeterminateComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14974:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15962:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+[  657654ms] ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490442265:300:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at mountIndeterminateComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14974:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15962:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3705:24)
+    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:3739:39)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19818:15)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+[  657656ms] [ERROR] The above error occurred in the <QuoteEditor> component:
+
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490442265:283:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5474:26)
+    at Outlet (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6138:26)
+    at PageTransition (http://localhost:5173/src/app/components/Layout.tsx?t=1773489482464:784:3)
+    at main
+    at div
+    at div
+    at Layout (http://localhost:5173/src/app/components/Layout.tsx?t=1773489482464:101:20)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5474:26)
+    at RenderErrorBoundary (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5433:5)
+    at DataRoutes (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6062:3)
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:6147:13)
+    at RouterProvider (http://localhost:5173/node_modules/.vite/deps/react-router.js?v=a2b3ea5f:5892:3)
+    at RoleRouter (http://localhost:5173/src/app/App.tsx?t=1773489551835:174:23)
+    at AppInner (http://localhost:5173/src/app/App.tsx?t=1773489551835:98:67)
+    at AuthProvider (http://localhost:5173/src/app/components/AuthContext.tsx:30:32)
+    at ConvexProvider (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=a2b3ea5f:4111:25)
+    at ConvexProviderWithAuth (http://localhost:5173/node_modules/.vite/deps/chunk-AIKYKSBK.js?v=a2b3ea5f:4905:3)
+    at AuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=a2b3ea5f:77:25)
+    at ConvexAuthProvider (http://localhost:5173/node_modules/.vite/deps/@convex-dev_auth_react.js?v=a2b3ea5f:390:11)
+    at ConvexProvider (http://localhost:5173/src/app/components/ConvexProvider.tsx:21:34)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary. @ http://localhost:5173/src/main.tsx?t=1773489551835:6
+[  657656ms] [ERROR] React Router caught the following error during render ReferenceError: Cannot access 'currentItems' before initialization
+    at QuoteEditor (http://localhost:5173/src/app/components/QuoteEditor.tsx?t=1773490442265:300:30)
+    at renderWithHooks (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:11596:26)
+    at mountIndeterminateComponent (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:14974:21)
+    at beginWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:15962:22)
+    at beginWork$1 (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19806:22)
+    at performUnitOfWork (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19251:20)
+    at workLoopSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19190:13)
+    at renderRootSync (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:19169:15)
+    at recoverFromConcurrentError (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:18786:28)
+    at performSyncWorkOnRoot (http://localhost:5173/node_modules/.vite/deps/chunk-TH7NCS4R.js?v=a2b3ea5f:18932:28) {componentStack: 
+    at QuoteEditor (http://localhost:5173/src/app…p/components/ConvexProvider.tsx:21:34)
+    at App} @ http://localhost:5173/src/main.tsx?t=1773489551835:6

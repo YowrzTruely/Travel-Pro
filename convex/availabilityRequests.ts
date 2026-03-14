@@ -88,6 +88,16 @@ export const respond = mutation({
     if (!doc) {
       throw new Error("Failed to read updated document");
     }
+    // Sync availability status back to the quote item
+    if (doc.quoteItemId) {
+      const item = await ctx.db.get(doc.quoteItemId);
+      if (item) {
+        await ctx.db.patch(doc.quoteItemId, {
+          availabilityStatus:
+            args.status === "alternative_proposed" ? "declined" : args.status,
+        });
+      }
+    }
     return { ...doc, id: doc._id };
   },
 });
