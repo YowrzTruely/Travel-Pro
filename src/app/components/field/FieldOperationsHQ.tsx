@@ -215,6 +215,13 @@ export function FieldOperationsHQ() {
         </div>
       </div>
 
+      {/* Participant count alert */}
+      {fieldOperation.status === "in_progress" && project.participants > 0 && (
+        <div className="mx-auto max-w-lg px-4 pt-3">
+          <ParticipantAlert planned={project.participants} />
+        </div>
+      )}
+
       {/* Action buttons — fixed on mobile */}
       <div className="fixed inset-x-0 bottom-0 z-20 border-[#e7e1da] border-t bg-white px-4 py-3 shadow-lg sm:static sm:z-auto sm:mx-auto sm:max-w-lg sm:border-t-0 sm:bg-transparent sm:shadow-none">
         <div className="mx-auto flex max-w-lg gap-2">
@@ -312,6 +319,42 @@ export function FieldOperationsHQ() {
           onClose={() => setShowTimeShift(false)}
           stops={sortedStops}
         />
+      )}
+    </div>
+  );
+}
+
+function ParticipantAlert({ planned }: { planned: number }) {
+  const [actual, setActual] = useState<string>("");
+  const actualNum = Number.parseInt(actual, 10);
+  const diff = Number.isNaN(actualNum) ? 0 : planned - actualNum;
+
+  return (
+    <div className="rounded-xl border border-[#e7e1da] bg-white p-3">
+      <div className="flex items-center gap-3">
+        <div className="flex-1">
+          <label
+            className="mb-1 block text-[#8d785e] text-[12px]"
+            htmlFor="actual-participants"
+            style={{ fontWeight: 600 }}
+          >
+            משתתפים בפועל (מתוכנן: {planned})
+          </label>
+          <input
+            className="w-full rounded-lg border border-[#e7e1da] bg-[#f5f3f0] px-3 py-2 text-[14px] outline-none focus:border-[#ff8c00]"
+            id="actual-participants"
+            onChange={(e) => setActual(e.target.value)}
+            placeholder={String(planned)}
+            type="number"
+            value={actual}
+          />
+        </div>
+      </div>
+      {diff > 0 && actual !== "" && (
+        <div className="mt-2 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-[13px] text-amber-700">
+          <span style={{ fontWeight: 600 }}>{diff} פחות משתתפים מהמתוכנן</span>
+          <span className="text-amber-500">— יש לעדכן את הספקים</span>
+        </div>
       )}
     </div>
   );

@@ -31,4 +31,11 @@ crons.cron(
   internal.supplierPromotions.deactivateExpired
 );
 
+// 8:00 UTC = 11:00 Israel time — send reminders for orders with events in 7 days
+crons.cron(
+  "send order reminders",
+  "0 8 * * *",
+  internal.supplierOrders.sendUpcomingReminders
+);
+
 export default crons;

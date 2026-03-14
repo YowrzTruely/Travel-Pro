@@ -658,7 +658,7 @@ export function QuoteEditor() {
                   id: projectId,
                   quoteVersion: nextVersion,
                 });
-                // Duplicate all quote items
+                // Duplicate all quote items (preserving supplierId)
                 for (const item of currentItems) {
                   await createItem({
                     projectId: project._id,
@@ -666,6 +666,9 @@ export function QuoteEditor() {
                     icon: item.icon,
                     name: item.name,
                     supplier: item.supplier,
+                    ...((item as any).supplierId
+                      ? { supplierId: (item as any).supplierId }
+                      : {}),
                     description: item.description,
                     cost: item.cost,
                     directPrice: item.directPrice,

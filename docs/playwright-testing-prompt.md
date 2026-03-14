@@ -182,16 +182,136 @@ Prerequisites: Project in "בביצוע" status
 
 ---
 
-## Supplier Onboarding Flow
+## Supplier Registration — 3 Entry Paths
+
+### Path A: Manual Add by Producer
 ```
-1. Navigate to /register/supplier (no auth)
-2. Fill: business name, category, region, first product, phone, email, password
-3. Submit → redirected to supplier dashboard
-4. Complete onboarding stages:
-   - Stage 1: Business details + profile image
-   - Stage 2: Products & pricing
-   - Stage 3: Documents
-5. Logout, login as admin
+1. Login as producer
+2. Click sidebar: "בנק ספקים"
+3. Click "הוספת ספק חדש"
+4. Fill: name, phone, categories (select up to 3), region
+5. Submit
+6. Verify: supplier appears in supplier bank list
+7. Click supplier → verify detail page loads
+```
+
+### Path B: Self-Registration
+```
+1. Navigate to /register/supplier (no auth needed)
+2. Verify form shows all fields:
+   - שם מלא, שם עסק, אימייל, טלפון, סיסמה, אימות סיסמה
+   - קטגוריה ראשית (8 options dropdown)
+   - אזור פעילות (11 options dropdown — all Hebrew)
+   - מוצר / שירות ראשון
+3. Fill all required fields with test data
+4. Click "צור חשבון ספק"
+5. Verify: redirected to supplier dashboard
+6. Verify sidebar shows: דשבורד, מוצרים, מסמכים, פרופיל + stage 2 items
+```
+
+### Path C: Auto-Registration via Availability Check
+```
+1. Login as producer
+2. Open project → add item with supplier selected FROM DROPDOWN (not typed)
+3. Click "בדיקת זמינות" tab → click "שלח בקשה"
+4. Verify: status changes to "ממתין לתשובה"
+5. Backend generates invite token for unlinked supplier
+   (Cannot test public invite page without knowing token — check Convex dashboard)
+6. If token known: navigate to /availability-invite/:token
+7. Verify: shows event context (project name, date, participants)
+8. Register via minimal form
+```
+
+## Supplier Profile & Pricing Flow
+
+### Profile Editing
+```
+1. Login as supplier
+2. Click sidebar: "פרופיל"
+3. Verify fields present:
+   - שם העסק, טלפון, אימייל, כתובת
+   - 8 category toggle buttons (אטרקציות, מסעדות, הסעות, צילום, בידור, סדנאות, לינה, אחר)
+   - 11 region toggle buttons (all Hebrew: גליל עליון through ים המלח)
+   - אתר אינטרנט, פייסבוק
+   - שעות פעילות, זמינות עונתית
+   - אחוז מרווח ברירת מחדל (should show "20")
+4. Toggle a category → verify limit of 3 (try selecting 4th → should be blocked)
+5. Toggle a region → verify it highlights
+6. Change a field → verify "שמור שינויים" button enables
+```
+
+### Product Editor — 4-Tier Pricing
+```
+1. Click sidebar: "מוצרים"
+2. Verify: product list shows with price, timing, capacity
+3. Click "עריכה" on a product
+4. Verify product editor shows ALL sections:
+   a. פרטי המוצר: name, description, unit (6 options: אדם/אירוע/יום/קבוצה/חבילה/יחידה)
+   b. תמחור (4 שכבות):
+      - מחיר מחירון (e.g., ₪150)
+      - מחיר ישיר (e.g., ₪120)
+      - מחיר הפקה (e.g., ₪100)
+      - מחיר ללקוח (e.g., ₪180)
+   c. תמחור כמותי:
+      - סף כמות (e.g., 50)
+      - מחירון כמותי, ישיר כמותי, הפקה כמותי
+   d. זמנים: ברוטו (דקות), נטו (דקות)
+   e. ציוד נדרש: list with add/remove
+   f. קיבולת, מיקום, תנאי ביטול
+   g. תוספות (Addons): name + price
+   h. כלי AI: "צור תיאור שיווקי", "נקה תמונה"
+5. Modify a price → click "שמור שינויים"
+6. Verify: changes saved (close and reopen editor)
+```
+
+### Documents
+```
+1. Click sidebar: "מסמכים"
+2. Verify document types shown:
+   - ביטוח צד ג' (חובה)
+   - ביטוח חבות מעבידים (חובה)
+   - רישיון עסק (מומלץ)
+3. Each doc shows: status (חסר/בתוקף/פג), upload button, "אין לי" button
+4. Click "העלאה" → file picker opens
+5. Upload a file → verify status changes
+```
+
+### Preview — "How I Look"
+```
+1. Click sidebar: "תצוגה מקדימה"
+2. Verify heading: "כך אני נראה"
+3. Verify toggle buttons: "תצוגת מפיק" / "תצוגת לקוח"
+4. Verify shows:
+   - Business name + icon
+   - Category + region + rating
+   - Verification status badge
+   - Products with dual pricing (מחיר מחירון + מחיר הפקה)
+   - Active promotions section
+   - Missing fields section with links to edit
+5. Click "תצוגת לקוח" → verify view changes
+```
+
+### Availability Calendar
+```
+1. Click sidebar: "זמינות"
+2. Verify: monthly calendar displays
+3. Click a date → verify toggle (available/unavailable)
+4. Navigate months (next/prev buttons)
+```
+
+### Requests & Bookings (Supplier Side)
+```
+1. Click sidebar: "בקשות"
+2. Verify 3 tabs: "בקשות ממתינות", "שריונות פעילים", "היסטוריה"
+3. If pending requests exist:
+   - Verify: shows project name, date, participants
+   - Click "אשר" → verify moves to bookings tab
+   - Or click "דחה" → verify moves to history
+4. If no requests: verify empty state "אין בקשות ממתינות"
+5. IMPORTANT: Requests are supplier-specific — only shows requests for THIS supplier's supplierId
+```
+
+### Supplier Onboarding Flow (Full)
 6. Click "אישור ספקים" → approve the pending supplier
 ```
 

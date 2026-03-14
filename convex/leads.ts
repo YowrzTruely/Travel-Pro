@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 
 export const list = query({
   args: {},
@@ -219,5 +219,37 @@ export const updateStatus = mutation({
       ...lead,
       id,
     };
+  },
+});
+
+/** Internal mutation for webhook-created leads */
+export const createFromWebhook = internalMutation({
+  args: {
+    source: v.string(),
+    name: v.string(),
+    phone: v.string(),
+    email: v.string(),
+    notes: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const id = await ctx.db.insert("leads", {
+      name: args.name,
+      phone: args.phone,
+      email: args.email,
+      source: args.source as
+        | "phone"
+        | "manual"
+        | "whatsapp"
+        | "facebook"
+        | "instagram"
+        | "tiktok"
+        | "youtube"
+        | "linkedin"
+        | "website",
+      status: "new",
+      notes: args.notes,
+      createdAt: Date.now(),
+    });
+    return { id };
   },
 });

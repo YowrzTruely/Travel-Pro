@@ -60,4 +60,48 @@ http.route({
   }),
 });
 
+// ─── Lead Webhook Intake (Facebook, Instagram, TikTok, etc.) ───
+http.route({
+  path: "/api/leads/webhook",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    try {
+      const body = await request.json();
+      const { source, name, phone, email, message } = body as {
+        source?: string;
+        name?: string;
+        phone?: string;
+        email?: string;
+        message?: string;
+      };
+
+      if (!name) {
+        return new Response(
+          JSON.stringify({ ok: false, error: "name is required" }),
+          { status: 400, headers: { "Content-Type": "application/json" } }
+        );
+      }
+
+      await ctx.runMutation(internal.leads.createFromWebhook, {
+        source: source || "website",
+        name,
+        phone: phone || "",
+        email: email || "",
+        notes: message || "",
+      });
+
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error("[Lead Webhook] Failed:", error);
+      return new Response(
+        JSON.stringify({ ok: false, error: "Internal error" }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+  }),
+});
+
 export default http;

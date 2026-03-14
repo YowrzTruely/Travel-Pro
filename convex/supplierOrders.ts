@@ -198,3 +198,41 @@ export const cancelOrder = mutation({
     return { ...doc, id: doc._id };
   },
 });
+
+/** Daily cron: send reminders for orders with events in the next 7 days */
+export const sendUpcomingReminders = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = new Date();
+    const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const todayStr = now.toISOString().split("T")[0];
+    const in7DaysStr = in7Days.toISOString().split("T")[0];
+
+    const orders = await ctx.db.query("supplierOrders").collect();
+    let remindersSent = 0;
+
+    for (const order of orders) {
+      if (
+        (order.status === "sent" || order.status === "confirmed") &&
+        order.date >= todayStr &&
+        order.date <= in7DaysStr
+      ) {
+        const supplier = await ctx.db.get(order.supplierId);
+        if (supplier?.userId) {
+          await ctx.db.insert("notifications", {
+            userId: supplier.userId,
+            type: "order_reminder",
+            title: "תזכורת הזמנה",
+            body: `הזמנה לתאריך ${order.date} — ${order.participants} משתתפים`,
+            channel: "in_app",
+            read: false,
+            createdAt: Date.now(),
+          });
+          remindersSent++;
+        }
+      }
+    }
+
+    return { remindersSent };
+  },
+});

@@ -146,6 +146,35 @@ export const update = mutation({
 
     const projectId = project._id as Id<"projects">;
     await ctx.db.patch(projectId, patch);
+
+    // Cascade cancellation: if project is cancelled, cancel all active bookings and orders
+    if (updates.status === "בוטל") {
+      const bookings = await ctx.db
+        .query("bookings")
+        .withIndex("by_projectId", (q) => q.eq("projectId", projectId))
+        .collect();
+      for (const booking of bookings) {
+        if (booking.status === "reserved" || booking.status === "confirmed") {
+          await ctx.db.patch(booking._id, {
+            status: "cancelled",
+            cancelledAt: Date.now(),
+            cancellationReason: "פרויקט בוטל",
+          });
+        }
+      }
+      const orders = await ctx.db
+        .query("supplierOrders")
+        .withIndex("by_projectId", (q) => q.eq("projectId", projectId))
+        .collect();
+      for (const order of orders) {
+        if (order.status !== "cancelled" && order.status !== "completed") {
+          await ctx.db.patch(order._id, {
+            status: "cancelled",
+          });
+        }
+      }
+    }
+
     const updated = await ctx.db.get(projectId);
     if (!updated) {
       throw new Error("Project not found after update");
