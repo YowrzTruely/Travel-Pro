@@ -139,6 +139,15 @@ export function SupplierProfile() {
         ? Number.parseFloat(data.defaultMarginPercent)
         : undefined;
 
+      // Determine profile completion stage based on filled fields
+      const hasBasicProfile =
+        data.name.trim() &&
+        data.phone.trim() &&
+        data.email.trim() &&
+        selectedCategories.length > 0 &&
+        selectedRegions.length > 0;
+      const profileCompletionStage = hasBasicProfile ? "stage2" : "stage1";
+
       await updateSupplier({
         id: supplierId,
         name: data.name.trim(),
@@ -153,6 +162,10 @@ export function SupplierProfile() {
         defaultMarginPercent:
           margin !== undefined && !Number.isNaN(margin) ? margin : undefined,
         seasonalAvailability: data.seasonalAvailability.trim() || undefined,
+        profileCompletionStage: profileCompletionStage as
+          | "stage1"
+          | "stage2"
+          | "stage3",
       });
 
       setSaveSuccess(true);
