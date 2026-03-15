@@ -45,6 +45,7 @@ export interface UserProfile {
 interface AuthState {
   loading: boolean;
   profile: UserProfile | null;
+  profileCreateFailed: boolean;
   profileLoading: boolean;
   user: { email?: string } | null;
 }
@@ -108,6 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const autoCreateFiredRef = useRef(false);
   const [profileRetry, setProfileRetry] = useState(0);
+  const [profileCreateFailed, setProfileCreateFailed] = useState(false);
 
   useEffect(() => {
     if (!(isAuthenticated && profileIncomplete) || autoCreateFiredRef.current) {
@@ -130,6 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     pendingSignupRef.current = null;
     autoCreateFiredRef.current = true;
+    setProfileCreateFailed(false);
 
     let retryTimer: number | undefined;
 
@@ -153,6 +156,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         retryTimer = window.setTimeout(() => {
           setProfileRetry((n) => n + 1);
         }, 2000);
+      } else {
+        setProfileCreateFailed(true);
       }
     });
 
@@ -298,6 +303,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         profile,
         loading: isLoading,
+        profileCreateFailed,
         profileLoading,
         login,
         signup,

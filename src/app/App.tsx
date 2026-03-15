@@ -67,7 +67,13 @@ function LoadingSpinner({ message }: { message: string }) {
 }
 
 function AppInner() {
-  const { user, profile, loading: authLoading, profileLoading } = useAuth();
+  const {
+    user,
+    profile,
+    loading: authLoading,
+    profileCreateFailed,
+    profileLoading,
+  } = useAuth();
   const isPublic = useMemo(() => isPublicPage(), []);
   const linkRegisteredUser = useMutation(
     api.publicAvailabilityInvite.linkRegisteredUser
@@ -116,6 +122,34 @@ function AppInner() {
 
   // 5. No profile yet (first-time user, auto-creation in progress)
   if (!profile) {
+    if (profileCreateFailed) {
+      return (
+        <div
+          className="flex min-h-screen items-center justify-center bg-[#f8f7f5] p-4 font-['Assistant',sans-serif]"
+          dir="rtl"
+        >
+          <div className="flex flex-col items-center gap-4 rounded-2xl bg-white p-8 shadow-lg">
+            <p
+              className="text-[#181510] text-[16px]"
+              style={{ fontWeight: 600 }}
+            >
+              לא הצלחנו ליצור את הפרופיל
+            </p>
+            <p className="text-[#8d785e] text-[14px]">
+              נסה לרענן את הדף כדי להמשיך
+            </p>
+            <button
+              className="rounded-xl bg-[#ff8c00] px-6 py-3 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+              onClick={() => window.location.reload()}
+              style={{ fontWeight: 600 }}
+              type="button"
+            >
+              רענן דף
+            </button>
+          </div>
+        </div>
+      );
+    }
     return <LoadingSpinner message="יוצר פרופיל..." />;
   }
 
