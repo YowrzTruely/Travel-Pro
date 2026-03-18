@@ -128,7 +128,7 @@ export function LoginPage() {
 
   return (
     <div
-      className="flex min-h-screen items-center justify-center bg-[#f8f7f5] p-4 font-['Assistant',sans-serif]"
+      className="flex min-h-screen items-center justify-center bg-background p-4 font-['Assistant',sans-serif]"
       dir="rtl"
     >
       <motion.div
@@ -147,25 +147,25 @@ export function LoginPage() {
             width="800"
           />
           <h1
-            className="text-[#181510] text-[28px]"
+            className="text-[28px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             Eventos
           </h1>
-          <p className="mt-1 text-[#8d785e] text-[14px]">
+          <p className="mt-1 text-[14px] text-muted-foreground">
             ניהול פרויקטים למפיקי טיולים
           </p>
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-xl">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-xl">
           {/* Tab toggle */}
-          <div className="mb-6 flex rounded-xl bg-[#f5f3f0] p-1">
+          <div className="mb-6 flex rounded-xl bg-accent p-1">
             <button
               className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2.5 text-[14px] transition-all ${
                 mode === "login"
-                  ? "bg-white text-[#181510] shadow-sm"
-                  : "text-[#8d785e] hover:text-[#181510]"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
               onClick={() => switchMode("login")}
               style={{ fontWeight: mode === "login" ? 600 : 400 }}
@@ -177,8 +177,8 @@ export function LoginPage() {
             <button
               className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2.5 text-[14px] transition-all ${
                 mode === "signup"
-                  ? "bg-white text-[#181510] shadow-sm"
-                  : "text-[#8d785e] hover:text-[#181510]"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
               onClick={() => switchMode("signup")}
               style={{ fontWeight: mode === "signup" ? 600 : 400 }}
@@ -193,7 +193,7 @@ export function LoginPage() {
           {serverError && (
             <motion.div
               animate={{ opacity: 1, height: "auto" }}
-              className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-600"
+              className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-[13px] text-destructive"
               initial={{ opacity: 0, height: 0 }}
               style={{ fontWeight: 500 }}
             >
@@ -234,7 +234,7 @@ export function LoginPage() {
                     })}
                   />
                   <button
-                    className="mt-1 flex items-center gap-1 text-[#8d785e] text-[12px] hover:text-[#ff8c00]"
+                    className="mt-1 flex items-center gap-1 text-[12px] text-muted-foreground hover:text-primary"
                     onClick={() => setShowPassword(!showPassword)}
                     type="button"
                   >
@@ -243,7 +243,7 @@ export function LoginPage() {
                   </button>
                 </div>
                 <button
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-3 text-white shadow-[#ff8c00]/20 shadow-lg transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-white shadow-lg shadow-primary/20 transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={submitting || !loginForm.formState.isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -277,7 +277,7 @@ export function LoginPage() {
                 {/* Role selection */}
                 <div>
                   <div
-                    className="mb-2 block text-[#181510] text-[14px]"
+                    className="mb-2 block text-[14px] text-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     סוג חשבון
@@ -286,8 +286,8 @@ export function LoginPage() {
                     <button
                       className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-2.5 text-[13px] transition-all ${
                         selectedRole === "producer"
-                          ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
-                          : "border-[#e7e1da] text-[#8d785e] hover:border-[#ff8c00]/50"
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/50"
                       }`}
                       onClick={() => setSelectedRole("producer")}
                       style={{
@@ -300,8 +300,8 @@ export function LoginPage() {
                     <button
                       className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-2.5 text-[13px] transition-all ${
                         selectedRole === "supplier"
-                          ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
-                          : "border-[#e7e1da] text-[#8d785e] hover:border-[#ff8c00]/50"
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/50"
                       }`}
                       onClick={() => setSelectedRole("supplier")}
                       style={{
@@ -350,7 +350,7 @@ export function LoginPage() {
                       },
                     })}
                   />
-                  <p className="mt-1 text-[#b8a990] text-[11px]">
+                  <p className="mt-1 text-[11px] text-tertiary">
                     מינימום 8 תווים
                   </p>
                 </div>
@@ -370,7 +370,7 @@ export function LoginPage() {
                     })}
                   />
                   <button
-                    className="mt-1 flex items-center gap-1 text-[#8d785e] text-[12px] hover:text-[#ff8c00]"
+                    className="mt-1 flex items-center gap-1 text-[12px] text-muted-foreground hover:text-primary"
                     onClick={() => setShowPassword(!showPassword)}
                     type="button"
                   >
@@ -379,7 +379,7 @@ export function LoginPage() {
                   </button>
                 </div>
                 <button
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-3 text-white shadow-[#ff8c00]/20 shadow-lg transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-white shadow-lg shadow-primary/20 transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={submitting || !signupForm.formState.isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -396,7 +396,7 @@ export function LoginPage() {
           </AnimatePresence>
         </div>
 
-        <p className="mt-6 text-center text-[#b8a990] text-[12px]">
+        <p className="mt-6 text-center text-[12px] text-tertiary">
           Eventos &copy; 2026 — כל הזכויות שמורות
         </p>
       </motion.div>

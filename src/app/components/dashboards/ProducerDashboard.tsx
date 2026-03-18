@@ -187,13 +187,13 @@ function PipelineStage({
     >
       <div className="w-[90px] shrink-0 text-left">
         <span
-          className="text-[#8d785e] text-[12px]"
+          className="text-[12px] text-muted-foreground"
           style={{ fontWeight: 500 }}
         >
           {stage.label}
         </span>
       </div>
-      <div className="relative h-[32px] flex-1 overflow-hidden rounded-lg bg-[#f5f3f0]">
+      <div className="relative h-[32px] flex-1 overflow-hidden rounded-lg bg-accent">
         <motion.div
           animate={{ width: `${widthPercent}%` }}
           className="flex h-full items-center justify-end rounded-lg px-3"
@@ -218,7 +218,7 @@ function PipelineStage({
         </motion.div>
       </div>
       {index < 4 && (
-        <ChevronLeft className="shrink-0 text-[#ddd6cb]" size={14} />
+        <ChevronLeft className="shrink-0 text-tertiary" size={14} />
       )}
       {index === 4 && <div className="w-[14px] shrink-0" />}
     </motion.div>
@@ -297,7 +297,7 @@ function DraggableWidget({
           className="absolute top-3 right-3 z-10 cursor-grab opacity-0 transition-opacity group-hover/drag:opacity-60"
           ref={drag as unknown as React.Ref<HTMLDivElement>}
         >
-          <GripVertical className="text-[#8d785e]" size={16} />
+          <GripVertical className="text-muted-foreground" size={16} />
         </div>
         {children}
       </div>
@@ -325,14 +325,14 @@ function WidgetSection({
 
   return (
     <Collapsible onOpenChange={setIsOpen} open={isOpen}>
-      <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
-        <div className="flex w-full items-center justify-between px-6 py-4 text-right transition-colors hover:bg-[#fdfcfb]">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+        <div className="flex w-full items-center justify-between px-6 py-4 text-right transition-colors hover:bg-surface">
           <div className="flex items-center gap-2.5">
             <Icon size={18} style={{ color: iconColor }} />
             <CollapsibleTrigger asChild>
               <button className="flex items-center gap-2.5" type="button">
                 <h2
-                  className="text-[#181510] text-[18px]"
+                  className="text-[18px] text-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {title}
@@ -347,13 +347,13 @@ function WidgetSection({
             </div>
           </div>
           <CollapsibleTrigger asChild>
-            <button className="text-[#8d785e]" type="button">
+            <button className="text-muted-foreground" type="button">
               {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </button>
           </CollapsibleTrigger>
         </div>
         <CollapsibleContent>
-          <div className="border-[#f5f3f0] border-t px-6 py-5">{children}</div>
+          <div className="border-accent border-t px-6 py-5">{children}</div>
         </CollapsibleContent>
       </div>
     </Collapsible>
@@ -579,8 +579,10 @@ export function ProducerDashboard() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-        <p className="text-[#8d785e] text-[14px]">טוען נתוני דשבורד...</p>
+        <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+        <p className="text-[14px] text-muted-foreground">
+          טוען נתוני דשבורד...
+        </p>
       </div>
     );
   }
@@ -709,20 +711,20 @@ export function ProducerDashboard() {
         {/* Pipeline Funnel */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="min-w-0 rounded-xl border border-[#e7e1da] bg-white p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-[2]"
+          className="min-w-0 rounded-xl border border-border bg-card p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-[2]"
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <div className="mb-5 flex items-center gap-2">
-            <TrendingUp className="text-[#ff8c00]" size={18} />
+            <TrendingUp className="text-primary" size={18} />
             <h2
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               משפך פרויקטים
             </h2>
             <span
-              className="mr-2 rounded-full bg-[#f5f3f0] px-2 py-0.5 text-[#8d785e] text-[12px]"
+              className="mr-2 rounded-full bg-accent px-2 py-0.5 text-[12px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               נתונים חיים
@@ -738,10 +740,12 @@ export function ProducerDashboard() {
               />
             ))}
           </div>
-          <div className="mt-4 flex items-center gap-2 border-[#f5f3f0] border-t pt-4">
-            <span className="text-[#8d785e] text-[12px]">שיעור המרה כולל:</span>
+          <div className="mt-4 flex items-center gap-2 border-accent border-t pt-4">
+            <span className="text-[12px] text-muted-foreground">
+              שיעור המרה כולל:
+            </span>
             <span
-              className="text-[#22c55e] text-[14px]"
+              className="text-[14px] text-success"
               style={{ fontWeight: 700 }}
             >
               {leadsCount > 0
@@ -749,7 +753,7 @@ export function ProducerDashboard() {
                 : 0}
               %
             </span>
-            <span className="text-[#8d785e] text-[11px]">
+            <span className="text-[11px] text-muted-foreground">
               (לידים &rarr; ביצוע)
             </span>
           </div>
@@ -758,14 +762,14 @@ export function ProducerDashboard() {
         {/* Revenue Progress Ring */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="flex min-w-0 flex-col items-center justify-center rounded-xl border border-[#e7e1da] bg-white p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-1"
+          className="flex min-w-0 flex-col items-center justify-center rounded-xl border border-border bg-card p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-1"
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.55 }}
         >
           <div className="mb-4 flex items-center gap-2 self-start">
-            <Target className="text-[#ff8c00]" size={18} />
+            <Target className="text-primary" size={18} />
             <h2
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               הכנסות
@@ -780,21 +784,21 @@ export function ProducerDashboard() {
             />
             <div className="absolute inset-0 flex rotate-0 flex-col items-center justify-center">
               <span
-                className="text-[#181510] text-[32px]"
+                className="text-[32px] text-foreground"
                 ref={percentCounter.ref as React.Ref<HTMLSpanElement>}
                 style={{ fontWeight: 800 }}
               >
                 {percentCounter.value}%
               </span>
-              <span className="text-[#8d785e] text-[12px]">מהיעד</span>
+              <span className="text-[12px] text-muted-foreground">מהיעד</span>
             </div>
           </div>
 
           <div className="mt-4 w-full space-y-2">
             <div className="flex justify-between text-[13px]">
-              <span className="text-[#8d785e]">הכנסות מפרויקטים</span>
+              <span className="text-muted-foreground">הכנסות מפרויקטים</span>
               <span
-                className="text-[#181510]"
+                className="text-foreground"
                 ref={revenueCounter.ref as React.Ref<HTMLSpanElement>}
                 style={{ fontWeight: 700 }}
               >
@@ -802,9 +806,9 @@ export function ProducerDashboard() {
               </span>
             </div>
             <div className="flex justify-between text-[13px]">
-              <span className="text-[#8d785e]">רווח משוער</span>
+              <span className="text-muted-foreground">רווח משוער</span>
               <span
-                className="text-[#22c55e]"
+                className="text-success"
                 ref={profitCounter.ref as React.Ref<HTMLSpanElement>}
                 style={{ fontWeight: 700 }}
               >
@@ -812,14 +816,20 @@ export function ProducerDashboard() {
               </span>
             </div>
             <div className="flex justify-between text-[13px]">
-              <span className="text-[#8d785e]">שולי רווח ממוצעים</span>
-              <span className="text-[#8d785e]" style={{ fontWeight: 600 }}>
+              <span className="text-muted-foreground">שולי רווח ממוצעים</span>
+              <span
+                className="text-muted-foreground"
+                style={{ fontWeight: 600 }}
+              >
                 {profitMargin}%
               </span>
             </div>
             <div className="flex justify-between text-[13px]">
-              <span className="text-[#8d785e]">יעד חודשי</span>
-              <span className="text-[#8d785e]" style={{ fontWeight: 600 }}>
+              <span className="text-muted-foreground">יעד חודשי</span>
+              <span
+                className="text-muted-foreground"
+                style={{ fontWeight: 600 }}
+              >
                 &#8362;{revenueTarget.toLocaleString()}
               </span>
             </div>
@@ -841,19 +851,19 @@ export function ProducerDashboard() {
         >
           <div>
             <h1
-              className="text-[#181510] text-[30px] tracking-[-0.75px]"
+              className="text-[30px] text-foreground tracking-[-0.75px]"
               style={{ fontWeight: 600 }}
             >
               לוח בקרה - מפיק אירועים
             </h1>
-            <p className="mt-1 text-[#8d785e] text-[16px]">
+            <p className="mt-1 text-[16px] text-muted-foreground">
               בוקר טוב, {user?.email?.split("@")[0] || "משתמש"}. הנה מה שקורה
               היום בפרויקטים שלך.
             </p>
           </div>
           <div className="flex shrink-0 gap-2">
             <button
-              className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
+              className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-lg bg-primary px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-primary-hover"
               onClick={() => navigate("/crm?newLead=true")}
               style={{ fontWeight: 600 }}
               type="button"
@@ -867,20 +877,20 @@ export function ProducerDashboard() {
         {/* ══════════ Ticker / Marquee ══════════ */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="relative flex h-[44px] items-center overflow-hidden rounded-xl border border-[#e7e1da] bg-gradient-to-l from-[#fffaf3] via-white to-[#fffaf3]"
+          className="relative flex h-[44px] items-center overflow-hidden rounded-xl border border-border bg-gradient-to-l from-[#fffaf3] via-white to-[#fffaf3]"
           dir="ltr"
           initial={{ opacity: 0, y: 6 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-14 bg-gradient-to-r from-white to-transparent" />
           <div className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-14 bg-gradient-to-l from-white to-transparent" />
-          <div className="z-20 flex h-full shrink-0 items-center gap-1.5 border-[#e7e1da] border-l px-4">
+          <div className="z-20 flex h-full shrink-0 items-center gap-1.5 border-border border-l px-4">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff8c00] opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff8c00]" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
             <span
-              className="whitespace-nowrap text-[#ff8c00] text-[11px] tracking-wider"
+              className="whitespace-nowrap text-[11px] text-primary tracking-wider"
               style={{ fontWeight: 800 }}
             >
               LIVE
@@ -897,12 +907,12 @@ export function ProducerDashboard() {
               {[...tickerMessages, ...tickerMessages].map((msg, i) => (
                 <span className="inline-flex items-center" key={`ticker-${i}`}>
                   <span
-                    className="px-5 text-[#3d3426] text-[13px]"
+                    className="px-5 text-[13px] text-foreground"
                     style={{ fontWeight: 500 }}
                   >
                     {msg}
                   </span>
-                  <span className="h-1 w-1 shrink-0 rounded-full bg-[#ddd6cb]" />
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
                 </span>
               ))}
             </div>
@@ -942,22 +952,27 @@ export function ProducerDashboard() {
         >
           <div className="flex items-center gap-2 px-1">
             <h2
-              className="text-[#181510] text-[20px]"
+              className="text-[20px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               פעילות אחרונה
             </h2>
           </div>
 
-          <div className="rounded-xl border border-[#e7e1da] bg-white p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+          <div className="rounded-xl border border-border bg-card p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
             {recentActivity === undefined ? (
               <div className="flex items-center justify-center py-6">
-                <Loader2 className="animate-spin text-[#8d785e]" size={20} />
+                <Loader2
+                  className="animate-spin text-muted-foreground"
+                  size={20}
+                />
               </div>
             ) : recentActivity.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8">
-                <Clock className="mb-2 text-[#e7e1da]" size={24} />
-                <p className="text-[#8d785e] text-[14px]">אין פעילות אחרונה</p>
+                <Clock className="mb-2 text-border" size={24} />
+                <p className="text-[14px] text-muted-foreground">
+                  אין פעילות אחרונה
+                </p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -982,7 +997,7 @@ export function ProducerDashboard() {
                       <div className="flex shrink-0 flex-col items-center">
                         <div
                           className="flex h-8 w-8 items-center justify-center rounded-full"
-                          style={{ backgroundColor: display.iconBg }}
+                          style={{ backgroundColor: `color-mix(in srgb, ${display.iconColor} 15%, var(--card))` }}
                         >
                           <ActivityIcon
                             size={15}
@@ -990,22 +1005,22 @@ export function ProducerDashboard() {
                           />
                         </div>
                         {idx < recentActivity.length - 1 && (
-                          <div className="mt-1.5 min-h-[24px] w-0.5 flex-1 bg-[#f5f3f0]" />
+                          <div className="mt-1.5 min-h-[24px] w-0.5 flex-1 bg-accent" />
                         )}
                       </div>
                       <div className="min-w-0">
                         <p
-                          className="text-[#181510] text-[14px]"
+                          className="text-[14px] text-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           {display.label} {entityLabel}
                         </p>
                         {item.details && (
-                          <p className="truncate text-[#8d785e] text-[12px]">
+                          <p className="truncate text-[12px] text-muted-foreground">
                             {item.details}
                           </p>
                         )}
-                        <p className="mt-0.5 text-[#c4b89a] text-[11px]">
+                        <p className="mt-0.5 text-[11px] text-tertiary">
                           {formatRelativeTime(item.createdAt)}
                         </p>
                       </div>
@@ -1050,7 +1065,7 @@ function MorningHQContent({
   if (!events) {
     return (
       <div className="flex items-center justify-center py-6">
-        <Loader2 className="animate-spin text-[#8d785e]" size={20} />
+        <Loader2 className="animate-spin text-muted-foreground" size={20} />
       </div>
     );
   }
@@ -1058,8 +1073,8 @@ function MorningHQContent({
   if (events.events.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8">
-        <Calendar className="mb-2 text-[#e7e1da]" size={27} strokeWidth={1.5} />
-        <p className="text-[#8d785e] text-[14px]">
+        <Calendar className="mb-2 text-border" size={27} strokeWidth={1.5} />
+        <p className="text-[14px] text-muted-foreground">
           אין אירועים מתוכננים להיום ומחר
         </p>
       </div>
@@ -1076,7 +1091,7 @@ function MorningHQContent({
       {todayEvents.length > 0 && (
         <div>
           <h3
-            className="mb-2 text-[#ff8c00] text-[14px]"
+            className="mb-2 text-[14px] text-primary"
             style={{ fontWeight: 600 }}
           >
             היום
@@ -1091,7 +1106,7 @@ function MorningHQContent({
       {tomorrowEvents.length > 0 && (
         <div>
           <h3
-            className="mb-2 text-[#3b82f6] text-[14px]"
+            className="mb-2 text-[14px] text-info"
             style={{ fontWeight: 600 }}
           >
             מחר
@@ -1123,16 +1138,19 @@ function EventRow({
   navigate: (path: string) => void;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-[#f5f3f0] bg-[#fdfcfb] px-4 py-3 transition-colors hover:bg-[#f5f3f0]">
+    <div className="flex items-center justify-between rounded-lg border border-accent bg-surface px-4 py-3 transition-colors hover:bg-accent">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#fff7ed]">
-          <Calendar className="text-[#ff8c00]" size={16} />
+          <Calendar className="text-primary" size={16} />
         </div>
         <div>
-          <p className="text-[#181510] text-[14px]" style={{ fontWeight: 600 }}>
+          <p
+            className="text-[14px] text-foreground"
+            style={{ fontWeight: 600 }}
+          >
             {event.title}
           </p>
-          <div className="flex items-center gap-3 text-[#8d785e] text-[12px]">
+          <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
             {event.startTime && (
               <span className="flex items-center gap-1">
                 <Clock size={11} />
@@ -1157,7 +1175,7 @@ function EventRow({
       </div>
       {event.projectId && (
         <button
-          className="rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#e67e00]"
+          className="rounded-lg bg-primary px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-primary-hover"
           onClick={() => navigate(`/field/${event.projectId}`)}
           style={{ fontWeight: 600 }}
           type="button"
@@ -1186,7 +1204,7 @@ function QuoteHeatContent({
   if (!data) {
     return (
       <div className="flex items-center justify-center py-6">
-        <Loader2 className="animate-spin text-[#8d785e]" size={20} />
+        <Loader2 className="animate-spin text-muted-foreground" size={20} />
       </div>
     );
   }
@@ -1206,12 +1224,12 @@ function QuoteHeatContent({
         {bars.map((bar) => (
           <div className="flex items-center gap-3" key={bar.label}>
             <span
-              className="w-16 shrink-0 text-left text-[#8d785e] text-[13px]"
+              className="w-16 shrink-0 text-left text-[13px] text-muted-foreground"
               style={{ fontWeight: 500 }}
             >
               {bar.label}
             </span>
-            <div className="relative h-7 flex-1 overflow-hidden rounded-md bg-[#f5f3f0]">
+            <div className="relative h-7 flex-1 overflow-hidden rounded-md bg-accent">
               <motion.div
                 animate={{
                   width: `${Math.max((bar.value / maxVal) * 100, 5)}%`,
@@ -1232,12 +1250,9 @@ function QuoteHeatContent({
           </div>
         ))}
       </div>
-      <div className="flex items-center gap-2 border-[#f5f3f0] border-t pt-3">
-        <span className="text-[#8d785e] text-[12px]">שיעור סגירה:</span>
-        <span
-          className="text-[#22c55e] text-[16px]"
-          style={{ fontWeight: 700 }}
-        >
+      <div className="flex items-center gap-2 border-accent border-t pt-3">
+        <span className="text-[12px] text-muted-foreground">שיעור סגירה:</span>
+        <span className="text-[16px] text-success" style={{ fontWeight: 700 }}>
           {data.closeRate}%
         </span>
       </div>
@@ -1263,7 +1278,7 @@ function UrgentAlertsContent({
   if (!alerts) {
     return (
       <div className="flex items-center justify-center py-6">
-        <Loader2 className="animate-spin text-[#8d785e]" size={20} />
+        <Loader2 className="animate-spin text-muted-foreground" size={20} />
       </div>
     );
   }
@@ -1271,8 +1286,8 @@ function UrgentAlertsContent({
   if (alerts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8">
-        <CheckCircle className="mb-2 text-[#22c55e]" size={24} />
-        <p className="text-[#8d785e] text-[14px]">אין התראות דחופות</p>
+        <CheckCircle className="mb-2 text-success" size={24} />
+        <p className="text-[14px] text-muted-foreground">אין התראות דחופות</p>
       </div>
     );
   }
@@ -1361,7 +1376,7 @@ function WeeklyCalendarContent({
   if (!data) {
     return (
       <div className="flex items-center justify-center py-6">
-        <Loader2 className="animate-spin text-[#8d785e]" size={20} />
+        <Loader2 className="animate-spin text-muted-foreground" size={20} />
       </div>
     );
   }
@@ -1377,22 +1392,22 @@ function WeeklyCalendarContent({
           <button
             className={`flex flex-col items-center rounded-lg px-1 py-2 transition-colors ${
               isToday
-                ? "border border-[#ff8c00] bg-[#ff8c00]/5"
-                : "border border-transparent hover:bg-[#f5f3f0]"
+                ? "border border-primary bg-primary/5"
+                : "border border-transparent hover:bg-accent"
             }`}
             key={day.date}
             onClick={() => navigate("/calendar")}
             type="button"
           >
             <span
-              className={`text-[11px] ${isToday ? "text-[#ff8c00]" : "text-[#8d785e]"}`}
+              className={`text-[11px] ${isToday ? "text-primary" : "text-muted-foreground"}`}
               style={{ fontWeight: 600 }}
             >
               {day.dayName}
             </span>
             <span
               className={`mt-0.5 flex h-7 w-7 items-center justify-center rounded-full text-[13px] ${
-                isToday ? "bg-[#ff8c00] text-white" : "text-[#181510]"
+                isToday ? "bg-primary text-white" : "text-foreground"
               }`}
               style={{ fontWeight: isToday ? 700 : 500 }}
             >
@@ -1419,7 +1434,7 @@ function WeeklyCalendarContent({
       })}
       {/* Event summary below the calendar strip */}
       {data.days.some((d) => d.events.length > 0) && (
-        <div className="col-span-7 mt-2 space-y-1 border-[#f5f3f0] border-t pt-2">
+        <div className="col-span-7 mt-2 space-y-1 border-accent border-t pt-2">
           {data.days
             .filter((d) => d.events.length > 0)
             .flatMap((d) =>
@@ -1428,13 +1443,13 @@ function WeeklyCalendarContent({
                   className="flex items-center gap-2 rounded-md px-2 py-1 text-[12px]"
                   key={ev.id}
                 >
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#ff8c00]" />
-                  <span className="text-[#8d785e]">{d.dayName}</span>
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="text-muted-foreground">{d.dayName}</span>
                   {ev.startTime && (
-                    <span className="text-[#b8a990]">{ev.startTime}</span>
+                    <span className="text-tertiary">{ev.startTime}</span>
                   )}
                   <span
-                    className="truncate text-[#181510]"
+                    className="truncate text-foreground"
                     style={{ fontWeight: 500 }}
                   >
                     {ev.title}
@@ -1470,7 +1485,7 @@ function OpenReservationsContent({
   if (!reservations) {
     return (
       <div className="flex items-center justify-center py-6">
-        <Loader2 className="animate-spin text-[#8d785e]" size={20} />
+        <Loader2 className="animate-spin text-muted-foreground" size={20} />
       </div>
     );
   }
@@ -1478,8 +1493,8 @@ function OpenReservationsContent({
   if (reservations.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8">
-        <CheckCircle className="mb-2 text-[#22c55e]" size={24} />
-        <p className="text-[#8d785e] text-[14px]">אין שריונות פתוחים</p>
+        <CheckCircle className="mb-2 text-success" size={24} />
+        <p className="text-[14px] text-muted-foreground">אין שריונות פתוחים</p>
       </div>
     );
   }
@@ -1488,7 +1503,7 @@ function OpenReservationsContent({
     <div className="overflow-x-auto">
       <table className="w-full text-right text-[13px]">
         <thead>
-          <tr className="border-[#f5f3f0] border-b text-[#8d785e]">
+          <tr className="border-accent border-b text-muted-foreground">
             <th className="px-3 py-2 font-medium">ספק</th>
             <th className="px-3 py-2 font-medium">פרויקט</th>
             <th className="px-3 py-2 font-medium">תאריך</th>
@@ -1507,14 +1522,14 @@ function OpenReservationsContent({
               r.expiresAt - Date.now() < 3 * 24 * 60 * 60 * 1000;
             return (
               <tr
-                className="border-[#f5f3f0] border-b transition-colors hover:bg-[#fdfcfb]"
+                className="border-accent border-b transition-colors hover:bg-surface"
                 key={r.id}
               >
-                <td className="px-3 py-2.5 font-medium text-[#181510]">
+                <td className="px-3 py-2.5 font-medium text-foreground">
                   {r.supplierName}
                 </td>
-                <td className="px-3 py-2.5 text-[#3d3426]">{r.projectName}</td>
-                <td className="px-3 py-2.5 text-[#8d785e]">{r.date}</td>
+                <td className="px-3 py-2.5 text-foreground">{r.projectName}</td>
+                <td className="px-3 py-2.5 text-muted-foreground">{r.date}</td>
                 <td
                   className="px-3 py-2.5"
                   style={{
@@ -1524,10 +1539,12 @@ function OpenReservationsContent({
                 >
                   {expiryStr}
                 </td>
-                <td className="px-3 py-2.5 text-[#8d785e]">{r.participants}</td>
+                <td className="px-3 py-2.5 text-muted-foreground">
+                  {r.participants}
+                </td>
                 <td className="px-3 py-2.5">
                   <button
-                    className="rounded px-2 py-1 text-[#ff8c00] text-[12px] transition-colors hover:bg-[#fff7ed]"
+                    className="rounded px-2 py-1 text-[12px] text-primary transition-colors hover:bg-[#fff7ed]"
                     onClick={() => navigate(`/projects/${r.projectId}`)}
                     style={{ fontWeight: 600 }}
                     type="button"

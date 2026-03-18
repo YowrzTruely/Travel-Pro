@@ -64,8 +64,8 @@ export function SupplierDashboard() {
         className="flex flex-col items-center justify-center py-32"
         dir="rtl"
       >
-        <AlertTriangle className="mb-3 text-[#f59e0b]" size={32} />
-        <p className="text-[#8d785e] text-[16px]">
+        <AlertTriangle className="mb-3 text-warning" size={32} />
+        <p className="text-[16px] text-muted-foreground">
           הפרופיל שלך לא מקושר לספק. אנא פנה למנהל המערכת.
         </p>
       </div>
@@ -75,8 +75,10 @@ export function SupplierDashboard() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-        <p className="text-[#8d785e] text-[14px]">טוען נתוני דשבורד...</p>
+        <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+        <p className="text-[14px] text-muted-foreground">
+          טוען נתוני דשבורד...
+        </p>
       </div>
     );
   }
@@ -111,12 +113,12 @@ export function SupplierDashboard() {
         transition={{ duration: 0.5 }}
       >
         <h1
-          className="text-[#181510] text-[30px] tracking-[-0.75px]"
+          className="text-[30px] text-foreground tracking-[-0.75px]"
           style={{ fontWeight: 600 }}
         >
           לוח בקרה - ספק
         </h1>
-        <p className="mt-1 text-[#8d785e] text-[16px]">
+        <p className="mt-1 text-[16px] text-muted-foreground">
           שלום, {profile?.name || "ספק"}. הנה סקירה על הפעילות שלך.
         </p>
       </motion.div>
@@ -159,54 +161,58 @@ export function SupplierDashboard() {
       {/* Pending Availability Requests */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+        className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
         <div className="flex items-center gap-2 px-6 py-4">
-          <Clock className="text-[#3b82f6]" size={18} />
+          <Clock className="text-info" size={18} />
           <h2
-            className="text-[#181510] text-[18px]"
+            className="text-[18px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             בקשות זמינות ממתינות
           </h2>
           {pendingRequests.length > 0 && (
             <span
-              className="rounded-full bg-[#3b82f6] px-2 py-0.5 text-[11px] text-white"
+              className="rounded-full bg-info px-2 py-0.5 text-[11px] text-white"
               style={{ fontWeight: 600 }}
             >
               {pendingRequests.length}
             </span>
           )}
         </div>
-        <div className="border-[#f5f3f0] border-t px-6 py-4">
+        <div className="border-accent border-t px-6 py-4">
           {pendingRequests.length === 0 ? (
             <div className="flex flex-col items-center py-6">
-              <CheckCircle className="mb-2 text-[#22c55e]" size={24} />
-              <p className="text-[#8d785e] text-[14px]">אין בקשות ממתינות</p>
+              <CheckCircle className="mb-2 text-success" size={24} />
+              <p className="text-[14px] text-muted-foreground">
+                אין בקשות ממתינות
+              </p>
             </div>
           ) : (
             <div className="space-y-3">
               {pendingRequests.map((req) => (
                 <div
-                  className="flex items-center justify-between rounded-lg border border-[#f5f3f0] bg-[#fdfcfb] px-4 py-3"
+                  className="flex items-center justify-between rounded-lg border border-accent bg-surface px-4 py-3"
                   key={req.id}
                 >
                   <div>
                     <p
-                      className="text-[#181510] text-[14px]"
+                      className="text-[14px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {req.date} - {req.participants ?? "?"} משתתפים
                     </p>
                     {req.notes && (
-                      <p className="text-[#8d785e] text-[12px]">{req.notes}</p>
+                      <p className="text-[12px] text-muted-foreground">
+                        {req.notes}
+                      </p>
                     )}
                   </div>
                   <div className="flex gap-2">
                     <button
-                      className="flex items-center gap-1 rounded-lg bg-[#22c55e] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#16a34a]"
+                      className="flex items-center gap-1 rounded-lg bg-success px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-success"
                       onClick={() =>
                         handleRespond(
                           req.id as Id<"availabilityRequests">,
@@ -220,7 +226,7 @@ export function SupplierDashboard() {
                       אשר
                     </button>
                     <button
-                      className="flex items-center gap-1 rounded-lg bg-[#ef4444] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#dc2626]"
+                      className="flex items-center gap-1 rounded-lg bg-destructive px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-destructive"
                       onClick={() =>
                         handleRespond(
                           req.id as Id<"availabilityRequests">,
@@ -246,43 +252,43 @@ export function SupplierDashboard() {
         {/* Active Promotions */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="min-w-0 overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-1"
+          className="min-w-0 overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-1"
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <div className="flex items-center gap-2 px-6 py-4">
-            <Tag className="text-[#f59e0b]" size={18} />
+            <Tag className="text-warning" size={18} />
             <h2
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               מבצעים פעילים
             </h2>
           </div>
-          <div className="border-[#f5f3f0] border-t px-6 py-4">
+          <div className="border-accent border-t px-6 py-4">
             {activePromotions.length === 0 ? (
-              <p className="py-4 text-center text-[#8d785e] text-[14px]">
+              <p className="py-4 text-center text-[14px] text-muted-foreground">
                 אין מבצעים פעילים כרגע
               </p>
             ) : (
               <div className="space-y-3">
                 {activePromotions.map((promo) => (
                   <div
-                    className="rounded-lg border border-[#fde68a] bg-[#fffbeb] px-4 py-3"
+                    className="rounded-lg border border-warning/30 bg-warning/10 px-4 py-3"
                     key={promo._id}
                   >
                     <p
-                      className="text-[#181510] text-[14px]"
+                      className="text-[14px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {promo.title}
                     </p>
                     {promo.description && (
-                      <p className="text-[#8d785e] text-[12px]">
+                      <p className="text-[12px] text-muted-foreground">
                         {promo.description}
                       </p>
                     )}
-                    <div className="mt-1 flex items-center gap-2 text-[#d97706] text-[12px]">
+                    <div className="mt-1 flex items-center gap-2 text-[12px] text-warning">
                       {promo.discountPercent && (
                         <span style={{ fontWeight: 600 }}>
                           {promo.discountPercent}% הנחה
@@ -303,24 +309,26 @@ export function SupplierDashboard() {
         {/* Document Alerts */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="min-w-0 overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-1"
+          className="min-w-0 overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-1"
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <div className="flex items-center gap-2 px-6 py-4">
-            <AlertTriangle className="text-[#ef4444]" size={18} />
+            <AlertTriangle className="text-destructive" size={18} />
             <h2
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               התראות מסמכים
             </h2>
           </div>
-          <div className="border-[#f5f3f0] border-t px-6 py-4">
+          <div className="border-accent border-t px-6 py-4">
             {alertDocs.length === 0 ? (
               <div className="flex flex-col items-center py-4">
-                <CheckCircle className="mb-2 text-[#22c55e]" size={24} />
-                <p className="text-[#8d785e] text-[14px]">כל המסמכים תקינים</p>
+                <CheckCircle className="mb-2 text-success" size={24} />
+                <p className="text-[14px] text-muted-foreground">
+                  כל המסמכים תקינים
+                </p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -335,10 +343,13 @@ export function SupplierDashboard() {
                     }}
                   >
                     {doc.status === "expired" ? (
-                      <XCircle className="shrink-0 text-[#ef4444]" size={16} />
+                      <XCircle
+                        className="shrink-0 text-destructive"
+                        size={16}
+                      />
                     ) : (
                       <AlertTriangle
-                        className="shrink-0 text-[#f59e0b]"
+                        className="shrink-0 text-warning"
                         size={16}
                       />
                     )}
@@ -354,14 +365,14 @@ export function SupplierDashboard() {
                         {doc.name}
                       </p>
                       {doc.expiry && (
-                        <p className="text-[#8d785e] text-[11px]">
+                        <p className="text-[11px] text-muted-foreground">
                           {doc.status === "expired" ? "פג תוקף" : "יפוג בקרוב"}{" "}
                           - {doc.expiry}
                         </p>
                       )}
                     </div>
                     <button
-                      className="shrink-0 rounded px-2 py-1 text-[#ff8c00] text-[11px] transition-colors hover:bg-[#fff7ed]"
+                      className="shrink-0 rounded px-2 py-1 text-[11px] text-primary transition-colors hover:bg-[#fff7ed]"
                       onClick={() => navigate("/documents")}
                       style={{ fontWeight: 600 }}
                       type="button"
@@ -379,33 +390,33 @@ export function SupplierDashboard() {
       {/* Recent Ratings */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+        className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5, delay: 0.6 }}
       >
         <div className="flex items-center gap-2 px-6 py-4">
-          <Star className="text-[#f59e0b]" size={18} />
+          <Star className="text-warning" size={18} />
           <h2
-            className="text-[#181510] text-[18px]"
+            className="text-[18px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             דירוגים אחרונים
           </h2>
         </div>
-        <div className="border-[#f5f3f0] border-t px-6 py-4">
+        <div className="border-accent border-t px-6 py-4">
           {recentRatings.length === 0 ? (
-            <p className="py-4 text-center text-[#8d785e] text-[14px]">
+            <p className="py-4 text-center text-[14px] text-muted-foreground">
               אין דירוגים עדיין
             </p>
           ) : (
             <div className="space-y-3">
               {recentRatings.map((rating) => (
                 <div
-                  className="flex items-start gap-3 rounded-lg border border-[#f5f3f0] bg-[#fdfcfb] px-4 py-3"
+                  className="flex items-start gap-3 rounded-lg border border-accent bg-surface px-4 py-3"
                   key={rating._id}
                 >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#fffbeb]">
-                    <Star className="text-[#f59e0b]" size={14} />
+                    <Star className="text-warning" size={14} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
@@ -414,25 +425,25 @@ export function SupplierDashboard() {
                           <Star
                             className={
                               i < rating.rating
-                                ? "fill-[#f59e0b] text-[#f59e0b]"
-                                : "text-[#e7e1da]"
+                                ? "fill-warning text-warning"
+                                : "text-border"
                             }
                             key={`star-${rating._id}-${i}`}
                             size={12}
                           />
                         ))}
                       </span>
-                      <span className="text-[#8d785e] text-[11px]">
+                      <span className="text-[11px] text-muted-foreground">
                         {new Date(rating.createdAt).toLocaleDateString("he-IL")}
                       </span>
                     </div>
                     {rating.comment && (
-                      <p className="mt-1 text-[#3d3426] text-[13px]">
+                      <p className="mt-1 text-[13px] text-foreground">
                         {rating.comment}
                       </p>
                     )}
                     {rating.participantName && (
-                      <p className="text-[#8d785e] text-[11px]">
+                      <p className="text-[11px] text-muted-foreground">
                         {rating.participantName}
                       </p>
                     )}

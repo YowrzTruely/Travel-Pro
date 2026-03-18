@@ -70,27 +70,27 @@ export function WeeklyView({
   const showNowLine = nowHour >= START_HOUR && nowHour < END_HOUR;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
       {/* Scrollable container for both header and grid */}
       <div className="max-h-[calc(100vh-280px)] overflow-y-auto">
         {/* Day headers — sticky at top */}
-        <div className="sticky top-0 z-20 grid grid-cols-[50px_repeat(7,1fr)] border-[#e7e1da] border-b bg-white">
-          <div className="border-[#e7e1da] border-l" />
+        <div className="sticky top-0 z-20 grid grid-cols-[50px_repeat(7,1fr)] border-border border-b bg-card">
+          <div className="border-border border-l" />
           {weekDays.map((day, i) => {
             const today = isToday(day);
             return (
               <div
-                className={`border-[#e7e1da] border-l py-3 text-center ${today ? "bg-[#ff8c00]/5" : ""}`}
+                className={`border-border border-l py-3 text-center ${today ? "bg-primary/5" : ""}`}
                 key={i}
               >
                 <div
-                  className="text-[#8d785e] text-[12px]"
+                  className="text-[12px] text-muted-foreground"
                   style={{ fontWeight: 500 }}
                 >
                   {format(day, "EEEE", { locale: he })}
                 </div>
                 <div
-                  className={`mt-0.5 text-[18px] ${today ? "text-[#ff8c00]" : "text-[#181510]"}`}
+                  className={`mt-0.5 text-[18px] ${today ? "text-primary" : "text-foreground"}`}
                   style={{ fontWeight: 700 }}
                 >
                   {format(day, "d")}
@@ -106,10 +106,10 @@ export function WeeklyView({
           style={{ height: `${totalHeight}px` }}
         >
           {/* Time labels */}
-          <div className="relative border-[#e7e1da] border-l">
+          <div className="relative border-border border-l">
             {HOURS.map((hour) => (
               <div
-                className="absolute w-full -translate-y-1/2 text-center text-[#8d785e] text-[11px]"
+                className="absolute w-full -translate-y-1/2 text-center text-[11px] text-muted-foreground"
                 key={hour}
                 style={{
                   top: `${(hour - START_HOUR) * HOUR_HEIGHT}px`,
@@ -129,14 +129,14 @@ export function WeeklyView({
 
             return (
               <div
-                className={`relative border-[#e7e1da] border-l ${today ? "bg-[#ff8c00]/[0.02]" : ""}`}
+                className={`relative border-border border-l ${today ? "bg-primary/[0.02]" : ""}`}
                 key={dayIdx}
                 onClick={() => onNewEvent(day)}
               >
                 {/* Hour grid lines */}
                 {HOURS.map((hour) => (
                   <div
-                    className="absolute w-full border-[#f5f3f0] border-b"
+                    className="absolute w-full border-accent border-b"
                     key={hour}
                     style={{
                       top: `${(hour - START_HOUR) * HOUR_HEIGHT}px`,
@@ -152,8 +152,8 @@ export function WeeklyView({
                     style={{ top: `${nowTop}px` }}
                   >
                     <div className="flex items-center">
-                      <div className="-mr-1 h-2 w-2 rounded-full bg-[#ef4444]" />
-                      <div className="h-[2px] flex-1 bg-[#ef4444]" />
+                      <div className="-mr-1 h-2 w-2 rounded-full bg-destructive" />
+                      <div className="h-[2px] flex-1 bg-destructive" />
                     </div>
                   </div>
                 )}

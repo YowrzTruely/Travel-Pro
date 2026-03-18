@@ -74,8 +74,8 @@ function StatusBadge({ status }: { status: string }) {
 function EmptyState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-      <AlertCircle className="text-[#8d785e]" size={40} />
-      <p className="text-[#8d785e] text-base">{message}</p>
+      <AlertCircle className="text-muted-foreground" size={40} />
+      <p className="text-base text-muted-foreground">{message}</p>
     </div>
   );
 }
@@ -111,22 +111,22 @@ function RequestCard({
   };
 
   return (
-    <div className="rounded-xl border border-[#e7e1da] bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+    <div className="rounded-xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
       <div className="mb-3 flex items-start justify-between">
         <div className="flex items-center gap-2">
           <StatusBadge status={request.status} />
-          <span className="text-[#8d785e] text-xs">
+          <span className="text-muted-foreground text-xs">
             {formatTimestamp(request.requestedAt)}
           </span>
         </div>
-        <ChevronRight className="text-[#8d785e]" size={18} />
+        <ChevronRight className="text-muted-foreground" size={18} />
       </div>
 
-      <h3 className="mb-2 font-bold text-[#181510] text-lg">
+      <h3 className="mb-2 font-bold text-foreground text-lg">
         {project?.name ?? "טוען..."}
       </h3>
 
-      <div className="flex flex-wrap gap-4 text-[#8d785e] text-sm">
+      <div className="flex flex-wrap gap-4 text-muted-foreground text-sm">
         <span className="flex items-center gap-1.5">
           <Calendar size={14} />
           {formatDate(request.date)}
@@ -140,13 +140,13 @@ function RequestCard({
       </div>
 
       {request.notes && (
-        <p className="mt-2 text-[#8d785e] text-sm">{request.notes}</p>
+        <p className="mt-2 text-muted-foreground text-sm">{request.notes}</p>
       )}
 
       {request.status === "pending" && (
         <div className="mt-4 flex gap-3">
           <button
-            className="flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 font-semibold text-sm text-white transition-colors hover:bg-green-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-success px-4 py-2 font-semibold text-sm text-white transition-colors hover:bg-green-700 disabled:opacity-50"
             disabled={loading}
             onClick={() => handleRespond("approved")}
             type="button"
@@ -155,7 +155,7 @@ function RequestCard({
             אישור
           </button>
           <button
-            className="flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-2 font-semibold text-sm text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-destructive px-4 py-2 font-semibold text-sm text-white transition-colors hover:bg-red-700 disabled:opacity-50"
             disabled={loading}
             onClick={() => handleRespond("declined")}
             type="button"
@@ -215,22 +215,22 @@ function BookingCard({
     booking.status === "reserved" || booking.status === "confirmed";
 
   return (
-    <div className="rounded-xl border border-[#e7e1da] bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+    <div className="rounded-xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
       <div className="mb-3 flex items-start justify-between">
         <div className="flex items-center gap-2">
           <StatusBadge status={booking.status} />
-          <span className="text-[#8d785e] text-xs">
+          <span className="text-muted-foreground text-xs">
             {formatTimestamp(booking.createdAt)}
           </span>
         </div>
-        <ChevronRight className="text-[#8d785e]" size={18} />
+        <ChevronRight className="text-muted-foreground" size={18} />
       </div>
 
-      <h3 className="mb-2 font-bold text-[#181510] text-lg">
+      <h3 className="mb-2 font-bold text-foreground text-lg">
         {project?.name ?? "טוען..."}
       </h3>
 
-      <div className="flex flex-wrap gap-4 text-[#8d785e] text-sm">
+      <div className="flex flex-wrap gap-4 text-muted-foreground text-sm">
         <span className="flex items-center gap-1.5">
           <Calendar size={14} />
           {formatDate(booking.date)}
@@ -251,7 +251,7 @@ function BookingCard({
         <div className="mt-4 flex gap-3">
           {booking.status === "reserved" && (
             <button
-              className="flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 font-semibold text-sm text-white transition-colors hover:bg-green-700 disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-lg bg-success px-4 py-2 font-semibold text-sm text-white transition-colors hover:bg-green-700 disabled:opacity-50"
               disabled={loading}
               onClick={handleConfirm}
               type="button"
@@ -261,7 +261,7 @@ function BookingCard({
             </button>
           )}
           <button
-            className="flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-2 font-semibold text-sm text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-destructive px-4 py-2 font-semibold text-sm text-white transition-colors hover:bg-red-700 disabled:opacity-50"
             disabled={loading}
             onClick={handleCancel}
             type="button"
@@ -294,12 +294,12 @@ export function RequestsPage() {
   if (!supplierId) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center font-['Assistant']">
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-8 text-center shadow-sm">
-          <AlertCircle className="mx-auto mb-3 text-[#ff8c00]" size={48} />
-          <h2 className="mb-2 font-bold text-[#181510] text-xl">
+        <div className="rounded-xl border border-border bg-card p-8 text-center shadow-sm">
+          <AlertCircle className="mx-auto mb-3 text-primary" size={48} />
+          <h2 className="mb-2 font-bold text-foreground text-xl">
             נא לקשר את החשבון לספק
           </h2>
-          <p className="text-[#8d785e] text-sm">
+          <p className="text-muted-foreground text-sm">
             יש לקשר את חשבון המשתמש לפרופיל ספק כדי לצפות בבקשות.
           </p>
         </div>
@@ -325,24 +325,24 @@ export function RequestsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f3f0] p-6 font-['Assistant']" dir="rtl">
+    <div className="min-h-screen bg-accent p-6 font-['Assistant']" dir="rtl">
       <div className="mx-auto max-w-4xl">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="font-bold text-2xl text-[#181510]">בקשות ושריונות</h1>
-          <p className="mt-1 text-[#8d785e] text-sm">
+          <h1 className="font-bold text-2xl text-foreground">בקשות ושריונות</h1>
+          <p className="mt-1 text-muted-foreground text-sm">
             ניהול בקשות זמינות ושריונות מפרויקטים
           </p>
         </div>
 
         {/* Tabs */}
-        <div className="mb-6 flex gap-2 rounded-xl border border-[#e7e1da] bg-white p-1.5">
+        <div className="mb-6 flex gap-2 rounded-xl border border-border bg-card p-1.5">
           {(["pending", "active", "history"] as const).map((tab) => (
             <button
               className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 font-semibold text-sm transition-colors ${
                 activeTab === tab
-                  ? "bg-[#ff8c00] text-white"
-                  : "text-[#8d785e] hover:bg-[#f5f3f0]"
+                  ? "bg-primary text-white"
+                  : "text-muted-foreground hover:bg-accent"
               }`}
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -353,8 +353,8 @@ export function RequestsPage() {
                 <span
                   className={`inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 font-bold text-xs ${
                     activeTab === tab
-                      ? "bg-white/20 text-white"
-                      : "bg-[#f5f3f0] text-[#8d785e]"
+                      ? "bg-card/20 text-white"
+                      : "bg-accent text-muted-foreground"
                   }`}
                 >
                   {tabCounts[tab]}
@@ -367,7 +367,7 @@ export function RequestsPage() {
         {/* Loading state */}
         {(requests === undefined || bookings === undefined) && (
           <div className="flex items-center justify-center py-16">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#e7e1da] border-t-[#ff8c00]" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-border border-t-primary" />
           </div>
         )}
 

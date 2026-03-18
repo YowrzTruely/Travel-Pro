@@ -504,27 +504,27 @@ export function ImportWizard() {
 
   return (
     <div
-      className="min-h-full bg-[#f8f7f5] font-['Assistant',sans-serif]"
+      className="min-h-full bg-background font-['Assistant',sans-serif]"
       dir="rtl"
     >
       {showConfetti && <ConfettiParticles />}
 
       {/* Header */}
-      <div className="border-[#e7e1da] border-b bg-white px-4 py-4 lg:px-6">
+      <div className="border-border border-b bg-card px-4 py-4 lg:px-6">
         <div className="flex items-center gap-3">
           <button
-            className="text-[#8d785e] transition-colors hover:text-[#181510]"
+            className="text-muted-foreground transition-colors hover:text-foreground"
             onClick={() => navigate("/suppliers")}
             type="button"
           >
             <ArrowRight size={20} />
           </button>
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-              <FileSpreadsheet className="text-[#ff8c00]" size={16} />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <FileSpreadsheet className="text-primary" size={16} />
             </div>
             <h1
-              className="text-[#181510] text-[22px]"
+              className="text-[22px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               ייבוא ספקים מאקסל
@@ -540,11 +540,11 @@ export function ImportWizard() {
           className="text-center"
           initial={{ opacity: 0, y: -10 }}
         >
-          <p className="text-[#8d785e] text-[14px]">
+          <p className="text-[14px] text-muted-foreground">
             ייבאו את רשימת הספקים שלכם בקלות ובמהירות
           </p>
           <button
-            className="mx-auto mt-2 flex items-center gap-1 text-[#8d785e] text-[13px] transition-colors hover:text-[#ff8c00]"
+            className="mx-auto mt-2 flex items-center gap-1 text-[13px] text-muted-foreground transition-colors hover:text-primary"
             onClick={generateSampleCSV}
             type="button"
           >
@@ -573,10 +573,10 @@ export function ImportWizard() {
                     animate={isActive ? { scale: [1, 1.1, 1] } : {}}
                     className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
                       isActive
-                        ? "bg-[#ff8c00] text-white shadow-[#ff8c00]/30 shadow-lg"
+                        ? "bg-primary text-white shadow-lg shadow-primary/30"
                         : isComplete
-                          ? "bg-green-500 text-white"
-                          : "bg-[#ddd6cb] text-[#8d785e]"
+                          ? "bg-success/100 text-white"
+                          : "bg-border text-muted-foreground"
                     }`}
                     transition={{
                       duration: 0.5,
@@ -591,7 +591,7 @@ export function ImportWizard() {
                     )}
                   </motion.div>
                   <span
-                    className={`text-[11px] ${isActive ? "text-[#ff8c00]" : "text-[#8d785e]"}`}
+                    className={`text-[11px] ${isActive ? "text-primary" : "text-muted-foreground"}`}
                     style={{ fontWeight: isActive ? 600 : 400 }}
                   >
                     {step.label}
@@ -599,7 +599,7 @@ export function ImportWizard() {
                 </button>
                 {idx < STEPS.length - 1 && (
                   <div className="relative mx-2 h-0.5 flex-1 overflow-hidden rounded">
-                    <div className="absolute inset-0 bg-[#ddd6cb]" />
+                    <div className="absolute inset-0 bg-border" />
                     <motion.div
                       animate={{ width: step.id < currentStep ? "100%" : "0%" }}
                       className="absolute inset-y-0 right-0 bg-green-400"
@@ -625,12 +625,12 @@ export function ImportWizard() {
               transition={{ duration: 0.3 }}
             >
               <div
-                className={`relative cursor-pointer rounded-2xl border-2 border-dashed bg-white p-12 text-center transition-all ${
+                className={`relative cursor-pointer rounded-2xl border-2 border-dashed bg-card p-12 text-center transition-all ${
                   dragOver
-                    ? "scale-[1.02] border-[#ff8c00] bg-[#ff8c00]/5"
+                    ? "scale-[1.02] border-primary bg-primary/5"
                     : file
-                      ? "border-green-400 bg-green-50/30"
-                      : "border-[#d4cdc3] hover:border-[#ff8c00]/50 hover:bg-[#fffaf3]"
+                      ? "border-green-400 bg-success/10/30"
+                      : "border-tertiary hover:border-primary/50 hover:bg-[#fffaf3]"
                 }`}
                 onClick={() => !file && fileInputRef.current?.click()}
                 onDragLeave={() => setDragOver(false)}
@@ -650,12 +650,9 @@ export function ImportWizard() {
 
                 {parsing ? (
                   <div className="flex flex-col items-center gap-3">
-                    <Loader2
-                      className="animate-spin text-[#ff8c00]"
-                      size={48}
-                    />
+                    <Loader2 className="animate-spin text-primary" size={48} />
                     <p
-                      className="text-[#181510] text-[16px]"
+                      className="text-[16px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       קורא את הקובץ...
@@ -665,7 +662,7 @@ export function ImportWizard() {
                   <div className="flex flex-col items-center gap-3">
                     <motion.div
                       animate={{ scale: 1 }}
-                      className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100"
+                      className="flex h-16 w-16 items-center justify-center rounded-2xl bg-success/15"
                       initial={{ scale: 0 }}
                       transition={{
                         type: "spring",
@@ -673,23 +670,23 @@ export function ImportWizard() {
                         damping: 20,
                       }}
                     >
-                      <FileText className="text-green-600" size={32} />
+                      <FileText className="text-success" size={32} />
                     </motion.div>
                     <div>
                       <p
-                        className="text-[#181510] text-[16px]"
+                        className="text-[16px] text-foreground"
                         style={{ fontWeight: 700 }}
                       >
                         {file.name}
                       </p>
-                      <p className="mt-1 text-[#8d785e] text-[13px]">
+                      <p className="mt-1 text-[13px] text-muted-foreground">
                         {csvData.length} שורות &bull; {csvHeaders.length} עמודות
                         &bull; {(file.size / 1024).toFixed(1)} KB
                       </p>
                     </div>
                     <div className="mt-2 flex gap-2">
                       <button
-                        className="flex items-center gap-1.5 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+                        className="flex items-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover"
                         onClick={(e) => {
                           e.stopPropagation();
                           setCurrentStep(2);
@@ -700,7 +697,7 @@ export function ImportWizard() {
                         המשך למיפוי <ArrowLeft size={14} />
                       </button>
                       <button
-                        className="flex items-center gap-1.5 rounded-xl border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+                        className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-accent"
                         onClick={(e) => {
                           e.stopPropagation();
                           setFile(null);
@@ -725,29 +722,29 @@ export function ImportWizard() {
                           ? { scale: 1.15, rotate: 5 }
                           : { scale: 1, rotate: 0 }
                       }
-                      className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[#ff8c00]/10"
+                      className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10"
                     >
-                      <Upload className="text-[#ff8c00]" size={36} />
+                      <Upload className="text-primary" size={36} />
                     </motion.div>
                     <div>
                       <p
-                        className="text-[#181510] text-[18px]"
+                        className="text-[18px] text-foreground"
                         style={{ fontWeight: 700 }}
                       >
                         גררו קובץ CSV לכאן
                       </p>
-                      <p className="mt-1 text-[#8d785e] text-[14px]">
+                      <p className="mt-1 text-[14px] text-muted-foreground">
                         או לחצו לבחירת קובץ מהמחשב
                       </p>
                     </div>
                     <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
-                      <span className="rounded-full bg-[#f5f3f0] px-3 py-1 text-[#b8a990] text-[12px]">
+                      <span className="rounded-full bg-accent px-3 py-1 text-[12px] text-tertiary">
                         CSV
                       </span>
-                      <span className="rounded-full bg-[#f5f3f0] px-3 py-1 text-[#b8a990] text-[12px]">
+                      <span className="rounded-full bg-accent px-3 py-1 text-[12px] text-tertiary">
                         UTF-8
                       </span>
-                      <span className="rounded-full bg-[#f5f3f0] px-3 py-1 text-[#b8a990] text-[12px]">
+                      <span className="rounded-full bg-accent px-3 py-1 text-[12px] text-tertiary">
                         עברית נתמכת
                       </span>
                     </div>
@@ -768,36 +765,38 @@ export function ImportWizard() {
               transition={{ duration: 0.3 }}
             >
               {/* Mapping panel */}
-              <div className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
                 <h3
-                  className="mb-1 flex items-center gap-2 text-[#181510] text-[16px]"
+                  className="mb-1 flex items-center gap-2 text-[16px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
-                  <LayoutList className="text-[#ff8c00]" size={16} /> מיפוי שדות
+                  <LayoutList className="text-primary" size={16} /> מיפוי שדות
                   מהקובץ
                 </h3>
-                <p className="mb-4 text-[#8d785e] text-[12px]">
+                <p className="mb-4 text-[12px] text-muted-foreground">
                   התאימו את עמודות הקובץ לשדות המערכת
                 </p>
                 <div className="space-y-3">
                   {SYSTEM_FIELDS.map((sf) => (
                     <div key={sf.key}>
                       <label
-                        className="mb-1 block text-[#8d785e] text-[12px]"
+                        className="mb-1 block text-[12px] text-muted-foreground"
                         htmlFor={`import-field-${sf.key}`}
                         style={{ fontWeight: 600 }}
                       >
                         {sf.label}{" "}
-                        {sf.required && <span className="text-red-500">*</span>}
+                        {sf.required && (
+                          <span className="text-destructive">*</span>
+                        )}
                       </label>
                       <div className="relative">
                         <select
-                          className={`w-full appearance-none rounded-lg border bg-white px-3 py-2.5 text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30 ${
+                          className={`w-full appearance-none rounded-lg border bg-card px-3 py-2.5 text-[13px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 ${
                             mappings[sf.key]
-                              ? "border-green-300 bg-green-50/30"
+                              ? "border-success/40 bg-success/10/30"
                               : sf.required
-                                ? "border-red-300"
-                                : "border-[#e7e1da]"
+                                ? "border-destructive/40"
+                                : "border-border"
                           }`}
                           id={`import-field-${sf.key}`}
                           onChange={(e) =>
@@ -816,14 +815,14 @@ export function ImportWizard() {
                           ))}
                         </select>
                         <ChevronDown
-                          className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[#8d785e]"
+                          className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground"
                           size={14}
                         />
                       </div>
                       {mappings[sf.key] && (
                         <motion.p
                           animate={{ opacity: 1, height: "auto" }}
-                          className="mt-0.5 flex items-center gap-1 text-[11px] text-green-600"
+                          className="mt-0.5 flex items-center gap-1 text-[11px] text-success"
                           initial={{ opacity: 0, height: 0 }}
                         >
                           <CheckCircle size={10} /> מחובר ל-"{mappings[sf.key]}"
@@ -834,13 +833,13 @@ export function ImportWizard() {
                 </div>
 
                 {!mappings.name && (
-                  <div className="mt-4 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3">
+                  <div className="mt-4 flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3">
                     <AlertTriangle
-                      className="shrink-0 text-red-500"
+                      className="shrink-0 text-destructive"
                       size={14}
                     />
                     <span
-                      className="text-[12px] text-red-700"
+                      className="text-[12px] text-destructive"
                       style={{ fontWeight: 500 }}
                     >
                       שדה "שם הספק" הוא חובה
@@ -849,7 +848,7 @@ export function ImportWizard() {
                 )}
 
                 <button
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                   disabled={!mappings.name || loadingDuplicates}
                   onClick={() => goToStep(3)}
                   style={{ fontWeight: 600 }}
@@ -867,25 +866,25 @@ export function ImportWizard() {
               </div>
 
               {/* Live preview */}
-              <div className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm lg:col-span-2">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-sm lg:col-span-2">
                 <div className="mb-4 flex items-center justify-between">
                   <h3
-                    className="flex items-center gap-2 text-[#181510] text-[16px]"
+                    className="flex items-center gap-2 text-[16px] text-foreground"
                     style={{ fontWeight: 700 }}
                   >
-                    <Eye className="text-[#ff8c00]" size={16} /> תצוגה מקדימה (5
+                    <Eye className="text-primary" size={16} /> תצוגה מקדימה (5
                     שורות ראשונות)
                   </h3>
-                  <span className="rounded-full bg-[#f5f3f0] px-2.5 py-1 text-[#8d785e] text-[12px]">
+                  <span className="rounded-full bg-accent px-2.5 py-1 text-[12px] text-muted-foreground">
                     {csvData.length} שורות בקובץ
                   </span>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-[#e7e1da] border-b bg-[#f5f3f0]">
+                      <tr className="border-border border-b bg-accent">
                         <th
-                          className="p-3 text-right text-[#8d785e] text-[12px]"
+                          className="p-3 text-right text-[12px] text-muted-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           #
@@ -893,7 +892,7 @@ export function ImportWizard() {
                         {SYSTEM_FIELDS.filter((sf) => mappings[sf.key]).map(
                           (sf) => (
                             <th
-                              className="p-3 text-right text-[#8d785e] text-[12px]"
+                              className="p-3 text-right text-[12px] text-muted-foreground"
                               key={sf.key}
                               style={{ fontWeight: 600 }}
                             >
@@ -907,25 +906,25 @@ export function ImportWizard() {
                       {csvData.slice(0, 5).map((row, idx) => (
                         <motion.tr
                           animate={{ opacity: 1, y: 0 }}
-                          className="border-[#ece8e3] border-b hover:bg-[#faf9f7]"
+                          className="border-accent border-b hover:bg-surface"
                           initial={{ opacity: 0, y: 10 }}
                           key={idx}
                           transition={{ delay: idx * 0.05 }}
                         >
-                          <td className="p-3 text-[#b8a990] text-[12px]">
+                          <td className="p-3 text-[12px] text-tertiary">
                             {idx + 1}
                           </td>
                           {SYSTEM_FIELDS.filter((sf) => mappings[sf.key]).map(
                             (sf) => (
                               <td
-                                className="p-3 text-[#181510] text-[13px]"
+                                className="p-3 text-[13px] text-foreground"
                                 key={sf.key}
                                 style={{
                                   fontWeight: sf.key === "name" ? 600 : 400,
                                 }}
                               >
                                 {row[mappings[sf.key]] || (
-                                  <span className="text-[#d4cdc3]">—</span>
+                                  <span className="text-tertiary">—</span>
                                 )}
                               </td>
                             )
@@ -936,7 +935,7 @@ export function ImportWizard() {
                   </table>
                 </div>
                 {csvData.length > 5 && (
-                  <p className="mt-3 text-center text-[#8d785e] text-[12px]">
+                  <p className="mt-3 text-center text-[12px] text-muted-foreground">
                     +{csvData.length - 5} שורות נוספות...
                   </p>
                 )}
@@ -959,17 +958,17 @@ export function ImportWizard() {
                   {
                     label: 'סה"כ שורות',
                     value: rows.length,
-                    color: "bg-blue-50 text-blue-700 border-blue-200",
+                    color: "bg-info/10 text-blue-700 border-info/30",
                   },
                   {
                     label: "לייבוא",
                     value: importCount,
-                    color: "bg-green-50 text-green-700 border-green-200",
+                    color: "bg-success/10 text-success border-success/30",
                   },
                   {
                     label: "כפילויות",
                     value: duplicateCount,
-                    color: "bg-yellow-50 text-yellow-700 border-yellow-200",
+                    color: "bg-warning/10 text-yellow-700 border-warning/30",
                   },
                 ].map((stat, i) => (
                   <motion.div
@@ -990,18 +989,18 @@ export function ImportWizard() {
               </div>
 
               {/* Preview table */}
-              <div className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
                 <div className="mb-4 flex items-center justify-between">
                   <h3
-                    className="flex items-center gap-2 text-[#181510] text-[16px]"
+                    className="flex items-center gap-2 text-[16px] text-foreground"
                     style={{ fontWeight: 700 }}
                   >
-                    <LayoutList className="text-[#ff8c00]" size={16} /> תצוגה
+                    <LayoutList className="text-primary" size={16} /> תצוגה
                     מקדימה וזיהוי כפילויות
                   </h3>
                   <div className="flex items-center gap-2">
                     <button
-                      className="rounded-md border border-[#e7e1da] px-2.5 py-1 text-[#8d785e] text-[11px] transition-colors hover:bg-[#f5f3f0]"
+                      className="rounded-md border border-border px-2.5 py-1 text-[11px] text-muted-foreground transition-colors hover:bg-accent"
                       onClick={() =>
                         setRows((prev) =>
                           prev.map((r) =>
@@ -1016,7 +1015,7 @@ export function ImportWizard() {
                       דלג על כולם
                     </button>
                     <button
-                      className="rounded-md border border-[#ff8c00]/30 px-2.5 py-1 text-[#ff8c00] text-[11px] transition-colors hover:bg-[#ff8c00]/5"
+                      className="rounded-md border border-primary/30 px-2.5 py-1 text-[11px] text-primary transition-colors hover:bg-primary/5"
                       onClick={() =>
                         setRows((prev) =>
                           prev.map((r) =>
@@ -1036,7 +1035,7 @@ export function ImportWizard() {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-[#e7e1da] border-b bg-[#f5f3f0]">
+                      <tr className="border-border border-b bg-accent">
                         {[
                           "#",
                           "שם ספק",
@@ -1046,7 +1045,7 @@ export function ImportWizard() {
                           "פעולה",
                         ].map((h) => (
                           <th
-                            className="p-3 text-right text-[#8d785e] text-[12px]"
+                            className="p-3 text-right text-[12px] text-muted-foreground"
                             key={h}
                             style={{ fontWeight: 600 }}
                           >
@@ -1059,31 +1058,31 @@ export function ImportWizard() {
                       {paginatedRows.map((row, idx) => (
                         <motion.tr
                           animate={{ opacity: 1, x: 0 }}
-                          className={`border-[#ece8e3] border-b transition-colors ${
+                          className={`border-accent border-b transition-colors ${
                             row._action === "skip"
-                              ? "bg-[#fafafa] opacity-50"
+                              ? "bg-accent opacity-50"
                               : row._isDuplicate
-                                ? "bg-yellow-50/50"
-                                : "hover:bg-[#faf9f7]"
+                                ? "bg-warning/10/50"
+                                : "hover:bg-surface"
                           }`}
                           initial={{ opacity: 0, x: 20 }}
                           key={row._rowIdx}
                           transition={{ delay: idx * 0.03 }}
                         >
-                          <td className="p-3 text-[#b8a990] text-[12px]">
+                          <td className="p-3 text-[12px] text-tertiary">
                             {row._rowIdx + 1}
                           </td>
                           <td
-                            className="p-3 text-[#181510] text-[13px]"
+                            className="p-3 text-[13px] text-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             {row.name}
                           </td>
-                          <td className="p-3 text-[#8d785e] text-[13px]">
+                          <td className="p-3 text-[13px] text-muted-foreground">
                             {row.category || "—"}
                           </td>
                           <td
-                            className="p-3 text-[#8d785e] text-[13px]"
+                            className="p-3 text-[13px] text-muted-foreground"
                             dir="ltr"
                           >
                             {row.phone || "—"}
@@ -1091,14 +1090,14 @@ export function ImportWizard() {
                           <td className="p-3">
                             {row._isDuplicate ? (
                               <span
-                                className="flex items-center gap-1 text-[12px] text-yellow-600"
+                                className="flex items-center gap-1 text-[12px] text-warning"
                                 style={{ fontWeight: 600 }}
                               >
                                 <AlertTriangle size={13} /> כפילות
                               </span>
                             ) : (
                               <span
-                                className="flex items-center gap-1 text-[12px] text-green-600"
+                                className="flex items-center gap-1 text-[12px] text-success"
                                 style={{ fontWeight: 600 }}
                               >
                                 <CheckCircle size={13} /> תקין
@@ -1111,8 +1110,8 @@ export function ImportWizard() {
                                 <button
                                   className={`rounded-md border px-2.5 py-1 text-[11px] transition-colors ${
                                     row._action === "import"
-                                      ? "border-[#ff8c00] bg-[#ff8c00] text-white"
-                                      : "border-[#ff8c00] text-[#ff8c00] hover:bg-[#ff8c00]/5"
+                                      ? "border-primary bg-primary text-white"
+                                      : "border-primary text-primary hover:bg-primary/5"
                                   }`}
                                   onClick={() =>
                                     setRows((prev) =>
@@ -1131,8 +1130,8 @@ export function ImportWizard() {
                                 <button
                                   className={`rounded-md border px-2.5 py-1 text-[11px] transition-colors ${
                                     row._action === "skip"
-                                      ? "border-[#181510] bg-[#181510] text-white"
-                                      : "border-[#e7e1da] text-[#8d785e] hover:bg-[#f5f3f0]"
+                                      ? "border-foreground bg-foreground text-white"
+                                      : "border-border text-muted-foreground hover:bg-accent"
                                   }`}
                                   onClick={() =>
                                     setRows((prev) =>
@@ -1151,7 +1150,7 @@ export function ImportWizard() {
                               </div>
                             ) : (
                               <span
-                                className="flex items-center gap-1 text-[11px] text-green-600"
+                                className="flex items-center gap-1 text-[11px] text-success"
                                 style={{ fontWeight: 600 }}
                               >
                                 <CheckCircle size={11} /> מוכן
@@ -1166,8 +1165,8 @@ export function ImportWizard() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="mt-3 flex items-center justify-between border-[#e7e1da] border-t pt-3">
-                    <span className="text-[#8d785e] text-[12px]">
+                  <div className="mt-3 flex items-center justify-between border-border border-t pt-3">
+                    <span className="text-[12px] text-muted-foreground">
                       מציג {previewPage * PAGE_SIZE + 1}-
                       {Math.min((previewPage + 1) * PAGE_SIZE, rows.length)}{" "}
                       מתוך {rows.length}
@@ -1179,8 +1178,8 @@ export function ImportWizard() {
                           <button
                             className={`flex h-7 w-7 items-center justify-center rounded-md text-[12px] transition-colors ${
                               previewPage === i
-                                ? "bg-[#ff8c00] text-white"
-                                : "text-[#8d785e] hover:bg-[#ece8e3]"
+                                ? "bg-primary text-white"
+                                : "text-muted-foreground hover:bg-accent"
                             }`}
                             key={i}
                             onClick={() => setPreviewPage(i)}
@@ -1192,7 +1191,9 @@ export function ImportWizard() {
                         )
                       )}
                       {totalPages > 10 && (
-                        <span className="text-[#8d785e] text-[12px]">...</span>
+                        <span className="text-[12px] text-muted-foreground">
+                          ...
+                        </span>
                       )}
                     </div>
                   </div>
@@ -1200,9 +1201,9 @@ export function ImportWizard() {
               </div>
 
               {/* Bottom action bar */}
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#e7e1da] bg-white p-4">
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card p-4">
                 <button
-                  className="flex items-center gap-1 text-[#8d785e] text-[14px] transition-colors hover:text-[#181510]"
+                  className="flex items-center gap-1 text-[14px] text-muted-foreground transition-colors hover:text-foreground"
                   onClick={() => setCurrentStep(2)}
                   type="button"
                 >
@@ -1211,7 +1212,7 @@ export function ImportWizard() {
                 <div className="flex gap-3">
                   {duplicateCount > 0 && (
                     <button
-                      className="rounded-xl border border-[#ff8c00] px-5 py-2 text-[#ff8c00] text-[14px] transition-colors hover:bg-[#ff8c00]/5"
+                      className="rounded-xl border border-primary px-5 py-2 text-[14px] text-primary transition-colors hover:bg-primary/5"
                       onClick={() => {
                         setRows((prev) =>
                           prev.map((r) =>
@@ -1228,7 +1229,7 @@ export function ImportWizard() {
                     </button>
                   )}
                   <button
-                    className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white shadow-sm transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-[14px] text-white shadow-sm transition-colors hover:bg-primary-hover disabled:opacity-50"
                     disabled={importing || importCount === 0}
                     onClick={runImport}
                     style={{ fontWeight: 600 }}
@@ -1248,27 +1249,27 @@ export function ImportWizard() {
               {importing && (
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 rounded-xl border border-[#e7e1da] bg-white p-5"
+                  className="mt-4 rounded-xl border border-border bg-card p-5"
                   initial={{ opacity: 0, y: 10 }}
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <span
-                      className="text-[#181510] text-[14px]"
+                      className="text-[14px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       מייבא ספקים...
                     </span>
                     <span
-                      className="text-[#ff8c00] text-[14px]"
+                      className="text-[14px] text-primary"
                       style={{ fontWeight: 700 }}
                     >
                       {Math.round(importProgress)}%
                     </span>
                   </div>
-                  <div className="h-3 w-full overflow-hidden rounded-full bg-[#ece8e3]">
+                  <div className="h-3 w-full overflow-hidden rounded-full bg-accent">
                     <motion.div
                       animate={{ width: `${importProgress}%` }}
-                      className="h-full rounded-full bg-gradient-to-l from-[#ff8c00] to-[#ffb347]"
+                      className="h-full rounded-full bg-gradient-to-l from-primary to-[#ffb347]"
                       initial={{ width: "0%" }}
                       transition={{ duration: 0.3 }}
                     />
@@ -1282,14 +1283,14 @@ export function ImportWizard() {
           {currentStep === 4 && importResult && (
             <motion.div
               animate={{ opacity: 1, scale: 1 }}
-              className="rounded-2xl border border-[#e7e1da] bg-white p-8 text-center shadow-sm"
+              className="rounded-2xl border border-border bg-card p-8 text-center shadow-sm"
               initial={{ opacity: 0, scale: 0.9 }}
               key="step4"
               transition={{ duration: 0.5, type: "spring" }}
             >
               <motion.div
                 animate={{ scale: 1 }}
-                className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-100"
+                className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-success/15"
                 initial={{ scale: 0 }}
                 transition={{
                   delay: 0.2,
@@ -1303,13 +1304,13 @@ export function ImportWizard() {
                   initial={{ opacity: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <PartyPopper className="text-green-600" size={48} />
+                  <PartyPopper className="text-success" size={48} />
                 </motion.div>
               </motion.div>
 
               <motion.h2
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-2 text-[#181510] text-[28px]"
+                className="mb-2 text-[28px] text-foreground"
                 initial={{ opacity: 0, y: 20 }}
                 style={{ fontWeight: 800 }}
                 transition={{ delay: 0.4 }}
@@ -1319,7 +1320,7 @@ export function ImportWizard() {
 
               <motion.p
                 animate={{ opacity: 1 }}
-                className="mb-6 text-[#8d785e] text-[16px]"
+                className="mb-6 text-[16px] text-muted-foreground"
                 initial={{ opacity: 0 }}
                 transition={{ delay: 0.6 }}
               >
@@ -1332,29 +1333,29 @@ export function ImportWizard() {
                 initial={{ opacity: 0, y: 20 }}
                 transition={{ delay: 0.7 }}
               >
-                <div className="rounded-xl border border-green-200 bg-green-50 p-4">
+                <div className="rounded-xl border border-success/30 bg-success/10 p-4">
                   <div
-                    className="text-[32px] text-green-600"
+                    className="text-[32px] text-success"
                     style={{ fontWeight: 800 }}
                   >
                     {importResult.imported}
                   </div>
                   <div
-                    className="text-[13px] text-green-700"
+                    className="text-[13px] text-success"
                     style={{ fontWeight: 500 }}
                   >
                     ספקים יובאו
                   </div>
                 </div>
-                <div className="rounded-xl border border-[#e7e1da] bg-[#f5f3f0] p-4">
+                <div className="rounded-xl border border-border bg-accent p-4">
                   <div
-                    className="text-[#8d785e] text-[32px]"
+                    className="text-[32px] text-muted-foreground"
                     style={{ fontWeight: 800 }}
                   >
                     {importResult.skipped}
                   </div>
                   <div
-                    className="text-[#8d785e] text-[13px]"
+                    className="text-[13px] text-muted-foreground"
                     style={{ fontWeight: 500 }}
                   >
                     דולגו
@@ -1369,7 +1370,7 @@ export function ImportWizard() {
                 transition={{ delay: 0.9 }}
               >
                 <button
-                  className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-6 py-3 text-[15px] text-white transition-colors hover:bg-[#e67e00]"
+                  className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-[15px] text-white transition-colors hover:bg-primary-hover"
                   onClick={() => navigate("/suppliers")}
                   style={{ fontWeight: 600 }}
                   type="button"
@@ -1377,7 +1378,7 @@ export function ImportWizard() {
                   <Users size={16} /> עבור לבנק ספקים
                 </button>
                 <button
-                  className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-6 py-3 text-[#8d785e] text-[15px] transition-colors hover:bg-[#f5f3f0]"
+                  className="flex items-center gap-2 rounded-xl border border-border px-6 py-3 text-[15px] text-muted-foreground transition-colors hover:bg-accent"
                   onClick={() => {
                     setCurrentStep(1);
                     setFile(null);
@@ -1420,9 +1421,9 @@ export function ImportWizard() {
                     initial={{ opacity: 0, y: 20, height: 0, marginTop: 0 }}
                     transition={{ duration: 0.4, ease: "easeInOut" }}
                   >
-                    <div className="relative rounded-xl border border-red-200 bg-red-50 p-4">
+                    <div className="relative rounded-xl border border-destructive/30 bg-destructive/10 p-4">
                       {/* Countdown progress bar at top */}
-                      <div className="absolute top-0 right-0 left-0 h-1 overflow-hidden rounded-t-xl bg-red-100">
+                      <div className="absolute top-0 right-0 left-0 h-1 overflow-hidden rounded-t-xl bg-destructive/15">
                         <motion.div
                           className="h-full bg-red-400"
                           style={{
@@ -1434,8 +1435,8 @@ export function ImportWizard() {
 
                       <div className="flex items-center justify-between gap-4 pt-1">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100">
-                            <Undo2 className="text-red-600" size={18} />
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive/15">
+                            <Undo2 className="text-destructive" size={18} />
                           </div>
                           <div className="text-right">
                             <p
@@ -1444,7 +1445,7 @@ export function ImportWizard() {
                             >
                               טעות? אפשר לבטל
                             </p>
-                            <p className="text-[12px] text-red-600">
+                            <p className="text-[12px] text-destructive">
                               <Clock className="ml-1 inline" size={11} />
                               נותרו {undoSecondsLeft} שניות לביטול הייבוא
                             </p>
@@ -1453,7 +1454,7 @@ export function ImportWizard() {
 
                         {rollingBack ? (
                           <div
-                            className="flex items-center gap-2 text-[13px] text-red-700"
+                            className="flex items-center gap-2 text-[13px] text-destructive"
                             style={{ fontWeight: 600 }}
                           >
                             <Loader2 className="animate-spin" size={16} />{" "}
@@ -1461,17 +1462,20 @@ export function ImportWizard() {
                           </div>
                         ) : showUndoConfirm ? (
                           <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-1 rounded-lg border border-red-300 bg-white px-3 py-1.5">
-                              <ShieldAlert className="text-red-500" size={13} />
+                            <div className="flex items-center gap-1 rounded-lg border border-destructive/40 bg-card px-3 py-1.5">
+                              <ShieldAlert
+                                className="text-destructive"
+                                size={13}
+                              />
                               <span
-                                className="text-[12px] text-red-700"
+                                className="text-[12px] text-destructive"
                                 style={{ fontWeight: 600 }}
                               >
                                 בטוח?
                               </span>
                             </div>
                             <button
-                              className="rounded-lg bg-red-600 px-4 py-1.5 text-[13px] text-white transition-colors hover:bg-red-700"
+                              className="rounded-lg bg-destructive px-4 py-1.5 text-[13px] text-white transition-colors hover:bg-red-700"
                               onClick={executeRollback}
                               style={{ fontWeight: 700 }}
                               type="button"
@@ -1479,7 +1483,7 @@ export function ImportWizard() {
                               כן, בטל ייבוא
                             </button>
                             <button
-                              className="rounded-lg border border-red-300 px-3 py-1.5 text-[13px] text-red-600 transition-colors hover:bg-red-100"
+                              className="rounded-lg border border-destructive/40 px-3 py-1.5 text-[13px] text-destructive transition-colors hover:bg-destructive/15"
                               onClick={() => setShowUndoConfirm(false)}
                               style={{ fontWeight: 600 }}
                               type="button"
@@ -1489,7 +1493,7 @@ export function ImportWizard() {
                           </div>
                         ) : (
                           <button
-                            className="flex items-center gap-1.5 rounded-lg border border-red-300 px-4 py-2 text-[13px] text-red-700 transition-colors hover:bg-red-100"
+                            className="flex items-center gap-1.5 rounded-lg border border-destructive/40 px-4 py-2 text-[13px] text-destructive transition-colors hover:bg-destructive/15"
                             onClick={() => setShowUndoConfirm(true)}
                             style={{ fontWeight: 700 }}
                             type="button"
@@ -1508,10 +1512,10 @@ export function ImportWizard() {
                     className="mt-6"
                     initial={{ opacity: 0, y: 10 }}
                   >
-                    <div className="flex items-center justify-center gap-3 rounded-xl border border-green-200 bg-green-50 p-4">
-                      <CheckCircle className="text-green-600" size={18} />
+                    <div className="flex items-center justify-center gap-3 rounded-xl border border-success/30 bg-success/10 p-4">
+                      <CheckCircle className="text-success" size={18} />
                       <span
-                        className="text-[14px] text-green-700"
+                        className="text-[14px] text-success"
                         style={{ fontWeight: 600 }}
                       >
                         הייבוא בוטל בהצלחה. כל הספקים שיובאו הוסרו מהמערכת.
@@ -1525,7 +1529,7 @@ export function ImportWizard() {
         </AnimatePresence>
 
         {/* Footer */}
-        <div className="py-4 text-center text-[#8d785e] text-[12px]">
+        <div className="py-4 text-center text-[12px] text-muted-foreground">
           &copy; 2026 Eventos — מערכת ניהול ספקים למפיקי טיולים. כל הזכויות
           שמורות.
         </div>

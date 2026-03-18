@@ -78,7 +78,7 @@ export function SupplierSelfRegister() {
         dir="rtl"
         style={{ backgroundColor: "#f8f7f5" }}
       >
-        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+        <div className="w-full max-w-md rounded-2xl bg-card p-8 shadow-lg">
           <div className="text-center">
             <div className="mb-4 text-5xl">✅</div>
             <h1
@@ -110,7 +110,7 @@ export function SupplierSelfRegister() {
       dir="rtl"
       style={{ backgroundColor: "#f8f7f5" }}
     >
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+      <div className="w-full max-w-md rounded-2xl bg-card p-8 shadow-lg">
         <div className="mb-6 text-center">
           <h1 className="mb-1 font-bold text-2xl" style={{ color: "#181510" }}>
             הרשמה כספק
@@ -119,7 +119,7 @@ export function SupplierSelfRegister() {
         </div>
 
         {error && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-center text-red-600 text-sm">
+          <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-center text-destructive text-sm">
             {error}
           </div>
         )}

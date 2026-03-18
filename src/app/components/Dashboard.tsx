@@ -396,7 +396,7 @@ function StatCard({
   return (
     <motion.button
       animate={{ opacity: 1, y: 0 }}
-      className="group relative flex cursor-pointer flex-col gap-1 overflow-hidden rounded-xl border border-[#e7e1da] bg-white p-5 pb-2 text-right shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#d4cdc3] hover:shadow-lg"
+      className="group relative flex cursor-pointer flex-col gap-1 overflow-hidden rounded-xl border border-border bg-card p-5 pb-2 text-right shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:border-tertiary hover:shadow-lg"
       initial={{ opacity: 0, y: 24 }}
       onClick={() => navigate(stat.link)}
       transition={{
@@ -418,14 +418,14 @@ function StatCard({
         </span>
         <div
           className="flex h-[36px] w-[34px] items-center justify-center rounded-lg"
-          style={{ backgroundColor: stat.iconBg }}
+          style={{ backgroundColor: `color-mix(in srgb, ${stat.iconColor} 15%, var(--card))` }}
         >
           <Icon size={18} style={{ color: stat.iconColor }} />
         </div>
       </div>
-      <p className="mt-1 text-[#8d785e] text-[14px]">{stat.label}</p>
+      <p className="mt-1 text-[14px] text-muted-foreground">{stat.label}</p>
       <p
-        className="text-[#181510] text-[30px] leading-[36px]"
+        className="text-[30px] text-foreground leading-[36px]"
         ref={counter.ref as React.Ref<HTMLParagraphElement>}
         style={{ fontWeight: 700 }}
       >
@@ -477,13 +477,13 @@ function PipelineStage({
     >
       <div className="w-[90px] shrink-0 text-left">
         <span
-          className="text-[#8d785e] text-[12px]"
+          className="text-[12px] text-muted-foreground"
           style={{ fontWeight: 500 }}
         >
           {stage.label}
         </span>
       </div>
-      <div className="relative h-[32px] flex-1 overflow-hidden rounded-lg bg-[#f5f3f0]">
+      <div className="relative h-[32px] flex-1 overflow-hidden rounded-lg bg-accent">
         <motion.div
           animate={{ width: `${widthPercent}%` }}
           className="flex h-full items-center justify-end rounded-lg px-3"
@@ -508,7 +508,7 @@ function PipelineStage({
         </motion.div>
       </div>
       {index < 4 && (
-        <ChevronLeft className="shrink-0 text-[#ddd6cb]" size={14} />
+        <ChevronLeft className="shrink-0 text-tertiary" size={14} />
       )}
       {index === 4 && <div className="w-[14px] shrink-0" />}
     </motion.div>
@@ -605,8 +605,10 @@ export function Dashboard() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-        <p className="text-[#8d785e] text-[14px]">טוען נתוני דשבורד...</p>
+        <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+        <p className="text-[14px] text-muted-foreground">
+          טוען נתוני דשבורד...
+        </p>
       </div>
     );
   }
@@ -622,19 +624,19 @@ export function Dashboard() {
       >
         <div>
           <h1
-            className="text-[#181510] text-[30px] tracking-[-0.75px]"
+            className="text-[30px] text-foreground tracking-[-0.75px]"
             style={{ fontWeight: 600 }}
           >
             לוח בקרה - מפיק אירועים
           </h1>
-          <p className="mt-1 text-[#8d785e] text-[16px]">
+          <p className="mt-1 text-[16px] text-muted-foreground">
             בוקר טוב, {user?.email?.split("@")[0] || "משתמש"}. הנה מה שקורה היום
             בפרויקטים שלך.
           </p>
         </div>
         <div className="flex shrink-0 gap-2">
           <button
-            className="rounded-lg bg-[#ff8c00] px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-[#e67e00]"
+            className="rounded-lg bg-primary px-4 py-[9px] text-[14px] text-white shadow-sm transition-all hover:bg-primary-hover"
             onClick={() => navigate("/projects")}
             style={{ fontWeight: 600 }}
             type="button"
@@ -647,20 +649,20 @@ export function Dashboard() {
       {/* ══════════ Ticker / Marquee ══════════ */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="relative flex h-[44px] items-center overflow-hidden rounded-xl border border-[#e7e1da] bg-gradient-to-l from-[#fffaf3] via-white to-[#fffaf3]"
+        className="relative flex h-[44px] items-center overflow-hidden rounded-xl border border-border bg-gradient-to-l from-[#fffaf3] via-white to-[#fffaf3]"
         dir="ltr"
         initial={{ opacity: 0, y: 6 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
         <div className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-14 bg-gradient-to-r from-white to-transparent" />
         <div className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-14 bg-gradient-to-l from-white to-transparent" />
-        <div className="z-20 flex h-full shrink-0 items-center gap-1.5 border-[#e7e1da] border-l px-4">
+        <div className="z-20 flex h-full shrink-0 items-center gap-1.5 border-border border-l px-4">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff8c00] opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff8c00]" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
           </span>
           <span
-            className="whitespace-nowrap text-[#ff8c00] text-[11px] tracking-wider"
+            className="whitespace-nowrap text-[11px] text-primary tracking-wider"
             style={{ fontWeight: 800 }}
           >
             LIVE
@@ -677,12 +679,12 @@ export function Dashboard() {
             {[...tickerMessages, ...tickerMessages].map((msg, i) => (
               <span className="inline-flex items-center" key={i}>
                 <span
-                  className="px-5 text-[#3d3426] text-[13px]"
+                  className="px-5 text-[13px] text-foreground"
                   style={{ fontWeight: 500 }}
                 >
                   {msg}
                 </span>
-                <span className="h-1 w-1 shrink-0 rounded-full bg-[#ddd6cb]" />
+                <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
               </span>
             ))}
           </div>
@@ -712,20 +714,20 @@ export function Dashboard() {
         {/* Pipeline Funnel */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="min-w-0 rounded-xl border border-[#e7e1da] bg-white p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-[2]"
+          className="min-w-0 rounded-xl border border-border bg-card p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-[2]"
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <div className="mb-5 flex items-center gap-2">
-            <TrendingUp className="text-[#ff8c00]" size={18} />
+            <TrendingUp className="text-primary" size={18} />
             <h2
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               {"משפך פרויקטים"}
             </h2>
             <span
-              className="mr-2 rounded-full bg-[#f5f3f0] px-2 py-0.5 text-[#8d785e] text-[12px]"
+              className="mr-2 rounded-full bg-accent px-2 py-0.5 text-[12px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               נתונים חיים
@@ -741,10 +743,12 @@ export function Dashboard() {
               />
             ))}
           </div>
-          <div className="mt-4 flex items-center gap-2 border-[#f5f3f0] border-t pt-4">
-            <span className="text-[#8d785e] text-[12px]">שיעור המרה כולל:</span>
+          <div className="mt-4 flex items-center gap-2 border-accent border-t pt-4">
+            <span className="text-[12px] text-muted-foreground">
+              שיעור המרה כולל:
+            </span>
             <span
-              className="text-[#22c55e] text-[14px]"
+              className="text-[14px] text-success"
               style={{ fontWeight: 700 }}
             >
               {leadsCount > 0
@@ -752,21 +756,23 @@ export function Dashboard() {
                 : 0}
               %
             </span>
-            <span className="text-[#8d785e] text-[11px]">(לידים → ביצוע)</span>
+            <span className="text-[11px] text-muted-foreground">
+              (לידים → ביצוע)
+            </span>
           </div>
         </motion.div>
 
         {/* Revenue Progress Ring */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="flex min-w-0 flex-col items-center justify-center rounded-xl border border-[#e7e1da] bg-white p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-1"
+          className="flex min-w-0 flex-col items-center justify-center rounded-xl border border-border bg-card p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] lg:flex-1"
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.55 }}
         >
           <div className="mb-4 flex items-center gap-2 self-start">
-            <Target className="text-[#ff8c00]" size={18} />
+            <Target className="text-primary" size={18} />
             <h2
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               הכנסות
@@ -781,21 +787,21 @@ export function Dashboard() {
             />
             <div className="absolute inset-0 flex rotate-0 flex-col items-center justify-center">
               <span
-                className="text-[#181510] text-[32px]"
+                className="text-[32px] text-foreground"
                 ref={percentCounter.ref as React.Ref<HTMLSpanElement>}
                 style={{ fontWeight: 800 }}
               >
                 {percentCounter.value}%
               </span>
-              <span className="text-[#8d785e] text-[12px]">מהיעד</span>
+              <span className="text-[12px] text-muted-foreground">מהיעד</span>
             </div>
           </div>
 
           <div className="mt-4 w-full space-y-2">
             <div className="flex justify-between text-[13px]">
-              <span className="text-[#8d785e]">הכנסות מפרויקטים</span>
+              <span className="text-muted-foreground">הכנסות מפרויקטים</span>
               <span
-                className="text-[#181510]"
+                className="text-foreground"
                 ref={revenueCounter.ref as React.Ref<HTMLSpanElement>}
                 style={{ fontWeight: 700 }}
               >
@@ -803,9 +809,9 @@ export function Dashboard() {
               </span>
             </div>
             <div className="flex justify-between text-[13px]">
-              <span className="text-[#8d785e]">רווח משוער</span>
+              <span className="text-muted-foreground">רווח משוער</span>
               <span
-                className="text-[#22c55e]"
+                className="text-success"
                 ref={profitCounter.ref as React.Ref<HTMLSpanElement>}
                 style={{ fontWeight: 700 }}
               >
@@ -813,14 +819,20 @@ export function Dashboard() {
               </span>
             </div>
             <div className="flex justify-between text-[13px]">
-              <span className="text-[#8d785e]">שולי רווח ממוצעים</span>
-              <span className="text-[#8d785e]" style={{ fontWeight: 600 }}>
+              <span className="text-muted-foreground">שולי רווח ממוצעים</span>
+              <span
+                className="text-muted-foreground"
+                style={{ fontWeight: 600 }}
+              >
                 {profitMargin}%
               </span>
             </div>
             <div className="flex justify-between text-[13px]">
-              <span className="text-[#8d785e]">יעד חודשי</span>
-              <span className="text-[#8d785e]" style={{ fontWeight: 600 }}>
+              <span className="text-muted-foreground">יעד חודשי</span>
+              <span
+                className="text-muted-foreground"
+                style={{ fontWeight: 600 }}
+              >
                 ₪{revenueTarget.toLocaleString()}
               </span>
             </div>
@@ -837,9 +849,9 @@ export function Dashboard() {
             initial={{ opacity: 0 }}
             transition={{ duration: 0.4, delay: 0.6 }}
           >
-            <div className="h-[18px] w-1 rounded-sm bg-[#ef4444]" />
+            <div className="h-[18px] w-1 rounded-sm bg-destructive" />
             <h2
-              className="text-[#181510] text-[20px]"
+              className="text-[20px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               פרויקטים שדורשים טיפול
@@ -853,7 +865,7 @@ export function Dashboard() {
               return (
                 <motion.div
                   animate={{ opacity: 1, x: 0 }}
-                  className="overflow-hidden rounded-lg bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md"
+                  className="overflow-hidden rounded-lg bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md"
                   initial={{ opacity: 0, x: 30 }}
                   key={task.id}
                   style={{
@@ -864,12 +876,12 @@ export function Dashboard() {
                 >
                   <div className="flex items-center justify-between px-6 py-5">
                     <div className="flex items-center gap-5">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#f5f3f0]">
-                        <CardIcon className="text-[#8d785e]" size={18} />
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent">
+                        <CardIcon className="text-muted-foreground" size={18} />
                       </div>
                       <div className="space-y-1">
                         <p
-                          className="text-[#181510] text-[18px]"
+                          className="text-[18px] text-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           {task.title}
@@ -903,8 +915,8 @@ export function Dashboard() {
                       <button
                         className={`rounded px-4 py-2 text-[12px] transition-colors ${
                           task.actionPrimary
-                            ? "bg-[#ff8c00] text-white hover:bg-[#e67e00]"
-                            : "bg-[#f5f3f0] text-[#181510] hover:bg-[#ece8e3]"
+                            ? "bg-primary text-white hover:bg-primary-hover"
+                            : "bg-accent text-foreground hover:bg-accent"
                         }`}
                         onClick={() => navigate(`/projects/${task.id}`)}
                         style={{ fontWeight: 600 }}
@@ -913,7 +925,7 @@ export function Dashboard() {
                         {task.action}
                       </button>
                       <button
-                        className="rounded-lg p-2 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+                        className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
                         onClick={() => navigate(`/projects/${task.id}`)}
                         title="אפשרויות נוספות"
                         type="button"
@@ -940,17 +952,17 @@ export function Dashboard() {
         >
           <div className="flex items-center gap-2 px-1">
             <h2
-              className="text-[#181510] text-[20px]"
+              className="text-[20px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               לוח זמנים שבועי
             </h2>
           </div>
 
-          <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
-            <div className="flex items-center justify-between border-[#f5f3f0] border-b px-4 py-4">
+          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+            <div className="flex items-center justify-between border-accent border-b px-4 py-4">
               <button
-                className="text-[#ff8c00] text-[12px]"
+                className="text-[12px] text-primary"
                 onClick={() => navigate("/calendar")}
                 style={{ fontWeight: 600 }}
                 type="button"
@@ -959,33 +971,33 @@ export function Dashboard() {
               </button>
               <div className="flex items-center gap-2">
                 <span
-                  className="px-2 text-[#181510] text-[14px]"
+                  className="px-2 text-[14px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   16-22 בפברואר, 2026
                 </span>
                 <button
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f5f3f0] transition-colors hover:bg-[#ece8e3]"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent transition-colors hover:bg-accent"
                   type="button"
                 >
-                  <ChevronRight className="text-[#181510]" size={14} />
+                  <ChevronRight className="text-foreground" size={14} />
                 </button>
                 <button
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f5f3f0] transition-colors hover:bg-[#ece8e3]"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent transition-colors hover:bg-accent"
                   type="button"
                 >
-                  <ChevronLeft className="text-[#181510]" size={14} />
+                  <ChevronLeft className="text-foreground" size={14} />
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center bg-[#fdfcfb] py-20">
+            <div className="flex flex-col items-center justify-center bg-surface py-20">
               <Calendar
-                className="mb-2 text-[#e7e1da]"
+                className="mb-2 text-border"
                 size={27}
                 strokeWidth={1.5}
               />
-              <p className="text-[#8d785e] text-[14px]">
+              <p className="text-[14px] text-muted-foreground">
                 אין אירועים נוספים להצגה בשבוע זה
               </p>
             </div>
@@ -1001,14 +1013,14 @@ export function Dashboard() {
         >
           <div className="flex items-center gap-2 px-1">
             <h2
-              className="text-[#181510] text-[20px]"
+              className="text-[20px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               פעילות אחרונה
             </h2>
           </div>
 
-          <div className="rounded-xl border border-[#e7e1da] bg-white p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+          <div className="rounded-xl border border-border bg-card p-6 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
             <div className="space-y-6">
               {activityItems.map((item, idx) => {
                 const ActivityIcon = item.icon;
@@ -1023,7 +1035,7 @@ export function Dashboard() {
                     <div className="flex shrink-0 flex-col items-center">
                       <div
                         className="flex h-8 w-8 items-center justify-center rounded-full"
-                        style={{ backgroundColor: item.iconBg }}
+                        style={{ backgroundColor: `color-mix(in srgb, ${item.iconColor} 15%, var(--card))` }}
                       >
                         <ActivityIcon
                           size={15}
@@ -1031,21 +1043,21 @@ export function Dashboard() {
                         />
                       </div>
                       {idx < activityItems.length - 1 && (
-                        <div className="mt-1.5 min-h-[24px] w-0.5 flex-1 bg-[#f5f3f0]" />
+                        <div className="mt-1.5 min-h-[24px] w-0.5 flex-1 bg-accent" />
                       )}
                     </div>
 
                     <div className="min-w-0">
                       <p
-                        className="text-[#181510] text-[14px]"
+                        className="text-[14px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {item.title}
                       </p>
-                      <p className="truncate text-[#8d785e] text-[12px]">
+                      <p className="truncate text-[12px] text-muted-foreground">
                         {item.subtitle}
                       </p>
-                      <p className="mt-0.5 text-[#c4b89a] text-[11px]">
+                      <p className="mt-0.5 text-[11px] text-tertiary">
                         {item.time}
                       </p>
                     </div>

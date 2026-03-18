@@ -372,7 +372,7 @@ export function ClassificationWizard() {
   if (loading) {
     return (
       <div
-        className="flex min-h-full items-center justify-center bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        className="flex min-h-full items-center justify-center bg-background font-['Assistant',sans-serif]"
         dir="rtl"
       >
         <motion.div
@@ -381,10 +381,13 @@ export function ClassificationWizard() {
           initial={{ opacity: 0 }}
         >
           <Loader2
-            className="mx-auto mb-4 animate-spin text-[#ff8c00]"
+            className="mx-auto mb-4 animate-spin text-primary"
             size={40}
           />
-          <p className="text-[#181510] text-[16px]" style={{ fontWeight: 600 }}>
+          <p
+            className="text-[16px] text-foreground"
+            style={{ fontWeight: 600 }}
+          >
             טוען ספקים...
           </p>
         </motion.div>
@@ -398,24 +401,24 @@ export function ClassificationWizard() {
   if (allDone) {
     return (
       <div
-        className="min-h-full bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        className="min-h-full bg-background font-['Assistant',sans-serif]"
         dir="rtl"
       >
-        <div className="border-[#e7e1da] border-b bg-white px-4 py-4 lg:px-6">
+        <div className="border-border border-b bg-card px-4 py-4 lg:px-6">
           <div className="flex items-center gap-3">
             <button
-              className="text-[#8d785e] transition-colors hover:text-[#181510]"
+              className="text-muted-foreground transition-colors hover:text-foreground"
               onClick={() => navigate("/suppliers")}
               type="button"
             >
               <ArrowRight size={20} />
             </button>
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-                <Microscope className="text-[#ff8c00]" size={16} />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                <Microscope className="text-primary" size={16} />
               </div>
               <h1
-                className="text-[#181510] text-[22px]"
+                className="text-[22px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 אשף סיווג ספקים מרוכז
@@ -427,26 +430,26 @@ export function ClassificationWizard() {
         <div className="mx-auto max-w-lg p-6">
           <motion.div
             animate={{ opacity: 1, scale: 1 }}
-            className="rounded-2xl border border-[#e7e1da] bg-white p-8 text-center shadow-sm"
+            className="rounded-2xl border border-border bg-card p-8 text-center shadow-sm"
             initial={{ opacity: 0, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
           >
             <motion.div
               animate={{ scale: 1 }}
-              className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-100"
+              className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-success/15"
               initial={{ scale: 0 }}
               transition={{ delay: 0.2, type: "spring" }}
             >
-              <PartyPopper className="text-green-600" size={48} />
+              <PartyPopper className="text-success" size={48} />
             </motion.div>
 
             <h2
-              className="mb-2 text-[#181510] text-[24px]"
+              className="mb-2 text-[24px] text-foreground"
               style={{ fontWeight: 800 }}
             >
               {totalInQueue === 0 ? "אין ספקים לסיווג" : "כל הספקים סווגו!"}
             </h2>
-            <p className="mb-6 text-[#8d785e] text-[14px]">
+            <p className="mb-6 text-[14px] text-muted-foreground">
               {totalInQueue === 0
                 ? "כל הספקים כבר מסווגים בבנק הספקים שלכם."
                 : `סיימתם לסווג ${classifiedCount} ספקים ב-${formatTime(elapsedSeconds)}.`}
@@ -459,27 +462,27 @@ export function ClassificationWizard() {
                 initial={{ opacity: 0, y: 10 }}
                 transition={{ delay: 0.4 }}
               >
-                <div className="rounded-xl border border-green-200 bg-green-50 p-3">
+                <div className="rounded-xl border border-success/30 bg-success/10 p-3">
                   <div
-                    className="text-[24px] text-green-600"
+                    className="text-[24px] text-success"
                     style={{ fontWeight: 800 }}
                   >
                     {classifiedCount}
                   </div>
-                  <div className="text-[11px] text-green-700">סווגו</div>
+                  <div className="text-[11px] text-success">סווגו</div>
                 </div>
-                <div className="rounded-xl border border-[#e7e1da] bg-[#f5f3f0] p-3">
+                <div className="rounded-xl border border-border bg-accent p-3">
                   <div
-                    className="text-[#8d785e] text-[24px]"
+                    className="text-[24px] text-muted-foreground"
                     style={{ fontWeight: 800 }}
                   >
                     {skippedCount}
                   </div>
-                  <div className="text-[#8d785e] text-[11px]">דולגו</div>
+                  <div className="text-[11px] text-muted-foreground">דולגו</div>
                 </div>
-                <div className="rounded-xl border border-blue-200 bg-blue-50 p-3">
+                <div className="rounded-xl border border-info/30 bg-info/10 p-3">
                   <div
-                    className="text-[24px] text-blue-600"
+                    className="text-[24px] text-info"
                     style={{ fontWeight: 800 }}
                   >
                     {formatTime(elapsedSeconds)}
@@ -491,7 +494,7 @@ export function ClassificationWizard() {
 
             <div className="flex items-center justify-center gap-3">
               <button
-                className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-6 py-3 text-[15px] text-white transition-colors hover:bg-[#e67e00]"
+                className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-[15px] text-white transition-colors hover:bg-primary-hover"
                 onClick={() => navigate("/suppliers")}
                 style={{ fontWeight: 600 }}
                 type="button"
@@ -500,7 +503,7 @@ export function ClassificationWizard() {
               </button>
               {skippedCount > 0 && (
                 <button
-                  className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-5 py-3 text-[#8d785e] text-[15px] transition-colors hover:bg-[#f5f3f0]"
+                  className="flex items-center gap-2 rounded-xl border border-border px-5 py-3 text-[15px] text-muted-foreground transition-colors hover:bg-accent"
                   onClick={() => {
                     // Re-read suppliers from Convex (already reactive)
                     const fresh = (suppliersData ?? []) as any as Supplier[];
@@ -532,26 +535,26 @@ export function ClassificationWizard() {
 
   return (
     <div
-      className="min-h-full bg-[#f8f7f5] font-['Assistant',sans-serif]"
+      className="min-h-full bg-background font-['Assistant',sans-serif]"
       dir="rtl"
     >
       {/* Header */}
-      <div className="border-[#e7e1da] border-b bg-white px-4 py-4 lg:px-6">
+      <div className="border-border border-b bg-card px-4 py-4 lg:px-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
-              className="text-[#8d785e] transition-colors hover:text-[#181510]"
+              className="text-muted-foreground transition-colors hover:text-foreground"
               onClick={() => navigate("/suppliers")}
               type="button"
             >
               <ArrowRight size={20} />
             </button>
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-                <Microscope className="text-[#ff8c00]" size={16} />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                <Microscope className="text-primary" size={16} />
               </div>
               <h1
-                className="text-[#181510] text-[22px]"
+                className="text-[22px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 אשף סיווג ספקים מרוכז
@@ -562,26 +565,26 @@ export function ClassificationWizard() {
           <div className="flex items-center gap-3">
             {/* Progress info */}
             <div className="hidden text-left md:block">
-              <span className="text-[#8d785e] text-[12px]">
+              <span className="text-[12px] text-muted-foreground">
                 {processedCount} מתוך {totalInQueue}
               </span>
               <span
-                className="mr-2 text-[#ff8c00] text-[12px]"
+                className="mr-2 text-[12px] text-primary"
                 style={{ fontWeight: 600 }}
               >
                 {progressPct}%
               </span>
             </div>
-            <div className="hidden h-2 w-32 overflow-hidden rounded-full bg-[#ddd6cb] md:block">
+            <div className="hidden h-2 w-32 overflow-hidden rounded-full bg-border md:block">
               <motion.div
                 animate={{ width: `${progressPct}%` }}
-                className="h-full rounded-full bg-gradient-to-l from-[#ff8c00] to-[#ffb347]"
+                className="h-full rounded-full bg-gradient-to-l from-primary to-[#ffb347]"
                 transition={{ duration: 0.5, ease: "easeOut" }}
               />
             </div>
 
             {/* Timer */}
-            <div className="flex items-center gap-1 rounded-full bg-[#f5f3f0] px-2.5 py-1 text-[#8d785e] text-[12px]">
+            <div className="flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-[12px] text-muted-foreground">
               <Clock size={12} />
               <span
                 style={{ fontWeight: 600, fontVariantNumeric: "tabular-nums" }}
@@ -591,7 +594,7 @@ export function ClassificationWizard() {
             </div>
 
             <button
-              className="relative p-2 text-[#8d785e] transition-colors hover:text-[#181510]"
+              className="relative p-2 text-muted-foreground transition-colors hover:text-foreground"
               onClick={() => setShowShortcuts(!showShortcuts)}
               type="button"
             >
@@ -606,7 +609,7 @@ export function ClassificationWizard() {
         {showShortcuts && (
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="absolute top-16 left-4 z-50 min-w-[200px] rounded-xl bg-[#181510] p-4 text-[13px] text-white shadow-xl lg:left-6"
+            className="absolute top-16 left-4 z-50 min-w-[200px] rounded-xl bg-foreground p-4 text-[13px] text-white shadow-xl lg:left-6"
             exit={{ opacity: 0, y: -10 }}
             initial={{ opacity: 0, y: -10 }}
           >
@@ -619,19 +622,19 @@ export function ClassificationWizard() {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-white/70">אשר והמשך</span>
-                <kbd className="rounded bg-white/10 px-2 py-0.5 text-[11px]">
+                <kbd className="rounded bg-card/10 px-2 py-0.5 text-[11px]">
                   Enter
                 </kbd>
               </div>
               <div className="flex justify-between">
                 <span className="text-white/70">דלג</span>
-                <kbd className="rounded bg-white/10 px-2 py-0.5 text-[11px]">
+                <kbd className="rounded bg-card/10 px-2 py-0.5 text-[11px]">
                   Esc
                 </kbd>
               </div>
               <div className="flex justify-between">
                 <span className="text-white/70">ארכיון</span>
-                <kbd className="rounded bg-white/10 px-2 py-0.5 text-[11px]">
+                <kbd className="rounded bg-card/10 px-2 py-0.5 text-[11px]">
                   A
                 </kbd>
               </div>
@@ -649,7 +652,7 @@ export function ClassificationWizard() {
               {currentSupplier && (
                 <motion.div
                   animate={{ opacity: 1, x: 0, scale: 1 }}
-                  className="overflow-hidden rounded-2xl border border-[#e7e1da] bg-white shadow-sm"
+                  className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
                   exit={{
                     opacity: 0,
                     x: slideDirection === "left" ? -80 : 80,
@@ -664,16 +667,16 @@ export function ClassificationWizard() {
                   transition={{ duration: 0.35, ease: "easeInOut" }}
                 >
                   {/* Card header */}
-                  <div className="bg-gradient-to-l from-[#fff7ed] to-white p-5">
+                  <div className="bg-gradient-to-l from-primary/5 to-white p-5">
                     <div className="mb-3 flex items-center justify-between">
                       <span
-                        className="flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-[12px] text-green-600"
+                        className="flex items-center gap-1 rounded-full bg-success/10 px-2.5 py-1 text-[12px] text-success"
                         style={{ fontWeight: 600 }}
                       >
                         <Sparkles size={11} /> ספק {currentIdx + 1} מתוך{" "}
                         {totalInQueue}
                       </span>
-                      <span className="text-[#8d785e] text-[12px]">
+                      <span className="text-[12px] text-muted-foreground">
                         {currentSupplier.verificationStatus === "verified"
                           ? "✅ מאומת"
                           : currentSupplier.verificationStatus === "pending"
@@ -683,7 +686,7 @@ export function ClassificationWizard() {
                     </div>
 
                     <h2
-                      className="mb-4 text-[#181510] text-[24px]"
+                      className="mb-4 text-[24px] text-foreground"
                       style={{ fontWeight: 700 }}
                     >
                       {currentSupplier.name}
@@ -691,22 +694,22 @@ export function ClassificationWizard() {
 
                     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                       <div>
-                        <div className="mb-0.5 flex items-center gap-1 text-[#8d785e] text-[11px]">
+                        <div className="mb-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
                           <Hash size={10} /> מזהה
                         </div>
                         <div
-                          className="text-[#181510] text-[14px]"
+                          className="text-[14px] text-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           {currentSupplier.id}
                         </div>
                       </div>
                       <div>
-                        <div className="mb-0.5 flex items-center gap-1 text-[#8d785e] text-[11px]">
+                        <div className="mb-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
                           <Phone size={10} /> טלפון
                         </div>
                         <div
-                          className="text-[#181510] text-[14px]"
+                          className="text-[14px] text-foreground"
                           dir="ltr"
                           style={{ fontWeight: 600 }}
                         >
@@ -714,28 +717,28 @@ export function ClassificationWizard() {
                         </div>
                       </div>
                       <div>
-                        <div className="mb-0.5 flex items-center gap-1 text-[#8d785e] text-[11px]">
+                        <div className="mb-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
                           <MapPin size={10} /> אזור
                         </div>
                         <div
-                          className="text-[#181510] text-[14px]"
+                          className="text-[14px] text-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           {currentSupplier.region || "—"}
                         </div>
                       </div>
                       <div>
-                        <div className="mb-0.5 flex items-center gap-1 text-[#8d785e] text-[11px]">
+                        <div className="mb-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
                           <FolderOpen size={10} /> קטגוריה מקורית
                         </div>
-                        <div className="text-[#8d785e] text-[14px]">
+                        <div className="text-[14px] text-muted-foreground">
                           {currentSupplier.category || "(ללא)"}
                         </div>
                       </div>
                     </div>
 
                     {currentSupplier.notes && currentSupplier.notes !== "-" && (
-                      <div className="mt-3 flex items-center gap-1 text-[#8d785e] text-[12px]">
+                      <div className="mt-3 flex items-center gap-1 text-[12px] text-muted-foreground">
                         <FileText size={11} /> הערות: {currentSupplier.notes}
                       </div>
                     )}
@@ -745,15 +748,15 @@ export function ClassificationWizard() {
                   {aiSuggestion && (
                     <motion.div
                       animate={{ opacity: 1, height: "auto" }}
-                      className="mx-5 my-4 rounded-xl border border-[#ff8c00]/30 bg-[#ff8c00]/5 p-3"
+                      className="mx-5 my-4 rounded-xl border border-primary/30 bg-primary/5 p-3"
                       initial={{ opacity: 0, height: 0 }}
                     >
                       <div className="flex items-center gap-2">
                         <Lightbulb
-                          className="shrink-0 text-[#ff8c00]"
+                          className="shrink-0 text-primary"
                           size={16}
                         />
-                        <p className="text-[#6b5d45] text-[13px]">
+                        <p className="text-[13px] text-muted-foreground">
                           {aiSuggestion.reason}
                         </p>
                       </div>
@@ -765,7 +768,7 @@ export function ClassificationWizard() {
                     {/* Category grid */}
                     <fieldset>
                       <legend
-                        className="mb-2 block text-[#181510] text-[13px]"
+                        className="mb-2 block text-[13px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         קטגוריה ראשית
@@ -776,7 +779,7 @@ export function ClassificationWizard() {
                             className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-[12px] transition-all ${
                               selectedCategory === cat.name
                                 ? "border-2 shadow-md"
-                                : "border-[#e7e1da] hover:border-[#d4cdc3]"
+                                : "border-border hover:border-tertiary"
                             }`}
                             key={cat.name}
                             onClick={() => {
@@ -827,7 +830,7 @@ export function ClassificationWizard() {
                           transition={{ duration: 0.2 }}
                         >
                           <legend
-                            className="mb-1.5 block text-[#181510] text-[13px]"
+                            className="mb-1.5 block text-[13px] text-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             תת-קטגוריה
@@ -838,7 +841,7 @@ export function ClassificationWizard() {
                                 className={`rounded-lg border px-3 py-1.5 text-[12px] transition-all ${
                                   selectedSub === sub
                                     ? "border-transparent text-white"
-                                    : "border-[#e7e1da] text-[#8d785e] hover:border-[#d4cdc3]"
+                                    : "border-border text-muted-foreground hover:border-tertiary"
                                 }`}
                                 key={sub}
                                 onClick={() => setSelectedSub(sub)}
@@ -862,7 +865,7 @@ export function ClassificationWizard() {
                     {/* Tags */}
                     <fieldset>
                       <legend
-                        className="mb-2 block text-[#181510] text-[13px]"
+                        className="mb-2 block text-[13px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         <Tag className="ml-1 inline" size={12} /> תגיות
@@ -873,8 +876,8 @@ export function ClassificationWizard() {
                           <button
                             className={`rounded-full border px-3 py-1 text-[12px] transition-all ${
                               selectedTags.includes(tag)
-                                ? "border-[#ff8c00] bg-[#ff8c00] text-white"
-                                : "border-[#e7e1da] text-[#8d785e] hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                                ? "border-primary bg-primary text-white"
+                                : "border-border text-muted-foreground hover:border-primary hover:text-primary"
                             }`}
                             key={tag}
                             onClick={() =>
@@ -900,12 +903,12 @@ export function ClassificationWizard() {
 
             {/* Actions bar */}
             <motion.div
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card p-4"
               layout
             >
               <div className="flex gap-2">
                 <button
-                  className="flex items-center gap-1.5 text-[#8d785e] text-[13px] transition-colors hover:text-[#181510] disabled:opacity-50"
+                  className="flex items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
                   disabled={saving}
                   onClick={handleArchive}
                   type="button"
@@ -913,7 +916,7 @@ export function ClassificationWizard() {
                   <Archive size={14} /> ארכיון
                 </button>
                 <button
-                  className="flex items-center gap-1.5 text-[#8d785e] text-[13px] transition-colors hover:text-[#181510] disabled:opacity-50"
+                  className="flex items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
                   disabled={saving}
                   onClick={handleSkip}
                   type="button"
@@ -922,7 +925,7 @@ export function ClassificationWizard() {
                 </button>
               </div>
               <button
-                className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-6 py-2.5 text-[14px] text-white shadow-sm transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-[14px] text-white shadow-sm transition-colors hover:bg-primary-hover disabled:opacity-50"
                 disabled={saving || !selectedCategory}
                 onClick={handleApprove}
                 style={{ fontWeight: 600 }}
@@ -941,30 +944,30 @@ export function ClassificationWizard() {
             {/* Keyboard tip */}
             <motion.div
               animate={{ opacity: 1 }}
-              className="flex items-center justify-center gap-2 rounded-xl border border-[#ff8c00]/20 bg-[#fff7ed] p-3"
+              className="flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-[#fff7ed] p-3"
               initial={{ opacity: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <Keyboard className="text-[#ff8c00]" size={14} />
-              <span className="text-[#6b5d45] text-[12px]">
+              <Keyboard className="text-primary" size={14} />
+              <span className="text-[12px] text-muted-foreground">
                 <kbd
-                  className="mx-0.5 rounded border border-[#e7e1da] bg-white px-1.5 py-0.5 text-[11px]"
+                  className="mx-0.5 rounded border border-border bg-card px-1.5 py-0.5 text-[11px]"
                   style={{ fontWeight: 700 }}
                 >
                   Enter
                 </kbd>{" "}
                 אישור
-                <span className="mx-2 text-[#d4cdc3]">|</span>
+                <span className="mx-2 text-tertiary">|</span>
                 <kbd
-                  className="mx-0.5 rounded border border-[#e7e1da] bg-white px-1.5 py-0.5 text-[11px]"
+                  className="mx-0.5 rounded border border-border bg-card px-1.5 py-0.5 text-[11px]"
                   style={{ fontWeight: 700 }}
                 >
                   Esc
                 </kbd>{" "}
                 דילוג
-                <span className="mx-2 text-[#d4cdc3]">|</span>
+                <span className="mx-2 text-tertiary">|</span>
                 <kbd
-                  className="mx-0.5 rounded border border-[#e7e1da] bg-white px-1.5 py-0.5 text-[11px]"
+                  className="mx-0.5 rounded border border-border bg-card px-1.5 py-0.5 text-[11px]"
                   style={{ fontWeight: 700 }}
                 >
                   A
@@ -977,12 +980,12 @@ export function ClassificationWizard() {
           {/* ═══ SIDEBAR ═══ */}
           <div className="space-y-5">
             {/* Queue */}
-            <div className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <h3
-                className="mb-3 flex items-center gap-2 text-[#181510] text-[14px]"
+                className="mb-3 flex items-center gap-2 text-[14px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
-                <LayoutList className="text-[#ff8c00]" size={14} /> תור ספקים (
+                <LayoutList className="text-primary" size={14} /> תור ספקים (
                 {totalInQueue - processedCount} נותרו)
               </h3>
               <div className="max-h-[300px] space-y-1.5 overflow-y-auto">
@@ -997,10 +1000,10 @@ export function ClassificationWizard() {
                         animate={{ opacity: 1, x: 0 }}
                         className={`rounded-lg p-2.5 transition-all ${
                           isCurrent
-                            ? "bg-[#ff8c00] text-white shadow-sm"
+                            ? "bg-primary text-white shadow-sm"
                             : isPast
-                              ? "border border-green-100 bg-green-50"
-                              : "hover:bg-[#f5f3f0]"
+                              ? "border border-green-100 bg-success/10"
+                              : "hover:bg-accent"
                         }`}
                         initial={{ opacity: 0, x: 20 }}
                         key={item.id}
@@ -1009,19 +1012,19 @@ export function ClassificationWizard() {
                         <div className="flex items-center gap-2">
                           {isPast && (
                             <CheckCircle
-                              className="shrink-0 text-green-500"
+                              className="shrink-0 text-success"
                               size={12}
                             />
                           )}
                           <div className="min-w-0">
                             <div
-                              className={`truncate text-[13px] ${isCurrent ? "text-white" : isPast ? "text-green-700" : "text-[#181510]"}`}
+                              className={`truncate text-[13px] ${isCurrent ? "text-white" : isPast ? "text-success" : "text-foreground"}`}
                               style={{ fontWeight: 600 }}
                             >
                               {item.name}
                             </div>
                             <div
-                              className={`text-[11px] ${isCurrent ? "text-orange-100" : isPast ? "text-green-500" : "text-[#8d785e]"}`}
+                              className={`text-[11px] ${isCurrent ? "text-orange-100" : isPast ? "text-success" : "text-muted-foreground"}`}
                             >
                               {isPast ? "סווג" : `מזהה: ${item.id}`}
                             </div>
@@ -1033,7 +1036,7 @@ export function ClassificationWizard() {
               </div>
               {totalInQueue - processedCount > 6 && (
                 <p
-                  className="mt-3 text-center text-[#ff8c00] text-[12px]"
+                  className="mt-3 text-center text-[12px] text-primary"
                   style={{ fontWeight: 600 }}
                 >
                   +{totalInQueue - processedCount - 6} ספקים נוספים
@@ -1042,45 +1045,53 @@ export function ClassificationWizard() {
             </div>
 
             {/* Stats */}
-            <div className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <h3
-                className="mb-3 flex items-center gap-2 text-[#181510] text-[14px]"
+                className="mb-3 flex items-center gap-2 text-[14px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
-                <Zap className="text-[#ff8c00]" size={14} /> סטטיסטיקת עבודה
+                <Zap className="text-primary" size={14} /> סטטיסטיקת עבודה
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-[#8d785e] text-[12px]">סווגו</span>
+                  <span className="text-[12px] text-muted-foreground">
+                    סווגו
+                  </span>
                   <span
-                    className="text-[13px] text-green-600"
+                    className="text-[13px] text-success"
                     style={{ fontWeight: 700 }}
                   >
                     {classifiedCount}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8d785e] text-[12px]">דולגו</span>
+                  <span className="text-[12px] text-muted-foreground">
+                    דולגו
+                  </span>
                   <span
-                    className="text-[#8d785e] text-[13px]"
+                    className="text-[13px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     {skippedCount}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8d785e] text-[12px]">קצב (לשעה)</span>
+                  <span className="text-[12px] text-muted-foreground">
+                    קצב (לשעה)
+                  </span>
                   <span
-                    className="text-[#181510] text-[13px]"
+                    className="text-[13px] text-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     {speedPerHour > 0 ? `${speedPerHour} ספקים/שעה` : "—"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8d785e] text-[12px]">זמן עבודה</span>
+                  <span className="text-[12px] text-muted-foreground">
+                    זמן עבודה
+                  </span>
                   <span
-                    className="text-[#181510] text-[13px]"
+                    className="text-[13px] text-foreground"
                     style={{
                       fontWeight: 600,
                       fontVariantNumeric: "tabular-nums",
@@ -1091,20 +1102,22 @@ export function ClassificationWizard() {
                 </div>
 
                 {/* Progress mini bar */}
-                <div className="border-[#ece8e3] border-t pt-2">
+                <div className="border-accent border-t pt-2">
                   <div className="mb-1 flex justify-between">
-                    <span className="text-[#8d785e] text-[11px]">התקדמות</span>
+                    <span className="text-[11px] text-muted-foreground">
+                      התקדמות
+                    </span>
                     <span
-                      className="text-[#ff8c00] text-[11px]"
+                      className="text-[11px] text-primary"
                       style={{ fontWeight: 700 }}
                     >
                       {progressPct}%
                     </span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-[#ece8e3]">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-accent">
                     <motion.div
                       animate={{ width: `${progressPct}%` }}
-                      className="h-full rounded-full bg-gradient-to-l from-[#ff8c00] to-[#ffb347]"
+                      className="h-full rounded-full bg-gradient-to-l from-primary to-[#ffb347]"
                       transition={{ duration: 0.5 }}
                     />
                   </div>

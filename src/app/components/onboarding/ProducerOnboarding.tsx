@@ -25,7 +25,7 @@ export function ProducerOnboarding() {
       dir="rtl"
       style={{ backgroundColor: "#f8f7f5" }}
     >
-      <div className="flex w-full max-w-md flex-col items-center gap-6 rounded-2xl bg-white p-10 shadow-lg">
+      <div className="flex w-full max-w-md flex-col items-center gap-6 rounded-2xl bg-card p-10 shadow-lg">
         <div
           className="flex h-20 w-20 items-center justify-center rounded-2xl text-4xl"
           style={{ backgroundColor: "#fff3e0" }}

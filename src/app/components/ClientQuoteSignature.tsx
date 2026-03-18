@@ -170,25 +170,25 @@ export function ClientQuoteSignature({
     >
       <div
         aria-modal="true"
-        className="w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl"
+        className="w-full max-w-lg rounded-xl bg-card p-6 shadow-2xl"
         dir="rtl"
         role="dialog"
       >
         {/* Header */}
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-              <PenTool className="text-[#ff8c00]" size={18} />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+              <PenTool className="text-primary" size={18} />
             </div>
             <h3
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               חתימה דיגיטלית
             </h3>
           </div>
           <button
-            className="rounded-lg p-1.5 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+            className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >
@@ -200,14 +200,14 @@ export function ClientQuoteSignature({
         <div className="mb-4 space-y-3">
           <div>
             <label
-              className="mb-1 block text-[#181510] text-[13px]"
+              className="mb-1 block text-[13px] text-foreground"
               htmlFor="sig-name"
               style={{ fontWeight: 600 }}
             >
               שם מלא *
             </label>
             <input
-              className="w-full rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] outline-none transition-colors focus:border-[#ff8c00]"
+              className="w-full rounded-lg border border-border px-3 py-2 text-[14px] outline-none transition-colors focus:border-primary"
               id="sig-name"
               onChange={(e) => setSignerName(e.target.value)}
               placeholder="שם מלא"
@@ -218,14 +218,14 @@ export function ClientQuoteSignature({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label
-                className="mb-1 block text-[#181510] text-[13px]"
+                className="mb-1 block text-[13px] text-foreground"
                 htmlFor="sig-role"
                 style={{ fontWeight: 600 }}
               >
                 תפקיד
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] outline-none transition-colors focus:border-[#ff8c00]"
+                className="w-full rounded-lg border border-border px-3 py-2 text-[14px] outline-none transition-colors focus:border-primary"
                 id="sig-role"
                 onChange={(e) => setSignerRole(e.target.value)}
                 placeholder="תפקיד"
@@ -235,14 +235,14 @@ export function ClientQuoteSignature({
             </div>
             <div>
               <label
-                className="mb-1 block text-[#181510] text-[13px]"
+                className="mb-1 block text-[13px] text-foreground"
                 htmlFor="sig-company"
                 style={{ fontWeight: 600 }}
               >
                 חברה
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] outline-none transition-colors focus:border-[#ff8c00]"
+                className="w-full rounded-lg border border-border px-3 py-2 text-[14px] outline-none transition-colors focus:border-primary"
                 id="sig-company"
                 onChange={(e) => setSignerCompany(e.target.value)}
                 placeholder="שם חברה"
@@ -257,13 +257,13 @@ export function ClientQuoteSignature({
         <div className="mb-4">
           <div className="mb-1 flex items-center justify-between">
             <span
-              className="text-[#181510] text-[13px]"
+              className="text-[13px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               חתימה *
             </span>
             <button
-              className="flex items-center gap-1 text-[#8d785e] text-[12px] transition-colors hover:text-[#ff8c00]"
+              className="flex items-center gap-1 text-[12px] text-muted-foreground transition-colors hover:text-primary"
               onClick={clearCanvas}
               type="button"
             >
@@ -272,7 +272,7 @@ export function ClientQuoteSignature({
             </button>
           </div>
           <canvas
-            className="w-full cursor-crosshair rounded-lg border-2 border-[#e7e1da] border-dashed bg-[#faf9f7]"
+            className="w-full cursor-crosshair rounded-lg border-2 border-border border-dashed bg-surface"
             height={160}
             onMouseDown={startDrawing}
             onMouseLeave={stopDrawing}
@@ -285,7 +285,7 @@ export function ClientQuoteSignature({
             width={460}
           />
           {!hasDrawn && (
-            <p className="mt-1 text-center text-[#8d785e] text-[11px]">
+            <p className="mt-1 text-center text-[11px] text-muted-foreground">
               חתמ/י כאן באמצעות העכבר או מסך מגע
             </p>
           )}
@@ -295,11 +295,11 @@ export function ClientQuoteSignature({
         <label className="mb-5 flex cursor-pointer items-start gap-2">
           <input
             checked={agreed}
-            className="mt-0.5 h-4 w-4 accent-[#ff8c00]"
+            className="mt-0.5 h-4 w-4 accent-primary"
             onChange={(e) => setAgreed(e.target.checked)}
             type="checkbox"
           />
-          <span className="text-[#181510] text-[13px]">
+          <span className="text-[13px] text-foreground">
             אני מאשר/ת את ההצעה על כל תנאיה
           </span>
         </label>
@@ -307,7 +307,7 @@ export function ClientQuoteSignature({
         {/* Actions */}
         <div className="flex gap-3">
           <button
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!canSubmit}
             onClick={handleSubmit}
             style={{ fontWeight: 700 }}
@@ -321,7 +321,7 @@ export function ClientQuoteSignature({
             אישור וחתימה
           </button>
           <button
-            className="rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+            className="rounded-xl border border-border px-4 py-2.5 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >

@@ -315,7 +315,7 @@ export function ItemEditor({
           {/* Drawer */}
           <motion.div
             animate={{ x: 0, opacity: 1 }}
-            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-xl flex-col overflow-hidden bg-[#f8f7f5] shadow-2xl"
+            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-xl flex-col overflow-hidden bg-background shadow-2xl"
             dir="rtl"
             exit={{ x: "100%", opacity: 0 }}
             initial={{ x: "100%", opacity: 0.5 }}
@@ -324,28 +324,28 @@ export function ItemEditor({
             {/* ─── Header ─── */}
             <motion.div
               animate={{ y: 0, opacity: 1 }}
-              className="flex items-center justify-between border-[#e7e1da] border-b bg-white px-5 py-4"
+              className="flex items-center justify-between border-border border-b bg-card px-5 py-4"
               initial={{ y: -20, opacity: 0 }}
               transition={{ delay: 0.15 }}
             >
               <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ff8c00] text-white">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white">
                   {typeIcon}
                 </span>
                 <div>
                   <h2
-                    className="text-[#181510] text-[17px]"
+                    className="text-[17px] text-foreground"
                     style={{ fontWeight: 700 }}
                   >
                     עריכת רכיב
                   </h2>
-                  <p className="text-[#8d785e] text-[12px]">
+                  <p className="text-[12px] text-muted-foreground">
                     {item.type} &bull; {item.id}
                   </p>
                 </div>
               </div>
               <button
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 onClick={onClose}
                 type="button"
               >
@@ -365,7 +365,7 @@ export function ItemEditor({
                 {images && images.length > 0 ? (
                   <div className="relative">
                     {/* Main image */}
-                    <div className="relative h-56 overflow-hidden bg-[#181510]">
+                    <div className="relative h-56 overflow-hidden bg-foreground">
                       <AnimatePresence mode="wait">
                         <motion.img
                           alt={images[activeImageIdx]?.name}
@@ -393,7 +393,7 @@ export function ItemEditor({
                       {images.length > 1 && (
                         <>
                           <button
-                            className="absolute top-1/2 left-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#181510] shadow-lg transition-all hover:bg-white"
+                            className="absolute top-1/2 left-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-card/90 text-foreground shadow-lg transition-all hover:bg-card"
                             onClick={() =>
                               setActiveImageIdx((i) => (i + 1) % images.length)
                             }
@@ -402,7 +402,7 @@ export function ItemEditor({
                             <ChevronLeft size={16} />
                           </button>
                           <button
-                            className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#181510] shadow-lg transition-all hover:bg-white"
+                            className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-card/90 text-foreground shadow-lg transition-all hover:bg-card"
                             onClick={() =>
                               setActiveImageIdx(
                                 (i) => (i - 1 + images.length) % images.length
@@ -417,7 +417,7 @@ export function ItemEditor({
 
                       {/* Delete current image */}
                       <button
-                        className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-red-500/80 px-2.5 py-1 text-[11px] text-white backdrop-blur-md transition-colors hover:bg-red-500"
+                        className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-destructive/100/80 px-2.5 py-1 text-[11px] text-white backdrop-blur-md transition-colors hover:bg-destructive/100"
                         onClick={() =>
                           images[activeImageIdx] &&
                           requestDelete({
@@ -436,12 +436,12 @@ export function ItemEditor({
 
                     {/* Thumbnail strip */}
                     {images.length > 1 && (
-                      <div className="flex gap-2 overflow-x-auto border-[#e7e1da] border-b bg-white p-3">
+                      <div className="flex gap-2 overflow-x-auto border-border border-b bg-card p-3">
                         {images.map((img, idx) => (
                           <button
                             className={`h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
                               idx === activeImageIdx
-                                ? "scale-105 border-[#ff8c00] shadow-md"
+                                ? "scale-105 border-primary shadow-md"
                                 : "border-transparent opacity-60 hover:opacity-100"
                             }`}
                             key={img.id}
@@ -459,7 +459,7 @@ export function ItemEditor({
                         ))}
                         {/* Add more button */}
                         <button
-                          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border-2 border-[#e7e1da] border-dashed text-[#b8a990] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border-2 border-border border-dashed text-tertiary transition-colors hover:border-primary hover:text-primary"
                           onClick={() => fileInputRef.current?.click()}
                           type="button"
                         >
@@ -473,8 +473,8 @@ export function ItemEditor({
                   <div
                     className={`relative m-4 cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300 ${
                       isDragging
-                        ? "scale-[1.02] border-[#ff8c00] bg-[#ff8c00]/5"
-                        : "border-[#e7e1da] bg-white hover:border-[#ff8c00]/50"
+                        ? "scale-[1.02] border-primary bg-primary/5"
+                        : "border-border bg-card hover:border-primary/50"
                     }`}
                     onClick={() => fileInputRef.current?.click()}
                     onDragLeave={handleDragLeave}
@@ -508,8 +508,8 @@ export function ItemEditor({
                         }
                         className={`mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors duration-300 ${
                           isDragging
-                            ? "bg-[#ff8c00]/15 text-[#ff8c00]"
-                            : "bg-[#f5f3f0] text-[#b8a990]"
+                            ? "bg-primary/15 text-primary"
+                            : "bg-accent text-tertiary"
                         }`}
                         transition={{
                           duration: 0.8,
@@ -518,7 +518,7 @@ export function ItemEditor({
                       >
                         {uploading ? (
                           <Loader2
-                            className="animate-spin text-[#ff8c00]"
+                            className="animate-spin text-primary"
                             size={28}
                           />
                         ) : (
@@ -526,7 +526,7 @@ export function ItemEditor({
                         )}
                       </motion.div>
                       <p
-                        className="mb-1 text-[#181510] text-[15px]"
+                        className="mb-1 text-[15px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {isDragging
@@ -535,7 +535,7 @@ export function ItemEditor({
                             ? "מעלה תמונה..."
                             : "גרור תמונה לכאן"}
                       </p>
-                      <p className="text-[#b8a990] text-[12px]">
+                      <p className="text-[12px] text-tertiary">
                         או לחץ לבחירת קובץ &bull; JPG, PNG עד 5MB
                       </p>
                     </div>
@@ -558,7 +558,7 @@ export function ItemEditor({
                 {images && images.length > 0 && (
                   <div className="px-4 pb-2">
                     <button
-                      className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#e7e1da] border-dashed p-3 text-[#8d785e] text-[13px] transition-all hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-border border-dashed p-3 text-[13px] text-muted-foreground transition-all hover:border-primary hover:text-primary"
                       onClick={() => fileInputRef.current?.click()}
                       onDragLeave={handleDragLeave}
                       onDragOver={handleDragOver}
@@ -581,27 +581,27 @@ export function ItemEditor({
                 {/* Section: Basic Info */}
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+                  className="space-y-3 rounded-xl border border-border bg-card p-4"
                   initial={{ opacity: 0, y: 15 }}
                   transition={{ delay: 0.25 }}
                 >
                   <div
-                    className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                    className="mb-1 flex items-center gap-2 text-[13px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
-                    <FileText className="text-[#ff8c00]" size={14} />
+                    <FileText className="text-primary" size={14} />
                     פרטי הרכיב
                   </div>
 
                   <div>
                     <label
-                      className="mb-1 block text-[#8d785e] text-[11px]"
+                      className="mb-1 block text-[11px] text-muted-foreground"
                       htmlFor="item-name"
                     >
                       שם הרכיב
                     </label>
                     <input
-                      className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                      className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                       id="item-name"
                       onChange={(e) => setName(e.target.value)}
                       placeholder="שם הרכיב..."
@@ -612,13 +612,13 @@ export function ItemEditor({
 
                   <div>
                     <label
-                      className="mb-1 block text-[#8d785e] text-[11px]"
+                      className="mb-1 block text-[11px] text-muted-foreground"
                       htmlFor="item-supplier"
                     >
                       ספק
                     </label>
                     <input
-                      className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                      className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                       id="item-supplier"
                       onChange={(e) => setSupplier(e.target.value)}
                       placeholder="שם הספק..."
@@ -628,13 +628,13 @@ export function ItemEditor({
 
                   <div>
                     <label
-                      className="mb-1 block text-[#8d785e] text-[11px]"
+                      className="mb-1 block text-[11px] text-muted-foreground"
                       htmlFor="item-description"
                     >
                       תיאור
                     </label>
                     <textarea
-                      className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                      className="w-full resize-none rounded-lg border border-border bg-input-background px-3 py-2 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="תיאור הרכיב..."
                       rows={3}
@@ -644,7 +644,7 @@ export function ItemEditor({
 
                   {/* Status selector */}
                   <fieldset>
-                    <legend className="mb-1.5 block text-[#8d785e] text-[11px]">
+                    <legend className="mb-1.5 block text-[11px] text-muted-foreground">
                       סטטוס
                     </legend>
                     <div className="flex gap-2">
@@ -653,7 +653,7 @@ export function ItemEditor({
                           className={`flex-1 rounded-lg border-2 px-3 py-2 text-[12px] transition-all ${
                             status === opt.value
                               ? "shadow-sm"
-                              : "border-transparent bg-[#f5f3f0] text-[#8d785e] hover:bg-[#ece8e3]"
+                              : "border-transparent bg-accent text-muted-foreground hover:bg-accent"
                           }`}
                           key={opt.value}
                           onClick={() => setStatus(opt.value)}
@@ -679,32 +679,32 @@ export function ItemEditor({
                 {/* Section: Pricing */}
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+                  className="space-y-3 rounded-xl border border-border bg-card p-4"
                   initial={{ opacity: 0, y: 15 }}
                   transition={{ delay: 0.35 }}
                 >
                   <div
-                    className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                    className="mb-1 flex items-center gap-2 text-[13px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
-                    <Banknote className="text-[#ff8c00]" size={14} />
+                    <Banknote className="text-primary" size={14} />
                     תמחור
                   </div>
 
                   <div className="grid grid-cols-3 gap-3">
                     <div>
                       <label
-                        className="mb-1 block text-[#8d785e] text-[11px]"
+                        className="mb-1 block text-[11px] text-muted-foreground"
                         htmlFor="item-cost"
                       >
                         עלות (ספק)
                       </label>
                       <div className="relative">
-                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990] text-[12px]">
+                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[12px] text-tertiary">
                           ₪
                         </span>
                         <input
-                          className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] py-2 pr-7 pl-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                          className="w-full rounded-lg border border-border bg-input-background py-2 pr-7 pl-2 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                           id="item-cost"
                           onChange={(e) =>
                             setCost(Number.parseFloat(e.target.value) || 0)
@@ -717,17 +717,17 @@ export function ItemEditor({
                     </div>
                     <div>
                       <label
-                        className="mb-1 block text-[#8d785e] text-[11px]"
+                        className="mb-1 block text-[11px] text-muted-foreground"
                         htmlFor="item-direct-price"
                       >
                         תמחור ישיר
                       </label>
                       <div className="relative">
-                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990] text-[12px]">
+                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[12px] text-tertiary">
                           ₪
                         </span>
                         <input
-                          className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] py-2 pr-7 pl-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                          className="w-full rounded-lg border border-border bg-input-background py-2 pr-7 pl-2 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                           id="item-direct-price"
                           onChange={(e) =>
                             setDirectPrice(
@@ -742,17 +742,17 @@ export function ItemEditor({
                     </div>
                     <div>
                       <label
-                        className="mb-1 block text-[#8d785e] text-[11px]"
+                        className="mb-1 block text-[11px] text-muted-foreground"
                         htmlFor="item-selling-price"
                       >
                         מחיר מכירה
                       </label>
                       <div className="relative">
-                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990] text-[12px]">
+                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[12px] text-tertiary">
                           ₪
                         </span>
                         <input
-                          className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] py-2 pr-7 pl-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                          className="w-full rounded-lg border border-border bg-input-background py-2 pr-7 pl-2 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                           id="item-selling-price"
                           onChange={(e) =>
                             setSellingPrice(
@@ -768,17 +768,19 @@ export function ItemEditor({
                   </div>
 
                   {/* Profit indicator bar */}
-                  <div className="rounded-xl bg-[#f5f3f0] p-3">
+                  <div className="rounded-xl bg-accent p-3">
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="text-[#8d785e] text-[12px]">רווח</span>
+                      <span className="text-[12px] text-muted-foreground">
+                        רווח
+                      </span>
                       <span
-                        className={`text-[14px] ${profit >= 0 ? "text-green-600" : "text-red-500"}`}
+                        className={`text-[14px] ${profit >= 0 ? "text-success" : "text-destructive"}`}
                         style={{ fontWeight: 700 }}
                       >
                         ₪{profit.toLocaleString()} ({profitPct}%)
                       </span>
                     </div>
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-[#e7e1da]">
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-border">
                       <motion.div
                         animate={{
                           width: `${Math.min(Math.max(profitPct, 0), 100)}%`,
@@ -803,7 +805,7 @@ export function ItemEditor({
                   {/* Profit weight (stars) */}
                   <div>
                     <fieldset>
-                      <legend className="mb-1.5 block text-[#8d785e] text-[11px]">
+                      <legend className="mb-1.5 block text-[11px] text-muted-foreground">
                         משקל רווח
                       </legend>
                       <div className="flex items-center gap-1.5">
@@ -817,15 +819,15 @@ export function ItemEditor({
                             <Star
                               className={
                                 w <= profitWeight
-                                  ? "text-[#ff8c00]"
-                                  : "text-[#ddd6cb]"
+                                  ? "text-primary"
+                                  : "text-tertiary"
                               }
                               fill={w <= profitWeight ? "#ff8c00" : "none"}
                               size={22}
                             />
                           </button>
                         ))}
-                        <span className="mr-2 text-[#8d785e] text-[12px]">
+                        <span className="mr-2 text-[12px] text-muted-foreground">
                           {profitWeight === 1
                             ? "מינימלי"
                             : profitWeight === 2
@@ -845,27 +847,29 @@ export function ItemEditor({
                 {isVolumePrice && product && (
                   <motion.div
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-xl border border-blue-200 bg-blue-50 p-4"
+                    className="rounded-xl border border-info/30 bg-info/10 p-4"
                     initial={{ opacity: 0, y: 15 }}
                     transition={{ delay: 0.38 }}
                   >
                     <div className="flex items-center gap-2">
                       <span
-                        className="rounded-md bg-blue-500 px-2 py-0.5 text-[11px] text-white"
+                        className="rounded-md bg-info/100 px-2 py-0.5 text-[11px] text-white"
                         style={{ fontWeight: 600 }}
                       >
                         מחיר כמות
                       </span>
-                      <span className="text-[#8d785e] text-[12px]">
+                      <span className="text-[12px] text-muted-foreground">
                         {participants} משתתפים ≥ סף כמות (
                         {product.volumeThreshold})
                       </span>
                     </div>
                     <div className="mt-2 grid grid-cols-2 gap-3 text-[12px]">
                       <div>
-                        <span className="text-[#8d785e]">מחירון כמות: </span>
+                        <span className="text-muted-foreground">
+                          מחירון כמות:{" "}
+                        </span>
                         <span
-                          className="text-[#181510]"
+                          className="text-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           ₪
@@ -877,9 +881,11 @@ export function ItemEditor({
                         </span>
                       </div>
                       <div>
-                        <span className="text-[#8d785e]">ישיר כמות: </span>
+                        <span className="text-muted-foreground">
+                          ישיר כמות:{" "}
+                        </span>
                         <span
-                          className="text-[#181510]"
+                          className="text-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           ₪
@@ -892,7 +898,7 @@ export function ItemEditor({
                       </div>
                     </div>
                     <button
-                      className="mt-2 rounded-lg bg-blue-500 px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-blue-600"
+                      className="mt-2 rounded-lg bg-info/100 px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-blue-600"
                       onClick={() => {
                         const volCost =
                           product.volumeProducerPrice ??
@@ -921,15 +927,15 @@ export function ItemEditor({
                 {productAddons && productAddons.length > 0 && (
                   <motion.div
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-xl border border-[#e7e1da] bg-white p-4"
+                    className="rounded-xl border border-border bg-card p-4"
                     initial={{ opacity: 0, y: 15 }}
                     transition={{ delay: 0.4 }}
                   >
                     <div
-                      className="mb-3 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                      className="mb-3 flex items-center gap-2 text-[13px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
-                      <Package className="text-[#ff8c00]" size={14} />
+                      <Package className="text-primary" size={14} />
                       תוספות זמינות
                     </div>
                     <div className="space-y-2">
@@ -941,15 +947,15 @@ export function ItemEditor({
                           <label
                             className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-all ${
                               isSelected
-                                ? "border-[#ff8c00] bg-[#ff8c00]/5"
-                                : "border-[#e7e1da] hover:border-[#ff8c00]/50"
+                                ? "border-primary bg-primary/5"
+                                : "border-border hover:border-primary/50"
                             }`}
                             key={addon.id}
                           >
                             <div className="flex items-center gap-3">
                               <input
                                 checked={isSelected}
-                                className="h-4 w-4 accent-[#ff8c00]"
+                                className="h-4 w-4 accent-primary"
                                 onChange={async () => {
                                   const currentAddons = [
                                     ...(item.selectedAddons ?? []),
@@ -994,25 +1000,25 @@ export function ItemEditor({
                               />
                               <div>
                                 <span
-                                  className="text-[#181510] text-[13px]"
+                                  className="text-[13px] text-foreground"
                                   style={{ fontWeight: 600 }}
                                 >
                                   {addon.name}
                                 </span>
                                 {addon.description && (
-                                  <p className="text-[#8d785e] text-[11px]">
+                                  <p className="text-[11px] text-muted-foreground">
                                     {addon.description}
                                   </p>
                                 )}
                               </div>
                             </div>
                             <span
-                              className="text-[#181510] text-[13px]"
+                              className="text-[13px] text-foreground"
                               style={{ fontWeight: 600 }}
                             >
                               ₪{addon.listPrice.toLocaleString()}
                               {addon.unit && (
-                                <span className="text-[#8d785e] text-[11px]">
+                                <span className="text-[11px] text-muted-foreground">
                                   /{addon.unit}
                                 </span>
                               )}
@@ -1027,19 +1033,19 @@ export function ItemEditor({
                 {/* Section: Notes */}
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-xl border border-[#e7e1da] bg-white p-4"
+                  className="rounded-xl border border-border bg-card p-4"
                   initial={{ opacity: 0, y: 15 }}
                   transition={{ delay: 0.45 }}
                 >
                   <div
-                    className="mb-2 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                    className="mb-2 flex items-center gap-2 text-[13px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
-                    <StickyNote className="text-[#ff8c00]" size={14} />
+                    <StickyNote className="text-primary" size={14} />
                     הערות פנימיות
                   </div>
                   <textarea
-                    className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                    className="w-full resize-none rounded-lg border border-border bg-input-background px-3 py-2 text-[13px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="הערות שלא יוצגו ללקוח..."
                     rows={3}
@@ -1055,17 +1061,17 @@ export function ItemEditor({
             {/* ─── Bottom Save Bar ─── */}
             <motion.div
               animate={{ y: 0, opacity: 1 }}
-              className="sticky bottom-0 flex items-center gap-3 border-[#e7e1da] border-t bg-white/95 px-4 py-3 backdrop-blur-md"
+              className="sticky bottom-0 flex items-center gap-3 border-border border-t bg-card/95 px-4 py-3 backdrop-blur-md"
               initial={{ y: 20, opacity: 0 }}
               transition={{ delay: 0.4 }}
             >
               <motion.button
                 className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-[14px] transition-all ${
                   saveSuccess
-                    ? "bg-green-500 text-white"
+                    ? "bg-success/100 text-white"
                     : hasChanges
-                      ? "bg-[#ff8c00] text-white shadow-[#ff8c00]/25 shadow-lg hover:bg-[#e67e00]"
-                      : "cursor-not-allowed bg-[#e7e1da] text-[#b8a990]"
+                      ? "bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary-hover"
+                      : "cursor-not-allowed bg-border text-tertiary"
                 }`}
                 disabled={saving || !(hasChanges || saveSuccess)}
                 onClick={handleSave}
@@ -1087,7 +1093,7 @@ export function ItemEditor({
                 )}
               </motion.button>
               <button
-                className="rounded-xl border border-[#e7e1da] px-5 py-3 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+                className="rounded-xl border border-border px-5 py-3 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
                 onClick={onClose}
                 type="button"
               >

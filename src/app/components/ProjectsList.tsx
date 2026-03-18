@@ -209,18 +209,18 @@ export function ProjectsList() {
       {/* Header */}
       <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff8c00]/10">
-            <FolderOpen className="text-[#ff8c00]" size={20} />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <FolderOpen className="text-primary" size={20} />
           </div>
           <h1
-            className="text-[#181510] text-[26px]"
+            className="text-[26px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             פרויקטים
           </h1>
         </div>
         <button
-          className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white shadow-[#ff8c00]/20 shadow-lg transition-all hover:bg-[#e67e00]"
+          className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-[14px] text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-hover"
           onClick={() => navigate("/projects?newProject=true")}
           style={{ fontWeight: 600 }}
           type="button"
@@ -233,23 +233,23 @@ export function ProjectsList() {
       <div className="mb-5 flex flex-wrap gap-3">
         <div className="relative min-w-[240px] flex-1">
           <Search
-            className="absolute top-1/2 right-3 -translate-y-1/2 text-[#8d785e]"
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground"
             size={16}
           />
           <input
-            className="w-full rounded-lg border border-[#e7e1da] bg-white py-2.5 pr-9 pl-3 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+            className="w-full rounded-lg border border-border bg-card py-2.5 pr-9 pl-3 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
             onChange={(e) => setSearch(e.target.value)}
             placeholder="חיפוש פרויקט..."
             value={search}
           />
         </div>
-        <div className="flex gap-1 overflow-x-auto rounded-lg border border-[#e7e1da] bg-white p-1">
+        <div className="flex gap-1 overflow-x-auto rounded-lg border border-border bg-card p-1">
           {STATUS_OPTIONS_ALL.map((status) => (
             <button
               className={`whitespace-nowrap rounded-md px-3 py-1.5 text-[12px] transition-all ${
                 statusFilter === status
-                  ? "bg-[#181510] text-white"
-                  : "text-[#8d785e] hover:bg-[#f5f3f0]"
+                  ? "bg-foreground text-white"
+                  : "text-muted-foreground hover:bg-accent"
               }`}
               key={status}
               onClick={() => setStatusFilter(status)}
@@ -265,8 +265,8 @@ export function ProjectsList() {
       {/* Loading */}
       {loading && (
         <div className="flex flex-col items-center justify-center py-16">
-          <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-          <p className="text-[#8d785e] text-[14px]">טוען פרויקטים...</p>
+          <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+          <p className="text-[14px] text-muted-foreground">טוען פרויקטים...</p>
         </div>
       )}
 
@@ -275,7 +275,7 @@ export function ProjectsList() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((project) => (
             <div
-              className="group relative rounded-xl border border-[#e7e1da] bg-white p-5 text-right transition-all hover:border-[#d4cdc3] hover:shadow-lg"
+              className="group relative rounded-xl border border-border bg-card p-5 text-right transition-all hover:border-tertiary hover:shadow-lg"
               key={project.id}
             >
               {/* Action menu trigger */}
@@ -284,7 +284,7 @@ export function ProjectsList() {
                 ref={openMenu === project.id ? menuRef : undefined}
               >
                 <button
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenMenu(openMenu === project.id ? null : project.id);
@@ -296,38 +296,41 @@ export function ProjectsList() {
 
                 {/* Dropdown menu */}
                 {openMenu === project.id && (
-                  <div className="absolute top-9 left-0 z-50 w-44 rounded-xl border border-[#e7e1da] bg-white py-1 shadow-xl">
+                  <div className="absolute top-9 left-0 z-50 w-44 rounded-xl border border-border bg-card py-1 shadow-xl">
                     <button
-                      className="flex w-full items-center gap-2.5 px-3 py-2.5 text-[#181510] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+                      className="flex w-full items-center gap-2.5 px-3 py-2.5 text-[13px] text-foreground transition-colors hover:bg-accent"
                       onClick={() => openEdit(project as unknown as Project)}
                       type="button"
                     >
-                      <Edit2 className="text-[#8d785e]" size={14} />
+                      <Edit2 className="text-muted-foreground" size={14} />
                       ערוך פרטים
                     </button>
                     <button
-                      className="flex w-full items-center gap-2.5 px-3 py-2.5 text-[#181510] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+                      className="flex w-full items-center gap-2.5 px-3 py-2.5 text-[13px] text-foreground transition-colors hover:bg-accent"
                       onClick={() =>
                         openStatusChange(project as unknown as Project)
                       }
                       type="button"
                     >
-                      <ArrowRightLeft className="text-[#8d785e]" size={14} />
+                      <ArrowRightLeft
+                        className="text-muted-foreground"
+                        size={14}
+                      />
                       שנה סטטוס
                     </button>
                     <button
-                      className="flex w-full items-center gap-2.5 px-3 py-2.5 text-[#181510] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+                      className="flex w-full items-center gap-2.5 px-3 py-2.5 text-[13px] text-foreground transition-colors hover:bg-accent"
                       onClick={() =>
                         duplicateProject(project as unknown as Project)
                       }
                       type="button"
                     >
-                      <Copy className="text-[#8d785e]" size={14} />
+                      <Copy className="text-muted-foreground" size={14} />
                       שכפל פרויקט
                     </button>
-                    <div className="my-1 border-[#f5f3f0] border-t" />
+                    <div className="my-1 border-accent border-t" />
                     <button
-                      className="flex w-full items-center gap-2.5 px-3 py-2.5 text-[13px] text-red-500 transition-colors hover:bg-red-50"
+                      className="flex w-full items-center gap-2.5 px-3 py-2.5 text-[13px] text-destructive transition-colors hover:bg-destructive/10"
                       onClick={() => openDelete(project as unknown as Project)}
                       type="button"
                     >
@@ -355,20 +358,20 @@ export function ProjectsList() {
                   >
                     {project.status}
                   </span>
-                  <span className="text-[#8d785e] text-[11px]">
+                  <span className="text-[11px] text-muted-foreground">
                     #{project.id}
                   </span>
                 </div>
                 <h3
-                  className="mb-1 text-[#181510] text-[16px] transition-colors group-hover:text-[#ff8c00]"
+                  className="mb-1 text-[16px] text-foreground transition-colors group-hover:text-primary"
                   style={{ fontWeight: 600 }}
                 >
                   {project.name}
                 </h3>
-                <p className="mb-3 text-[#8d785e] text-[12px]">
+                <p className="mb-3 text-[12px] text-muted-foreground">
                   {project.company}
                 </p>
-                <div className="flex flex-wrap gap-3 text-[#8d785e] text-[12px]">
+                <div className="flex flex-wrap gap-3 text-[12px] text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Users size={12} /> {project.participants}
                   </span>
@@ -385,21 +388,21 @@ export function ProjectsList() {
                 </div>
                 {project.profitMargin > 0 && (
                   <div className="mt-3 flex items-center gap-2">
-                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#ece8e3]">
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-accent">
                       <div
                         className="h-full rounded-full bg-green-400"
                         style={{ width: `${project.profitMargin}%` }}
                       />
                     </div>
                     <span
-                      className="text-[11px] text-green-600"
+                      className="text-[11px] text-success"
                       style={{ fontWeight: 600 }}
                     >
                       {project.profitMargin}%
                     </span>
                   </div>
                 )}
-                <div className="mt-3 flex items-center justify-end text-[#ff8c00] text-[12px] opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="mt-3 flex items-center justify-end text-[12px] text-primary opacity-0 transition-opacity group-hover:opacity-100">
                   פתח פרויקט <ChevronLeft size={12} />
                 </div>
               </button>
@@ -411,8 +414,8 @@ export function ProjectsList() {
       {!loading && filtered.length === 0 && (
         <div className="py-16 text-center">
           <div className="mb-3 text-[40px]">📁</div>
-          <p className="text-[#8d785e] text-[16px]">לא נמצאו פרויקטים</p>
-          <p className="mt-1 text-[#8d785e] text-[13px]">
+          <p className="text-[16px] text-muted-foreground">לא נמצאו פרויקטים</p>
+          <p className="mt-1 text-[13px] text-muted-foreground">
             נסה לשנות את הסינון או ליצור פרויקט חדש
           </p>
         </div>
@@ -430,18 +433,18 @@ export function ProjectsList() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <div className="mb-5 flex items-center justify-between">
               <h3
-                className="text-[#181510] text-[20px]"
+                className="text-[20px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 עריכת פרויקט
               </h3>
               <button
-                className="text-[#8d785e] hover:text-[#181510]"
+                className="text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setEditingProject(null);
                   editForm.reset();
@@ -491,7 +494,7 @@ export function ProjectsList() {
               />
               <div className="flex gap-3 pt-2">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                   disabled={saving || !editForm.formState.isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -504,7 +507,7 @@ export function ProjectsList() {
                   {saving ? "שומר..." : "שמור שינויים"}
                 </button>
                 <button
-                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-xl border border-border px-5 transition-colors hover:bg-accent"
                   onClick={() => {
                     setEditingProject(null);
                     editForm.reset();
@@ -529,25 +532,25 @@ export function ProjectsList() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <div className="mb-4 flex items-center justify-between">
               <h3
-                className="text-[#181510] text-[20px]"
+                className="text-[20px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 שינוי סטטוס
               </h3>
               <button
-                className="text-[#8d785e] hover:text-[#181510]"
+                className="text-muted-foreground hover:text-foreground"
                 onClick={() => setStatusProject(null)}
                 type="button"
               >
                 <X size={20} />
               </button>
             </div>
-            <p className="mb-4 text-[#8d785e] text-[13px]">
+            <p className="mb-4 text-[13px] text-muted-foreground">
               פרויקט:{" "}
               <span style={{ fontWeight: 600, color: "#181510" }}>
                 {statusProject.name}
@@ -561,8 +564,8 @@ export function ProjectsList() {
                   <button
                     className={`flex w-full items-center justify-between rounded-xl border p-3 transition-all ${
                       isCurrent
-                        ? "cursor-default border-[#ff8c00] bg-[#ff8c00]/5"
-                        : "border-[#e7e1da] hover:border-[#d4cdc3] hover:bg-[#f5f3f0]"
+                        ? "cursor-default border-primary bg-primary/5"
+                        : "border-border hover:border-tertiary hover:bg-accent"
                     }`}
                     disabled={isCurrent || saving}
                     key={status}
@@ -575,7 +578,7 @@ export function ProjectsList() {
                         style={{ backgroundColor: color }}
                       />
                       <span
-                        className="text-[#181510] text-[14px]"
+                        className="text-[14px] text-foreground"
                         style={{ fontWeight: isCurrent ? 600 : 400 }}
                       >
                         {status}
@@ -583,7 +586,7 @@ export function ProjectsList() {
                     </div>
                     {isCurrent && (
                       <span
-                        className="text-[#ff8c00] text-[11px]"
+                        className="text-[11px] text-primary"
                         style={{ fontWeight: 600 }}
                       >
                         נוכחי

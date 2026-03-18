@@ -31,10 +31,10 @@ export function EventRatings() {
   if (!projectId) {
     return (
       <div
-        className="flex min-h-screen items-center justify-center bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        className="flex min-h-screen items-center justify-center bg-background font-['Assistant',sans-serif]"
         dir="rtl"
       >
-        <p className="text-[#8d785e] text-[16px]">דף דירוג לא נמצא</p>
+        <p className="text-[16px] text-muted-foreground">דף דירוג לא נמצא</p>
       </div>
     );
   }
@@ -42,10 +42,10 @@ export function EventRatings() {
   if (quoteItems === undefined) {
     return (
       <div
-        className="flex min-h-screen items-center justify-center bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        className="flex min-h-screen items-center justify-center bg-background font-['Assistant',sans-serif]"
         dir="rtl"
       >
-        <Loader2 className="animate-spin text-[#b8a990]" size={32} />
+        <Loader2 className="animate-spin text-tertiary" size={32} />
       </div>
     );
   }
@@ -106,20 +106,20 @@ export function EventRatings() {
   if (submitted) {
     return (
       <div
-        className="flex min-h-screen items-center justify-center bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        className="flex min-h-screen items-center justify-center bg-background font-['Assistant',sans-serif]"
         dir="rtl"
       >
         <div className="mx-auto max-w-md px-4 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#22c55e]/10">
-            <CheckCircle className="text-[#22c55e]" size={32} />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success/10">
+            <CheckCircle className="text-success" size={32} />
           </div>
           <h1
-            className="mb-2 text-[#181510] text-[24px]"
+            className="mb-2 text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             תודה רבה!
           </h1>
-          <p className="text-[#8d785e] text-[15px]">
+          <p className="text-[15px] text-muted-foreground">
             הדירוגים שלכם נשמרו בהצלחה. המשוב שלכם עוזר לנו להשתפר!
           </p>
         </div>
@@ -129,35 +129,35 @@ export function EventRatings() {
 
   return (
     <div
-      className="min-h-screen bg-[#f8f7f5] font-['Assistant',sans-serif]"
+      className="min-h-screen bg-background font-['Assistant',sans-serif]"
       dir="rtl"
     >
       <div className="mx-auto max-w-2xl px-4 py-8">
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ff8c00]/10">
-            <Star className="text-[#ff8c00]" size={28} />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+            <Star className="text-primary" size={28} />
           </div>
           <h1
-            className="text-[#181510] text-[24px]"
+            className="text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             דרגו את הפעילויות
           </h1>
-          <p className="mt-1 text-[#8d785e] text-[15px]">
+          <p className="mt-1 text-[15px] text-muted-foreground">
             ספרו לנו מה חשבתם על כל פעילות
           </p>
         </div>
 
         {/* Participant Name */}
-        <div className="mb-6 rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm">
+        <div className="mb-6 rounded-2xl border border-border bg-card p-5 shadow-sm">
           <label
-            className="mb-2 block text-[#181510] text-[14px]"
+            className="mb-2 block text-[14px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             השם שלכם (אופציונלי)
             <input
-              className="mt-1 block w-full rounded-lg border border-[#e7e1da] px-3 py-2.5 font-normal text-[14px] outline-none focus:border-[#ff8c00]"
+              className="mt-1 block w-full rounded-lg border border-border px-3 py-2.5 font-normal text-[14px] outline-none focus:border-primary"
               onChange={(e) => setParticipantName(e.target.value)}
               placeholder="הכניסו את שמכם"
               value={participantName}
@@ -167,8 +167,10 @@ export function EventRatings() {
 
         {/* Activities to rate */}
         {rateableItems.length === 0 ? (
-          <div className="rounded-2xl border border-[#e7e1da] bg-white py-12 text-center shadow-sm">
-            <p className="text-[#8d785e] text-[16px]">אין פעילויות לדירוג</p>
+          <div className="rounded-2xl border border-border bg-card py-12 text-center shadow-sm">
+            <p className="text-[16px] text-muted-foreground">
+              אין פעילויות לדירוג
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -180,7 +182,7 @@ export function EventRatings() {
               };
               return (
                 <div
-                  className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm"
+                  className="rounded-2xl border border-border bg-card p-5 shadow-sm"
                   key={item.id}
                 >
                   <div className="mb-3 flex items-center gap-2">
@@ -188,14 +190,14 @@ export function EventRatings() {
                       <span className="text-[18px]">{item.icon}</span>
                     )}
                     <h3
-                      className="text-[#181510] text-[16px]"
+                      className="text-[16px] text-foreground"
                       style={{ fontWeight: 700 }}
                     >
                       {item.name}
                     </h3>
                   </div>
                   {item.description && (
-                    <p className="mb-3 text-[#8d785e] text-[13px]">
+                    <p className="mb-3 text-[13px] text-muted-foreground">
                       {item.description}
                     </p>
                   )}
@@ -219,8 +221,8 @@ export function EventRatings() {
                         <Star
                           className={
                             star <= entry.rating
-                              ? "fill-[#ff8c00] text-[#ff8c00]"
-                              : "text-[#e7e1da]"
+                              ? "fill-primary text-primary"
+                              : "text-border"
                           }
                           size={28}
                         />
@@ -230,7 +232,7 @@ export function EventRatings() {
 
                   {/* Comment */}
                   <textarea
-                    className="w-full resize-none rounded-lg border border-[#e7e1da] px-3 py-2 text-[13px] outline-none focus:border-[#ff8c00]"
+                    className="w-full resize-none rounded-lg border border-border px-3 py-2 text-[13px] outline-none focus:border-primary"
                     onChange={(e) =>
                       updateRating(
                         item.id,
@@ -253,7 +255,7 @@ export function EventRatings() {
         {rateableItems.length > 0 && (
           <div className="mt-6 text-center">
             <button
-              className="inline-flex items-center gap-2 rounded-xl bg-[#ff8c00] px-8 py-3 text-[15px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-3 text-[15px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
               disabled={submitting}
               onClick={handleSubmit}
               style={{ fontWeight: 700 }}

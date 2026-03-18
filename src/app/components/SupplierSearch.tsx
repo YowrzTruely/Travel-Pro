@@ -86,7 +86,7 @@ export function SupplierSearch({
   return (
     <div className="relative" ref={wrapperRef}>
       <label
-        className="mb-1 block text-[#181510] text-[13px]"
+        className="mb-1 block text-[13px] text-foreground"
         htmlFor="supplier-search-input"
         style={{ fontWeight: 600 }}
       >
@@ -94,12 +94,12 @@ export function SupplierSearch({
       </label>
       <div className="relative">
         <Search
-          className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990]"
+          className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-tertiary"
           size={14}
         />
         <input
           autoComplete="off"
-          className="w-full rounded-xl border border-[#e7e1da] bg-[#f5f3f0] py-2.5 pr-9 pl-8 text-[#181510] text-[14px] outline-none transition-all focus:border-[#ff8c00] focus:ring-1 focus:ring-[#ff8c00]"
+          className="w-full rounded-xl border border-border bg-accent py-2.5 pr-9 pl-8 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
           id="supplier-search-input"
           onChange={(e) => handleInputChange(e.target.value)}
           onFocus={() => {
@@ -111,7 +111,7 @@ export function SupplierSearch({
         />
         {query && (
           <button
-            className="absolute top-1/2 left-3 -translate-y-1/2 text-[#b8a990] hover:text-[#181510]"
+            className="absolute top-1/2 left-3 -translate-y-1/2 text-tertiary hover:text-foreground"
             onClick={(e) => {
               e.stopPropagation();
               setQuery("");
@@ -125,10 +125,10 @@ export function SupplierSearch({
       </div>
 
       {open && results.length > 0 && (
-        <div className="absolute top-full z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-[#e7e1da] bg-white shadow-xl">
+        <div className="absolute top-full z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-border bg-card shadow-xl">
           {results.map((s: any) => (
             <button
-              className="flex w-full items-center gap-3 border-[#f5f3f0] border-b px-4 py-3 text-right transition-colors last:border-b-0 hover:bg-[#f5f3f0]"
+              className="flex w-full items-center gap-3 border-accent border-b px-4 py-3 text-right transition-colors last:border-b-0 hover:bg-accent"
               key={s._id}
               onClick={(e) => {
                 e.stopPropagation();
@@ -144,19 +144,19 @@ export function SupplierSearch({
               </div>
               <div className="min-w-0 flex-1">
                 <div
-                  className="truncate text-[#181510] text-[13px]"
+                  className="truncate text-[13px] text-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {s.name}
                 </div>
-                <div className="text-[#8d785e] text-[11px]">
+                <div className="text-[11px] text-muted-foreground">
                   {s.category} &bull; {regionDisplayLabel(s.region) || s.region}{" "}
                   &bull; {"★".repeat(Math.round(s.rating))}
                 </div>
               </div>
               {promotionSupplierIds.has(s._id) && (
                 <span
-                  className="shrink-0 rounded-full bg-orange-50 px-1.5 py-0.5 text-[10px] text-orange-600"
+                  className="shrink-0 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary"
                   style={{ fontWeight: 600 }}
                 >
                   מבצע פעיל
@@ -164,7 +164,7 @@ export function SupplierSearch({
               )}
               {s.verificationStatus === "verified" && (
                 <span
-                  className="shrink-0 rounded-full bg-green-50 px-1.5 py-0.5 text-[10px] text-green-600"
+                  className="shrink-0 rounded-full bg-success/10 px-1.5 py-0.5 text-[10px] text-success"
                   style={{ fontWeight: 600 }}
                 >
                   מאומת
@@ -176,8 +176,8 @@ export function SupplierSearch({
       )}
 
       {open && loaded && results.length === 0 && query.trim() && (
-        <div className="absolute top-full z-50 mt-1 w-full rounded-xl border border-[#e7e1da] bg-white p-4 text-center shadow-xl">
-          <p className="text-[#8d785e] text-[13px]">
+        <div className="absolute top-full z-50 mt-1 w-full rounded-xl border border-border bg-card p-4 text-center shadow-xl">
+          <p className="text-[13px] text-muted-foreground">
             לא נמצאו ספקים. ניתן להקליד שם ידנית.
           </p>
         </div>
@@ -187,14 +187,14 @@ export function SupplierSearch({
       {!query.trim() && recommendations && recommendations.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2">
           <span
-            className="text-[#8d785e] text-[11px]"
+            className="text-[11px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
             מומלצים:
           </span>
           {recommendations.map((rec: any) => (
             <button
-              className="flex items-center gap-1.5 rounded-full border border-[#e7e1da] bg-white px-3 py-1 text-[12px] transition-all hover:border-[#ff8c00] hover:bg-[#ff8c00]/5"
+              className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-[12px] transition-all hover:border-primary hover:bg-primary/5"
               key={rec.id}
               onClick={(e) => {
                 e.stopPropagation();
@@ -203,12 +203,12 @@ export function SupplierSearch({
               type="button"
             >
               <span style={{ fontWeight: 600 }}>{rec.name}</span>
-              <span className="flex items-center gap-0.5 text-[#ff8c00]">
+              <span className="flex items-center gap-0.5 text-primary">
                 <Star fill="#ff8c00" size={10} />
                 {rec.rating}
               </span>
               <span
-                className="rounded-full bg-[#ff8c00]/10 px-1.5 py-0.5 text-[#ff8c00] text-[10px]"
+                className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary"
                 style={{ fontWeight: 600 }}
               >
                 {rec.reason}

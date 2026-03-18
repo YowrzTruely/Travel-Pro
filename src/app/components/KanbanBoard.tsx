@@ -1216,7 +1216,7 @@ function AttachmentLightbox({
             </span>
             {total > 1 && (
               <span
-                className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-white/50"
+                className="rounded-full bg-card/10 px-2 py-0.5 text-[11px] text-white/50"
                 style={{ fontWeight: 600 }}
               >
                 {currentIndex + 1} / {total}
@@ -1225,7 +1225,7 @@ function AttachmentLightbox({
           </div>
           <div className="flex items-center gap-2">
             <a
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 transition-colors hover:bg-white/20"
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-card/10 transition-colors hover:bg-card/20"
               download={att.name}
               href={att.dataUrl}
               title="הורדה"
@@ -1233,7 +1233,7 @@ function AttachmentLightbox({
               <Download className="text-white" size={15} />
             </a>
             <button
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 transition-colors hover:bg-white/20"
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-card/10 transition-colors hover:bg-card/20"
               onClick={onClose}
               type="button"
             >
@@ -1262,23 +1262,23 @@ function AttachmentLightbox({
               />
             ) : (
               <div
-                className="flex flex-col items-center gap-4 rounded-2xl bg-white p-12 shadow-2xl"
+                className="flex flex-col items-center gap-4 rounded-2xl bg-card p-12 shadow-2xl"
                 dir="rtl"
               >
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[#f0ece6]">
-                  <FileText className="text-[#8d785e]" size={36} />
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-accent">
+                  <FileText className="text-muted-foreground" size={36} />
                 </div>
                 <span
-                  className="text-[#181510] text-[15px]"
+                  className="text-[15px] text-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {att.name}
                 </span>
-                <span className="text-[#8d785e] text-[12px]">
+                <span className="text-[12px] text-muted-foreground">
                   לא ניתן לצפות בתצוגה מקדימה לסוג קובץ זה
                 </span>
                 <a
-                  className="mt-2 flex items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[13px] text-white transition-colors hover:bg-[#e67e00]"
+                  className="mt-2 flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-[13px] text-white transition-colors hover:bg-primary-hover"
                   download={att.name}
                   href={att.dataUrl}
                   style={{ fontWeight: 600 }}
@@ -1295,14 +1295,14 @@ function AttachmentLightbox({
         {total > 1 && (
           <>
             <button
-              className="absolute top-1/2 left-0 flex h-10 w-10 -translate-x-4 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-colors hover:bg-white/25"
+              className="absolute top-1/2 left-0 flex h-10 w-10 -translate-x-4 -translate-y-1/2 items-center justify-center rounded-full bg-card/15 backdrop-blur-sm transition-colors hover:bg-card/25"
               onClick={() => setCurrentIndex((i) => (i + 1) % total)}
               type="button"
             >
               <ChevronLeft className="text-white" size={20} />
             </button>
             <button
-              className="absolute top-1/2 right-0 flex h-10 w-10 translate-x-4 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-colors hover:bg-white/25"
+              className="absolute top-1/2 right-0 flex h-10 w-10 translate-x-4 -translate-y-1/2 items-center justify-center rounded-full bg-card/15 backdrop-blur-sm transition-colors hover:bg-card/25"
               onClick={() => setCurrentIndex((i) => (i - 1 + total) % total)}
               type="button"
             >
@@ -1344,7 +1344,7 @@ const TaskCard = forwardRef<
   return (
     <motion.div
       animate={{ opacity: isDragging ? 0.5 : 1, y: 0 }}
-      className="group cursor-pointer rounded-xl border border-[#e7e1da] bg-white p-4 shadow-sm transition-all hover:border-[#d4cdc3] hover:bg-[#fdfcfb] hover:shadow-md"
+      className="group cursor-pointer rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:border-tertiary hover:bg-surface hover:shadow-md"
       draggable
       exit={{ opacity: 0, scale: 0.95 }}
       initial={{ opacity: 0, y: 10 }}
@@ -1383,7 +1383,7 @@ const TaskCard = forwardRef<
 
       {/* Title */}
       <h4
-        className="mb-1.5 text-[#181510] text-[13px] leading-[1.5]"
+        className="mb-1.5 text-[13px] text-foreground leading-[1.5]"
         style={{ fontWeight: 600 }}
       >
         {task.title}
@@ -1391,7 +1391,7 @@ const TaskCard = forwardRef<
 
       {/* Description */}
       {task.description && (
-        <p className="mb-3 line-clamp-2 text-[#8d785e] text-[11px] leading-[1.6]">
+        <p className="mb-3 line-clamp-2 text-[11px] text-muted-foreground leading-[1.6]">
           {task.description}
         </p>
       )}
@@ -1403,7 +1403,7 @@ const TaskCard = forwardRef<
             const allIdx = (task.attachments || []).indexOf(att);
             return (
               <button
-                className="group/thumb relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-[#e7e1da] transition-colors hover:border-[#ff8c00]"
+                className="group/thumb relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-border transition-colors hover:border-primary"
                 key={idx}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -1429,7 +1429,7 @@ const TaskCard = forwardRef<
           })}
           {imageAttachments.length > 3 && (
             <button
-              className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-[#e7e1da] bg-[#f0ece6]"
+              className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-border bg-accent"
               onClick={(e) => {
                 e.stopPropagation();
                 onOpenLightbox(task.attachments, 3);
@@ -1437,7 +1437,7 @@ const TaskCard = forwardRef<
               type="button"
             >
               <span
-                className="text-[#8d785e] text-[11px]"
+                className="text-[11px] text-muted-foreground"
                 style={{ fontWeight: 700 }}
               >
                 +{imageAttachments.length - 3}
@@ -1452,7 +1452,7 @@ const TaskCard = forwardRef<
         <div className="mb-3 flex flex-wrap gap-1">
           {task.tags.map((tag, i) => (
             <span
-              className="rounded-full bg-[#ff8c00]/10 px-2 py-0.5 text-[#ff8c00] text-[10px]"
+              className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary"
               key={i}
               style={{ fontWeight: 600 }}
             >
@@ -1463,21 +1463,21 @@ const TaskCard = forwardRef<
       )}
 
       {/* Bottom: Date + Attachments + Grip */}
-      <div className="flex items-center justify-between border-[#f0ece6] border-t pt-2.5">
+      <div className="flex items-center justify-between border-accent border-t pt-2.5">
         <div className="flex items-center gap-3">
           {nonImageCount > 0 && (
-            <span className="flex items-center gap-1 text-[#8d785e] text-[10px]">
+            <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
               <Paperclip size={10} />
               {nonImageCount}
             </span>
           )}
-          <span className="flex items-center gap-1 text-[#b8a990] text-[10px]">
+          <span className="flex items-center gap-1 text-[10px] text-tertiary">
             <Calendar size={10} />
             {formatDate(task.createdAt)}
           </span>
         </div>
         <div className="opacity-0 transition-opacity group-hover:opacity-40">
-          <GripVertical className="text-[#8d785e]" size={12} />
+          <GripVertical className="text-muted-foreground" size={12} />
         </div>
       </div>
     </motion.div>
@@ -1576,24 +1576,24 @@ function KanbanColumn({
             style={{ backgroundColor: column.dotColor }}
           />
           <span
-            className="text-[#181510] text-[13px]"
+            className="text-[13px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {column.label}
           </span>
           <span
-            className="rounded-full bg-[#f0ece6] px-2 py-0.5 text-[#8d785e] text-[11px]"
+            className="rounded-full bg-accent px-2 py-0.5 text-[11px] text-muted-foreground"
             style={{ fontWeight: 700 }}
           >
             {tasks.length}
           </span>
         </div>
         <button
-          className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#e7e1da] bg-white transition-colors hover:border-[#d4cdc3] hover:bg-[#f5f3f0]"
+          className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-card transition-colors hover:border-tertiary hover:bg-accent"
           onClick={() => onAddTask(column.id)}
           type="button"
         >
-          <Plus className="text-[#8d785e]" size={14} />
+          <Plus className="text-muted-foreground" size={14} />
         </button>
       </div>
 
@@ -1601,9 +1601,7 @@ function KanbanColumn({
       <div className="relative min-h-0 flex-1">
         <div
           className={`kanban-scroll h-full space-y-3 overflow-y-auto rounded-xl p-1.5 transition-colors ${
-            dragOver
-              ? "bg-[#ff8c00]/5 ring-2 ring-[#ff8c00]/30 ring-dashed"
-              : ""
+            dragOver ? "bg-primary/5 ring-2 ring-[#ff8c00]/30 ring-dashed" : ""
           }`}
           ref={scrollRef}
           style={{
@@ -1627,8 +1625,10 @@ function KanbanColumn({
 
           {tasks.length === 0 && (
             <div className="flex flex-col items-center justify-center py-14 opacity-40">
-              <LayoutGrid className="mb-2 text-[#8d785e]" size={24} />
-              <span className="text-[#8d785e] text-[12px]">אין משימות</span>
+              <LayoutGrid className="mb-2 text-muted-foreground" size={24} />
+              <span className="text-[12px] text-muted-foreground">
+                אין משימות
+              </span>
             </div>
           )}
         </div>
@@ -1726,23 +1726,23 @@ function TaskModal({
 
       <motion.div
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="relative flex max-h-[90vh] w-full max-w-[860px] flex-col overflow-hidden rounded-2xl border border-[#e7e1da] bg-white shadow-2xl"
+        className="relative flex max-h-[90vh] w-full max-w-[860px] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
         dir="rtl"
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ duration: 0.2 }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-[#f0ece6] border-b px-8 pt-7 pb-4">
+        <div className="flex items-center justify-between border-accent border-b px-8 pt-7 pb-4">
           <div className="flex items-center gap-3">
             <div>
               <h2
-                className="text-[#181510] text-[22px]"
+                className="text-[22px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 {isNew ? "משימה חדשה" : "עריכת משימה"}
               </h2>
-              <p className="mt-0.5 text-[#8d785e] text-[13px]">
+              <p className="mt-0.5 text-[13px] text-muted-foreground">
                 {isNew ? "צור משימה חדשה ללוח." : "ערוך את פרטי המשימה."}
               </p>
             </div>
@@ -1758,11 +1758,11 @@ function TaskModal({
             </span>
           </div>
           <button
-            className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-[#f5f3f0]"
+            className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >
-            <X className="text-[#8d785e]" size={18} />
+            <X className="text-muted-foreground" size={18} />
           </button>
         </div>
 
@@ -1773,19 +1773,19 @@ function TaskModal({
             <div className="flex-[2] space-y-5">
               <div>
                 <label
-                  className="mb-2 block text-[#181510] text-[13px]"
+                  className="mb-2 block text-[13px] text-foreground"
                   htmlFor="kanban-title"
                   style={{ fontWeight: 600 }}
                 >
                   כותרת
                 </label>
                 <input
-                  className={`w-full rounded-xl border bg-[#f8f7f5] px-4 py-3 text-[#181510] text-[14px] placeholder-[#b8a990] transition-all focus:outline-none focus:ring-2 ${
+                  className={`w-full rounded-xl border bg-background px-4 py-3 text-[14px] text-foreground placeholder-tertiary transition-all focus:outline-none focus:ring-2 ${
                     titleError
-                      ? "border-red-400 bg-red-50/30 focus:border-red-400 focus:ring-red-200"
+                      ? "border-red-400 bg-destructive/10/30 focus:border-red-400 focus:ring-red-200"
                       : isTitleValid
                         ? "border-green-400 focus:border-green-400 focus:ring-green-200"
-                        : "border-[#e7e1da] focus:border-[#ff8c00] focus:ring-[#ff8c00]/10"
+                        : "border-border focus:border-primary focus:ring-primary/10"
                   }`}
                   id="kanban-title"
                   onChange={(e) => update("title", e.target.value)}
@@ -1796,7 +1796,7 @@ function TaskModal({
                 />
                 {titleError && (
                   <p
-                    className="mt-1 flex items-center gap-1 text-[12px] text-red-500"
+                    className="mt-1 flex items-center gap-1 text-[12px] text-destructive"
                     style={{ fontWeight: 500 }}
                   >
                     <AlertCircle size={12} />
@@ -1806,14 +1806,14 @@ function TaskModal({
               </div>
               <div>
                 <label
-                  className="mb-2 block text-[#181510] text-[13px]"
+                  className="mb-2 block text-[13px] text-foreground"
                   htmlFor="kanban-description"
                   style={{ fontWeight: 600 }}
                 >
                   תיאור
                 </label>
                 <textarea
-                  className="w-full resize-none rounded-xl border border-[#e7e1da] bg-[#f8f7f5] px-4 py-3 text-[#181510] text-[13px] placeholder-[#b8a990] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/10"
+                  className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-[13px] text-foreground placeholder-tertiary transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
                   id="kanban-description"
                   onChange={(e) => update("description", e.target.value)}
                   placeholder="תאר את המשימה..."
@@ -1824,7 +1824,7 @@ function TaskModal({
               {/* ── Attachments ── */}
               <div>
                 <label
-                  className="mb-2 block text-[#181510] text-[13px]"
+                  className="mb-2 block text-[13px] text-foreground"
                   htmlFor="kanban-attachments"
                   style={{ fontWeight: 600 }}
                 >
@@ -1838,7 +1838,7 @@ function TaskModal({
                       const isImage = att.type.startsWith("image/");
                       return (
                         <div
-                          className="flex items-center gap-3 rounded-lg border border-[#e7e1da] bg-[#f8f7f5] p-2.5 transition-colors hover:border-[#d4cdc3]"
+                          className="flex items-center gap-3 rounded-lg border border-border bg-background p-2.5 transition-colors hover:border-tertiary"
                           key={idx}
                         >
                           <button
@@ -1863,24 +1863,24 @@ function TaskModal({
                                 </div>
                               </div>
                             ) : (
-                              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#f0ece6] transition-colors group-hover/att:bg-[#e7e1da]">
+                              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-accent transition-colors group-hover/att:bg-border">
                                 <FileText
-                                  className="text-[#8d785e]"
+                                  className="text-muted-foreground"
                                   size={16}
                                 />
                               </div>
                             )}
                             <div className="min-w-0 flex-1 text-right">
-                              <span className="block truncate text-[#181510] text-[12px]">
+                              <span className="block truncate text-[12px] text-foreground">
                                 {att.name}
                               </span>
-                              <span className="block text-[#b8a990] text-[10px]">
+                              <span className="block text-[10px] text-tertiary">
                                 {isImage ? "לחץ לצפייה" : "לחץ לפרטים"}
                               </span>
                             </div>
                           </button>
                           <button
-                            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-red-50"
+                            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-destructive/10"
                             onClick={() => {
                               requestTaskDelete({
                                 title: "מחיקת קובץ מצורף",
@@ -1898,7 +1898,7 @@ function TaskModal({
                             }}
                             type="button"
                           >
-                            <Trash2 className="text-[#dc2626]" size={13} />
+                            <Trash2 className="text-destructive" size={13} />
                           </button>
                         </div>
                       );
@@ -1907,22 +1907,22 @@ function TaskModal({
                 )}
 
                 {/* Upload area */}
-                <label className="group flex cursor-pointer items-center gap-3 rounded-xl border-2 border-[#e7e1da] border-dashed px-4 py-4 transition-colors hover:border-[#ff8c00]/40">
+                <label className="group flex cursor-pointer items-center gap-3 rounded-xl border-2 border-border border-dashed px-4 py-4 transition-colors hover:border-primary/40">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#f0ece6] transition-colors group-hover:bg-[#ff8c00]/10">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent transition-colors group-hover:bg-primary/10">
                       <ImagePlus
-                        className="text-[#8d785e] transition-colors group-hover:text-[#ff8c00]"
+                        className="text-muted-foreground transition-colors group-hover:text-primary"
                         size={16}
                       />
                     </div>
                     <div>
                       <span
-                        className="block text-[#181510] text-[12px]"
+                        className="block text-[12px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         הוסף תמונה או קובץ
                       </span>
-                      <span className="block text-[#b8a990] text-[10px]">
+                      <span className="block text-[10px] text-tertiary">
                         PNG, JPG, PDF, DOC — עד 5MB
                       </span>
                     </div>
@@ -1965,9 +1965,9 @@ function TaskModal({
             </div>
 
             {/* Left — Properties */}
-            <div className="w-[240px] space-y-4 rounded-xl border border-[#e7e1da] bg-[#f8f7f5] p-5">
+            <div className="w-[240px] space-y-4 rounded-xl border border-border bg-background p-5">
               <div
-                className="mb-1 text-[#8d785e] text-[11px] tracking-wide"
+                className="mb-1 text-[11px] text-muted-foreground tracking-wide"
                 style={{ fontWeight: 700 }}
               >
                 מאפיינים
@@ -1975,14 +1975,14 @@ function TaskModal({
 
               <div>
                 <label
-                  className="mb-1.5 block text-[#181510] text-[12px]"
+                  className="mb-1.5 block text-[12px] text-foreground"
                   htmlFor="kanban-status"
                   style={{ fontWeight: 600 }}
                 >
                   סטטוס
                 </label>
                 <select
-                  className="w-full cursor-pointer appearance-none rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 text-[#181510] text-[13px] transition-colors focus:border-[#ff8c00] focus:outline-none"
+                  className="w-full cursor-pointer appearance-none rounded-lg border border-border bg-card px-3 py-2.5 text-[13px] text-foreground transition-colors focus:border-primary focus:outline-none"
                   id="kanban-status"
                   onChange={(e) => update("status", e.target.value)}
                   style={selectArrowStyle}
@@ -1998,14 +1998,14 @@ function TaskModal({
 
               <div>
                 <label
-                  className="mb-1.5 block text-[#181510] text-[12px]"
+                  className="mb-1.5 block text-[12px] text-foreground"
                   htmlFor="kanban-priority"
                   style={{ fontWeight: 600 }}
                 >
                   עדיפות
                 </label>
                 <select
-                  className="w-full cursor-pointer appearance-none rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 text-[#181510] text-[13px] transition-colors focus:border-[#ff8c00] focus:outline-none"
+                  className="w-full cursor-pointer appearance-none rounded-lg border border-border bg-card px-3 py-2.5 text-[13px] text-foreground transition-colors focus:border-primary focus:outline-none"
                   id="kanban-priority"
                   onChange={(e) => update("priority", e.target.value)}
                   style={selectArrowStyle}
@@ -2019,14 +2019,14 @@ function TaskModal({
 
               <div>
                 <label
-                  className="mb-1.5 block text-[#181510] text-[12px]"
+                  className="mb-1.5 block text-[12px] text-foreground"
                   htmlFor="kanban-type"
                   style={{ fontWeight: 600 }}
                 >
                   סוג
                 </label>
                 <select
-                  className="w-full cursor-pointer appearance-none rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 text-[#181510] text-[13px] transition-colors focus:border-[#ff8c00] focus:outline-none"
+                  className="w-full cursor-pointer appearance-none rounded-lg border border-border bg-card px-3 py-2.5 text-[13px] text-foreground transition-colors focus:border-primary focus:outline-none"
                   id="kanban-type"
                   onChange={(e) => update("type", e.target.value)}
                   style={selectArrowStyle}
@@ -2040,14 +2040,14 @@ function TaskModal({
 
               <div>
                 <label
-                  className="mb-1.5 block text-[#181510] text-[12px]"
+                  className="mb-1.5 block text-[12px] text-foreground"
                   htmlFor="kanban-feature"
                   style={{ fontWeight: 600 }}
                 >
                   פיצ׳ר
                 </label>
                 <select
-                  className="w-full cursor-pointer appearance-none rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 text-[#181510] text-[13px] transition-colors focus:border-[#ff8c00] focus:outline-none"
+                  className="w-full cursor-pointer appearance-none rounded-lg border border-border bg-card px-3 py-2.5 text-[13px] text-foreground transition-colors focus:border-primary focus:outline-none"
                   id="kanban-feature"
                   onChange={(e) => update("feature", e.target.value)}
                   style={selectArrowStyle}
@@ -2063,14 +2063,14 @@ function TaskModal({
 
               <div>
                 <label
-                  className="mb-1.5 block text-[#181510] text-[12px]"
+                  className="mb-1.5 block text-[12px] text-foreground"
                   htmlFor="kanban-version"
                   style={{ fontWeight: 600 }}
                 >
                   גרסה
                 </label>
                 <select
-                  className="w-full cursor-pointer appearance-none rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 text-[#181510] text-[13px] transition-colors focus:border-[#ff8c00] focus:outline-none"
+                  className="w-full cursor-pointer appearance-none rounded-lg border border-border bg-card px-3 py-2.5 text-[13px] text-foreground transition-colors focus:border-primary focus:outline-none"
                   id="kanban-version"
                   onChange={(e) => update("version", e.target.value)}
                   style={selectArrowStyle}
@@ -2085,11 +2085,11 @@ function TaskModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-[#f0ece6] border-t bg-[#fdfcfb] px-8 py-5">
+        <div className="flex items-center justify-between border-accent border-t bg-surface px-8 py-5">
           <div>
             {!isNew && (
               <button
-                className="rounded-lg px-4 py-2 text-[#dc2626] text-[13px] transition-colors hover:bg-red-50 hover:text-[#b91c1c]"
+                className="rounded-lg px-4 py-2 text-[13px] text-destructive transition-colors hover:bg-destructive/10 hover:text-destructive"
                 onClick={() =>
                   requestTaskDelete({
                     title: "מחיקת משימה",
@@ -2109,7 +2109,7 @@ function TaskModal({
           </div>
           <div className="flex items-center gap-3">
             <button
-              className="rounded-xl border border-[#e7e1da] bg-white px-5 py-2.5 text-[#181510] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+              className="rounded-xl border border-border bg-card px-5 py-2.5 text-[13px] text-foreground transition-colors hover:bg-accent"
               onClick={onClose}
               style={{ fontWeight: 600 }}
               type="button"
@@ -2117,7 +2117,7 @@ function TaskModal({
               ביטול
             </button>
             <button
-              className="rounded-xl bg-[#ff8c00] px-6 py-2.5 text-[13px] text-white shadow-[#ff8c00]/20 shadow-md transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl bg-primary px-6 py-2.5 text-[13px] text-white shadow-md shadow-primary/20 transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!isTitleValid}
               onClick={handleSave}
               style={{ fontWeight: 600 }}
@@ -2164,51 +2164,51 @@ function StatsBar({ tasks }: { tasks: Task[] }) {
   return (
     <div className="flex flex-wrap items-center gap-5 text-[12px]">
       <div className="flex items-center gap-1.5">
-        <div className="h-2 w-2 rounded-full bg-[#ff8c00]" />
-        <span className="text-[#8d785e]">סה״כ משימות:</span>
-        <span className="text-[#181510]" style={{ fontWeight: 700 }}>
+        <div className="h-2 w-2 rounded-full bg-primary" />
+        <span className="text-muted-foreground">סה״כ משימות:</span>
+        <span className="text-foreground" style={{ fontWeight: 700 }}>
           {total}
         </span>
       </div>
       <div className="flex items-center gap-1.5">
-        <div className="h-2 w-2 rounded-full bg-[#22c55e]" />
-        <span className="text-[#8d785e]">הושלמו:</span>
-        <span className="text-[#22c55e]" style={{ fontWeight: 700 }}>
+        <div className="h-2 w-2 rounded-full bg-success" />
+        <span className="text-muted-foreground">הושלמו:</span>
+        <span className="text-success" style={{ fontWeight: 700 }}>
           {done}
         </span>
       </div>
       <div className="flex items-center gap-1.5">
-        <div className="h-2 w-2 rounded-full bg-[#ff8c00]" />
-        <span className="text-[#8d785e]">בעבודה:</span>
-        <span className="text-[#ff8c00]" style={{ fontWeight: 700 }}>
+        <div className="h-2 w-2 rounded-full bg-primary" />
+        <span className="text-muted-foreground">בעבודה:</span>
+        <span className="text-primary" style={{ fontWeight: 700 }}>
           {inProgress}
         </span>
       </div>
       <div className="flex items-center gap-1.5">
-        <div className="h-2 w-2 rounded-full bg-[#8d785e]" />
-        <span className="text-[#8d785e]">לביצוע:</span>
-        <span className="text-[#181510]" style={{ fontWeight: 700 }}>
+        <div className="h-2 w-2 rounded-full bg-muted-foreground" />
+        <span className="text-muted-foreground">לביצוע:</span>
+        <span className="text-foreground" style={{ fontWeight: 700 }}>
           {todo}
         </span>
       </div>
       <div className="flex items-center gap-1.5">
-        <div className="h-2 w-2 rounded-full bg-[#dc2626]" />
-        <span className="text-[#8d785e]">עדיפות גבוהה:</span>
-        <span className="text-[#dc2626]" style={{ fontWeight: 700 }}>
+        <div className="h-2 w-2 rounded-full bg-destructive" />
+        <span className="text-muted-foreground">עדיפות גבוהה:</span>
+        <span className="text-destructive" style={{ fontWeight: 700 }}>
           {highPriority}
         </span>
       </div>
 
       {/* Progress bar */}
       <div className="mr-auto flex items-center gap-2">
-        <span className="text-[#8d785e]">התקדמות:</span>
-        <div className="h-2 w-28 overflow-hidden rounded-full bg-[#ece8e3]">
+        <span className="text-muted-foreground">התקדמות:</span>
+        <div className="h-2 w-28 overflow-hidden rounded-full bg-accent">
           <div
-            className="h-full rounded-full bg-gradient-to-l from-[#ff8c00] to-[#22c55e] transition-all duration-500"
+            className="h-full rounded-full bg-gradient-to-l from-primary to-[#22c55e] transition-all duration-500"
             style={{ width: `${total > 0 ? (done / total) * 100 : 0}%` }}
           />
         </div>
-        <span className="text-[#181510]" style={{ fontWeight: 700 }}>
+        <span className="text-foreground" style={{ fontWeight: 700 }}>
           {total > 0 ? Math.round((done / total) * 100) : 0}%
         </span>
       </div>
@@ -2249,17 +2249,17 @@ function IdeasBank({
       {/* Sub-header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#a78bfa]/10">
-            <Lightbulb className="text-[#a78bfa]" size={18} />
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-chart-5/10">
+            <Lightbulb className="text-chart-5" size={18} />
           </div>
           <div>
             <h2
-              className="text-[#181510] text-[16px]"
+              className="text-[16px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               בנק הצעות — {version}
             </h2>
-            <p className="text-[#8d785e] text-[11px]">
+            <p className="text-[11px] text-muted-foreground">
               {ideas.length} רעיונות לפיתוח עתידי
             </p>
           </div>
@@ -2283,7 +2283,7 @@ function IdeasBank({
       {features.length > 1 && (
         <div className="mb-5 flex flex-wrap items-center gap-2">
           <span
-            className="text-[#8d785e] text-[11px]"
+            className="text-[11px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
             סינון לפי פיצ'ר:
@@ -2291,8 +2291,8 @@ function IdeasBank({
           <button
             className={`rounded-lg px-3 py-1.5 text-[11px] transition-colors ${
               filterFeature === "ALL"
-                ? "bg-[#a78bfa] text-white"
-                : "bg-[#f0ece6] text-[#8d785e] hover:text-[#181510]"
+                ? "bg-chart-5 text-white"
+                : "bg-accent text-muted-foreground hover:text-foreground"
             }`}
             onClick={() => setFilterFeature("ALL")}
             style={{ fontWeight: 600 }}
@@ -2306,8 +2306,8 @@ function IdeasBank({
               <button
                 className={`rounded-lg px-3 py-1.5 text-[11px] transition-colors ${
                   filterFeature === f
-                    ? "bg-[#a78bfa] text-white"
-                    : "bg-[#f0ece6] text-[#8d785e] hover:text-[#181510]"
+                    ? "bg-chart-5 text-white"
+                    : "bg-accent text-muted-foreground hover:text-foreground"
                 }`}
                 key={f}
                 onClick={() => setFilterFeature(f)}
@@ -2324,13 +2324,16 @@ function IdeasBank({
       {/* Ideas grid */}
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#a78bfa]/10">
-            <Lightbulb className="text-[#a78bfa]" size={28} />
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-chart-5/10">
+            <Lightbulb className="text-chart-5" size={28} />
           </div>
-          <p className="text-[#8d785e] text-[14px]" style={{ fontWeight: 600 }}>
+          <p
+            className="text-[14px] text-muted-foreground"
+            style={{ fontWeight: 600 }}
+          >
             אין הצעות עדיין
           </p>
-          <p className="mt-1 text-[#b8a990] text-[12px]">
+          <p className="mt-1 text-[12px] text-tertiary">
             לחצו על ״הצעה חדשה״ כדי להוסיף רעיון
           </p>
         </div>
@@ -2342,7 +2345,7 @@ function IdeasBank({
               return (
                 <motion.div
                   animate={{ opacity: 1, scale: 1 }}
-                  className="group cursor-pointer rounded-2xl border border-[#e7e1da] bg-white p-5 transition-all hover:border-[#a78bfa]/30 hover:shadow-lg"
+                  className="group cursor-pointer rounded-2xl border border-border bg-card p-5 transition-all hover:border-chart-5/30 hover:shadow-lg"
                   exit={{ opacity: 0, scale: 0.95 }}
                   initial={{ opacity: 0, scale: 0.95 }}
                   key={task.id}
@@ -2378,7 +2381,7 @@ function IdeasBank({
 
                   {/* Title */}
                   <h3
-                    className="mb-2 text-[#181510] text-[14px] leading-snug"
+                    className="mb-2 text-[14px] text-foreground leading-snug"
                     style={{ fontWeight: 700 }}
                   >
                     {task.title}
@@ -2386,7 +2389,7 @@ function IdeasBank({
 
                   {/* Description */}
                   {task.description && (
-                    <p className="mb-3 line-clamp-3 text-[#8d785e] text-[12px] leading-relaxed">
+                    <p className="mb-3 line-clamp-3 text-[12px] text-muted-foreground leading-relaxed">
                       {task.description}
                     </p>
                   )}
@@ -2394,14 +2397,14 @@ function IdeasBank({
                   {/* Feature + Tags */}
                   <div className="mb-4 flex flex-wrap items-center gap-2">
                     <span
-                      className="rounded-full bg-[#f0ece6] px-2 py-0.5 text-[#8d785e] text-[10px]"
+                      className="rounded-full bg-accent px-2 py-0.5 text-[10px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {task.feature}
                     </span>
                     {task.tags.slice(0, 2).map((tag) => (
                       <span
-                        className="rounded-full bg-[#a78bfa]/10 px-2 py-0.5 text-[#a78bfa] text-[10px]"
+                        className="rounded-full bg-chart-5/10 px-2 py-0.5 text-[10px] text-chart-5"
                         key={tag}
                         style={{ fontWeight: 600 }}
                       >
@@ -2412,7 +2415,7 @@ function IdeasBank({
 
                   {/* Promote button */}
                   <button
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#e7e1da] border-dashed py-2.5 text-[#8d785e] text-[12px] opacity-0 transition-all hover:border-[#a78bfa] hover:bg-[#a78bfa]/5 hover:text-[#a78bfa] group-hover:opacity-100"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-border border-dashed py-2.5 text-[12px] text-muted-foreground opacity-0 transition-all hover:border-chart-5 hover:bg-chart-5/5 hover:text-chart-5 group-hover:opacity-100"
                     onClick={(e) => {
                       e.stopPropagation();
                       onPromote(task);
@@ -2703,33 +2706,33 @@ export function KanbanBoard() {
 
   return (
     <div
-      className="flex h-screen flex-col overflow-hidden bg-[#f8f7f5]"
+      className="flex h-screen flex-col overflow-hidden bg-background"
       dir="rtl"
     >
       {/* Header */}
-      <div className="flex-shrink-0 border-[#e7e1da] border-b bg-white">
+      <div className="flex-shrink-0 border-border border-b bg-card">
         <div className="mx-auto max-w-[1500px] px-6 py-5">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff8c00]/10">
-                  <LayoutGrid className="text-[#ff8c00]" size={20} />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                  <LayoutGrid className="text-primary" size={20} />
                 </div>
                 <div>
                   <h1
-                    className="text-[#181510] text-[20px]"
+                    className="text-[20px] text-foreground"
                     style={{ fontWeight: 700 }}
                   >
                     לוח משימות
                   </h1>
                   <div className="flex items-center gap-2">
-                    <p className="text-[#8d785e] text-[12px]">
+                    <p className="text-[12px] text-muted-foreground">
                       ניהול משימות פיתוח Eventos
                     </p>
                     {/* Sync status indicator */}
                     {isSyncing ? (
                       <div
-                        className="flex items-center gap-1 text-[#ff8c00] text-[10px]"
+                        className="flex items-center gap-1 text-[10px] text-primary"
                         style={{ fontWeight: 600 }}
                       >
                         <Loader2 className="animate-spin" size={10} />
@@ -2737,7 +2740,7 @@ export function KanbanBoard() {
                       </div>
                     ) : syncError ? (
                       <div
-                        className="flex items-center gap-1 text-[#dc2626] text-[10px]"
+                        className="flex items-center gap-1 text-[10px] text-destructive"
                         style={{ fontWeight: 600 }}
                       >
                         <CloudOff size={10} />
@@ -2745,7 +2748,7 @@ export function KanbanBoard() {
                       </div>
                     ) : isLoading ? null : (
                       <div
-                        className="flex items-center gap-1 text-[#22c55e] text-[10px]"
+                        className="flex items-center gap-1 text-[10px] text-success"
                         style={{ fontWeight: 600 }}
                       >
                         <Cloud size={10} />
@@ -2757,13 +2760,13 @@ export function KanbanBoard() {
               </div>
 
               {/* ══════ VERSION TABS ══════ */}
-              <div className="mr-4 flex items-center rounded-xl bg-[#f0ece6] p-1">
+              <div className="mr-4 flex items-center rounded-xl bg-accent p-1">
                 {VERSION_TABS.map((tab) => {
                   const isActive = activeVersion === tab.id;
                   return (
                     <button
                       className={`relative flex items-center gap-2 rounded-lg px-4 py-2 text-[13px] transition-all ${
-                        isActive ? "bg-white shadow-sm" : "hover:bg-white/50"
+                        isActive ? "bg-card shadow-sm" : "hover:bg-card/50"
                       }`}
                       key={tab.id}
                       onClick={() => setActiveVersion(tab.id)}
@@ -2777,7 +2780,7 @@ export function KanbanBoard() {
                       <span style={{ color: isActive ? tab.color : "#8d785e" }}>
                         {tab.label}
                       </span>
-                      <span className="text-[#8d785e] text-[10px]">
+                      <span className="text-[10px] text-muted-foreground">
                         {tab.subtitle}
                       </span>
                       <span
@@ -2806,12 +2809,12 @@ export function KanbanBoard() {
               </div>
 
               {/* ══════ VIEW MODE TOGGLE ══════ */}
-              <div className="mr-2 flex items-center rounded-xl bg-[#f0ece6] p-1">
+              <div className="mr-2 flex items-center rounded-xl bg-accent p-1">
                 <button
                   className={`relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-[12px] transition-all ${
                     viewMode === "kanban"
-                      ? "bg-white shadow-sm"
-                      : "hover:bg-white/50"
+                      ? "bg-card shadow-sm"
+                      : "hover:bg-card/50"
                   }`}
                   onClick={() => setViewMode("kanban")}
                   style={{ fontWeight: viewMode === "kanban" ? 700 : 500 }}
@@ -2834,8 +2837,8 @@ export function KanbanBoard() {
                 <button
                   className={`relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-[12px] transition-all ${
                     viewMode === "ideas"
-                      ? "bg-white shadow-sm"
-                      : "hover:bg-white/50"
+                      ? "bg-card shadow-sm"
+                      : "hover:bg-card/50"
                   }`}
                   onClick={() => setViewMode("ideas")}
                   style={{ fontWeight: viewMode === "ideas" ? 700 : 500 }}
@@ -2878,11 +2881,11 @@ export function KanbanBoard() {
                   {/* Search */}
                   <div className="relative">
                     <Search
-                      className="absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990]"
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-tertiary"
                       size={14}
                     />
                     <input
-                      className="w-52 rounded-xl border border-[#e7e1da] bg-[#f8f7f5] py-2 pr-9 pl-3 text-[#181510] text-[12px] placeholder-[#b8a990] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/10"
+                      className="w-52 rounded-xl border border-border bg-background py-2 pr-9 pl-3 text-[12px] text-foreground placeholder-tertiary transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="חיפוש משימות..."
                       type="text"
@@ -2896,8 +2899,8 @@ export function KanbanBoard() {
                       showFilters ||
                       filterType !== "ALL" ||
                       filterPriority !== "ALL"
-                        ? "border-[#ff8c00]/30 bg-[#ff8c00]/10 text-[#ff8c00]"
-                        : "border-[#e7e1da] bg-[#f8f7f5] text-[#8d785e] hover:text-[#181510]"
+                        ? "border-primary/30 bg-primary/10 text-primary"
+                        : "border-border bg-background text-muted-foreground hover:text-foreground"
                     }`}
                     onClick={() => setShowFilters(!showFilters)}
                     style={{ fontWeight: 600 }}
@@ -2906,7 +2909,7 @@ export function KanbanBoard() {
                     <Filter size={13} />
                     סינון
                     {(filterType !== "ALL" || filterPriority !== "ALL") && (
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#ff8c00]" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                     )}
                   </button>
 
@@ -2929,7 +2932,7 @@ export function KanbanBoard() {
 
               {/* Refresh from server */}
               <button
-                className="flex items-center gap-1.5 rounded-xl border border-[#e7e1da] bg-[#f8f7f5] px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:text-[#181510] disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-2 text-[12px] text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
                 disabled={isLoading}
                 onClick={handleRefreshFromServer}
                 style={{ fontWeight: 600 }}
@@ -2954,9 +2957,9 @@ export function KanbanBoard() {
                 exit={{ height: 0, opacity: 0 }}
                 initial={{ height: 0, opacity: 0 }}
               >
-                <div className="flex items-center gap-4 border-[#f0ece6] border-t py-3">
+                <div className="flex items-center gap-4 border-accent border-t py-3">
                   <span
-                    className="text-[#8d785e] text-[12px]"
+                    className="text-[12px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     סוג:
@@ -2966,8 +2969,8 @@ export function KanbanBoard() {
                       <button
                         className={`rounded-lg px-3 py-1.5 text-[11px] transition-colors ${
                           filterType === t
-                            ? "bg-[#ff8c00] text-white"
-                            : "bg-[#f0ece6] text-[#8d785e] hover:text-[#181510]"
+                            ? "bg-primary text-white"
+                            : "bg-accent text-muted-foreground hover:text-foreground"
                         }`}
                         key={t}
                         onClick={() => setFilterType(t)}
@@ -2979,10 +2982,10 @@ export function KanbanBoard() {
                     ))}
                   </div>
 
-                  <div className="h-5 w-px bg-[#e7e1da]" />
+                  <div className="h-5 w-px bg-border" />
 
                   <span
-                    className="text-[#8d785e] text-[12px]"
+                    className="text-[12px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     עדיפות:
@@ -2992,8 +2995,8 @@ export function KanbanBoard() {
                       <button
                         className={`rounded-lg px-3 py-1.5 text-[11px] transition-colors ${
                           filterPriority === p
-                            ? "bg-[#ff8c00] text-white"
-                            : "bg-[#f0ece6] text-[#8d785e] hover:text-[#181510]"
+                            ? "bg-primary text-white"
+                            : "bg-accent text-muted-foreground hover:text-foreground"
                         }`}
                         key={p}
                         onClick={() => setFilterPriority(p)}
@@ -3007,7 +3010,7 @@ export function KanbanBoard() {
 
                   {(filterType !== "ALL" || filterPriority !== "ALL") && (
                     <button
-                      className="mr-auto text-[#dc2626] text-[11px] transition-colors hover:text-[#b91c1c]"
+                      className="mr-auto text-[11px] text-destructive transition-colors hover:text-destructive"
                       onClick={() => {
                         setFilterType("ALL");
                         setFilterPriority("ALL");
@@ -3036,11 +3039,11 @@ export function KanbanBoard() {
       <div className="relative flex min-h-0 flex-1 flex-col">
         {/* Loading overlay on initial load */}
         {isLoading && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-[#f8f7f5]/70 backdrop-blur-sm">
+          <div className="absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-background/70 backdrop-blur-sm">
             <div className="flex flex-col items-center gap-3">
-              <Loader2 className="animate-spin text-[#ff8c00]" size={28} />
+              <Loader2 className="animate-spin text-primary" size={28} />
               <span
-                className="text-[#8d785e] text-[13px]"
+                className="text-[13px] text-muted-foreground"
                 style={{ fontWeight: 600 }}
               >
                 טוען משימות מהשרת...

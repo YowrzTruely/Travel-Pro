@@ -46,16 +46,16 @@ export function ApproveSuppliers() {
 
   return (
     <div
-      className="min-h-screen bg-[#f8f7f5] font-['Assistant',sans-serif] text-[#181510]"
+      className="min-h-screen bg-background font-['Assistant',sans-serif] text-foreground"
       dir="rtl"
     >
       <div className="mx-auto max-w-7xl p-6">
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
-          <Users className="h-7 w-7 text-[#ff8c00]" />
+          <Users className="h-7 w-7 text-primary" />
           <h1 className="font-bold text-2xl">אישור ספקים</h1>
           {pendingSuppliers && pendingSuppliers.length > 0 && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#ff8c00]/10 px-3 py-1 font-medium text-[#ff8c00] text-sm">
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 font-medium text-primary text-sm">
               <Clock className="h-4 w-4" />
               {pendingSuppliers.length} ממתינים
             </span>
@@ -63,57 +63,57 @@ export function ApproveSuppliers() {
         </div>
 
         {/* Table */}
-        <div className="rounded-2xl border border-[#e7e1da] bg-white shadow-sm">
+        <div className="rounded-2xl border border-border bg-card shadow-sm">
           {pendingSuppliers === undefined ? (
-            <div className="flex items-center justify-center p-12 text-[#181510]/50">
+            <div className="flex items-center justify-center p-12 text-foreground/50">
               טוען...
             </div>
           ) : pendingSuppliers.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-2 p-12 text-[#181510]/50">
-              <CheckCircle className="h-10 w-10 text-[#e7e1da]" />
+            <div className="flex flex-col items-center justify-center gap-2 p-12 text-foreground/50">
+              <CheckCircle className="h-10 w-10 text-border" />
               <p className="text-lg">אין ספקים ממתינים לאישור</p>
               <p className="text-sm">כל הרישומים טופלו</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-[#e7e1da]">
-                  <TableHead className="text-right text-[#181510]/70">
+                <TableRow className="border-border">
+                  <TableHead className="text-right text-foreground/70">
                     שם
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     אימייל
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     טלפון
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     חברה
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     תאריך הרשמה
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     פעולות
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {pendingSuppliers.map((supplier) => (
-                  <TableRow className="border-[#e7e1da]" key={supplier._id}>
+                  <TableRow className="border-border" key={supplier._id}>
                     <TableCell className="font-medium">
                       {supplier.name || "---"}
                     </TableCell>
-                    <TableCell className="text-[#181510]/80">
+                    <TableCell className="text-foreground/80">
                       {supplier.email || "---"}
                     </TableCell>
-                    <TableCell className="text-[#181510]/80">
+                    <TableCell className="text-foreground/80">
                       {supplier.phone || "---"}
                     </TableCell>
-                    <TableCell className="text-[#181510]/80">
+                    <TableCell className="text-foreground/80">
                       {supplier.company || "---"}
                     </TableCell>
-                    <TableCell className="text-[#181510]/80">
+                    <TableCell className="text-foreground/80">
                       {supplier.createdAt
                         ? formatHebrewDate(supplier.createdAt)
                         : "---"}
@@ -121,7 +121,7 @@ export function ApproveSuppliers() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <button
-                          className="inline-flex items-center gap-1 rounded-xl bg-green-600 px-3 py-1.5 font-medium text-sm text-white transition-colors hover:bg-green-700"
+                          className="inline-flex items-center gap-1 rounded-xl bg-success px-3 py-1.5 font-medium text-sm text-white transition-colors hover:bg-green-700"
                           onClick={() =>
                             handleApprove(supplier.id, supplier.name || "")
                           }
@@ -131,7 +131,7 @@ export function ApproveSuppliers() {
                           אשר
                         </button>
                         <button
-                          className="inline-flex items-center gap-1 rounded-xl bg-red-600 px-3 py-1.5 font-medium text-sm text-white transition-colors hover:bg-red-700"
+                          className="inline-flex items-center gap-1 rounded-xl bg-destructive px-3 py-1.5 font-medium text-sm text-white transition-colors hover:bg-red-700"
                           onClick={() =>
                             handleReject(supplier.id, supplier.name || "")
                           }

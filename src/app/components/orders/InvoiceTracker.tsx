@@ -87,7 +87,7 @@ export function InvoiceTracker({ projectId }: { projectId: Id<"projects"> }) {
   if (invoices === undefined || suppliers === undefined) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-[#b8a990]" size={24} />
+        <Loader2 className="animate-spin text-tertiary" size={24} />
       </div>
     );
   }
@@ -109,16 +109,16 @@ export function InvoiceTracker({ projectId }: { projectId: Id<"projects"> }) {
 
       <div className="flex items-center justify-between">
         <h2
-          className="flex items-center gap-2 text-[#181510] text-[18px]"
+          className="flex items-center gap-2 text-[18px] text-foreground"
           style={{ fontWeight: 700 }}
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-            <Receipt className="text-[#ff8c00]" size={15} />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+            <Receipt className="text-primary" size={15} />
           </div>
           מעקב חשבוניות
         </h2>
         <span
-          className="text-[#8d785e] text-[14px]"
+          className="text-[14px] text-muted-foreground"
           style={{ fontWeight: 600 }}
         >
           {received}/{total} חשבוניות התקבלו
@@ -126,15 +126,17 @@ export function InvoiceTracker({ projectId }: { projectId: Id<"projects"> }) {
       </div>
 
       {checkResult && !checkResult.allReceived && (
-        <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-700">
+        <div className="flex items-center gap-2 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-[13px] text-warning">
           <AlertTriangle size={16} />
           <span>לא ניתן להעביר לארכיון עד לקבלת כל החשבוניות</span>
         </div>
       )}
 
       {invoices.length === 0 ? (
-        <div className="rounded-xl border border-[#e7e1da] bg-white py-12 text-center">
-          <p className="text-[#8d785e] text-[16px]">אין חשבוניות למעקב</p>
+        <div className="rounded-xl border border-border bg-card py-12 text-center">
+          <p className="text-[16px] text-muted-foreground">
+            אין חשבוניות למעקב
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -145,7 +147,7 @@ export function InvoiceTracker({ projectId }: { projectId: Id<"projects"> }) {
 
             return (
               <div
-                className="flex items-center justify-between rounded-xl border border-[#e7e1da] bg-white p-4"
+                className="flex items-center justify-between rounded-xl border border-border bg-card p-4"
                 key={invoice._id}
               >
                 <div className="flex items-center gap-3">
@@ -160,18 +162,18 @@ export function InvoiceTracker({ projectId }: { projectId: Id<"projects"> }) {
                     {status.label}
                   </span>
                   <span
-                    className="text-[#181510] text-[14px]"
+                    className="text-[14px] text-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     {supplierMap.get(invoice.supplierId) ?? "ספק"}
                   </span>
                   {invoice.invoiceNumber && (
-                    <span className="text-[#8d785e] text-[13px]">
+                    <span className="text-[13px] text-muted-foreground">
                       #{invoice.invoiceNumber}
                     </span>
                   )}
                   {invoice.amount != null && invoice.amount > 0 && (
-                    <span className="text-[#181510] text-[13px]">
+                    <span className="text-[13px] text-foreground">
                       ₪{invoice.amount.toLocaleString()}
                     </span>
                   )}
@@ -179,7 +181,7 @@ export function InvoiceTracker({ projectId }: { projectId: Id<"projects"> }) {
                 <div className="flex gap-2">
                   {invoice.status === "pending" && (
                     <button
-                      className="flex items-center gap-1 rounded-lg bg-[#3b82f6] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#2563eb] disabled:opacity-50"
+                      className="flex items-center gap-1 rounded-lg bg-info px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-info disabled:opacity-50"
                       disabled={isUploading}
                       onClick={() => triggerFileSelect(invoice._id)}
                       style={{ fontWeight: 600 }}
@@ -195,7 +197,7 @@ export function InvoiceTracker({ projectId }: { projectId: Id<"projects"> }) {
                   )}
                   {invoice.status === "received" && (
                     <button
-                      className="flex items-center gap-1 rounded-lg bg-[#22c55e] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#16a34a] disabled:opacity-50"
+                      className="flex items-center gap-1 rounded-lg bg-success px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-success disabled:opacity-50"
                       disabled={isLoading}
                       onClick={() => handleVerify(invoice._id)}
                       style={{ fontWeight: 600 }}

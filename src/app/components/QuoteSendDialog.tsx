@@ -99,28 +99,28 @@ export function QuoteSendDialog({
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent
-        className="max-w-md rounded-xl border-[#e7e1da] bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        className="max-w-md rounded-xl border-border bg-background font-['Assistant',sans-serif]"
         dir="rtl"
       >
         <DialogHeader>
-          <DialogTitle className="text-right font-bold text-[#181510] text-lg">
+          <DialogTitle className="text-right font-bold text-foreground text-lg">
             שליחת הצעת מחיר ללקוח
           </DialogTitle>
         </DialogHeader>
 
         {/* Quote URL */}
-        <div className="mt-2 rounded-xl border border-[#e7e1da] bg-white p-3">
-          <p className="mb-1.5 font-semibold text-[#8d785e] text-xs">
+        <div className="mt-2 rounded-xl border border-border bg-card p-3">
+          <p className="mb-1.5 font-semibold text-muted-foreground text-xs">
             קישור להצעה
           </p>
           <div className="flex items-center gap-2">
             <input
-              className="flex-1 truncate rounded-lg border border-[#e7e1da] bg-[#f8f7f5] px-3 py-1.5 text-[#181510] text-xs outline-none"
+              className="flex-1 truncate rounded-lg border border-border bg-background px-3 py-1.5 text-foreground text-xs outline-none"
               readOnly
               value={quoteUrl}
             />
             <button
-              className="flex items-center gap-1 rounded-lg bg-[#181510] px-3 py-1.5 text-white text-xs transition hover:bg-[#2a2518]"
+              className="flex items-center gap-1 rounded-lg bg-foreground px-3 py-1.5 text-white text-xs transition hover:bg-foreground"
               onClick={copyLink}
               type="button"
             >
@@ -132,7 +132,7 @@ export function QuoteSendDialog({
 
         {/* Channel selector */}
         <div className="mt-3">
-          <p className="mb-2 font-semibold text-[#8d785e] text-xs">
+          <p className="mb-2 font-semibold text-muted-foreground text-xs">
             ערוץ שליחה
           </p>
           <div className="flex gap-2">
@@ -140,8 +140,8 @@ export function QuoteSendDialog({
               <button
                 className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 font-semibold text-[13px] transition ${
                   channel === ch.key
-                    ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
-                    : "border-[#e7e1da] bg-white text-[#8d785e] hover:border-[#ff8c00]/40"
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/40"
                 }`}
                 key={ch.key}
                 onClick={() => setChannel(ch.key)}
@@ -159,13 +159,13 @@ export function QuoteSendDialog({
           {channel === "email" ? (
             <div>
               <label
-                className="mb-1 block font-semibold text-[#181510] text-sm"
+                className="mb-1 block font-semibold text-foreground text-sm"
                 htmlFor="quote-email"
               >
                 כתובת אימייל
               </label>
               <Input
-                className="rounded-xl border-[#e7e1da] bg-white text-sm"
+                className="rounded-xl border-border bg-card text-sm"
                 dir="ltr"
                 id="quote-email"
                 onChange={(e) => setEmail(e.target.value)}
@@ -177,13 +177,13 @@ export function QuoteSendDialog({
           ) : (
             <div>
               <label
-                className="mb-1 block font-semibold text-[#181510] text-sm"
+                className="mb-1 block font-semibold text-foreground text-sm"
                 htmlFor="quote-phone"
               >
                 מספר טלפון
               </label>
               <Input
-                className="rounded-xl border-[#e7e1da] bg-white text-sm"
+                className="rounded-xl border-border bg-card text-sm"
                 dir="ltr"
                 id="quote-phone"
                 onChange={(e) => setPhone(e.target.value)}
@@ -198,7 +198,7 @@ export function QuoteSendDialog({
         {/* Send button */}
         <div className="mt-4 flex gap-2">
           <Button
-            className="flex-1 rounded-xl bg-[#ff8c00] font-semibold text-white hover:bg-[#e67e00]"
+            className="flex-1 rounded-xl bg-primary font-semibold text-white hover:bg-primary-hover"
             disabled={sending}
             onClick={handleSend}
             type="button"
@@ -211,7 +211,7 @@ export function QuoteSendDialog({
             {channel === "whatsapp" ? "פתח וואטסאפ" : "שלח"}
           </Button>
           <Button
-            className="rounded-xl border-[#e7e1da] text-[#8d785e]"
+            className="rounded-xl border-border text-muted-foreground"
             onClick={() => onOpenChange(false)}
             type="button"
             variant="outline"

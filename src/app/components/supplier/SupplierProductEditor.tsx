@@ -612,11 +612,11 @@ export function SupplierProductEditor({
       {/* Background image (edit mode only) */}
       {isEditMode && (
         <div className="px-4 pt-4 pb-2">
-          <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white">
-            <div className="flex items-center gap-2 border-[#e7e1da] border-b px-4 py-3">
-              <ImageIcon className="text-[#8b5cf6]" size={16} />
+          <div className="overflow-hidden rounded-xl border border-border bg-card">
+            <div className="flex items-center gap-2 border-border border-b px-4 py-3">
+              <ImageIcon className="text-chart-5" size={16} />
               <span
-                className="text-[#181510] text-[13px]"
+                className="text-[13px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 תמונת רקע
@@ -629,7 +629,7 @@ export function SupplierProductEditor({
                 onDragOver={handleBgDragOver}
                 onDrop={handleBgDrop}
               >
-                <div className="relative h-32 overflow-hidden bg-[#181510]">
+                <div className="relative h-32 overflow-hidden bg-foreground">
                   <img
                     alt={backgroundImage.name}
                     className="h-full w-full cursor-grab object-cover active:cursor-grabbing"
@@ -652,12 +652,12 @@ export function SupplierProductEditor({
                   )}
                 </div>
                 <div className="flex items-center justify-between px-4 py-2">
-                  <span className="truncate text-[#8d785e] text-[12px]">
+                  <span className="truncate text-[12px] text-muted-foreground">
                     {backgroundImage.name}
                   </span>
                   <div className="flex gap-2">
                     <button
-                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
+                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-[12px] text-muted-foreground transition-colors hover:bg-accent"
                       onClick={() => bgFileInputRef.current?.click()}
                       type="button"
                     >
@@ -665,7 +665,7 @@ export function SupplierProductEditor({
                       החלף
                     </button>
                     <button
-                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-[12px] text-red-500 transition-colors hover:bg-red-50"
+                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-[12px] text-destructive transition-colors hover:bg-destructive/10"
                       onClick={() =>
                         requestDelete({
                           title: "הסרת רקע",
@@ -683,10 +683,8 @@ export function SupplierProductEditor({
               </div>
             ) : (
               <button
-                className={`flex w-full items-center justify-center gap-2 px-4 py-6 text-[#8d785e] text-[13px] transition-colors ${
-                  isDraggingBg
-                    ? "bg-[#ff8c00]/5 text-[#ff8c00]"
-                    : "hover:bg-[#f5f3f0]"
+                className={`flex w-full items-center justify-center gap-2 px-4 py-6 text-[13px] text-muted-foreground transition-colors ${
+                  isDraggingBg ? "bg-primary/5 text-primary" : "hover:bg-accent"
                 }`}
                 onClick={() => bgFileInputRef.current?.click()}
                 onDragLeave={handleBgDragLeave}
@@ -738,7 +736,7 @@ export function SupplierProductEditor({
               onDragOver={handleDragOver}
               onDrop={handleDrop}
             >
-              <div className="relative h-48 overflow-hidden bg-[#181510]">
+              <div className="relative h-48 overflow-hidden bg-foreground">
                 {isDragging && (
                   <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 text-[13px] text-white backdrop-blur-sm">
                     שחרר להוספת תמונות
@@ -779,7 +777,7 @@ export function SupplierProductEditor({
                 {images.length > 1 && (
                   <>
                     <button
-                      className="absolute top-1/2 left-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#181510] shadow-lg"
+                      className="absolute top-1/2 left-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-card/90 text-foreground shadow-lg"
                       onClick={() =>
                         setActiveImageIdx((i) => (i + 1) % images.length)
                       }
@@ -788,7 +786,7 @@ export function SupplierProductEditor({
                       <ChevronLeft size={16} />
                     </button>
                     <button
-                      className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#181510] shadow-lg"
+                      className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-card/90 text-foreground shadow-lg"
                       onClick={() =>
                         setActiveImageIdx(
                           (i) => (i - 1 + images.length) % images.length
@@ -801,7 +799,7 @@ export function SupplierProductEditor({
                   </>
                 )}
                 <button
-                  className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-red-500/80 px-2.5 py-1 text-[11px] text-white backdrop-blur-md hover:bg-red-500"
+                  className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-destructive/100/80 px-2.5 py-1 text-[11px] text-white backdrop-blur-md hover:bg-destructive/100"
                   onClick={() =>
                     images[activeImageIdx] &&
                     requestDelete({
@@ -817,12 +815,12 @@ export function SupplierProductEditor({
                 </button>
               </div>
               {images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto border-[#e7e1da] border-b bg-white p-3">
+                <div className="flex gap-2 overflow-x-auto border-border border-b bg-card p-3">
                   {images.map((img, idx) => (
                     <button
                       className={`h-12 w-12 shrink-0 cursor-grab overflow-hidden rounded-lg border-2 transition-all active:cursor-grabbing ${
                         idx === activeImageIdx
-                          ? "border-[#ff8c00] shadow-md"
+                          ? "border-primary shadow-md"
                           : "border-transparent opacity-60 hover:opacity-100"
                       }`}
                       draggable
@@ -847,7 +845,7 @@ export function SupplierProductEditor({
                     </button>
                   ))}
                   <button
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 border-[#e7e1da] border-dashed text-[#b8a990] hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border-2 border-border border-dashed text-tertiary hover:border-primary hover:text-primary"
                     onClick={() => fileInputRef.current?.click()}
                     type="button"
                   >
@@ -860,8 +858,8 @@ export function SupplierProductEditor({
             <div
               className={`relative m-4 cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all ${
                 isDragging
-                  ? "border-[#ff8c00] bg-[#ff8c00]/5"
-                  : "border-[#e7e1da] bg-white hover:border-[#ff8c00]/50"
+                  ? "border-primary bg-primary/5"
+                  : "border-border bg-card hover:border-primary/50"
               }`}
               onClick={() => fileInputRef.current?.click()}
               onDragLeave={handleDragLeave}
@@ -869,23 +867,20 @@ export function SupplierProductEditor({
               onDrop={handleDrop}
             >
               <div className="flex flex-col items-center justify-center px-6 py-10">
-                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f5f3f0] text-[#b8a990]">
+                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent text-tertiary">
                   {uploading ? (
-                    <Loader2
-                      className="animate-spin text-[#ff8c00]"
-                      size={24}
-                    />
+                    <Loader2 className="animate-spin text-primary" size={24} />
                   ) : (
                     <Upload size={24} />
                   )}
                 </div>
                 <p
-                  className="mb-1 text-[#181510] text-[14px]"
+                  className="mb-1 text-[14px] text-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {uploading ? "מעלה תמונה..." : "הוסף תמונות למוצר"}
                 </p>
-                <p className="text-[#b8a990] text-[12px]">
+                <p className="text-[12px] text-tertiary">
                   גרור לכאן או לחץ לבחירת קובץ
                 </p>
               </div>
@@ -906,7 +901,7 @@ export function SupplierProductEditor({
           {images && images.length > 0 && (
             <div className="px-4 pb-2">
               <button
-                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#e7e1da] border-dashed p-3 text-[#8d785e] text-[13px] hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-border border-dashed p-3 text-[13px] text-muted-foreground hover:border-primary hover:text-primary"
                 onClick={() => fileInputRef.current?.click()}
                 onDragLeave={handleDragLeave}
                 onDragOver={handleDragOver}
@@ -929,27 +924,27 @@ export function SupplierProductEditor({
         {/* Basic info */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+          className="space-y-3 rounded-xl border border-border bg-card p-4"
           initial={{ opacity: 0, y: 15 }}
           transition={{ delay: 0.25 }}
         >
           <div
-            className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+            className="mb-1 flex items-center gap-2 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
-            <FileText className="text-[#ff8c00]" size={14} />
+            <FileText className="text-primary" size={14} />
             פרטי המוצר
           </div>
 
           <div>
             <label
-              className="mb-1 block text-[#8d785e] text-[11px]"
+              className="mb-1 block text-[11px] text-muted-foreground"
               htmlFor="pe-name"
             >
               שם המוצר *
             </label>
             <input
-              className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[15px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[15px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               id="pe-name"
               placeholder="שם המוצר..."
               style={{ fontWeight: 600 }}
@@ -958,7 +953,7 @@ export function SupplierProductEditor({
               })}
             />
             {errors.name && (
-              <p className="mt-1 text-[12px] text-red-500">
+              <p className="mt-1 text-[12px] text-destructive">
                 {errors.name.message}
               </p>
             )}
@@ -966,13 +961,13 @@ export function SupplierProductEditor({
 
           <div>
             <label
-              className="mb-1 block text-[#8d785e] text-[11px]"
+              className="mb-1 block text-[11px] text-muted-foreground"
               htmlFor="pe-desc"
             >
               תיאור
             </label>
             <textarea
-              className="w-full resize-none overflow-hidden rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full resize-none overflow-hidden rounded-lg border border-border bg-input-background px-3 py-2 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               id="pe-desc"
               onInput={(e) => autoResize(e.currentTarget)}
               placeholder="תיאור המוצר..."
@@ -988,7 +983,7 @@ export function SupplierProductEditor({
           </div>
 
           <div>
-            <span className="mb-1 block text-[#8d785e] text-[11px]">
+            <span className="mb-1 block text-[11px] text-muted-foreground">
               יחידת מדידה
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -1000,7 +995,7 @@ export function SupplierProductEditor({
                     value={u}
                     {...register("unit")}
                   />
-                  <span className="block rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[#8d785e] text-[12px] transition-all hover:border-[#ff8c00]/40 peer-checked:border-[#ff8c00] peer-checked:bg-[#ff8c00]/10 peer-checked:text-[#ff8c00]">
+                  <span className="block rounded-lg border border-border bg-input-background px-3 py-2 text-[12px] text-muted-foreground transition-all hover:border-primary/40 peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary">
                     {u}
                   </span>
                 </label>
@@ -1012,27 +1007,27 @@ export function SupplierProductEditor({
         {/* AI tools */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+          className="space-y-3 rounded-xl border border-border bg-card p-4"
           initial={{ opacity: 0, y: 15 }}
           transition={{ delay: 0.27 }}
         >
           <div
-            className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+            className="mb-1 flex items-center gap-2 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
-            <Sparkles className="text-[#ff8c00]" size={14} />
+            <Sparkles className="text-primary" size={14} />
             כלי AI
           </div>
 
           <div>
             <label
-              className="mb-1 block text-[#8d785e] text-[11px]"
+              className="mb-1 block text-[11px] text-muted-foreground"
               htmlFor="pe-ai-desc"
             >
               תיאור שיווקי (AI)
             </label>
             <textarea
-              className="w-full resize-none overflow-hidden rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full resize-none overflow-hidden rounded-lg border border-border bg-input-background px-3 py-2 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               id="pe-ai-desc"
               onInput={(e) => autoResize(e.currentTarget)}
               rows={2}
@@ -1048,7 +1043,7 @@ export function SupplierProductEditor({
 
           <div className="flex gap-2">
             <button
-              className="flex items-center gap-1.5 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00] disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-[12px] text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
               disabled={aiLoading}
               onClick={handleGenerateAiDescription}
               type="button"
@@ -1062,7 +1057,7 @@ export function SupplierProductEditor({
             </button>
             {isEditMode && (
               <button
-                className="flex items-center gap-1.5 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00] disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-[12px] text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
                 disabled={aiLoading}
                 onClick={handleCleanImage}
                 type="button"
@@ -1081,15 +1076,15 @@ export function SupplierProductEditor({
         {/* 4-tier pricing */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+          className="space-y-3 rounded-xl border border-border bg-card p-4"
           initial={{ opacity: 0, y: 15 }}
           transition={{ delay: 0.3 }}
         >
           <div
-            className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+            className="mb-1 flex items-center gap-2 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
-            <Banknote className="text-[#ff8c00]" size={14} />
+            <Banknote className="text-primary" size={14} />
             תמחור (4 שכבות)
           </div>
 
@@ -1124,12 +1119,12 @@ export function SupplierProductEditor({
         {/* Volume pricing */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+          className="space-y-3 rounded-xl border border-border bg-card p-4"
           initial={{ opacity: 0, y: 15 }}
           transition={{ delay: 0.35 }}
         >
           <div
-            className="mb-1 text-[#8d785e] text-[13px]"
+            className="mb-1 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
             תמחור כמותי
@@ -1137,13 +1132,13 @@ export function SupplierProductEditor({
 
           <div>
             <label
-              className="mb-1 block text-[#8d785e] text-[11px]"
+              className="mb-1 block text-[11px] text-muted-foreground"
               htmlFor="pe-vol-threshold"
             >
               סף כמות (מעל X)
             </label>
             <input
-              className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               id="pe-vol-threshold"
               type="number"
               {...register("volumeThreshold")}
@@ -1175,27 +1170,27 @@ export function SupplierProductEditor({
         {/* Timing */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+          className="space-y-3 rounded-xl border border-border bg-card p-4"
           initial={{ opacity: 0, y: 15 }}
           transition={{ delay: 0.4 }}
         >
           <div
-            className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+            className="mb-1 flex items-center gap-2 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
-            <Clock className="text-[#ff8c00]" size={14} />
+            <Clock className="text-primary" size={14} />
             זמנים
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label
-                className="mb-1 block text-[#8d785e] text-[11px]"
+                className="mb-1 block text-[11px] text-muted-foreground"
                 htmlFor="pe-gross"
               >
                 זמן ברוטו (דקות)
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 id="pe-gross"
                 type="number"
                 {...register("grossTime")}
@@ -1203,13 +1198,13 @@ export function SupplierProductEditor({
             </div>
             <div>
               <label
-                className="mb-1 block text-[#8d785e] text-[11px]"
+                className="mb-1 block text-[11px] text-muted-foreground"
                 htmlFor="pe-net"
               >
                 זמן נטו (דקות)
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 id="pe-net"
                 type="number"
                 {...register("netTime")}
@@ -1221,27 +1216,27 @@ export function SupplierProductEditor({
         {/* Equipment */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+          className="space-y-3 rounded-xl border border-border bg-card p-4"
           initial={{ opacity: 0, y: 15 }}
           transition={{ delay: 0.45 }}
         >
           <div
-            className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+            className="mb-1 flex items-center gap-2 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
-            <Wrench className="text-[#ff8c00]" size={14} />
+            <Wrench className="text-primary" size={14} />
             ציוד נדרש
           </div>
 
           <div className="flex flex-wrap gap-2">
             {equipment.map((item) => (
               <span
-                className="flex items-center gap-1 rounded-lg bg-[#f5f3f0] px-2.5 py-1.5 text-[#181510] text-[12px]"
+                className="flex items-center gap-1 rounded-lg bg-accent px-2.5 py-1.5 text-[12px] text-foreground"
                 key={item}
               >
                 {item}
                 <button
-                  className="text-[#8d785e] hover:text-red-500"
+                  className="text-muted-foreground hover:text-destructive"
                   onClick={() => removeEquipmentItem(item)}
                   type="button"
                 >
@@ -1252,7 +1247,7 @@ export function SupplierProductEditor({
           </div>
           <div className="flex gap-2">
             <input
-              className="flex-1 rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="flex-1 rounded-lg border border-border bg-input-background px-3 py-2 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               onChange={(e) => setNewEquipment(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -1264,7 +1259,7 @@ export function SupplierProductEditor({
               value={newEquipment}
             />
             <button
-              className="rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] hover:border-[#ff8c00] hover:text-[#ff8c00]"
+              className="rounded-lg border border-border px-3 py-2 text-muted-foreground hover:border-primary hover:text-primary"
               onClick={addEquipmentItem}
               type="button"
             >
@@ -1276,20 +1271,20 @@ export function SupplierProductEditor({
         {/* Capacity, location, cancellation */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+          className="space-y-3 rounded-xl border border-border bg-card p-4"
           initial={{ opacity: 0, y: 15 }}
           transition={{ delay: 0.5 }}
         >
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label
-                className="mb-1 block text-[#8d785e] text-[11px]"
+                className="mb-1 block text-[11px] text-muted-foreground"
                 htmlFor="pe-capacity"
               >
                 קיבולת (משתתפים)
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 id="pe-capacity"
                 type="number"
                 {...register("capacity")}
@@ -1297,13 +1292,13 @@ export function SupplierProductEditor({
             </div>
             <div>
               <label
-                className="mb-1 block text-[#8d785e] text-[11px]"
+                className="mb-1 block text-[11px] text-muted-foreground"
                 htmlFor="pe-location"
               >
                 מיקום
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 id="pe-location"
                 {...register("location")}
               />
@@ -1312,13 +1307,13 @@ export function SupplierProductEditor({
 
           <div>
             <label
-              className="mb-1 block text-[#8d785e] text-[11px]"
+              className="mb-1 block text-[11px] text-muted-foreground"
               htmlFor="pe-cancel"
             >
               תנאי ביטול
             </label>
             <textarea
-              className="w-full resize-none overflow-hidden rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full resize-none overflow-hidden rounded-lg border border-border bg-input-background px-3 py-2 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               id="pe-cancel"
               onInput={(e) => autoResize(e.currentTarget)}
               rows={2}
@@ -1337,12 +1332,12 @@ export function SupplierProductEditor({
         {isEditMode && productId && (
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+            className="space-y-3 rounded-xl border border-border bg-card p-4"
             initial={{ opacity: 0, y: 15 }}
             transition={{ delay: 0.55 }}
           >
             <div
-              className="mb-1 text-[#8d785e] text-[13px]"
+              className="mb-1 text-[13px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               תוספות (Addons)
@@ -1350,22 +1345,22 @@ export function SupplierProductEditor({
 
             {addons?.map((addon) => (
               <div
-                className="flex items-center justify-between rounded-lg bg-[#f5f3f0] px-3 py-2"
+                className="flex items-center justify-between rounded-lg bg-accent px-3 py-2"
                 key={addon.id}
               >
                 <div>
                   <span
-                    className="text-[#181510] text-[13px]"
+                    className="text-[13px] text-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     {addon.name}
                   </span>
-                  <span className="mr-2 text-[#8d785e] text-[12px]">
+                  <span className="mr-2 text-[12px] text-muted-foreground">
                     ₪{addon.listPrice}
                   </span>
                 </div>
                 <button
-                  className="text-[#8d785e] hover:text-red-500"
+                  className="text-muted-foreground hover:text-destructive"
                   onClick={() => handleRemoveAddon(addon.id)}
                   type="button"
                 >
@@ -1376,20 +1371,20 @@ export function SupplierProductEditor({
 
             <div className="flex gap-2">
               <input
-                className="flex-1 rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="flex-1 rounded-lg border border-border bg-input-background px-3 py-2 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 onChange={(e) => setNewAddonName(e.target.value)}
                 placeholder="שם תוספת..."
                 value={newAddonName}
               />
               <input
-                className="w-24 rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="w-24 rounded-lg border border-border bg-input-background px-3 py-2 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 onChange={(e) => setNewAddonPrice(e.target.value)}
                 placeholder="מחיר"
                 type="number"
                 value={newAddonPrice}
               />
               <button
-                className="rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                className="rounded-lg border border-border px-3 py-2 text-muted-foreground hover:border-primary hover:text-primary"
                 onClick={handleAddAddon}
                 type="button"
               >
@@ -1407,15 +1402,15 @@ export function SupplierProductEditor({
   const bottomBar = (
     <motion.div
       animate={{ y: 0, opacity: 1 }}
-      className="sticky bottom-0 flex items-center gap-3 border-[#e7e1da] border-t bg-white/95 px-4 py-3 backdrop-blur-md"
+      className="sticky bottom-0 flex items-center gap-3 border-border border-t bg-card/95 px-4 py-3 backdrop-blur-md"
       initial={{ y: 20, opacity: 0 }}
       transition={{ delay: 0.4 }}
     >
       <motion.button
         className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-[14px] transition-all ${
           saveSuccess
-            ? "bg-green-500 text-white"
-            : "bg-[#ff8c00] text-white shadow-[#ff8c00]/25 shadow-lg hover:bg-[#e67e00]"
+            ? "bg-success/100 text-white"
+            : "bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary-hover"
         }`}
         disabled={saving}
         style={{ fontWeight: 600 }}
@@ -1437,7 +1432,7 @@ export function SupplierProductEditor({
         )}
       </motion.button>
       <button
-        className="rounded-xl border border-[#e7e1da] px-5 py-3 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+        className="rounded-xl border border-border px-5 py-3 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
         onClick={handleRequestClose}
         type="button"
       >
@@ -1449,7 +1444,7 @@ export function SupplierProductEditor({
   // ─── Page mode: inline content ───
   if (mode === "page") {
     return (
-      <div className="min-h-screen bg-[#f8f7f5] p-6" dir="rtl">
+      <div className="min-h-screen bg-background p-6" dir="rtl">
         <form
           className="mx-auto flex max-w-2xl flex-col"
           onSubmit={handleSubmit(onSubmit)}
@@ -1480,7 +1475,7 @@ export function SupplierProductEditor({
           {/* Drawer */}
           <motion.div
             animate={{ x: 0, opacity: 1 }}
-            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-xl flex-col overflow-hidden bg-[#f8f7f5] shadow-2xl"
+            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-xl flex-col overflow-hidden bg-background shadow-2xl"
             dir="rtl"
             exit={{ x: "100%", opacity: 0 }}
             initial={{ x: "100%", opacity: 0.5 }}
@@ -1489,30 +1484,30 @@ export function SupplierProductEditor({
             {/* Header */}
             <motion.div
               animate={{ y: 0, opacity: 1 }}
-              className="flex items-center justify-between border-[#e7e1da] border-b bg-white px-5 py-4"
+              className="flex items-center justify-between border-border border-b bg-card px-5 py-4"
               initial={{ y: -20, opacity: 0 }}
               transition={{ delay: 0.15 }}
             >
               <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ff8c00] text-white">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white">
                   <Package size={18} />
                 </span>
                 <div>
                   <h2
-                    className="text-[#181510] text-[17px]"
+                    className="text-[17px] text-foreground"
                     style={{ fontWeight: 700 }}
                   >
                     {isEditMode ? "עריכת מוצר" : "מוצר חדש"}
                   </h2>
                   {isEditMode && (
-                    <p className="text-[#8d785e] text-[12px]">
+                    <p className="text-[12px] text-muted-foreground">
                       מזהה: {product?.id}
                     </p>
                   )}
                 </div>
               </div>
               <button
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 onClick={handleRequestClose}
                 type="button"
               >
@@ -1550,15 +1545,18 @@ function PriceField({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-[#8d785e] text-[11px]" htmlFor={id}>
+      <label
+        className="mb-1 block text-[11px] text-muted-foreground"
+        htmlFor={id}
+      >
         {label}
       </label>
       <div className="relative">
-        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990] text-[13px]">
+        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[13px] text-tertiary">
           ₪
         </span>
         <input
-          className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] py-2.5 pr-7 pl-2 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+          className="w-full rounded-lg border border-border bg-input-background py-2.5 pr-7 pl-2 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
           id={id}
           type="number"
           {...register(name)}

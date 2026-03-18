@@ -181,7 +181,7 @@ export function SupplierProfile() {
   if (!supplierId) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <p className="text-[#8d785e] text-[14px]">
+        <p className="text-[14px] text-muted-foreground">
           לא נמצא חיבור לספק. פנה למנהל המערכת.
         </p>
       </div>
@@ -191,7 +191,7 @@ export function SupplierProfile() {
   if (supplier === undefined) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <Loader2 className="animate-spin text-[#ff8c00]" size={32} />
+        <Loader2 className="animate-spin text-primary" size={32} />
       </div>
     );
   }
@@ -199,7 +199,7 @@ export function SupplierProfile() {
   if (supplier === null) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <p className="text-[#8d785e] text-[14px]">ספק לא נמצא</p>
+        <p className="text-[14px] text-muted-foreground">ספק לא נמצא</p>
       </div>
     );
   }
@@ -210,20 +210,22 @@ export function SupplierProfile() {
     selectedRegions.join(",") !== (supplier.region || "");
 
   return (
-    <div className="min-h-screen bg-[#f8f7f5] p-6" dir="rtl">
+    <div className="min-h-screen bg-background p-6" dir="rtl">
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ff8c00] text-white">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white">
           <User size={20} />
         </span>
         <div>
           <h1
-            className="text-[#181510] text-[22px]"
+            className="text-[22px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             פרופיל העסק
           </h1>
-          <p className="text-[#8d785e] text-[13px]">ערוך את פרטי העסק שלך</p>
+          <p className="text-[13px] text-muted-foreground">
+            ערוך את פרטי העסק שלך
+          </p>
         </div>
       </div>
 
@@ -232,31 +234,31 @@ export function SupplierProfile() {
         onSubmit={handleSubmit(onSubmit)}
       >
         {/* Basic Info */}
-        <section className="rounded-xl border border-[#e7e1da] bg-white p-5">
+        <section className="rounded-xl border border-border bg-card p-5">
           <div
-            className="mb-4 flex items-center gap-2 text-[#8d785e] text-[13px]"
+            className="mb-4 flex items-center gap-2 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
-            <Building2 className="text-[#ff8c00]" size={14} />
+            <Building2 className="text-primary" size={14} />
             פרטים בסיסיים
           </div>
 
           <div className="space-y-4">
             <div>
               <label
-                className="mb-1 block text-[#8d785e] text-[13px]"
+                className="mb-1 block text-[13px] text-muted-foreground"
                 htmlFor="profile-name"
                 style={{ fontWeight: 600 }}
               >
                 שם העסק <span className="text-red-400">*</span>
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 id="profile-name"
                 {...register("name", { required: "שם העסק הוא שדה חובה" })}
               />
               {errors.name && (
-                <p className="mt-1 text-[12px] text-red-500">
+                <p className="mt-1 text-[12px] text-destructive">
                   {errors.name.message}
                 </p>
               )}
@@ -265,28 +267,28 @@ export function SupplierProfile() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
-                  className="mb-1 block text-[#8d785e] text-[13px]"
+                  className="mb-1 block text-[13px] text-muted-foreground"
                   htmlFor="profile-phone"
                   style={{ fontWeight: 600 }}
                 >
                   טלפון
                 </label>
                 <input
-                  className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                  className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                   id="profile-phone"
                   {...register("phone")}
                 />
               </div>
               <div>
                 <label
-                  className="mb-1 block text-[#8d785e] text-[13px]"
+                  className="mb-1 block text-[13px] text-muted-foreground"
                   htmlFor="profile-email"
                   style={{ fontWeight: 600 }}
                 >
                   אימייל
                 </label>
                 <input
-                  className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                  className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                   id="profile-email"
                   type="email"
                   {...register("email")}
@@ -296,14 +298,14 @@ export function SupplierProfile() {
 
             <div>
               <label
-                className="mb-1 block text-[#8d785e] text-[13px]"
+                className="mb-1 block text-[13px] text-muted-foreground"
                 htmlFor="profile-address"
                 style={{ fontWeight: 600 }}
               >
                 כתובת
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 id="profile-address"
                 {...register("address")}
               />
@@ -312,9 +314,9 @@ export function SupplierProfile() {
         </section>
 
         {/* Categories */}
-        <section className="rounded-xl border border-[#e7e1da] bg-white p-5">
+        <section className="rounded-xl border border-border bg-card p-5">
           <div
-            className="mb-3 text-[#8d785e] text-[13px]"
+            className="mb-3 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
             קטגוריות (עד {MAX_CATEGORIES_WITHOUT_APPROVAL})
@@ -326,8 +328,8 @@ export function SupplierProfile() {
                 <button
                   className={`rounded-lg border px-3 py-2 text-[13px] transition-all ${
                     selected
-                      ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
-                      : "border-[#e7e1da] bg-[#fafaf8] text-[#8d785e] hover:border-[#ff8c00]/40"
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-input-background text-muted-foreground hover:border-primary/40"
                   }`}
                   key={cat.value}
                   onClick={() => toggleCategory(cat.value)}
@@ -342,9 +344,9 @@ export function SupplierProfile() {
         </section>
 
         {/* Regions */}
-        <section className="rounded-xl border border-[#e7e1da] bg-white p-5">
+        <section className="rounded-xl border border-border bg-card p-5">
           <div
-            className="mb-3 text-[#8d785e] text-[13px]"
+            className="mb-3 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
             אזורי פעילות
@@ -356,8 +358,8 @@ export function SupplierProfile() {
                 <button
                   className={`rounded-lg border px-3 py-2 text-[13px] transition-all ${
                     selected
-                      ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
-                      : "border-[#e7e1da] bg-[#fafaf8] text-[#8d785e] hover:border-[#ff8c00]/40"
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-input-background text-muted-foreground hover:border-primary/40"
                   }`}
                   key={reg.value}
                   onClick={() => toggleRegion(reg.value)}
@@ -372,12 +374,12 @@ export function SupplierProfile() {
         </section>
 
         {/* Online & Business */}
-        <section className="rounded-xl border border-[#e7e1da] bg-white p-5">
+        <section className="rounded-xl border border-border bg-card p-5">
           <div
-            className="mb-4 flex items-center gap-2 text-[#8d785e] text-[13px]"
+            className="mb-4 flex items-center gap-2 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
-            <Globe className="text-[#ff8c00]" size={14} />
+            <Globe className="text-primary" size={14} />
             נוכחות מקוונת ועסקית
           </div>
 
@@ -385,14 +387,14 @@ export function SupplierProfile() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
-                  className="mb-1 block text-[#8d785e] text-[13px]"
+                  className="mb-1 block text-[13px] text-muted-foreground"
                   htmlFor="profile-website"
                   style={{ fontWeight: 600 }}
                 >
                   אתר אינטרנט
                 </label>
                 <input
-                  className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                  className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                   dir="ltr"
                   id="profile-website"
                   placeholder="https://..."
@@ -401,14 +403,14 @@ export function SupplierProfile() {
               </div>
               <div>
                 <label
-                  className="mb-1 block text-[#8d785e] text-[13px]"
+                  className="mb-1 block text-[13px] text-muted-foreground"
                   htmlFor="profile-facebook"
                   style={{ fontWeight: 600 }}
                 >
                   פייסבוק
                 </label>
                 <input
-                  className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                  className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                   dir="ltr"
                   id="profile-facebook"
                   placeholder="https://facebook.com/..."
@@ -419,14 +421,14 @@ export function SupplierProfile() {
 
             <div>
               <label
-                className="mb-1 block text-[#8d785e] text-[13px]"
+                className="mb-1 block text-[13px] text-muted-foreground"
                 htmlFor="profile-hours"
                 style={{ fontWeight: 600 }}
               >
                 שעות פעילות
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 id="profile-hours"
                 placeholder="א׳-ה׳ 08:00-17:00"
                 {...register("operatingHours")}
@@ -436,7 +438,7 @@ export function SupplierProfile() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
-                  className="mb-1 block text-[#8d785e] text-[13px]"
+                  className="mb-1 block text-[13px] text-muted-foreground"
                   htmlFor="profile-margin"
                   style={{ fontWeight: 600 }}
                 >
@@ -444,27 +446,27 @@ export function SupplierProfile() {
                 </label>
                 <div className="relative">
                   <input
-                    className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] py-2.5 pr-3 pl-8 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                    className="w-full rounded-lg border border-border bg-input-background py-2.5 pr-3 pl-8 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     id="profile-margin"
                     placeholder="0"
                     type="number"
                     {...register("defaultMarginPercent")}
                   />
-                  <span className="absolute top-1/2 left-3 -translate-y-1/2 text-[#b8a990] text-[13px]">
+                  <span className="absolute top-1/2 left-3 -translate-y-1/2 text-[13px] text-tertiary">
                     %
                   </span>
                 </div>
               </div>
               <div>
                 <label
-                  className="mb-1 block text-[#8d785e] text-[13px]"
+                  className="mb-1 block text-[13px] text-muted-foreground"
                   htmlFor="profile-seasonal"
                   style={{ fontWeight: 600 }}
                 >
                   זמינות עונתית
                 </label>
                 <input
-                  className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                  className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                   id="profile-seasonal"
                   placeholder="כל השנה / מרץ-נובמבר"
                   {...register("seasonalAvailability")}
@@ -479,10 +481,10 @@ export function SupplierProfile() {
           <button
             className={`flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl py-3.5 text-[15px] transition-all ${
               saveSuccess
-                ? "bg-green-500 text-white"
+                ? "bg-success/100 text-white"
                 : hasFormChanges
-                  ? "bg-[#ff8c00] text-white shadow-[#ff8c00]/25 shadow-lg hover:bg-[#e67e00]"
-                  : "cursor-not-allowed bg-[#e7e1da] text-[#b8a990]"
+                  ? "bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary-hover"
+                  : "cursor-not-allowed bg-border text-tertiary"
             }`}
             disabled={saving || !hasFormChanges}
             style={{ fontWeight: 600 }}
@@ -509,11 +511,11 @@ export function SupplierProfile() {
       {showApprovalModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div
-            className="relative mx-4 w-full max-w-md rounded-xl border border-[#e7e1da] bg-white p-6 shadow-xl"
+            className="relative mx-4 w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-xl"
             dir="rtl"
           >
             <button
-              className="absolute top-3 left-3 rounded-lg p-1 text-[#8d785e] transition-colors hover:bg-[#f8f7f5]"
+              className="absolute top-3 left-3 rounded-lg p-1 text-muted-foreground transition-colors hover:bg-background"
               onClick={() => setShowApprovalModal(false)}
               type="button"
             >
@@ -521,19 +523,19 @@ export function SupplierProfile() {
             </button>
 
             <h2
-              className="mb-2 text-[#181510] text-[18px]"
+              className="mb-2 text-[18px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               נדרש אישור מנהל
             </h2>
-            <p className="mb-5 text-[#8d785e] text-[14px] leading-relaxed">
+            <p className="mb-5 text-[14px] text-muted-foreground leading-relaxed">
               הגעת למקסימום של {MAX_CATEGORIES_WITHOUT_APPROVAL} קטגוריות.
               להוספת קטגוריות נוספות נדרש אישור מנהל המערכת.
             </p>
 
             <div className="flex gap-3">
               <button
-                className="flex-1 rounded-xl bg-[#ff8c00] py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+                className="flex-1 rounded-xl bg-primary py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover"
                 onClick={handleApprovalRequest}
                 style={{ fontWeight: 600 }}
                 type="button"
@@ -541,7 +543,7 @@ export function SupplierProfile() {
                 שלח בקשת אישור
               </button>
               <button
-                className="flex-1 rounded-xl border border-[#e7e1da] bg-white py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f8f7f5]"
+                className="flex-1 rounded-xl border border-border bg-card py-2.5 text-[14px] text-muted-foreground transition-colors hover:bg-background"
                 onClick={() => setShowApprovalModal(false)}
                 style={{ fontWeight: 600 }}
                 type="button"

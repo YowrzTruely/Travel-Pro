@@ -98,7 +98,7 @@ export function NewLeadModal({ onClose }: NewLeadModalProps) {
     >
       <div
         aria-modal="true"
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl"
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-card p-6 shadow-2xl"
         dir="rtl"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.key === "Escape" && onClose()}
@@ -106,13 +106,13 @@ export function NewLeadModal({ onClose }: NewLeadModalProps) {
       >
         <div className="mb-4 flex items-center justify-between">
           <h2
-            className="text-[#181510] text-[22px]"
+            className="text-[22px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             ליד חדש
           </h2>
           <button
-            className="rounded-lg p-1 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+            className="rounded-lg p-1 text-muted-foreground transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >
@@ -235,7 +235,7 @@ export function NewLeadModal({ onClose }: NewLeadModalProps) {
 
           <div className="flex gap-3 pt-2">
             <button
-              className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
               disabled={saving || !isValid}
               style={{ fontWeight: 600 }}
               type="submit"
@@ -244,7 +244,7 @@ export function NewLeadModal({ onClose }: NewLeadModalProps) {
               {saving ? "יוצר..." : "צור ליד"}
             </button>
             <button
-              className="rounded-lg border border-[#e7e1da] px-6 py-2.5 text-[#181510] transition-colors hover:bg-[#f5f3f0]"
+              className="rounded-lg border border-border px-6 py-2.5 text-foreground transition-colors hover:bg-accent"
               onClick={onClose}
               type="button"
             >

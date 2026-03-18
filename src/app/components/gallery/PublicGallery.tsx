@@ -47,10 +47,10 @@ export function PublicGallery() {
   if (!projectId) {
     return (
       <div
-        className="flex min-h-screen items-center justify-center bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        className="flex min-h-screen items-center justify-center bg-background font-['Assistant',sans-serif]"
         dir="rtl"
       >
-        <p className="text-[#8d785e] text-[16px]">גלריה לא נמצאה</p>
+        <p className="text-[16px] text-muted-foreground">גלריה לא נמצאה</p>
       </div>
     );
   }
@@ -116,51 +116,51 @@ export function PublicGallery() {
   if (items === undefined || stats === undefined) {
     return (
       <div
-        className="flex min-h-screen items-center justify-center bg-[#f8f7f5] font-['Assistant',sans-serif]"
+        className="flex min-h-screen items-center justify-center bg-background font-['Assistant',sans-serif]"
         dir="rtl"
       >
-        <Loader2 className="animate-spin text-[#b8a990]" size={32} />
+        <Loader2 className="animate-spin text-tertiary" size={32} />
       </div>
     );
   }
 
   return (
     <div
-      className="min-h-screen bg-[#f8f7f5] font-['Assistant',sans-serif]"
+      className="min-h-screen bg-background font-['Assistant',sans-serif]"
       dir="rtl"
     >
       <div className="mx-auto max-w-5xl px-4 py-8">
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ff8c00]/10">
-            <Camera className="text-[#ff8c00]" size={28} />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+            <Camera className="text-primary" size={28} />
           </div>
           <h1
-            className="text-[#181510] text-[24px]"
+            className="text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             גלריית האירוע
           </h1>
-          <p className="mt-1 text-[#8d785e] text-[15px]">
+          <p className="mt-1 text-[15px] text-muted-foreground">
             צפו והעלו תמונות וסרטונים מהאירוע
           </p>
         </div>
 
         {/* Stats */}
         <div className="mb-6 flex justify-center gap-4">
-          <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 shadow-sm">
-            <ImageIcon className="text-[#8d785e]" size={16} />
+          <div className="flex items-center gap-2 rounded-lg bg-card px-4 py-2 shadow-sm">
+            <ImageIcon className="text-muted-foreground" size={16} />
             <span
-              className="text-[#181510] text-[14px]"
+              className="text-[14px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               {stats.photos} תמונות
             </span>
           </div>
-          <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 shadow-sm">
-            <Video className="text-[#8d785e]" size={16} />
+          <div className="flex items-center gap-2 rounded-lg bg-card px-4 py-2 shadow-sm">
+            <Video className="text-muted-foreground" size={16} />
             <span
-              className="text-[#181510] text-[14px]"
+              className="text-[14px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               {stats.videos} סרטונים
@@ -169,22 +169,22 @@ export function PublicGallery() {
         </div>
 
         {/* Upload Section */}
-        <div className="mb-8 rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-sm">
+        <div className="mb-8 rounded-2xl border border-border bg-card p-6 shadow-sm">
           <h2
-            className="mb-4 text-[#181510] text-[16px]"
+            className="mb-4 text-[16px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             העלו גם אתם תמונות
           </h2>
           <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <input
-              className="rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] outline-none focus:border-[#ff8c00]"
+              className="rounded-lg border border-border px-3 py-2 text-[14px] outline-none focus:border-primary"
               onChange={(e) => setParticipantName(e.target.value)}
               placeholder="השם שלכם (אופציונלי)"
               value={participantName}
             />
             <input
-              className="rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] outline-none focus:border-[#ff8c00]"
+              className="rounded-lg border border-border px-3 py-2 text-[14px] outline-none focus:border-primary"
               dir="ltr"
               onChange={(e) => setParticipantPhone(e.target.value)}
               placeholder="טלפון (אופציונלי)"
@@ -192,7 +192,7 @@ export function PublicGallery() {
             />
           </div>
           <button
-            className="flex items-center gap-1.5 rounded-xl bg-[#ff8c00] px-6 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-xl bg-primary px-6 py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
             disabled={uploading}
             onClick={() => fileInputRef.current?.click()}
             style={{ fontWeight: 600 }}
@@ -216,9 +216,9 @@ export function PublicGallery() {
         </div>
 
         {/* Download Section */}
-        <div className="mb-8 rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-sm">
+        <div className="mb-8 rounded-2xl border border-border bg-card p-6 shadow-sm">
           {registered ? (
-            <div className="flex items-center gap-3 text-[#22c55e]">
+            <div className="flex items-center gap-3 text-success">
               <Check size={20} />
               <span className="text-[14px]" style={{ fontWeight: 600 }}>
                 נרשמתם בהצלחה! ניתן להוריד את התמונות
@@ -227,37 +227,37 @@ export function PublicGallery() {
           ) : showRegForm ? (
             <div>
               <h3
-                className="mb-3 text-[#181510] text-[15px]"
+                className="mb-3 text-[15px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 הרשמה להורדת תמונות
               </h3>
               <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <input
-                  className="rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] outline-none focus:border-[#ff8c00]"
+                  className="rounded-lg border border-border px-3 py-2 text-[14px] outline-none focus:border-primary"
                   onChange={(e) => setRegName(e.target.value)}
                   placeholder="שם מלא *"
                   value={regName}
                 />
                 <input
-                  className="rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] outline-none focus:border-[#ff8c00]"
+                  className="rounded-lg border border-border px-3 py-2 text-[14px] outline-none focus:border-primary"
                   dir="ltr"
                   onChange={(e) => setRegPhone(e.target.value)}
                   placeholder="טלפון *"
                   value={regPhone}
                 />
               </div>
-              <label className="mb-4 flex cursor-pointer items-center gap-2 text-[#8d785e] text-[13px]">
+              <label className="mb-4 flex cursor-pointer items-center gap-2 text-[13px] text-muted-foreground">
                 <input
                   checked={marketingConsent}
-                  className="rounded accent-[#ff8c00]"
+                  className="rounded accent-primary"
                   onChange={(e) => setMarketingConsent(e.target.checked)}
                   type="checkbox"
                 />
                 מאשר/ת קבלת עדכונים ומבצעים
               </label>
               <button
-                className="flex items-center gap-1.5 rounded-xl bg-[#22c55e] px-6 py-2.5 text-[14px] text-white transition-colors hover:bg-[#16a34a] disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-xl bg-success px-6 py-2.5 text-[14px] text-white transition-colors hover:bg-success disabled:opacity-50"
                 disabled={registering}
                 onClick={handleRegister}
                 style={{ fontWeight: 600 }}
@@ -273,7 +273,7 @@ export function PublicGallery() {
             </div>
           ) : (
             <button
-              className="flex items-center gap-1.5 rounded-xl border border-[#e7e1da] bg-[#f8f7f5] px-6 py-2.5 text-[#181510] text-[14px] transition-colors hover:bg-[#f0ede8]"
+              className="flex items-center gap-1.5 rounded-xl border border-border bg-background px-6 py-2.5 text-[14px] text-foreground transition-colors hover:bg-accent"
               onClick={() => setShowRegForm(true)}
               style={{ fontWeight: 600 }}
               type="button"
@@ -286,12 +286,12 @@ export function PublicGallery() {
 
         {/* Gallery Grid */}
         {items.length === 0 ? (
-          <div className="rounded-2xl border border-[#e7e1da] bg-white py-16 text-center shadow-sm">
-            <Camera className="mx-auto mb-3 text-[#b8a990]" size={40} />
-            <p className="text-[#8d785e] text-[16px]">
+          <div className="rounded-2xl border border-border bg-card py-16 text-center shadow-sm">
+            <Camera className="mx-auto mb-3 text-tertiary" size={40} />
+            <p className="text-[16px] text-muted-foreground">
               אין תמונות או סרטונים עדיין
             </p>
-            <p className="mt-1 text-[#b8a990] text-[13px]">
+            <p className="mt-1 text-[13px] text-tertiary">
               היו הראשונים להעלות
             </p>
           </div>
@@ -330,11 +330,11 @@ function PublicGalleryItem({
   );
 
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-[#e7e1da] bg-[#f8f7f5]">
+    <div className="group relative overflow-hidden rounded-xl border border-border bg-background">
       <div className="aspect-square">
         {fileType === "video" ? (
-          <div className="flex h-full w-full items-center justify-center bg-[#181510]/5">
-            <Video className="text-[#8d785e]" size={32} />
+          <div className="flex h-full w-full items-center justify-center bg-foreground/5">
+            <Video className="text-muted-foreground" size={32} />
           </div>
         ) : imageUrl ? (
           <img
@@ -346,7 +346,7 @@ function PublicGalleryItem({
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <Loader2 className="animate-spin text-[#b8a990]" size={20} />
+            <Loader2 className="animate-spin text-tertiary" size={20} />
           </div>
         )}
       </div>
@@ -360,7 +360,7 @@ function PublicGalleryItem({
           )}
           {downloadEnabled && imageUrl && (
             <a
-              className="mr-auto rounded-lg bg-white/80 p-1.5 text-[#181510] transition-colors hover:bg-white"
+              className="mr-auto rounded-lg bg-card/80 p-1.5 text-foreground transition-colors hover:bg-card"
               download
               href={imageUrl}
             >

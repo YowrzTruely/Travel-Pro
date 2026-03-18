@@ -22,23 +22,23 @@ export function RootErrorBoundary() {
 
   return (
     <div
-      className="flex min-h-screen items-center justify-center bg-[#f8f7f5] p-4 font-['Assistant',sans-serif]"
+      className="flex min-h-screen items-center justify-center bg-background p-4 font-['Assistant',sans-serif]"
       dir="rtl"
     >
       <div className="max-w-md text-center">
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-[#ff8c00]/10">
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10">
           <span className="text-[40px]">{icon}</span>
         </div>
         <h1
-          className="mb-2 text-[#181510] text-[28px]"
+          className="mb-2 text-[28px] text-foreground"
           style={{ fontWeight: 700 }}
         >
           {title}
         </h1>
-        <p className="mb-8 text-[#8d785e] text-[16px]">{description}</p>
+        <p className="mb-8 text-[16px] text-muted-foreground">{description}</p>
         <div className="flex justify-center gap-3">
           <button
-            className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+            className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover"
             onClick={() => navigate("/")}
             style={{ fontWeight: 600 }}
             type="button"
@@ -47,7 +47,7 @@ export function RootErrorBoundary() {
             חזרה לדף הבית
           </button>
           <button
-            className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-5 py-2.5 text-[#6b5d45] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+            className="flex items-center gap-2 rounded-xl border border-border px-5 py-2.5 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
             onClick={() => window.location.reload()}
             type="button"
           >

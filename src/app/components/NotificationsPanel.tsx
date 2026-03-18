@@ -33,95 +33,95 @@ interface NotifTypeConfig {
 const typeConfigMap: Record<string, NotifTypeConfig> = {
   availability_request: {
     icon: Calendar,
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
-    dotColor: "bg-purple-500",
+    color: "text-chart-5",
+    bgColor: "bg-chart-5/10",
+    dotColor: "bg-chart-5/100",
   },
   availability_approved: {
     icon: CheckCircle,
-    color: "text-green-600",
-    bgColor: "bg-green-50",
-    dotColor: "bg-green-500",
+    color: "text-success",
+    bgColor: "bg-success/10",
+    dotColor: "bg-success/100",
   },
   availability_declined: {
     icon: XCircle,
-    color: "text-red-600",
-    bgColor: "bg-red-50",
-    dotColor: "bg-red-500",
+    color: "text-destructive",
+    bgColor: "bg-destructive/10",
+    dotColor: "bg-destructive/100",
   },
   booking_expiring: {
     icon: Clock,
-    color: "text-yellow-600",
-    bgColor: "bg-yellow-50",
-    dotColor: "bg-yellow-500",
+    color: "text-warning",
+    bgColor: "bg-warning/10",
+    dotColor: "bg-warning/100",
   },
   booking_expired: {
     icon: AlertTriangle,
-    color: "text-red-600",
-    bgColor: "bg-red-50",
-    dotColor: "bg-red-500",
+    color: "text-destructive",
+    bgColor: "bg-destructive/10",
+    dotColor: "bg-destructive/100",
   },
   quote_approved: {
     icon: CheckCircle2,
-    color: "text-green-600",
-    bgColor: "bg-green-50",
-    dotColor: "bg-green-500",
+    color: "text-success",
+    bgColor: "bg-success/10",
+    dotColor: "bg-success/100",
   },
   new_lead: {
     icon: Target,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
-    dotColor: "bg-blue-500",
+    color: "text-info",
+    bgColor: "bg-info/10",
+    dotColor: "bg-info/100",
   },
   doc_expiring: {
     icon: AlertTriangle,
-    color: "text-yellow-600",
-    bgColor: "bg-yellow-50",
-    dotColor: "bg-yellow-500",
+    color: "text-warning",
+    bgColor: "bg-warning/10",
+    dotColor: "bg-warning/100",
   },
   doc_expired: {
     icon: AlertOctagon,
-    color: "text-red-600",
-    bgColor: "bg-red-50",
-    dotColor: "bg-red-500",
+    color: "text-destructive",
+    bgColor: "bg-destructive/10",
+    dotColor: "bg-destructive/100",
   },
   doc_reminder: {
     icon: Bell,
-    color: "text-orange-600",
-    bgColor: "bg-orange-50",
-    dotColor: "bg-orange-500",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    dotColor: "bg-primary/100",
   },
   invoice_missing: {
     icon: FileWarning,
-    color: "text-orange-600",
-    bgColor: "bg-orange-50",
-    dotColor: "bg-orange-500",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    dotColor: "bg-primary/100",
   },
   supplier_pending: {
     icon: UserPlus,
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
-    dotColor: "bg-purple-500",
+    color: "text-chart-5",
+    bgColor: "bg-chart-5/10",
+    dotColor: "bg-chart-5/100",
   },
   supplier_approved: {
     icon: ShieldCheck,
-    color: "text-green-600",
-    bgColor: "bg-green-50",
-    dotColor: "bg-green-500",
+    color: "text-success",
+    bgColor: "bg-success/10",
+    dotColor: "bg-success/100",
   },
   order_sent: {
     icon: Send,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
-    dotColor: "bg-blue-500",
+    color: "text-info",
+    bgColor: "bg-info/10",
+    dotColor: "bg-info/100",
   },
 };
 
 const defaultConfig: NotifTypeConfig = {
   icon: Bell,
-  color: "text-gray-600",
-  bgColor: "bg-gray-50",
-  dotColor: "bg-gray-500",
+  color: "text-muted-foreground",
+  bgColor: "bg-accent",
+  dotColor: "bg-accent0",
 };
 
 // ─── Relative time in Hebrew ───
@@ -251,13 +251,13 @@ export function NotificationsPanel() {
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className="relative flex h-10 w-10 items-center justify-center rounded-lg text-[#181510] transition-colors hover:bg-[#f5f3f0]"
+          className="relative flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-accent"
           type="button"
         >
           <Bell size={20} />
           {unreadCount > 0 && (
             <span
-              className="absolute top-1.5 left-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-white bg-[#ef4444] text-[10px] text-white"
+              className="absolute top-1.5 left-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-white bg-destructive text-[10px] text-white"
               style={{ fontWeight: 700 }}
             >
               {unreadCount > 9 ? "9+" : unreadCount}
@@ -268,14 +268,14 @@ export function NotificationsPanel() {
 
       <PopoverContent
         align="end"
-        className="w-96 overflow-hidden rounded-xl border border-[#e7e1da] bg-white p-0 shadow-2xl"
+        className="w-96 overflow-hidden rounded-xl border border-border bg-card p-0 shadow-2xl"
         sideOffset={8}
       >
         <div dir="rtl">
           {/* Header */}
-          <div className="flex items-center justify-between border-[#e7e1da] border-b bg-[#fcfbf9] px-4 py-3">
+          <div className="flex items-center justify-between border-border border-b bg-surface px-4 py-3">
             <h3
-              className="text-[#181510] text-[15px]"
+              className="text-[15px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               התראות
@@ -283,7 +283,7 @@ export function NotificationsPanel() {
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
                 <button
-                  className="text-[#ff8c00] text-[11px]"
+                  className="text-[11px] text-primary"
                   onClick={handleMarkAllRead}
                   style={{ fontWeight: 600 }}
                   type="button"
@@ -298,21 +298,25 @@ export function NotificationsPanel() {
           <div className="max-h-[400px] overflow-y-auto">
             {isLoading ? (
               <div className="py-10 text-center">
-                <div className="mx-auto mb-2 h-5 w-5 animate-spin rounded-full border-2 border-[#ff8c00] border-t-transparent" />
-                <p className="text-[#8d785e] text-[13px]">טוען התראות...</p>
+                <div className="mx-auto mb-2 h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                <p className="text-[13px] text-muted-foreground">
+                  טוען התראות...
+                </p>
               </div>
             ) : grouped.length === 0 ? (
               <div className="py-10 text-center">
-                <Bell className="mx-auto mb-2 text-[#ddd6cb]" size={28} />
-                <p className="text-[#8d785e] text-[14px]">אין התראות חדשות</p>
+                <Bell className="mx-auto mb-2 text-tertiary" size={28} />
+                <p className="text-[14px] text-muted-foreground">
+                  אין התראות חדשות
+                </p>
               </div>
             ) : (
               grouped.map((group) => (
                 <div key={group.label}>
                   {/* Group header */}
-                  <div className="sticky top-0 z-10 border-[#f5f3f0] border-b bg-[#f8f7f5] px-4 py-1.5">
+                  <div className="sticky top-0 z-10 border-accent border-b bg-background px-4 py-1.5">
                     <span
-                      className="text-[#8d785e] text-[11px]"
+                      className="text-[11px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {group.label}
@@ -324,7 +328,7 @@ export function NotificationsPanel() {
                     const Icon = config.icon;
                     return (
                       <button
-                        className={`flex w-full items-start gap-3 border-[#f5f3f0] border-b px-4 py-3.5 text-right transition-colors last:border-b-0 hover:bg-[#f5f3f0] ${notif.read ? "" : "bg-[#fffaf3]"}`}
+                        className={`flex w-full items-start gap-3 border-accent border-b px-4 py-3.5 text-right transition-colors last:border-b-0 hover:bg-accent ${notif.read ? "" : "bg-[#fffaf3]"}`}
                         key={notif.id}
                         onClick={() => handleClickNotification(notif)}
                         type="button"
@@ -342,7 +346,7 @@ export function NotificationsPanel() {
                               />
                             )}
                             <span
-                              className="truncate text-[#181510] text-[13px]"
+                              className="truncate text-[13px] text-foreground"
                               style={{
                                 fontWeight: notif.read ? 400 : 600,
                               }}
@@ -350,10 +354,10 @@ export function NotificationsPanel() {
                               {notif.title}
                             </span>
                           </div>
-                          <p className="mt-0.5 line-clamp-2 text-[#8d785e] text-[12px]">
+                          <p className="mt-0.5 line-clamp-2 text-[12px] text-muted-foreground">
                             {notif.body}
                           </p>
-                          <span className="mt-1 block text-[#c4b89a] text-[10px]">
+                          <span className="mt-1 block text-[10px] text-tertiary">
                             {relativeTimeHebrew(notif.createdAt)}
                           </span>
                         </div>

@@ -84,7 +84,7 @@ export function ProjectOrders({ projectId }: { projectId: Id<"projects"> }) {
   if (orders === undefined || suppliers === undefined) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-[#b8a990]" size={24} />
+        <Loader2 className="animate-spin text-tertiary" size={24} />
       </div>
     );
   }
@@ -93,17 +93,17 @@ export function ProjectOrders({ projectId }: { projectId: Id<"projects"> }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2
-          className="flex items-center gap-2 text-[#181510] text-[18px]"
+          className="flex items-center gap-2 text-[18px] text-foreground"
           style={{ fontWeight: 700 }}
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-            <Send className="text-[#ff8c00]" size={15} />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+            <Send className="text-primary" size={15} />
           </div>
           הזמנות ספקים ({orders.length})
         </h2>
         {pendingOrders.length > 0 && (
           <button
-            className="flex items-center gap-1.5 rounded-xl bg-[#ff8c00] px-4 py-2 text-[13px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-[13px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
             disabled={sendingAll}
             onClick={handleSendAll}
             style={{ fontWeight: 600 }}
@@ -120,8 +120,8 @@ export function ProjectOrders({ projectId }: { projectId: Id<"projects"> }) {
       </div>
 
       {orders.length === 0 ? (
-        <div className="rounded-xl border border-[#e7e1da] bg-white py-12 text-center">
-          <p className="text-[#8d785e] text-[16px]">אין הזמנות עדיין</p>
+        <div className="rounded-xl border border-border bg-card py-12 text-center">
+          <p className="text-[16px] text-muted-foreground">אין הזמנות עדיין</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -131,14 +131,14 @@ export function ProjectOrders({ projectId }: { projectId: Id<"projects"> }) {
 
             return (
               <div
-                className="rounded-xl border border-[#e7e1da] bg-white p-4"
+                className="rounded-xl border border-border bg-card p-4"
                 key={order._id}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex items-center gap-2">
                       <span
-                        className="text-[#181510] text-[15px]"
+                        className="text-[15px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {supplierMap.get(order.supplierId) ?? "ספק לא ידוע"}
@@ -154,13 +154,13 @@ export function ProjectOrders({ projectId }: { projectId: Id<"projects"> }) {
                         {status.label}
                       </span>
                       {order.usesCustomFormat && (
-                        <span className="flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[12px] text-amber-600">
+                        <span className="flex items-center gap-1 rounded-full bg-warning/10 px-2 py-0.5 text-[12px] text-warning">
                           <AlertTriangle size={12} />
                           פורמט מותאם
                         </span>
                       )}
                     </div>
-                    <div className="flex flex-wrap gap-4 text-[#8d785e] text-[13px]">
+                    <div className="flex flex-wrap gap-4 text-[13px] text-muted-foreground">
                       <span>תאריך: {order.date}</span>
                       <span>משתתפים: {order.participants}</span>
                       <span style={{ fontWeight: 600, color: "#181510" }}>
@@ -171,7 +171,7 @@ export function ProjectOrders({ projectId }: { projectId: Id<"projects"> }) {
                   <div className="flex gap-2">
                     {order.status === "pending" && (
                       <button
-                        className="flex items-center gap-1 rounded-lg bg-[#3b82f6] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#2563eb] disabled:opacity-50"
+                        className="flex items-center gap-1 rounded-lg bg-info px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-info disabled:opacity-50"
                         disabled={isLoading}
                         onClick={() => handleSend(order._id)}
                         style={{ fontWeight: 600 }}
@@ -187,7 +187,7 @@ export function ProjectOrders({ projectId }: { projectId: Id<"projects"> }) {
                     )}
                     {order.status === "sent" && (
                       <button
-                        className="flex items-center gap-1 rounded-lg bg-[#22c55e] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#16a34a] disabled:opacity-50"
+                        className="flex items-center gap-1 rounded-lg bg-success px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-success disabled:opacity-50"
                         disabled={isLoading}
                         onClick={() => handleConfirm(order._id)}
                         style={{ fontWeight: 600 }}
@@ -204,7 +204,7 @@ export function ProjectOrders({ projectId }: { projectId: Id<"projects"> }) {
                     {order.status !== "cancelled" &&
                       order.status !== "completed" && (
                         <button
-                          className="flex items-center gap-1 rounded-lg border border-[#fecaca] bg-[#fef2f2] px-3 py-1.5 text-[#ef4444] text-[12px] transition-colors hover:bg-[#fee2e2] disabled:opacity-50"
+                          className="flex items-center gap-1 rounded-lg border border-[#fecaca] bg-[#fef2f2] px-3 py-1.5 text-[12px] text-destructive transition-colors hover:bg-[#fee2e2] disabled:opacity-50"
                           disabled={isLoading}
                           onClick={() => handleCancel(order._id)}
                           style={{ fontWeight: 600 }}

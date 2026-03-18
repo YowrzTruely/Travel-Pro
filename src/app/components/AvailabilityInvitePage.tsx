@@ -35,12 +35,12 @@ export function AvailabilityInvitePage() {
   if (inviteData === undefined) {
     return (
       <div
-        className="flex min-h-screen items-center justify-center bg-[#f8f7f5]"
+        className="flex min-h-screen items-center justify-center bg-background"
         dir="rtl"
       >
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-10 w-10 animate-spin text-[#ff8c00]" />
-          <p className="font-['Assistant',sans-serif] text-[#8d785e] text-[15px]">
+          <Loader2 className="h-10 w-10 animate-spin text-primary" />
+          <p className="font-['Assistant',sans-serif] text-[15px] text-muted-foreground">
             טוען פרטי הזמנה...
           </p>
         </div>
@@ -58,24 +58,24 @@ export function AvailabilityInvitePage() {
 
     return (
       <div
-        className="flex min-h-screen flex-col items-center justify-center bg-[#f8f7f5] p-6"
+        className="flex min-h-screen flex-col items-center justify-center bg-background p-6"
         dir="rtl"
       >
         <div className="w-full max-w-md space-y-6 text-center">
-          <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-            <AlertCircle className="text-red-500" size={32} />
+          <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-destructive/15">
+            <AlertCircle className="text-destructive" size={32} />
           </span>
           <h1
-            className="text-[#181510] text-[24px]"
+            className="text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {message}
           </h1>
-          <p className="text-[#8d785e] text-[14px]">
+          <p className="text-[14px] text-muted-foreground">
             ניתן להירשם כספק דרך הקישור הכללי
           </p>
           <Link
-            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#ff8c00] px-6 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-primary px-6 text-[14px] text-white transition-colors hover:bg-primary-hover"
             style={{ fontWeight: 600 }}
             to="/register/supplier"
           >
@@ -123,22 +123,22 @@ export function AvailabilityInvitePage() {
 
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-center bg-[#f8f7f5] p-6"
+      className="flex min-h-screen flex-col items-center justify-center bg-background p-6"
       dir="rtl"
     >
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center">
-          <span className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-[#ff8c00]/10">
-            <Calendar className="text-[#ff8c00]" size={32} />
+          <span className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+            <Calendar className="text-primary" size={32} />
           </span>
           <h1
-            className="mt-4 text-[#181510] text-[24px]"
+            className="mt-4 text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             בקשת זמינות
           </h1>
-          <p className="mt-2 text-[#8d785e] text-[14px]">
+          <p className="mt-2 text-[14px] text-muted-foreground">
             {inviteData.producerName
               ? `${inviteData.producerName} שלח/ה לך בקשת זמינות`
               : "קיבלת בקשה לבדיקת זמינות"}
@@ -146,35 +146,40 @@ export function AvailabilityInvitePage() {
         </div>
 
         {/* Event context card */}
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+        <div className="rounded-xl border border-border bg-card p-5">
           <h2
-            className="mb-3 text-[#181510] text-[16px]"
+            className="mb-3 text-[16px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             פרטי האירוע
           </h2>
           <div className="space-y-2">
             {inviteData.projectName && (
-              <div className="flex items-center gap-2 text-[#5c5347] text-sm">
-                <MapPin className="shrink-0 text-[#8d785e]" size={14} />
+              <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                <MapPin className="shrink-0 text-muted-foreground" size={14} />
                 <span>{inviteData.projectName}</span>
               </div>
             )}
             {inviteData.date && (
-              <div className="flex items-center gap-2 text-[#5c5347] text-sm">
-                <Calendar className="shrink-0 text-[#8d785e]" size={14} />
+              <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                <Calendar
+                  className="shrink-0 text-muted-foreground"
+                  size={14}
+                />
                 <span>{inviteData.date}</span>
               </div>
             )}
             {(inviteData.participants ?? 0) > 0 && (
-              <div className="flex items-center gap-2 text-[#5c5347] text-sm">
-                <Users className="shrink-0 text-[#8d785e]" size={14} />
+              <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                <Users className="shrink-0 text-muted-foreground" size={14} />
                 <span>{inviteData.participants} משתתפים</span>
               </div>
             )}
             {inviteData.productName && (
-              <div className="flex items-center gap-2 text-[#5c5347] text-sm">
-                <span className="shrink-0 text-[#8d785e] text-xs">📦</span>
+              <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                <span className="shrink-0 text-muted-foreground text-xs">
+                  📦
+                </span>
                 <span>{inviteData.productName}</span>
               </div>
             )}
@@ -183,25 +188,25 @@ export function AvailabilityInvitePage() {
 
         {/* Registration form */}
         <form
-          className="rounded-xl border border-[#e7e1da] bg-white p-5"
+          className="rounded-xl border border-border bg-card p-5"
           onSubmit={handleRegister}
         >
           <h2
-            className="mb-4 text-[#181510] text-[16px]"
+            className="mb-4 text-[16px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             הרשמה כספק
           </h2>
 
           {error && (
-            <div className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-red-600 text-sm">
+            <div className="mb-3 rounded-lg bg-destructive/10 px-3 py-2 text-destructive text-sm">
               {error}
             </div>
           )}
 
           <div className="space-y-3">
             <input
-              className="w-full rounded-lg border border-[#d4c9b8] px-4 py-2.5 text-right text-sm focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+              className="w-full rounded-lg border border-border px-4 py-2.5 text-right text-sm focus:outline-none focus:ring-1 focus:ring-primary"
               onChange={(e) => setName(e.target.value)}
               placeholder="שם מלא / שם עסק *"
               required
@@ -209,7 +214,7 @@ export function AvailabilityInvitePage() {
               value={name}
             />
             <input
-              className="w-full rounded-lg border border-[#d4c9b8] px-4 py-2.5 text-right text-sm focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+              className="w-full rounded-lg border border-border px-4 py-2.5 text-right text-sm focus:outline-none focus:ring-1 focus:ring-primary"
               onChange={(e) => setEmail(e.target.value)}
               placeholder="אימייל *"
               required
@@ -217,7 +222,7 @@ export function AvailabilityInvitePage() {
               value={email}
             />
             <input
-              className="w-full rounded-lg border border-[#d4c9b8] px-4 py-2.5 text-right text-sm focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+              className="w-full rounded-lg border border-border px-4 py-2.5 text-right text-sm focus:outline-none focus:ring-1 focus:ring-primary"
               defaultValue={inviteData.supplierPhone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="טלפון"
@@ -225,7 +230,7 @@ export function AvailabilityInvitePage() {
               value={phone || inviteData.supplierPhone}
             />
             <input
-              className="w-full rounded-lg border border-[#d4c9b8] px-4 py-2.5 text-right text-sm focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+              className="w-full rounded-lg border border-border px-4 py-2.5 text-right text-sm focus:outline-none focus:ring-1 focus:ring-primary"
               minLength={6}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="סיסמה (לפחות 6 תווים) *"
@@ -236,7 +241,7 @@ export function AvailabilityInvitePage() {
           </div>
 
           <button
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-3 font-semibold text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-semibold text-[14px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
             disabled={submitting}
             type="submit"
           >
@@ -254,7 +259,7 @@ export function AvailabilityInvitePage() {
         {/* Already registered link */}
         <div className="text-center">
           <Link
-            className="inline-flex items-center gap-2 text-[#8d785e] text-[14px] transition-colors hover:text-[#ff8c00]"
+            className="inline-flex items-center gap-2 text-[14px] text-muted-foreground transition-colors hover:text-primary"
             to="/"
           >
             <LogIn size={14} />

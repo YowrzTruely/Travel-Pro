@@ -85,24 +85,24 @@ export function ActivityLog() {
 
   return (
     <div
-      className="min-h-screen bg-[#f8f7f5] font-['Assistant',sans-serif] text-[#181510]"
+      className="min-h-screen bg-background font-['Assistant',sans-serif] text-foreground"
       dir="rtl"
     >
       <div className="mx-auto max-w-7xl p-6">
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
-          <Activity className="h-7 w-7 text-[#ff8c00]" />
+          <Activity className="h-7 w-7 text-primary" />
           <h1 className="font-bold text-2xl">יומן פעילות</h1>
         </div>
 
         {/* Filter Bar */}
-        <div className="mb-6 flex flex-wrap items-end gap-4 rounded-lg border border-[#e7e1da] bg-white p-4">
+        <div className="mb-6 flex flex-wrap items-end gap-4 rounded-lg border border-border bg-card p-4">
           <label className="flex flex-col gap-1">
-            <span className="font-medium text-[#181510]/70 text-sm">
+            <span className="font-medium text-foreground/70 text-sm">
               סוג ישות
             </span>
             <select
-              className="rounded-md border border-[#e7e1da] bg-white px-3 py-2 text-sm focus:border-[#ff8c00] focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+              className="rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               onChange={(e) => setEntityType(e.target.value)}
               value={entityType}
             >
@@ -115,9 +115,11 @@ export function ActivityLog() {
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="font-medium text-[#181510]/70 text-sm">פעולה</span>
+            <span className="font-medium text-foreground/70 text-sm">
+              פעולה
+            </span>
             <select
-              className="rounded-md border border-[#e7e1da] bg-white px-3 py-2 text-sm focus:border-[#ff8c00] focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+              className="rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               onChange={(e) => setAction(e.target.value)}
               value={action}
             >
@@ -130,11 +132,11 @@ export function ActivityLog() {
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="font-medium text-[#181510]/70 text-sm">
+            <span className="font-medium text-foreground/70 text-sm">
               מתאריך
             </span>
             <input
-              className="rounded-md border border-[#e7e1da] bg-white px-3 py-2 text-sm focus:border-[#ff8c00] focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+              className="rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               onChange={(e) => setFromDate(e.target.value)}
               type="date"
               value={fromDate}
@@ -142,11 +144,11 @@ export function ActivityLog() {
           </label>
 
           <label className="flex flex-col gap-1">
-            <span className="font-medium text-[#181510]/70 text-sm">
+            <span className="font-medium text-foreground/70 text-sm">
               עד תאריך
             </span>
             <input
-              className="rounded-md border border-[#e7e1da] bg-white px-3 py-2 text-sm focus:border-[#ff8c00] focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+              className="rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               onChange={(e) => setToDate(e.target.value)}
               type="date"
               value={toDate}
@@ -155,54 +157,54 @@ export function ActivityLog() {
         </div>
 
         {/* Table */}
-        <div className="rounded-lg border border-[#e7e1da] bg-white">
+        <div className="rounded-lg border border-border bg-card">
           {entries === undefined ? (
-            <div className="flex items-center justify-center p-12 text-[#181510]/50">
+            <div className="flex items-center justify-center p-12 text-foreground/50">
               טוען...
             </div>
           ) : entries.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-2 p-12 text-[#181510]/50">
-              <Activity className="h-10 w-10 text-[#e7e1da]" />
+            <div className="flex flex-col items-center justify-center gap-2 p-12 text-foreground/50">
+              <Activity className="h-10 w-10 text-border" />
               <p className="text-lg">אין רשומות פעילות</p>
               <p className="text-sm">לא נמצאו רשומות התואמות את הסינון שנבחר</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-[#e7e1da]">
-                  <TableHead className="text-right text-[#181510]/70">
+                <TableRow className="border-border">
+                  <TableHead className="text-right text-foreground/70">
                     תאריך
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     משתמש
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     פעולה
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     סוג ישות
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     פרטים
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {entries.map((entry) => (
-                  <TableRow className="border-[#e7e1da]" key={entry._id}>
-                    <TableCell className="text-[#181510]/80">
+                  <TableRow className="border-border" key={entry._id}>
+                    <TableCell className="text-foreground/80">
                       {formatHebrewDate(entry.createdAt)}
                     </TableCell>
                     <TableCell>{entry.userId ?? "מערכת"}</TableCell>
                     <TableCell>
-                      <span className="inline-flex rounded-full bg-[#ff8c00]/10 px-2 py-0.5 font-medium text-[#ff8c00] text-xs">
+                      <span className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary text-xs">
                         {ACTION_LABELS[entry.action] ?? entry.action}
                       </span>
                     </TableCell>
                     <TableCell>
                       {ENTITY_LABELS[entry.entityType] ?? entry.entityType}
                     </TableCell>
-                    <TableCell className="max-w-xs truncate text-[#181510]/60">
+                    <TableCell className="max-w-xs truncate text-foreground/60">
                       {entry.details ?? "—"}
                     </TableCell>
                   </TableRow>

@@ -143,16 +143,16 @@ export function SignaturePad({ stopId, onSaved, onCancel }: SignaturePadProps) {
   };
 
   return (
-    <div className="mt-3 rounded-lg border border-[#e7e1da] bg-[#faf9f7] p-3">
+    <div className="mt-3 rounded-lg border border-border bg-surface p-3">
       <div className="mb-2 flex items-center justify-between">
         <span
-          className="text-[#181510] text-[13px]"
+          className="text-[13px] text-foreground"
           style={{ fontWeight: 600 }}
         >
           חתימת ספק
         </span>
         <button
-          className="flex items-center gap-1 text-[#8d785e] text-[12px] transition-colors hover:text-[#ff8c00]"
+          className="flex items-center gap-1 text-[12px] text-muted-foreground transition-colors hover:text-primary"
           onClick={clearCanvas}
           type="button"
         >
@@ -161,7 +161,7 @@ export function SignaturePad({ stopId, onSaved, onCancel }: SignaturePadProps) {
         </button>
       </div>
       <canvas
-        className="w-full cursor-crosshair touch-none rounded-lg border-2 border-[#e7e1da] border-dashed bg-white"
+        className="w-full cursor-crosshair touch-none rounded-lg border-2 border-border border-dashed bg-card"
         height={120}
         onMouseDown={startDrawing}
         onMouseLeave={stopDrawing}
@@ -175,7 +175,7 @@ export function SignaturePad({ stopId, onSaved, onCancel }: SignaturePadProps) {
       />
       <div className="mt-2 flex gap-2">
         <button
-          className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[#ff8c00] px-3 py-2 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
           disabled={!hasDrawn || submitting}
           onClick={handleSave}
           style={{ fontWeight: 600 }}
@@ -189,7 +189,7 @@ export function SignaturePad({ stopId, onSaved, onCancel }: SignaturePadProps) {
           שמור חתימה
         </button>
         <button
-          className="min-h-11 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+          className="min-h-11 rounded-lg border border-border px-3 py-2 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
           onClick={onCancel}
           type="button"
         >

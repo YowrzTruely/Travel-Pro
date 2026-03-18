@@ -189,8 +189,11 @@ const ISRAEL_OUTLINE = `
 function StarRating({ rating }: { rating: number }) {
   return (
     <span className="inline-flex items-center gap-0.5">
-      <Star className="fill-[#f59e0b] text-[#f59e0b]" size={10} />
-      <span className="text-[#8d785e] text-[11px]" style={{ fontWeight: 600 }}>
+      <Star className="fill-warning text-warning" size={10} />
+      <span
+        className="text-[11px] text-muted-foreground"
+        style={{ fontWeight: 600 }}
+      >
         {rating}
       </span>
     </span>
@@ -220,11 +223,11 @@ function MapTooltip({
       transition={{ duration: 0.2 }}
     >
       <div
-        className="min-w-[260px] max-w-[300px] rounded-xl border border-[#e7e1da] bg-white p-4 shadow-[0_8px_32px_rgba(0,0,0,0.14)]"
+        className="min-w-[260px] max-w-[300px] rounded-xl border border-border bg-card p-4 shadow-[0_8px_32px_rgba(0,0,0,0.14)]"
         dir="rtl"
       >
         {/* Header */}
-        <div className="mb-3 flex items-center gap-2 border-[#f0ece6] border-b pb-2.5">
+        <div className="mb-3 flex items-center gap-2 border-accent border-b pb-2.5">
           <div
             className="flex h-7 w-7 items-center justify-center rounded-lg"
             style={{ backgroundColor: `${location.color}18` }}
@@ -233,12 +236,14 @@ function MapTooltip({
           </div>
           <div>
             <p
-              className="text-[#181510] text-[14px]"
+              className="text-[14px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               {location.name}
             </p>
-            <p className="text-[#8d785e] text-[11px]">{location.region}</p>
+            <p className="text-[11px] text-muted-foreground">
+              {location.region}
+            </p>
           </div>
         </div>
 
@@ -246,9 +251,9 @@ function MapTooltip({
         {location.projects.length > 0 && (
           <div className="mb-2.5">
             <div className="mb-1.5 flex items-center gap-1.5">
-              <Briefcase className="text-[#8d785e]" size={11} />
+              <Briefcase className="text-muted-foreground" size={11} />
               <span
-                className="text-[#8d785e] text-[11px]"
+                className="text-[11px] text-muted-foreground"
                 style={{ fontWeight: 600 }}
               >
                 {location.projects.length} פרויקטים
@@ -261,7 +266,7 @@ function MapTooltip({
                   key={i}
                 >
                   <span
-                    className="truncate text-[#181510] text-[12px]"
+                    className="truncate text-[12px] text-foreground"
                     style={{ fontWeight: 500 }}
                   >
                     {p.name}
@@ -286,9 +291,9 @@ function MapTooltip({
         {location.suppliers.length > 0 && (
           <div>
             <div className="mb-1.5 flex items-center gap-1.5">
-              <Users className="text-[#8d785e]" size={11} />
+              <Users className="text-muted-foreground" size={11} />
               <span
-                className="text-[#8d785e] text-[11px]"
+                className="text-[11px] text-muted-foreground"
                 style={{ fontWeight: 600 }}
               >
                 {location.suppliers.length} ספקים
@@ -301,13 +306,13 @@ function MapTooltip({
                   key={i}
                 >
                   <span
-                    className="truncate text-[#181510] text-[12px]"
+                    className="truncate text-[12px] text-foreground"
                     style={{ fontWeight: 500 }}
                   >
                     {s.name}
                   </span>
                   <div className="flex shrink-0 items-center gap-2">
-                    <span className="text-[#b09d84] text-[10px]">
+                    <span className="text-[10px] text-tertiary">
                       {s.category}
                     </span>
                     <StarRating rating={s.rating} />
@@ -322,7 +327,7 @@ function MapTooltip({
       {/* Arrow */}
       <div className="-mt-[1px] flex justify-center">
         <div
-          className="h-3 w-3 rotate-45 border-[#e7e1da] border-r border-b bg-white"
+          className="h-3 w-3 rotate-45 border-border border-r border-b bg-card"
           style={{ marginTop: -6 }}
         />
       </div>
@@ -362,37 +367,39 @@ export function IsraelMap() {
   return (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
-      className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+      className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
       initial={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.6, delay: 1.1 }}
     >
       {/* Header */}
-      <div className="border-[#f0ece6] border-b px-6 pt-5 pb-4">
+      <div className="border-accent border-b px-6 pt-5 pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fff3e0]">
-              <MapPin className="text-[#ff8c00]" size={16} />
+              <MapPin className="text-primary" size={16} />
             </div>
             <div>
               <h2
-                className="text-[#181510] text-[18px]"
+                className="text-[18px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 מפת פעילות ארצית
               </h2>
-              <p className="mt-0.5 text-[#8d785e] text-[12px]">
+              <p className="mt-0.5 text-[12px] text-muted-foreground">
                 פרויקטים וספקים פעילים לפי אזור
               </p>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#ff8c00]" />
-              <span className="text-[#8d785e] text-[11px]">פרויקטים</span>
+              <span className="h-2 w-2 rounded-full bg-primary" />
+              <span className="text-[11px] text-muted-foreground">
+                פרויקטים
+              </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#8b5cf6]" />
-              <span className="text-[#8d785e] text-[11px]">ספקים</span>
+              <span className="h-2 w-2 rounded-full bg-chart-5" />
+              <span className="text-[11px] text-muted-foreground">ספקים</span>
             </div>
           </div>
         </div>
@@ -401,7 +408,7 @@ export function IsraelMap() {
       <div className="flex flex-col lg:flex-row">
         {/* Map Area */}
         <div
-          className="relative min-h-[480px] flex-1 bg-gradient-to-b from-[#fdfcfa] to-[#f8f5f0] p-6"
+          className="relative min-h-[480px] flex-1 bg-gradient-to-b from-surface to-accent p-6"
           onMouseLeave={() => setActiveLocation(null)}
           ref={containerRef}
         >
@@ -539,7 +546,7 @@ export function IsraelMap() {
                   }}
                 >
                   <span
-                    className="rounded bg-white/80 px-1.5 py-0.5 text-[#181510] text-[11px] backdrop-blur-sm"
+                    className="rounded bg-card/80 px-1.5 py-0.5 text-[11px] text-foreground backdrop-blur-sm"
                     style={{ fontWeight: isActive ? 700 : 500 }}
                   >
                     {loc.name}
@@ -562,42 +569,44 @@ export function IsraelMap() {
         </div>
 
         {/* Sidebar - Region Summary */}
-        <div className="border-[#f0ece6] border-r bg-[#fdfcfa] p-5 lg:w-[260px]">
+        <div className="border-accent border-r bg-surface p-5 lg:w-[260px]">
           {/* Stats summary */}
           <div className="mb-5 space-y-3">
-            <div className="flex items-center gap-3 rounded-lg border border-[#e7e1da] bg-white p-3">
+            <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#fff3e0]">
-                <Briefcase className="text-[#ff8c00]" size={15} />
+                <Briefcase className="text-primary" size={15} />
               </div>
               <div>
                 <p
-                  className="text-[#181510] text-[20px]"
+                  className="text-[20px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   {totalProjects}
                 </p>
-                <p className="text-[#8d785e] text-[11px]">פרויקטים פעילים</p>
+                <p className="text-[11px] text-muted-foreground">
+                  פרויקטים פעילים
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-lg border border-[#e7e1da] bg-white p-3">
+            <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#f5f3ff]">
-                <Users className="text-[#8b5cf6]" size={15} />
+                <Users className="text-chart-5" size={15} />
               </div>
               <div>
                 <p
-                  className="text-[#181510] text-[20px]"
+                  className="text-[20px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   {totalSuppliers}
                 </p>
-                <p className="text-[#8d785e] text-[11px]">ספקים במאגר</p>
+                <p className="text-[11px] text-muted-foreground">ספקים במאגר</p>
               </div>
             </div>
           </div>
 
           {/* Region list */}
           <p
-            className="mb-2.5 text-[#8d785e] text-[12px]"
+            className="mb-2.5 text-[12px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
             אזורים פעילים
@@ -630,17 +639,17 @@ export function IsraelMap() {
                   />
                   <div className="min-w-0 flex-1">
                     <p
-                      className="truncate text-[#181510] text-[12px]"
+                      className="truncate text-[12px] text-foreground"
                       style={{ fontWeight: isActive ? 700 : 500 }}
                     >
                       {loc.name}
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-1.5">
-                    <span className="text-[#b09d84] text-[11px]">
+                    <span className="text-[11px] text-tertiary">
                       {loc.projects.length}P · {loc.suppliers.length}S
                     </span>
-                    <ChevronLeft className="text-[#d4cdc3]" size={12} />
+                    <ChevronLeft className="text-tertiary" size={12} />
                   </div>
                 </button>
               );
@@ -648,18 +657,20 @@ export function IsraelMap() {
           </div>
 
           {/* Hottest region */}
-          <div className="mt-5 border-[#f0ece6] border-t pt-4">
-            <p className="mb-1 text-[#8d785e] text-[11px]">אזור הכי פעיל</p>
+          <div className="mt-5 border-accent border-t pt-4">
+            <p className="mb-1 text-[11px] text-muted-foreground">
+              אזור הכי פעיל
+            </p>
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#ff8c00]" />
+              <span className="h-2 w-2 rounded-full bg-primary" />
               <span
-                className="text-[#181510] text-[13px]"
+                className="text-[13px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 תל אביב והמרכז
               </span>
               <span
-                className="text-[#ff8c00] text-[11px]"
+                className="text-[11px] text-primary"
                 style={{ fontWeight: 600 }}
               >
                 5 פריטים

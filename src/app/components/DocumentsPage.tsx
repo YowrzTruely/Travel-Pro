@@ -82,27 +82,27 @@ const formatDate = (dateStr: string) => {
 const statusConfig = {
   valid: {
     label: "בתוקף",
-    color: "text-green-600",
-    bg: "bg-green-50",
-    border: "border-green-200",
+    color: "text-success",
+    bg: "bg-success/10",
+    border: "border-success/30",
     icon: CheckCircle,
-    iconColor: "text-green-500",
+    iconColor: "text-success",
   },
   warning: {
     label: "פג בקרוב",
-    color: "text-yellow-600",
-    bg: "bg-yellow-50",
-    border: "border-yellow-200",
+    color: "text-warning",
+    bg: "bg-warning/10",
+    border: "border-warning/30",
     icon: Clock,
     iconColor: "text-yellow-500",
   },
   expired: {
     label: "פג תוקף",
-    color: "text-red-500",
-    bg: "bg-red-50",
-    border: "border-red-200",
+    color: "text-destructive",
+    bg: "bg-destructive/10",
+    border: "border-destructive/30",
     icon: AlertTriangle,
-    iconColor: "text-red-500",
+    iconColor: "text-destructive",
   },
 };
 
@@ -383,9 +383,9 @@ export function DocumentsPage() {
         dir="rtl"
       >
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="animate-spin text-[#ff8c00]" size={32} />
+          <Loader2 className="animate-spin text-primary" size={32} />
           <span
-            className="text-[#8d785e] text-[15px]"
+            className="text-[15px] text-muted-foreground"
             style={{ fontWeight: 500 }}
           >
             טוען מסמכים...
@@ -403,23 +403,23 @@ export function DocumentsPage() {
       {/* ═══ Header ═══ */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ff8c00]/10">
-            <FileText className="text-[#ff8c00]" size={22} />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
+            <FileText className="text-primary" size={22} />
           </div>
           <div>
             <h1
-              className="text-[#181510] text-[24px]"
+              className="text-[24px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               ניהול מסמכים
             </h1>
-            <p className="text-[#8d785e] text-[13px]">
+            <p className="text-[13px] text-muted-foreground">
               מסמכים, חוזים והסכמים עם ספקים ולקוחות
             </p>
           </div>
         </div>
         <button
-          className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+          className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover"
           onClick={() => setShowAddDoc(true)}
           style={{ fontWeight: 600 }}
           type="button"
@@ -458,12 +458,12 @@ export function DocumentsPage() {
           },
         ].map((card) => (
           <div
-            className="rounded-xl border border-[#e7e1da] p-4"
+            className="rounded-xl border border-border p-4"
             key={card.label}
             style={{ backgroundColor: card.bg }}
           >
             <div
-              className="mb-1 text-[#8d785e] text-[12px]"
+              className="mb-1 text-[12px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               {card.label}
@@ -479,7 +479,7 @@ export function DocumentsPage() {
       </div>
 
       {/* ═══ Tabs ═══ */}
-      <div className="mb-4 flex w-fit items-center gap-1 rounded-xl bg-[#f5f3f0] p-1">
+      <div className="mb-4 flex w-fit items-center gap-1 rounded-xl bg-accent p-1">
         {[
           { key: "suppliers" as TabType, label: "מסמכי ספקים", icon: Shield },
           {
@@ -491,8 +491,8 @@ export function DocumentsPage() {
           <button
             className={`flex items-center gap-2 rounded-lg px-4 py-2 text-[13px] transition-all ${
               activeTab === tab.key
-                ? "bg-white text-[#181510] shadow-sm"
-                : "text-[#8d785e] hover:text-[#181510]"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             }`}
             key={tab.key}
             onClick={() => {
@@ -507,8 +507,8 @@ export function DocumentsPage() {
             <span
               className={`rounded-full px-1.5 py-0.5 text-[11px] ${
                 activeTab === tab.key
-                  ? "bg-[#ff8c00]/10 text-[#ff8c00]"
-                  : "bg-[#e7e1da] text-[#8d785e]"
+                  ? "bg-primary/10 text-primary"
+                  : "bg-border text-muted-foreground"
               }`}
               style={{ fontWeight: 700 }}
             >
@@ -525,11 +525,11 @@ export function DocumentsPage() {
         {/* Search */}
         <div className="relative min-w-[200px] flex-1">
           <Search
-            className="absolute top-1/2 right-3 -translate-y-1/2 text-[#8d785e]"
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground"
             size={16}
           />
           <input
-            className="w-full rounded-xl border border-[#e7e1da] bg-white py-2.5 pr-9 pl-4 text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+            className="w-full rounded-xl border border-border bg-card py-2.5 pr-9 pl-4 text-[13px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
             onChange={(e) => setSearch(e.target.value)}
             placeholder="חיפוש לפי שם מסמך או שם ספק/פרויקט..."
             value={search}
@@ -538,7 +538,7 @@ export function DocumentsPage() {
 
         {/* Status filter */}
         <select
-          className="rounded-xl border border-[#e7e1da] bg-white px-3 py-2.5 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+          className="rounded-xl border border-border bg-card px-3 py-2.5 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
           onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
           value={statusFilter}
         >
@@ -550,7 +550,7 @@ export function DocumentsPage() {
 
         {/* Type filter */}
         <select
-          className="rounded-xl border border-[#e7e1da] bg-white px-3 py-2.5 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+          className="rounded-xl border border-border bg-card px-3 py-2.5 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
           onChange={(e) => setTypeFilter(e.target.value)}
           value={typeFilter}
         >
@@ -565,21 +565,21 @@ export function DocumentsPage() {
       </div>
 
       {/* ═══ Documents Table ═══ */}
-      <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white">
+      <div className="overflow-hidden rounded-xl border border-border bg-card">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#f5f3f0]">
-              <FileText className="text-[#b8a990]" size={24} />
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-accent">
+              <FileText className="text-tertiary" size={24} />
             </div>
             <div
-              className="mb-1 text-[#181510] text-[15px]"
+              className="mb-1 text-[15px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               {search || statusFilter !== "all" || typeFilter !== "הכל"
                 ? "לא נמצאו מסמכים תואמים"
                 : "אין מסמכים עדיין"}
             </div>
-            <div className="text-[#8d785e] text-[13px]">
+            <div className="text-[13px] text-muted-foreground">
               {search || statusFilter !== "all" || typeFilter !== "הכל"
                 ? "נסה לשנות את הסינון"
                 : activeTab === "projects"
@@ -592,45 +592,45 @@ export function DocumentsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-[13px]">
                 <thead>
-                  <tr className="border-[#e7e1da] border-b bg-[#faf9f7]">
+                  <tr className="border-border border-b bg-surface">
                     <th
-                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      className="px-4 py-3 text-right text-[12px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       סטטוס
                     </th>
                     <th
-                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      className="px-4 py-3 text-right text-[12px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       שם מסמך
                     </th>
                     <th
-                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      className="px-4 py-3 text-right text-[12px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {activeTab === "suppliers" ? "ספק" : "פרויקט"}
                     </th>
                     <th
-                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      className="px-4 py-3 text-right text-[12px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       סוג
                     </th>
                     <th
-                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      className="px-4 py-3 text-right text-[12px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       תוקף
                     </th>
                     <th
-                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      className="px-4 py-3 text-right text-[12px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       קובץ
                     </th>
                     <th
-                      className="px-4 py-3 text-right text-[#8d785e] text-[12px]"
+                      className="px-4 py-3 text-right text-[12px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       פעולות
@@ -643,7 +643,7 @@ export function DocumentsPage() {
                     const StatusIcon = sc.icon;
                     return (
                       <tr
-                        className="border-[#f0ede8] border-b transition-colors hover:bg-[#faf9f7]"
+                        className="border-accent border-b transition-colors hover:bg-surface"
                         key={`${doc.entityType}-${doc.id}`}
                       >
                         {/* Status */}
@@ -660,7 +660,7 @@ export function DocumentsPage() {
                         {/* Document name */}
                         <td className="px-4 py-3">
                           <div
-                            className="text-[#181510]"
+                            className="text-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             {doc.name}
@@ -670,7 +670,7 @@ export function DocumentsPage() {
                         {/* Entity name (clickable) */}
                         <td className="px-4 py-3">
                           <button
-                            className="text-[#ff8c00] transition-colors hover:text-[#e67e00] hover:underline"
+                            className="text-primary transition-colors hover:text-primary-hover hover:underline"
                             onClick={() =>
                               navigate(
                                 doc.entityType === "supplier"
@@ -688,7 +688,7 @@ export function DocumentsPage() {
                         {/* Type badge */}
                         <td className="px-4 py-3">
                           <span
-                            className="rounded-full bg-[#f5f3f0] px-2 py-0.5 text-[#8d785e] text-[11px]"
+                            className="rounded-full bg-accent px-2 py-0.5 text-[11px] text-muted-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             {doc.type}
@@ -708,16 +708,14 @@ export function DocumentsPage() {
                         {/* File name */}
                         <td className="px-4 py-3">
                           {doc.fileName ? (
-                            <div className="flex items-center gap-1 text-[#8d785e] text-[12px]">
+                            <div className="flex items-center gap-1 text-[12px] text-muted-foreground">
                               <FileText size={12} />
                               <span className="max-w-[120px] truncate">
                                 {doc.fileName}
                               </span>
                             </div>
                           ) : (
-                            <span className="text-[#b8a990] text-[12px]">
-                              —
-                            </span>
+                            <span className="text-[12px] text-tertiary">—</span>
                           )}
                         </td>
 
@@ -725,7 +723,7 @@ export function DocumentsPage() {
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
                             <button
-                              className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ff8c00]/10 hover:text-[#ff8c00]"
+                              className="rounded-lg p-1.5 text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
                               onClick={() =>
                                 navigate(
                                   doc.entityType === "supplier"
@@ -739,7 +737,7 @@ export function DocumentsPage() {
                               <Eye size={14} />
                             </button>
                             <button
-                              className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ff8c00]/10 hover:text-[#ff8c00]"
+                              className="rounded-lg p-1.5 text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
                               onClick={() => {
                                 setEditingDoc(doc);
                                 setEditExpiryValue(doc.expiry);
@@ -750,7 +748,7 @@ export function DocumentsPage() {
                               <Edit2 size={14} />
                             </button>
                             <button
-                              className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-red-50 hover:text-red-500"
+                              className="rounded-lg p-1.5 text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive"
                               onClick={() => setDeletingDoc(doc)}
                               title="מחיקה"
                               type="button"
@@ -768,15 +766,15 @@ export function DocumentsPage() {
 
             {/* ═══ Pagination ═══ */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between border-[#f0ede8] border-t px-4 py-3">
-                <div className="text-[#8d785e] text-[12px]">
+              <div className="flex items-center justify-between border-accent border-t px-4 py-3">
+                <div className="text-[12px] text-muted-foreground">
                   מציג {(currentPage - 1) * ITEMS_PER_PAGE + 1}–
                   {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} מתוך{" "}
                   {filtered.length}
                 </div>
                 <div className="flex items-center gap-1">
                   <button
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-[#f5f3f0] disabled:opacity-30"
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent disabled:opacity-30"
                     disabled={currentPage <= 1}
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     type="button"
@@ -788,8 +786,8 @@ export function DocumentsPage() {
                       <button
                         className={`flex h-7 w-7 items-center justify-center rounded-md text-[12px] transition-colors ${
                           currentPage === page
-                            ? "bg-[#ff8c00] text-white"
-                            : "text-[#8d785e] hover:bg-[#f5f3f0]"
+                            ? "bg-primary text-white"
+                            : "text-muted-foreground hover:bg-accent"
                         }`}
                         key={page}
                         onClick={() => setCurrentPage(page)}
@@ -800,7 +798,7 @@ export function DocumentsPage() {
                     )
                   )}
                   <button
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-[#f5f3f0] disabled:opacity-30"
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent disabled:opacity-30"
                     disabled={currentPage >= totalPages}
                     onClick={() =>
                       setCurrentPage((p) => Math.min(totalPages, p + 1))
@@ -828,24 +826,24 @@ export function DocumentsPage() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-2xl"
             dir="rtl"
             role="dialog"
           >
             <div className="mb-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-                  <Plus className="text-[#ff8c00]" size={18} />
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                  <Plus className="text-primary" size={18} />
                 </div>
                 <h3
-                  className="text-[#181510] text-[18px]"
+                  className="text-[18px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   הוספת מסמך פרויקט
                 </h3>
               </div>
               <button
-                className="text-[#8d785e] transition-colors hover:text-[#181510]"
+                className="text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => {
                   setShowAddDoc(false);
                   resetForm();
@@ -916,7 +914,7 @@ export function DocumentsPage() {
 
               <div className="flex gap-3 pt-3">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                   disabled={saving || !isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -929,7 +927,7 @@ export function DocumentsPage() {
                   {saving ? "שומר..." : "הוסף מסמך"}
                 </button>
                 <button
-                  className="rounded-xl px-4 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                  className="rounded-xl px-4 py-2.5 text-[14px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                   onClick={() => {
                     setShowAddDoc(false);
                     resetForm();
@@ -957,24 +955,24 @@ export function DocumentsPage() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-2xl"
             dir="rtl"
             role="dialog"
           >
             <div className="mb-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-                  <CalendarDays className="text-[#ff8c00]" size={18} />
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                  <CalendarDays className="text-primary" size={18} />
                 </div>
                 <h3
-                  className="text-[#181510] text-[18px]"
+                  className="text-[18px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   עדכון תוקף
                 </h3>
               </div>
               <button
-                className="text-[#8d785e] transition-colors hover:text-[#181510]"
+                className="text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => {
                   setEditingDoc(null);
                   setEditExpiryValue("");
@@ -987,32 +985,32 @@ export function DocumentsPage() {
 
             <div className="mb-4">
               <div
-                className="mb-1 text-[#8d785e] text-[13px]"
+                className="mb-1 text-[13px] text-muted-foreground"
                 style={{ fontWeight: 600 }}
               >
                 מסמך
               </div>
               <div
-                className="text-[#181510] text-[15px]"
+                className="text-[15px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 {editingDoc.name}
               </div>
-              <div className="mt-0.5 text-[#8d785e] text-[12px]">
+              <div className="mt-0.5 text-[12px] text-muted-foreground">
                 {editingDoc.entityName}
               </div>
             </div>
 
             <div className="mb-4">
               <label
-                className="mb-1 block text-[#8d785e] text-[13px]"
+                className="mb-1 block text-[13px] text-muted-foreground"
                 htmlFor="doc-expiry-date"
                 style={{ fontWeight: 600 }}
               >
                 תאריך תוקף חדש
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 text-[#181510] text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/10"
+                className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-[13px] text-foreground transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
                 id="doc-expiry-date"
                 onChange={(e) => setEditExpiryValue(e.target.value)}
                 type="date"
@@ -1022,7 +1020,7 @@ export function DocumentsPage() {
 
             <div className="flex gap-3">
               <button
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                 disabled={!editExpiryValue || saving}
                 onClick={onUpdateExpiry}
                 style={{ fontWeight: 600 }}
@@ -1036,7 +1034,7 @@ export function DocumentsPage() {
                 {saving ? "שומר..." : "שמור"}
               </button>
               <button
-                className="rounded-xl px-4 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                className="rounded-xl px-4 py-2.5 text-[14px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 onClick={() => {
                   setEditingDoc(null);
                   setEditExpiryValue("");
@@ -1061,42 +1059,42 @@ export function DocumentsPage() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-2xl"
             dir="rtl"
             role="dialog"
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-50">
-                <Trash2 className="text-red-500" size={20} />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
+                <Trash2 className="text-destructive" size={20} />
               </div>
               <div>
                 <h3
-                  className="text-[#181510] text-[18px]"
+                  className="text-[18px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   מחיקת מסמך
                 </h3>
-                <p className="text-[#8d785e] text-[13px]">
+                <p className="text-[13px] text-muted-foreground">
                   פעולה זו אינה ניתנת לביטול
                 </p>
               </div>
             </div>
 
-            <div className="mb-4 rounded-xl bg-[#faf9f7] p-3">
+            <div className="mb-4 rounded-xl bg-surface p-3">
               <div
-                className="text-[#181510] text-[14px]"
+                className="text-[14px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 {deletingDoc.name}
               </div>
-              <div className="mt-0.5 text-[#8d785e] text-[12px]">
+              <div className="mt-0.5 text-[12px] text-muted-foreground">
                 {deletingDoc.entityName}
               </div>
             </div>
 
             <div className="flex gap-3">
               <button
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-[14px] text-white transition-colors hover:bg-red-600 disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-destructive/100 py-2.5 text-[14px] text-white transition-colors hover:bg-destructive disabled:opacity-50"
                 disabled={saving}
                 onClick={onDeleteDoc}
                 style={{ fontWeight: 600 }}
@@ -1110,7 +1108,7 @@ export function DocumentsPage() {
                 {saving ? "מוחק..." : "מחק"}
               </button>
               <button
-                className="rounded-xl px-4 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                className="rounded-xl px-4 py-2.5 text-[14px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 onClick={() => setDeletingDoc(null)}
                 style={{ fontWeight: 600 }}
                 type="button"

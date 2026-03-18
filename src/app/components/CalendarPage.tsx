@@ -265,18 +265,18 @@ export function CalendarPage() {
       {/* Header */}
       <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff8c00]/10">
-            <CalendarIcon className="text-[#ff8c00]" size={20} />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <CalendarIcon className="text-primary" size={20} />
           </div>
           <h1
-            className="text-[#181510] text-[24px]"
+            className="text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             יומן
           </h1>
         </div>
         <button
-          className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white shadow-sm transition-colors hover:bg-[#e67e00]"
+          className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-[14px] text-white shadow-sm transition-colors hover:bg-primary-hover"
           onClick={() => handleNewEvent()}
           style={{ fontWeight: 600 }}
           type="button"
@@ -298,27 +298,27 @@ export function CalendarPage() {
         {/* Date navigation */}
         <div className="flex items-center gap-3">
           <button
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#e7e1da] bg-white transition-colors hover:bg-[#f5f3f0]"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-card transition-colors hover:bg-accent"
             onClick={navigateNext}
             type="button"
           >
-            <ChevronRight className="text-[#181510]" size={14} />
+            <ChevronRight className="text-foreground" size={14} />
           </button>
           <button
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#e7e1da] bg-white transition-colors hover:bg-[#f5f3f0]"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-card transition-colors hover:bg-accent"
             onClick={navigatePrev}
             type="button"
           >
-            <ChevronLeft className="text-[#181510]" size={14} />
+            <ChevronLeft className="text-foreground" size={14} />
           </button>
           <span
-            className="min-w-[180px] text-center text-[#181510] text-[15px]"
+            className="min-w-[180px] text-center text-[15px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {headerDateText}
           </span>
           <button
-            className="rounded-lg border border-[#ff8c00]/30 px-3 py-1.5 text-[#ff8c00] text-[13px] transition-colors hover:border-[#ff8c00] hover:text-[#e67e00]"
+            className="rounded-lg border border-primary/30 px-3 py-1.5 text-[13px] text-primary transition-colors hover:border-primary hover:text-primary-hover"
             onClick={goToToday}
             style={{ fontWeight: 600 }}
             type="button"
@@ -331,7 +331,7 @@ export function CalendarPage() {
       {/* Loading */}
       {loading && (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="animate-spin text-[#ff8c00]" size={32} />
+          <Loader2 className="animate-spin text-primary" size={32} />
         </div>
       )}
 
@@ -424,27 +424,27 @@ export function CalendarPage() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-sm rounded-2xl bg-white p-6 font-['Assistant',sans-serif] shadow-2xl"
+            className="w-full max-w-sm rounded-2xl bg-card p-6 font-['Assistant',sans-serif] shadow-2xl"
             dir="rtl"
             role="dialog"
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-50">
-                <AlertTriangle className="text-red-500" size={24} />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-destructive/10">
+                <AlertTriangle className="text-destructive" size={24} />
               </div>
               <div>
                 <h3
-                  className="text-[#181510] text-[18px]"
+                  className="text-[18px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   מחיקת אירוע
                 </h3>
-                <p className="text-[#8d785e] text-[13px]">
+                <p className="text-[13px] text-muted-foreground">
                   פעולה זו אינה ניתנת לביטול
                 </p>
               </div>
             </div>
-            <p className="mb-5 text-[#181510] text-[14px]">
+            <p className="mb-5 text-[14px] text-foreground">
               האם אתה בטוח שברצונך למחוק את האירוע{" "}
               <span style={{ fontWeight: 700 }}>
                 &quot;{deletingEvent.title}&quot;
@@ -453,7 +453,7 @@ export function CalendarPage() {
             </p>
             <div className="flex gap-3">
               <button
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-[14px] text-white transition-colors hover:bg-red-600 disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-destructive/100 py-2.5 text-[14px] text-white transition-colors hover:bg-destructive disabled:opacity-50"
                 disabled={saving}
                 onClick={handleDeleteEvent}
                 style={{ fontWeight: 600 }}
@@ -467,7 +467,7 @@ export function CalendarPage() {
                 {saving ? "מוחק..." : "כן, מחק"}
               </button>
               <button
-                className="rounded-xl border border-[#e7e1da] px-5 text-[#181510] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+                className="rounded-xl border border-border px-5 text-[14px] text-foreground transition-colors hover:bg-accent"
                 onClick={() => setDeletingEvent(null)}
                 style={{ fontWeight: 600 }}
                 type="button"
@@ -513,7 +513,7 @@ function CalendarViewToggle({
 
   return (
     <div
-      className="relative flex rounded-xl border border-[#e7e1da] bg-white p-1 shadow-sm"
+      className="relative flex rounded-xl border border-border bg-card p-1 shadow-sm"
       ref={containerRef}
     >
       <motion.div

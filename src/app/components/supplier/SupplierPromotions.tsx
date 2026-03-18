@@ -43,7 +43,7 @@ export function SupplierPromotions() {
   if (!supplierId) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <p className="text-[#8d785e] text-[15px]">לא נמצא ספק מקושר</p>
+        <p className="text-[15px] text-muted-foreground">לא נמצא ספק מקושר</p>
       </div>
     );
   }
@@ -51,7 +51,7 @@ export function SupplierPromotions() {
   if (promotions === undefined || products === undefined) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#ff8c00] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary border-t-transparent" />
       </div>
     );
   }
@@ -77,17 +77,17 @@ export function SupplierPromotions() {
       case "active":
         return {
           label: "פעיל",
-          className: "bg-green-50 text-green-700 border-green-200",
+          className: "bg-success/10 text-success border-success/30",
         };
       case "upcoming":
         return {
           label: "עתידי",
-          className: "bg-blue-50 text-blue-700 border-blue-200",
+          className: "bg-info/10 text-blue-700 border-info/30",
         };
       default:
         return {
           label: "פג תוקף",
-          className: "bg-gray-100 text-gray-500 border-gray-200",
+          className: "bg-accent text-muted-foreground border-border",
         };
     }
   }
@@ -117,23 +117,23 @@ export function SupplierPromotions() {
 
   return (
     <FeatureGate featureName="מבצעים" requiredStage="stage2">
-      <div className="min-h-screen bg-[#f8f7f5] p-6" dir="rtl">
+      <div className="min-h-screen bg-background p-6" dir="rtl">
         <div className="mx-auto max-w-4xl">
           {/* Header */}
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h1
-                className="text-[#181510] text-[24px]"
+                className="text-[24px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 מבצעים והנחות
               </h1>
-              <p className="mt-1 text-[#8d785e] text-[14px]">
+              <p className="mt-1 text-[14px] text-muted-foreground">
                 נהל מבצעים מוגבלים בזמן עבור המוצרים שלך
               </p>
             </div>
             <button
-              className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
+              className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
               onClick={openCreate}
               style={{ fontWeight: 600 }}
               type="button"
@@ -145,15 +145,15 @@ export function SupplierPromotions() {
 
           {/* Promotions list */}
           {promotions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-[#e7e1da] bg-white py-16">
-              <Tag className="mb-4 text-[#e7e1da]" size={48} />
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card py-16">
+              <Tag className="mb-4 text-border" size={48} />
               <p
-                className="text-[#181510] text-[16px]"
+                className="text-[16px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 אין מבצעים עדיין
               </p>
-              <p className="mt-1 text-[#8d785e] text-[13px]">
+              <p className="mt-1 text-[13px] text-muted-foreground">
                 צור מבצע ראשון כדי למשוך יותר לקוחות
               </p>
             </div>
@@ -168,14 +168,14 @@ export function SupplierPromotions() {
 
                 return (
                   <div
-                    className="rounded-2xl border border-[#e7e1da] bg-white p-5 shadow-sm transition-colors hover:border-[#ff8c00]/30"
+                    className="rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-primary/30"
                     key={promo.id}
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span
-                            className="text-[#181510] text-[16px]"
+                            className="text-[16px] text-foreground"
                             style={{ fontWeight: 700 }}
                           >
                             {promo.title}
@@ -188,11 +188,11 @@ export function SupplierPromotions() {
                           </span>
                         </div>
                         {promo.description && (
-                          <p className="mt-1 text-[#8d785e] text-[13px]">
+                          <p className="mt-1 text-[13px] text-muted-foreground">
                             {promo.description}
                           </p>
                         )}
-                        <div className="mt-2 flex flex-wrap items-center gap-3 text-[#8d785e] text-[12px]">
+                        <div className="mt-2 flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
                           {productName && (
                             <span className="flex items-center gap-1">
                               <Tag size={12} />
@@ -221,7 +221,7 @@ export function SupplierPromotions() {
                         {status !== "expired" && (
                           <>
                             <button
-                              className="min-h-[44px] min-w-[44px] rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
+                              className="min-h-[44px] min-w-[44px] rounded-lg border border-border px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-accent"
                               onClick={() => openEdit(promo.id)}
                               style={{ fontWeight: 600 }}
                               type="button"
@@ -229,7 +229,7 @@ export function SupplierPromotions() {
                               ערוך
                             </button>
                             <button
-                              className="min-h-[44px] min-w-[44px] rounded-lg border border-red-200 px-3 py-1.5 text-[12px] text-red-500 transition-colors hover:bg-red-50"
+                              className="min-h-[44px] min-w-[44px] rounded-lg border border-destructive/30 px-3 py-1.5 text-[12px] text-destructive transition-colors hover:bg-destructive/10"
                               onClick={() => handleDeactivate(promo.id)}
                               style={{ fontWeight: 600 }}
                               type="button"
@@ -382,18 +382,18 @@ function PromotionModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div
-        className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl"
+        className="relative w-full max-w-lg rounded-2xl bg-card p-6 shadow-xl"
         dir="rtl"
       >
         <button
-          className="absolute top-4 left-4 text-[#8d785e] hover:text-[#181510]"
+          className="absolute top-4 left-4 text-muted-foreground hover:text-foreground"
           onClick={onClose}
           type="button"
         >
           <X size={20} />
         </button>
         <h2
-          className="mb-5 text-[#181510] text-[18px]"
+          className="mb-5 text-[18px] text-foreground"
           style={{ fontWeight: 700 }}
         >
           {editingPromo ? "עריכת מבצע" : "מבצע חדש"}
@@ -403,33 +403,35 @@ function PromotionModal({
           {/* Title */}
           <div>
             <label
-              className="mb-1 block text-[#181510] text-[13px]"
+              className="mb-1 block text-[13px] text-foreground"
               htmlFor="promo-title"
               style={{ fontWeight: 600 }}
             >
               כותרת *
             </label>
             <input
-              className="w-full rounded-xl border border-[#e7e1da] bg-[#f5f3f0] px-4 py-2.5 text-[14px] outline-none focus:border-[#ff8c00] focus:ring-1 focus:ring-[#ff8c00]"
+              className="w-full rounded-xl border border-border bg-accent px-4 py-2.5 text-[14px] outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               id="promo-title"
               {...register("title", { required: true })}
             />
             {formState.errors.title && (
-              <span className="mt-1 text-[12px] text-red-500">שדה חובה</span>
+              <span className="mt-1 text-[12px] text-destructive">
+                שדה חובה
+              </span>
             )}
           </div>
 
           {/* Description */}
           <div>
             <label
-              className="mb-1 block text-[#181510] text-[13px]"
+              className="mb-1 block text-[13px] text-foreground"
               htmlFor="promo-desc"
               style={{ fontWeight: 600 }}
             >
               תיאור
             </label>
             <textarea
-              className="w-full rounded-xl border border-[#e7e1da] bg-[#f5f3f0] px-4 py-2.5 text-[14px] outline-none focus:border-[#ff8c00] focus:ring-1 focus:ring-[#ff8c00]"
+              className="w-full rounded-xl border border-border bg-accent px-4 py-2.5 text-[14px] outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               id="promo-desc"
               rows={2}
               {...register("description")}
@@ -440,14 +442,14 @@ function PromotionModal({
           {!editingPromo && (
             <div>
               <label
-                className="mb-1 block text-[#181510] text-[13px]"
+                className="mb-1 block text-[13px] text-foreground"
                 htmlFor="promo-product"
                 style={{ fontWeight: 600 }}
               >
                 מוצר
               </label>
               <select
-                className="w-full rounded-xl border border-[#e7e1da] bg-[#f5f3f0] px-4 py-2.5 text-[14px] outline-none focus:border-[#ff8c00] focus:ring-1 focus:ring-[#ff8c00]"
+                className="w-full rounded-xl border border-border bg-accent px-4 py-2.5 text-[14px] outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                 id="promo-product"
                 {...register("productId")}
               >
@@ -464,7 +466,7 @@ function PromotionModal({
           {/* Discount type */}
           <div>
             <span
-              className="mb-2 block text-[#181510] text-[13px]"
+              className="mb-2 block text-[13px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               סוג הנחה
@@ -492,14 +494,14 @@ function PromotionModal({
           {/* Discount value */}
           <div>
             <label
-              className="mb-1 block text-[#181510] text-[13px]"
+              className="mb-1 block text-[13px] text-foreground"
               htmlFor="promo-discount"
               style={{ fontWeight: 600 }}
             >
               {discountType === "percent" ? "אחוז הנחה (%)" : "סכום הנחה (₪)"}
             </label>
             <input
-              className="w-full rounded-xl border border-[#e7e1da] bg-[#f5f3f0] px-4 py-2.5 text-[14px] outline-none focus:border-[#ff8c00] focus:ring-1 focus:ring-[#ff8c00]"
+              className="w-full rounded-xl border border-border bg-accent px-4 py-2.5 text-[14px] outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               id="promo-discount"
               min={0}
               type="number"
@@ -514,14 +516,14 @@ function PromotionModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label
-                className="mb-1 block text-[#181510] text-[13px]"
+                className="mb-1 block text-[13px] text-foreground"
                 htmlFor="promo-starts"
                 style={{ fontWeight: 600 }}
               >
                 תאריך התחלה *
               </label>
               <input
-                className="w-full rounded-xl border border-[#e7e1da] bg-[#f5f3f0] px-4 py-2.5 text-[14px] outline-none focus:border-[#ff8c00] focus:ring-1 focus:ring-[#ff8c00]"
+                className="w-full rounded-xl border border-border bg-accent px-4 py-2.5 text-[14px] outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                 id="promo-starts"
                 type="date"
                 {...register("startsAt", { required: true })}
@@ -529,14 +531,14 @@ function PromotionModal({
             </div>
             <div>
               <label
-                className="mb-1 block text-[#181510] text-[13px]"
+                className="mb-1 block text-[13px] text-foreground"
                 htmlFor="promo-expires"
                 style={{ fontWeight: 600 }}
               >
                 תאריך סיום *
               </label>
               <input
-                className="w-full rounded-xl border border-[#e7e1da] bg-[#f5f3f0] px-4 py-2.5 text-[14px] outline-none focus:border-[#ff8c00] focus:ring-1 focus:ring-[#ff8c00]"
+                className="w-full rounded-xl border border-border bg-accent px-4 py-2.5 text-[14px] outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                 id="promo-expires"
                 type="date"
                 {...register("expiresAt", { required: true })}
@@ -547,7 +549,7 @@ function PromotionModal({
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
             <button
-              className="min-h-[44px] rounded-xl border border-[#e7e1da] px-5 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+              className="min-h-[44px] rounded-xl border border-border px-5 py-2.5 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
               onClick={onClose}
               style={{ fontWeight: 600 }}
               type="button"
@@ -555,7 +557,7 @@ function PromotionModal({
               ביטול
             </button>
             <button
-              className="min-h-[44px] rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
+              className="min-h-[44px] rounded-xl bg-primary px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
               style={{ fontWeight: 600 }}
               type="submit"
             >

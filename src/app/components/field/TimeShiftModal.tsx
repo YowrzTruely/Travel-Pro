@@ -77,23 +77,23 @@ export function TimeShiftModal({
     >
       <div
         aria-modal="true"
-        className="w-full max-w-md rounded-xl bg-white p-5 shadow-2xl"
+        className="w-full max-w-md rounded-xl bg-card p-5 shadow-2xl"
         dir="rtl"
         role="dialog"
       >
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Clock className="text-[#ff8c00]" size={20} />
+            <Clock className="text-primary" size={20} />
             <h3
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               הזזת לוח זמנים
             </h3>
           </div>
           <button
-            className="rounded-lg p-1.5 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+            className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >
@@ -105,14 +105,14 @@ export function TimeShiftModal({
         <div className="mb-4 space-y-3">
           <div>
             <label
-              className="mb-1 block text-[#181510] text-[13px]"
+              className="mb-1 block text-[13px] text-foreground"
               htmlFor="shift-minutes"
               style={{ fontWeight: 600 }}
             >
               דקות להזזה (חיובי = עיכוב, שלילי = הקדמה)
             </label>
             <input
-              className="w-full rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] outline-none focus:border-[#ff8c00]"
+              className="w-full rounded-lg border border-border px-3 py-2 text-[14px] outline-none focus:border-primary"
               id="shift-minutes"
               inputMode="numeric"
               onChange={(e) => setMinutesShift(Number(e.target.value) || 0)}
@@ -122,14 +122,14 @@ export function TimeShiftModal({
           </div>
           <div>
             <label
-              className="mb-1 block text-[#181510] text-[13px]"
+              className="mb-1 block text-[13px] text-foreground"
               htmlFor="from-stop"
               style={{ fontWeight: 600 }}
             >
               מעצירה מספר
             </label>
             <select
-              className="w-full rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] outline-none focus:border-[#ff8c00]"
+              className="w-full rounded-lg border border-border px-3 py-2 text-[14px] outline-none focus:border-primary"
               id="from-stop"
               onChange={(e) => setFromIndex(Number(e.target.value))}
               value={fromIndex}
@@ -145,9 +145,9 @@ export function TimeShiftModal({
 
         {/* Preview */}
         {minutesShift !== 0 && previewStops.length > 0 && (
-          <div className="mb-4 rounded-lg border border-[#e7e1da] bg-[#faf9f7] p-3">
+          <div className="mb-4 rounded-lg border border-border bg-surface p-3">
             <p
-              className="mb-2 text-[#8d785e] text-[13px]"
+              className="mb-2 text-[13px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               תצוגה מקדימה ({previewStops.length} עצירות)
@@ -158,17 +158,14 @@ export function TimeShiftModal({
                   className="flex items-center justify-between text-[13px]"
                   key={s.orderIndex}
                 >
-                  <span className="text-[#181510]">
+                  <span className="text-foreground">
                     {s.orderIndex + 1}. {s.supplierName}
                   </span>
                   <div className="flex items-center gap-2">
-                    <span className="text-[#8d785e] line-through">
+                    <span className="text-muted-foreground line-through">
                       {s.plannedStartTime}-{s.plannedEndTime}
                     </span>
-                    <span
-                      className="text-[#ff8c00]"
-                      style={{ fontWeight: 600 }}
-                    >
+                    <span className="text-primary" style={{ fontWeight: 600 }}>
                       {s.newStart}-{s.newEnd}
                     </span>
                   </div>
@@ -181,7 +178,7 @@ export function TimeShiftModal({
         {/* Actions */}
         <div className="flex gap-3">
           <button
-            className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             disabled={minutesShift === 0 || submitting}
             onClick={handleSubmit}
             style={{ fontWeight: 700 }}
@@ -195,7 +192,7 @@ export function TimeShiftModal({
             עדכן זמנים
           </button>
           <button
-            className="min-h-11 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+            className="min-h-11 rounded-xl border border-border px-4 py-2.5 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >

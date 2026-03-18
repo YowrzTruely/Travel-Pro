@@ -27,7 +27,7 @@ export function ProductEditPage() {
   if (!supplierId) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <p className="text-[#8d785e] text-[14px]">
+        <p className="text-[14px] text-muted-foreground">
           לא נמצא חיבור לספק. פנה למנהל המערכת.
         </p>
       </div>
@@ -38,7 +38,7 @@ export function ProductEditPage() {
   if (!isNew && product === undefined) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <Loader2 className="animate-spin text-[#ff8c00]" size={32} />
+        <Loader2 className="animate-spin text-primary" size={32} />
       </div>
     );
   }
@@ -53,9 +53,9 @@ export function ProductEditPage() {
         className="flex h-64 flex-col items-center justify-center gap-4"
         dir="rtl"
       >
-        <p className="text-[#8d785e] text-[16px]">המוצר לא נמצא</p>
+        <p className="text-[16px] text-muted-foreground">המוצר לא נמצא</p>
         <button
-          className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+          className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover"
           onClick={handleClose}
           style={{ fontWeight: 600 }}
           type="button"

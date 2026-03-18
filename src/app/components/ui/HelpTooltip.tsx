@@ -11,7 +11,7 @@ export function HelpTooltip({ text, videoUrl }: HelpTooltipProps) {
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className="inline-flex h-5 w-5 items-center justify-center rounded-full text-[#8d785e] transition-colors hover:bg-[#f5f3f0] hover:text-[#ff8c00]"
+          className="inline-flex h-5 w-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
           type="button"
         >
           <Info size={14} />
@@ -19,15 +19,15 @@ export function HelpTooltip({ text, videoUrl }: HelpTooltipProps) {
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="w-64 rounded-lg border border-[#e7e1da] bg-white p-3 shadow-lg"
+        className="w-64 rounded-lg border border-border bg-card p-3 shadow-lg"
         side="bottom"
       >
-        <p className="text-right text-[#3d3426] text-[13px] leading-relaxed">
+        <p className="text-right text-[13px] text-foreground leading-relaxed">
           {text}
         </p>
         {videoUrl && (
           <a
-            className="mt-2 flex items-center gap-1.5 text-right text-[#ff8c00] text-[12px] transition-colors hover:text-[#e67e00]"
+            className="mt-2 flex items-center gap-1.5 text-right text-[12px] text-primary transition-colors hover:text-primary-hover"
             href={videoUrl}
             rel="noopener noreferrer"
             target="_blank"

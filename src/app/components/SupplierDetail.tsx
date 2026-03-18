@@ -371,8 +371,8 @@ export function SupplierDetail() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-        <p className="text-[#8d785e] text-[14px]">טוען פרטי ספק...</p>
+        <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+        <p className="text-[14px] text-muted-foreground">טוען פרטי ספק...</p>
       </div>
     );
   }
@@ -380,12 +380,12 @@ export function SupplierDetail() {
   if (!supplier) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <AlertTriangle className="mb-3 text-[#ef4444]" size={32} />
-        <p className="text-[#181510] text-[16px]" style={{ fontWeight: 600 }}>
+        <AlertTriangle className="mb-3 text-destructive" size={32} />
+        <p className="text-[16px] text-foreground" style={{ fontWeight: 600 }}>
           ספק לא נמצא
         </p>
         <button
-          className="mt-3 text-[#ff8c00] text-[13px]"
+          className="mt-3 text-[13px] text-primary"
           onClick={() => navigate("/suppliers")}
           style={{ fontWeight: 600 }}
           type="button"
@@ -398,10 +398,10 @@ export function SupplierDetail() {
 
   const verifBg =
     supplier.verificationStatus === "verified"
-      ? "bg-green-50 text-green-600"
+      ? "bg-success/10 text-success"
       : supplier.verificationStatus === "pending"
-        ? "bg-yellow-50 text-yellow-600"
-        : "bg-[#f5f3f0] text-[#8d785e]";
+        ? "bg-warning/10 text-warning"
+        : "bg-accent text-muted-foreground";
   const VerifIcon =
     supplier.verificationStatus === "verified"
       ? CheckCircle
@@ -420,18 +420,18 @@ export function SupplierDetail() {
     <div className="mx-auto p-4 font-['Assistant',sans-serif] lg:p-6" dir="rtl">
       {/* Archived banner */}
       {isArchived && (
-        <div className="mb-5 flex items-center justify-between rounded-xl border border-[#94a3b8]/30 bg-[#94a3b8]/10 px-4 py-3">
+        <div className="mb-5 flex items-center justify-between rounded-xl border border-muted-foreground/30 bg-muted-foreground/10 px-4 py-3">
           <div className="flex items-center gap-2">
-            <Archive className="text-[#64748b]" size={16} />
+            <Archive className="text-muted-foreground" size={16} />
             <span
-              className="text-[#475569] text-[14px]"
+              className="text-[14px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               ספק זה נמצא בארכיון
             </span>
           </div>
           <button
-            className="flex items-center gap-1.5 rounded-lg bg-green-50 px-3 py-1.5 text-[13px] text-green-600 transition-all hover:bg-green-100 hover:text-green-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-success/10 px-3 py-1.5 text-[13px] text-success transition-all hover:bg-success/15 hover:text-success disabled:opacity-50"
             disabled={archiving}
             onClick={restoreSupplier}
             style={{ fontWeight: 600 }}
@@ -451,7 +451,7 @@ export function SupplierDetail() {
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <button
-            className="text-[#8d785e] transition-colors hover:text-[#181510]"
+            className="text-muted-foreground transition-colors hover:text-foreground"
             onClick={() =>
               navigate(isArchived ? "/suppliers/archive" : "/suppliers")
             }
@@ -474,13 +474,13 @@ export function SupplierDetail() {
           <div>
             <div className="flex items-center gap-2">
               <h1
-                className="text-[#181510] text-[24px]"
+                className="text-[24px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 {supplier.name}
               </h1>
               <button
-                className="flex items-center gap-1 rounded-lg bg-[#ff8c00]/10 px-2.5 py-1 text-[#ff8c00] text-[12px] transition-all hover:bg-[#ff8c00]/20 hover:text-[#e67e00]"
+                className="flex items-center gap-1 rounded-lg bg-primary/10 px-2.5 py-1 text-[12px] text-primary transition-all hover:bg-primary/20 hover:text-primary-hover"
                 onClick={() => {
                   editSupplierForm.reset({
                     name: supplier.name,
@@ -528,11 +528,11 @@ export function SupplierDetail() {
                   </span>
                 );
               })}
-              <span className="text-[#8d785e] text-[13px]">
+              <span className="text-[13px] text-muted-foreground">
                 &bull; {regionDisplayLabel(supplier.region) || supplier.region}
               </span>
               {supplier.phone && (
-                <span className="text-[#8d785e] text-[13px]">
+                <span className="text-[13px] text-muted-foreground">
                   &bull; {supplier.phone}
                 </span>
               )}
@@ -541,7 +541,7 @@ export function SupplierDetail() {
         </div>
         {!isArchived && (
           <button
-            className="flex items-center gap-1.5 rounded-xl border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[13px] transition-all hover:border-[#b8a990] hover:text-[#181510]"
+            className="flex items-center gap-1.5 rounded-xl border border-border px-3 py-2 text-[13px] text-muted-foreground transition-all hover:border-tertiary hover:text-foreground"
             onClick={() => setShowArchiveConfirm(true)}
             style={{ fontWeight: 500 }}
             type="button"
@@ -597,8 +597,8 @@ export function SupplierDetail() {
               );
             })}
             {hasManual && (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-yellow-200 bg-yellow-50 px-2.5 py-1">
-                <AlertTriangle className="text-yellow-600" size={12} />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/30 bg-warning/10 px-2.5 py-1">
+                <AlertTriangle className="text-warning" size={12} />
                 <span
                   className="whitespace-nowrap text-[11px] text-yellow-800"
                   style={{ fontWeight: 500 }}
@@ -612,13 +612,13 @@ export function SupplierDetail() {
       })()}
 
       {/* Tabs */}
-      <div className="mb-5 flex gap-1 overflow-x-auto rounded-lg bg-[#ece8e3] p-1">
+      <div className="mb-5 flex gap-1 overflow-x-auto rounded-lg bg-accent p-1">
         {tabItems.map((tab) => (
           <button
             className={`whitespace-nowrap rounded-md px-4 py-2 text-[13px] transition-all ${
               activeTab === tab.id
-                ? "bg-white text-[#181510] shadow-sm"
-                : "text-[#8d785e] hover:text-[#181510]"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             }`}
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
@@ -629,22 +629,22 @@ export function SupplierDetail() {
             {tab.id === "docs" &&
               insuranceCompliance &&
               (insuranceCompliance.compliant ? (
-                <ShieldCheck className="mr-1 inline h-3.5 w-3.5 text-green-500" />
+                <ShieldCheck className="mr-1 inline h-3.5 w-3.5 text-success" />
               ) : (
-                <ShieldAlert className="mr-1 inline h-3.5 w-3.5 text-red-500" />
+                <ShieldAlert className="mr-1 inline h-3.5 w-3.5 text-destructive" />
               ))}
             {tab.id === "contacts" && (
-              <span className="mr-1 text-[#b8a990] text-[10px]">
+              <span className="mr-1 text-[10px] text-tertiary">
                 ({contactsList.length})
               </span>
             )}
             {tab.id === "products" && (
-              <span className="mr-1 text-[#b8a990] text-[10px]">
+              <span className="mr-1 text-[10px] text-tertiary">
                 ({productsList.length})
               </span>
             )}
             {tab.id === "docs" && (
-              <span className="mr-1 text-[#b8a990] text-[10px]">
+              <span className="mr-1 text-[10px] text-tertiary">
                 ({documentsList.length})
               </span>
             )}
@@ -657,16 +657,16 @@ export function SupplierDetail() {
         <div className="grid gap-5 lg:grid-cols-3">
           <div className="space-y-5 lg:col-span-2">
             {/* Contacts preview */}
-            <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+            <div className="rounded-xl border border-border bg-card p-5">
               <div className="mb-4 flex items-center justify-between">
                 <h3
-                  className="text-[#181510] text-[16px]"
+                  className="text-[16px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   אנשי קשר ({contactsList.length})
                 </h3>
                 <button
-                  className="text-[#ff8c00] text-[12px]"
+                  className="text-[12px] text-primary"
                   onClick={() => setActiveTab("contacts")}
                   style={{ fontWeight: 600 }}
                   type="button"
@@ -675,37 +675,37 @@ export function SupplierDetail() {
                 </button>
               </div>
               {contactsList.length === 0 ? (
-                <p className="py-4 text-center text-[#b8a990] text-[13px]">
+                <p className="py-4 text-center text-[13px] text-tertiary">
                   אין אנשי קשר
                 </p>
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
                   {contactsList.slice(0, 2).map((contact) => (
                     <div
-                      className="rounded-xl border border-[#e7e1da] p-4"
+                      className="rounded-xl border border-border p-4"
                       key={contact.id}
                     >
                       <div className="mb-3 flex items-center gap-3">
                         <div
-                          className={`flex h-10 w-10 items-center justify-center rounded-full text-[14px] text-white ${contact.primary ? "bg-green-500" : "bg-[#ff8c00]"}`}
+                          className={`flex h-10 w-10 items-center justify-center rounded-full text-[14px] text-white ${contact.primary ? "bg-success/100" : "bg-primary"}`}
                           style={{ fontWeight: 600 }}
                         >
                           {getInitials(contact.name)}
                         </div>
                         <div>
                           <div
-                            className="text-[#181510] text-[14px]"
+                            className="text-[14px] text-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             {contact.name}
                           </div>
-                          <div className="text-[#8d785e] text-[11px]">
+                          <div className="text-[11px] text-muted-foreground">
                             {contact.role}
                           </div>
                         </div>
                         {contact.primary && (
                           <span
-                            className="mr-auto rounded-full bg-green-50 px-2 py-0.5 text-[10px] text-green-600"
+                            className="mr-auto rounded-full bg-success/10 px-2 py-0.5 text-[10px] text-success"
                             style={{ fontWeight: 600 }}
                           >
                             ראשי
@@ -713,10 +713,10 @@ export function SupplierDetail() {
                         )}
                       </div>
                       <div className="space-y-1.5">
-                        <div className="flex items-center gap-2 text-[#8d785e] text-[12px]">
+                        <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
                           <Phone size={12} /> {contact.phone}
                         </div>
-                        <div className="flex items-center gap-2 text-[#8d785e] text-[12px]">
+                        <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
                           <Mail size={12} /> {contact.email}
                         </div>
                       </div>
@@ -727,16 +727,16 @@ export function SupplierDetail() {
             </div>
 
             {/* Products preview */}
-            <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+            <div className="rounded-xl border border-border bg-card p-5">
               <div className="mb-4 flex items-center justify-between">
                 <h3
-                  className="text-[#181510] text-[16px]"
+                  className="text-[16px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   מוצרים ושירותים ({productsList.length})
                 </h3>
                 <button
-                  className="text-[#ff8c00] text-[12px]"
+                  className="text-[12px] text-primary"
                   onClick={() => setActiveTab("products")}
                   style={{ fontWeight: 600 }}
                   type="button"
@@ -745,7 +745,7 @@ export function SupplierDetail() {
                 </button>
               </div>
               {productsList.length === 0 ? (
-                <p className="py-4 text-center text-[#b8a990] text-[13px]">
+                <p className="py-4 text-center text-[13px] text-tertiary">
                   אין מוצרים
                 </p>
               ) : (
@@ -757,7 +757,7 @@ export function SupplierDetail() {
                     return (
                       // biome-ignore lint/a11y/useSemanticElements: Complex card component with images - using div with role="button" is appropriate
                       <div
-                        className="group cursor-pointer overflow-hidden rounded-xl border border-[#e7e1da] transition-all hover:border-[#ff8c00]/40 hover:shadow-sm"
+                        className="group cursor-pointer overflow-hidden rounded-xl border border-border transition-all hover:border-primary/40 hover:shadow-sm"
                         key={product.id}
                         onClick={() => setEditingProduct(product)}
                         onKeyDown={(e) => {
@@ -771,7 +771,7 @@ export function SupplierDetail() {
                       >
                         {/* Product image */}
                         {heroImg ? (
-                          <div className="relative h-24 overflow-hidden bg-[#f5f3f0]">
+                          <div className="relative h-24 overflow-hidden bg-accent">
                             <ImageWithFallback
                               alt={product.name}
                               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -785,31 +785,31 @@ export function SupplierDetail() {
                             )}
                           </div>
                         ) : (
-                          <div className="flex h-16 items-center justify-center bg-[#f5f3f0]">
+                          <div className="flex h-16 items-center justify-center bg-accent">
                             <Package className="text-[#d0c8bb]" size={20} />
                           </div>
                         )}
                         <div className="p-3">
                           <div
-                            className="flex items-center gap-1 text-[#181510] text-[13px] transition-colors group-hover:text-[#ff8c00]"
+                            className="flex items-center gap-1 text-[13px] text-foreground transition-colors group-hover:text-primary"
                             style={{ fontWeight: 600 }}
                           >
                             {product.name}
                             <Pencil
-                              className="text-[#b8a990] transition-colors group-hover:text-[#ff8c00]"
+                              className="text-tertiary transition-colors group-hover:text-primary"
                               size={10}
                             />
                           </div>
-                          <div className="mt-1 line-clamp-2 text-[#8d785e] text-[11px]">
+                          <div className="mt-1 line-clamp-2 text-[11px] text-muted-foreground">
                             {product.description}
                           </div>
                           <div
-                            className="mt-2 text-[#181510] text-[14px]"
+                            className="mt-2 text-[14px] text-foreground"
                             style={{ fontWeight: 700 }}
                           >
                             ₪{product.price.toLocaleString()}
                             <span
-                              className="text-[#8d785e] text-[11px]"
+                              className="text-[11px] text-muted-foreground"
                               style={{ fontWeight: 400 }}
                             >
                               /{product.unit}
@@ -827,16 +827,16 @@ export function SupplierDetail() {
           {/* Side panel */}
           <div className="space-y-5">
             {/* Rating */}
-            <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+            <div className="rounded-xl border border-border bg-card p-5">
               <h3
-                className="mb-3 text-[#181510] text-[14px]"
+                className="mb-3 text-[14px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 דירוג
               </h3>
               <div className="flex items-center gap-2">
                 <span
-                  className="text-[#181510] text-[28px]"
+                  className="text-[28px] text-foreground"
                   style={{ fontWeight: 800 }}
                 >
                   {supplier.rating}
@@ -844,7 +844,7 @@ export function SupplierDetail() {
                 <div className="flex">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <span
-                      className={`text-[18px] ${s <= supplier.rating ? "text-[#ff8c00]" : "text-[#ddd6cb]"}`}
+                      className={`text-[18px] ${s <= supplier.rating ? "text-primary" : "text-tertiary"}`}
                       key={s}
                     >
                       ★
@@ -863,16 +863,16 @@ export function SupplierDetail() {
             />
 
             {/* Documents summary */}
-            <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+            <div className="rounded-xl border border-border bg-card p-5">
               <div className="mb-3 flex items-center justify-between">
                 <h3
-                  className="text-[#181510] text-[14px]"
+                  className="text-[14px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   מסמכים ותקינות
                 </h3>
                 <button
-                  className="text-[#ff8c00] text-[11px]"
+                  className="text-[11px] text-primary"
                   onClick={() => setActiveTab("docs")}
                   style={{ fontWeight: 600 }}
                   type="button"
@@ -911,11 +911,11 @@ export function SupplierDetail() {
                           className={`flex items-center justify-between rounded-lg border p-2.5 ${
                             doc
                               ? status === "expired"
-                                ? "border-red-200 bg-red-50"
+                                ? "border-destructive/30 bg-destructive/10"
                                 : status === "warning"
-                                  ? "border-yellow-200 bg-yellow-50"
-                                  : "border-green-200 bg-green-50"
-                              : "border-[#d4cdc3] border-dashed bg-[#f8f7f5]"
+                                  ? "border-warning/30 bg-warning/10"
+                                  : "border-success/30 bg-success/10"
+                              : "border-tertiary border-dashed bg-background"
                           }`}
                           key={name}
                         >
@@ -923,7 +923,7 @@ export function SupplierDetail() {
                             {doc ? (
                               status === "valid" ? (
                                 <CheckCircle
-                                  className="text-green-500"
+                                  className="text-success"
                                   size={13}
                                 />
                               ) : status === "warning" ? (
@@ -933,15 +933,15 @@ export function SupplierDetail() {
                                 />
                               ) : (
                                 <AlertTriangle
-                                  className="text-red-500"
+                                  className="text-destructive"
                                   size={13}
                                 />
                               )
                             ) : (
-                              <Upload className="text-[#b8a990]" size={13} />
+                              <Upload className="text-tertiary" size={13} />
                             )}
                             <span
-                              className="text-[#181510] text-[12px]"
+                              className="text-[12px] text-foreground"
                               style={{ fontWeight: 500 }}
                             >
                               {name}
@@ -949,7 +949,7 @@ export function SupplierDetail() {
                           </div>
                           {doc ? (
                             <span
-                              className={`text-[10px] ${status === "expired" ? "text-red-500" : status === "warning" ? "text-yellow-600" : "text-green-600"}`}
+                              className={`text-[10px] ${status === "expired" ? "text-destructive" : status === "warning" ? "text-warning" : "text-success"}`}
                               style={{ fontWeight: 600 }}
                             >
                               {new Date(doc.expiry).toLocaleDateString(
@@ -963,7 +963,7 @@ export function SupplierDetail() {
                             </span>
                           ) : (
                             <span
-                              className="text-[#b8a990] text-[10px]"
+                              className="text-[10px] text-tertiary"
                               style={{ fontWeight: 600 }}
                             >
                               חסר
@@ -982,16 +982,16 @@ export function SupplierDetail() {
 
       {/* ═══ Contacts Tab ═══ */}
       {activeTab === "contacts" && (
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+        <div className="rounded-xl border border-border bg-card p-5">
           <div className="mb-4 flex items-center justify-between">
             <h3
-              className="text-[#181510] text-[16px]"
+              className="text-[16px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               אנשי קשר ({contactsList.length})
             </h3>
             <button
-              className="flex items-center gap-1 text-[#ff8c00] text-[13px]"
+              className="flex items-center gap-1 text-[13px] text-primary"
               onClick={() => setShowAddContact(true)}
               style={{ fontWeight: 600 }}
               type="button"
@@ -1004,9 +1004,9 @@ export function SupplierDetail() {
               <div className="mb-2 flex justify-center">
                 <Users className="text-[#d0c8bb]" size={32} />
               </div>
-              <p className="text-[#8d785e] text-[14px]">אין אנשי קשר</p>
+              <p className="text-[14px] text-muted-foreground">אין אנשי קשר</p>
               <button
-                className="mt-2 text-[#ff8c00] text-[13px]"
+                className="mt-2 text-[13px] text-primary"
                 onClick={() => setShowAddContact(true)}
                 style={{ fontWeight: 600 }}
                 type="button"
@@ -1018,38 +1018,38 @@ export function SupplierDetail() {
             <div className="space-y-3">
               {contactsList.map((contact) => (
                 <div
-                  className="flex items-center justify-between rounded-xl border border-[#e7e1da] p-4"
+                  className="flex items-center justify-between rounded-xl border border-border p-4"
                   key={contact.id}
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-full text-[14px] text-white ${contact.primary ? "bg-green-500" : "bg-[#ff8c00]"}`}
+                      className={`flex h-10 w-10 items-center justify-center rounded-full text-[14px] text-white ${contact.primary ? "bg-success/100" : "bg-primary"}`}
                       style={{ fontWeight: 600 }}
                     >
                       {getInitials(contact.name)}
                     </div>
                     <div>
                       <div
-                        className="text-[#181510] text-[14px]"
+                        className="text-[14px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {contact.name}
                         {contact.primary && (
                           <span
-                            className="mr-2 rounded-full bg-green-50 px-2 py-0.5 text-[10px] text-green-600"
+                            className="mr-2 rounded-full bg-success/10 px-2 py-0.5 text-[10px] text-success"
                             style={{ fontWeight: 600 }}
                           >
                             ראשי
                           </span>
                         )}
                       </div>
-                      <div className="text-[#8d785e] text-[12px]">
+                      <div className="text-[12px] text-muted-foreground">
                         {contact.role}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3 text-[#8d785e] text-[12px]">
+                    <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Phone size={12} />
                         {contact.phone}
@@ -1060,7 +1060,7 @@ export function SupplierDetail() {
                       </span>
                     </div>
                     <button
-                      className="text-[#c4b89a] transition-colors hover:text-red-500"
+                      className="text-tertiary transition-colors hover:text-destructive"
                       onClick={() =>
                         requestDelete({
                           title: "מחיקת איש קשר",
@@ -1082,16 +1082,16 @@ export function SupplierDetail() {
 
       {/* ═══ Products Tab ═══ */}
       {activeTab === "products" && (
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+        <div className="rounded-xl border border-border bg-card p-5">
           <div className="mb-4 flex items-center justify-between">
             <h3
-              className="text-[#181510] text-[16px]"
+              className="text-[16px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               מוצרים ושירותים ({productsList.length})
             </h3>
             <button
-              className="flex items-center gap-1 text-[#ff8c00] text-[13px]"
+              className="flex items-center gap-1 text-[13px] text-primary"
               onClick={() => setShowAddProduct(true)}
               style={{ fontWeight: 600 }}
               type="button"
@@ -1104,9 +1104,9 @@ export function SupplierDetail() {
               <div className="mb-2 flex justify-center">
                 <Package className="text-[#d0c8bb]" size={32} />
               </div>
-              <p className="text-[#8d785e] text-[14px]">אין מוצרים</p>
+              <p className="text-[14px] text-muted-foreground">אין מוצרים</p>
               <button
-                className="mt-2 text-[#ff8c00] text-[13px]"
+                className="mt-2 text-[13px] text-primary"
                 onClick={() => setShowAddProduct(true)}
                 style={{ fontWeight: 600 }}
                 type="button"
@@ -1125,7 +1125,7 @@ export function SupplierDetail() {
                 return (
                   // biome-ignore lint/a11y/useSemanticElements: Complex card component with images - using div with role="button" is appropriate
                   <div
-                    className="group relative cursor-pointer overflow-hidden rounded-xl border border-[#e7e1da] transition-all hover:border-[#ff8c00]/40 hover:shadow-lg"
+                    className="group relative cursor-pointer overflow-hidden rounded-xl border border-border transition-all hover:border-primary/40 hover:shadow-lg"
                     key={product.id}
                     onClick={() => setEditingProduct(product)}
                     onKeyDown={(e) => {
@@ -1139,7 +1139,7 @@ export function SupplierDetail() {
                   >
                     {/* Delete button */}
                     <button
-                      className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-[#c4b89a] opacity-0 shadow-sm transition-all hover:text-red-500 group-hover:opacity-100"
+                      className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-card/90 text-tertiary opacity-0 shadow-sm transition-all hover:text-destructive group-hover:opacity-100"
                       onClick={(e) => {
                         e.stopPropagation();
                         requestDelete({
@@ -1155,14 +1155,14 @@ export function SupplierDetail() {
 
                     {/* Edit badge */}
                     <div
-                      className="absolute top-2 right-2 z-10 flex items-center gap-1 rounded-full bg-[#ff8c00] px-2 py-0.5 text-[10px] text-white opacity-0 shadow-sm transition-all group-hover:opacity-100"
+                      className="absolute top-2 right-2 z-10 flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[10px] text-white opacity-0 shadow-sm transition-all group-hover:opacity-100"
                       style={{ fontWeight: 600 }}
                     >
                       <Pencil size={10} /> עריכה
                     </div>
 
                     {/* Image */}
-                    <div className="relative flex h-32 items-center justify-center overflow-hidden bg-[#f5f3f0]">
+                    <div className="relative flex h-32 items-center justify-center overflow-hidden bg-accent">
                       <ImageWithFallback
                         alt={product.name}
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -1176,7 +1176,7 @@ export function SupplierDetail() {
                       )}
                       {/* Price tag */}
                       <span
-                        className="absolute bottom-2 left-2 rounded-md bg-white/90 px-2 py-0.5 text-[#181510] text-[12px] shadow-sm backdrop-blur-sm"
+                        className="absolute bottom-2 left-2 rounded-md bg-card/90 px-2 py-0.5 text-[12px] text-foreground shadow-sm backdrop-blur-sm"
                         style={{ fontWeight: 700 }}
                       >
                         ₪{product.price.toLocaleString()}/{product.unit}
@@ -1186,12 +1186,12 @@ export function SupplierDetail() {
                     {/* Info */}
                     <div className="p-4">
                       <div
-                        className="text-[#181510] text-[14px] transition-colors group-hover:text-[#ff8c00]"
+                        className="text-[14px] text-foreground transition-colors group-hover:text-primary"
                         style={{ fontWeight: 600 }}
                       >
                         {product.name}
                       </div>
-                      <div className="mt-1 line-clamp-2 text-[#8d785e] text-[12px]">
+                      <div className="mt-1 line-clamp-2 text-[12px] text-muted-foreground">
                         {product.description}
                       </div>
                     </div>
@@ -1283,21 +1283,21 @@ export function SupplierDetail() {
           };
 
           return (
-            <div className="rounded-xl border border-[#e7e1da] bg-white p-6">
+            <div className="rounded-xl border border-border bg-card p-6">
               <div className="mb-6 flex items-center justify-between">
                 <h3
-                  className="text-[#181510] text-[20px]"
+                  className="text-[20px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   מסמכים ותקינות
                 </h3>
                 <button
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#f5f3f0] transition-colors hover:bg-[#ece8e3]"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent transition-colors hover:bg-accent"
                   onClick={() => setActiveTab("docs")}
                   title="העלאה"
                   type="button"
                 >
-                  <Upload className="text-[#8d785e]" size={16} />
+                  <Upload className="text-muted-foreground" size={16} />
                 </button>
               </div>
 
@@ -1318,11 +1318,11 @@ export function SupplierDetail() {
                           className={`relative rounded-2xl border-2 p-5 transition-all ${
                             hasDoc
                               ? isExpired
-                                ? "border-red-200 bg-gradient-to-l from-red-50 to-red-50/30"
+                                ? "border-destructive/30 bg-gradient-to-l from-red-50 to-red-50/30"
                                 : isWarning
-                                  ? "border-yellow-200 bg-gradient-to-l from-yellow-50 to-yellow-50/30"
-                                  : "border-green-200 bg-gradient-to-l from-green-50 to-green-50/30"
-                              : "cursor-pointer border-[#d4cdc3] border-dashed bg-[#faf9f7] hover:border-[#ff8c00]/40 hover:bg-[#fffaf3]"
+                                  ? "border-warning/30 bg-gradient-to-l from-yellow-50 to-yellow-50/30"
+                                  : "border-success/30 bg-gradient-to-l from-green-50 to-green-50/30"
+                              : "cursor-pointer border-tertiary border-dashed bg-surface hover:border-primary/40 hover:bg-[#fffaf3]"
                           }`}
                           onClick={() => {
                             if (!(hasDoc || isEditing)) {
@@ -1337,17 +1337,17 @@ export function SupplierDetail() {
                                 className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${
                                   hasDoc
                                     ? isExpired
-                                      ? "bg-red-100"
+                                      ? "bg-destructive/15"
                                       : isWarning
                                         ? "bg-yellow-100"
-                                        : "bg-green-100"
-                                    : "bg-[#ece8e3]"
+                                        : "bg-success/15"
+                                    : "bg-accent"
                                 }`}
                               >
                                 {hasDoc ? (
                                   isExpired ? (
                                     <AlertTriangle
-                                      className="text-red-500"
+                                      className="text-destructive"
                                       size={18}
                                     />
                                   ) : (
@@ -1355,28 +1355,28 @@ export function SupplierDetail() {
                                       className={
                                         isWarning
                                           ? "text-yellow-500"
-                                          : "text-green-600"
+                                          : "text-success"
                                       }
                                       size={18}
                                     />
                                   )
                                 ) : (
                                   <Upload
-                                    className="text-[#8d785e]"
+                                    className="text-muted-foreground"
                                     size={18}
                                   />
                                 )}
                               </div>
                               <div>
                                 <div
-                                  className="text-[#181510] text-[16px]"
+                                  className="text-[16px] text-foreground"
                                   style={{ fontWeight: 700 }}
                                 >
                                   {docName}
                                 </div>
                                 {hasDoc ? (
                                   <div
-                                    className={`mt-0.5 text-[13px] ${isExpired ? "text-red-500" : isWarning ? "text-yellow-600" : "text-green-600"}`}
+                                    className={`mt-0.5 text-[13px] ${isExpired ? "text-destructive" : isWarning ? "text-warning" : "text-success"}`}
                                     style={{ fontWeight: 500 }}
                                   >
                                     {isExpired
@@ -1384,7 +1384,7 @@ export function SupplierDetail() {
                                       : `בתוקף עד: ${formatExpiryDate(doc.expiry)}`}
                                   </div>
                                 ) : (
-                                  <div className="mt-0.5 text-[#b8a990] text-[13px]">
+                                  <div className="mt-0.5 text-[13px] text-tertiary">
                                     לא הועלה — לחץ להעלאה
                                   </div>
                                 )}
@@ -1394,17 +1394,17 @@ export function SupplierDetail() {
                               className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${
                                 hasDoc
                                   ? isExpired
-                                    ? "bg-red-100"
+                                    ? "bg-destructive/15"
                                     : isWarning
                                       ? "bg-yellow-100"
-                                      : "bg-green-100"
-                                  : "bg-[#ece8e3]"
+                                      : "bg-success/15"
+                                  : "bg-accent"
                               }`}
                             >
                               {hasDoc ? (
                                 isExpired ? (
                                   <ShieldAlert
-                                    className="text-red-500"
+                                    className="text-destructive"
                                     size={22}
                                   />
                                 ) : (
@@ -1412,20 +1412,23 @@ export function SupplierDetail() {
                                     className={
                                       isWarning
                                         ? "text-yellow-500"
-                                        : "text-green-600"
+                                        : "text-success"
                                     }
                                     size={22}
                                   />
                                 )
                               ) : (
-                                <Shield className="text-[#b8a990]" size={22} />
+                                <Shield className="text-tertiary" size={22} />
                               )}
                             </div>
                           </div>
                           {hasDoc && doc.fileName && (
                             <div className="mt-3 mr-14 flex items-center gap-2">
-                              <FileText className="text-[#8d785e]" size={12} />
-                              <span className="text-[#8d785e] text-[11px]">
+                              <FileText
+                                className="text-muted-foreground"
+                                size={12}
+                              />
+                              <span className="text-[11px] text-muted-foreground">
                                 {doc.fileName}
                               </span>
                             </div>
@@ -1433,7 +1436,7 @@ export function SupplierDetail() {
                           {hasDoc && !isEditing && (
                             <div className="mt-3 mr-14 flex items-center gap-2">
                               <button
-                                className="flex items-center gap-1 text-[#ff8c00] text-[11px] transition-colors hover:text-[#e67e00]"
+                                className="flex items-center gap-1 text-[11px] text-primary transition-colors hover:text-primary-hover"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setDocExpiryEditing(docName);
@@ -1444,9 +1447,9 @@ export function SupplierDetail() {
                               >
                                 <CalendarDays size={12} /> עדכן תוקף
                               </button>
-                              <span className="text-[#e7e1da]">|</span>
+                              <span className="text-border">|</span>
                               <label
-                                className="flex cursor-pointer items-center gap-1 text-[#ff8c00] text-[11px] transition-colors hover:text-[#e67e00]"
+                                className="flex cursor-pointer items-center gap-1 text-[11px] text-primary transition-colors hover:text-primary-hover"
                                 style={{ fontWeight: 600 }}
                               >
                                 <Upload size={12} /> החלף קובץ
@@ -1471,9 +1474,9 @@ export function SupplierDetail() {
                           )}
                         </div>
                         {isEditing && (
-                          <div className="mt-3 space-y-3 rounded-xl border border-[#e7e1da] bg-[#f8f7f5] p-4">
+                          <div className="mt-3 space-y-3 rounded-xl border border-border bg-background p-4">
                             <div
-                              className="text-[#181510] text-[13px]"
+                              className="text-[13px] text-foreground"
                               style={{ fontWeight: 600 }}
                             >
                               {hasDoc
@@ -1483,14 +1486,14 @@ export function SupplierDetail() {
                             <div className="grid gap-3 sm:grid-cols-2">
                               <div>
                                 <label
-                                  className="mb-1 block text-[#8d785e] text-[12px]"
+                                  className="mb-1 block text-[12px] text-muted-foreground"
                                   htmlFor="doc-expiry"
                                   style={{ fontWeight: 600 }}
                                 >
                                   תאריך תוקף
                                 </label>
                                 <input
-                                  className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 text-[#181510] text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/10"
+                                  className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-[13px] text-foreground transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
                                   id="doc-expiry"
                                   onChange={(e) =>
                                     setDocExpiryValue(e.target.value)
@@ -1502,21 +1505,21 @@ export function SupplierDetail() {
                               {!hasDoc && (
                                 <div>
                                   <label
-                                    className="mb-1 block text-[#8d785e] text-[12px]"
+                                    className="mb-1 block text-[12px] text-muted-foreground"
                                     htmlFor="doc-file-upload"
                                     style={{ fontWeight: 600 }}
                                   >
                                     קובץ מסמך
                                   </label>
                                   <label
-                                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5 transition-colors hover:border-[#ff8c00]/40"
+                                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5 transition-colors hover:border-primary/40"
                                     htmlFor="doc-file-upload"
                                   >
                                     <Upload
-                                      className="text-[#8d785e]"
+                                      className="text-muted-foreground"
                                       size={14}
                                     />
-                                    <span className="text-[#8d785e] text-[13px]">
+                                    <span className="text-[13px] text-muted-foreground">
                                       בחר קובץ...
                                     </span>
                                     <input
@@ -1549,7 +1552,7 @@ export function SupplierDetail() {
                             <div className="flex items-center gap-2">
                               {hasDoc && (
                                 <button
-                                  className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00] px-4 py-2 text-[12px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                                  className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-[12px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                                   disabled={!docExpiryValue || isSaving}
                                   onClick={() => {
                                     if (docExpiryValue) {
@@ -1577,7 +1580,7 @@ export function SupplierDetail() {
                                 </button>
                               )}
                               <button
-                                className="rounded-lg px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:text-[#181510]"
+                                className="rounded-lg px-3 py-2 text-[12px] text-muted-foreground transition-colors hover:text-foreground"
                                 onClick={() => {
                                   setDocExpiryEditing(null);
                                   setDocExpiryValue("");
@@ -1600,9 +1603,9 @@ export function SupplierDetail() {
                 (d) =>
                   !["רישיון עסק", "תעודת כשרות", "ביטוח צד ג'"].includes(d.name)
               ).length > 0 && (
-                <div className="mt-6 border-[#e7e1da] border-t pt-5">
+                <div className="mt-6 border-border border-t pt-5">
                   <h4
-                    className="mb-3 text-[#181510] text-[14px]"
+                    className="mb-3 text-[14px] text-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     מסמכים נוספים
@@ -1621,10 +1624,10 @@ export function SupplierDetail() {
                         <div
                           className={`flex items-center justify-between rounded-xl border p-3 ${
                             doc.status === "expired"
-                              ? "border-red-200 bg-red-50"
+                              ? "border-destructive/30 bg-destructive/10"
                               : doc.status === "warning"
-                                ? "border-yellow-200 bg-yellow-50"
-                                : "border-green-200 bg-green-50"
+                                ? "border-warning/30 bg-warning/10"
+                                : "border-success/30 bg-success/10"
                           }`}
                           key={doc.id}
                         >
@@ -1632,22 +1635,22 @@ export function SupplierDetail() {
                             <FileText
                               className={
                                 doc.status === "expired"
-                                  ? "text-red-500"
+                                  ? "text-destructive"
                                   : doc.status === "warning"
                                     ? "text-yellow-500"
-                                    : "text-green-500"
+                                    : "text-success"
                               }
                               size={15}
                             />
                             <span
-                              className="text-[#181510] text-[13px]"
+                              className="text-[13px] text-foreground"
                               style={{ fontWeight: 500 }}
                             >
                               {doc.name}
                             </span>
                           </div>
                           <span
-                            className={`text-[12px] ${doc.status === "expired" ? "text-red-500" : doc.status === "warning" ? "text-yellow-600" : "text-green-600"}`}
+                            className={`text-[12px] ${doc.status === "expired" ? "text-destructive" : doc.status === "warning" ? "text-warning" : "text-success"}`}
                             style={{ fontWeight: 600 }}
                           >
                             {formatExpiryDate(doc.expiry)}
@@ -1663,9 +1666,9 @@ export function SupplierDetail() {
 
       {/* ═══ History Tab ═══ */}
       {activeTab === "history" && (
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-6">
+        <div className="rounded-xl border border-border bg-card p-6">
           <h3
-            className="mb-6 text-[#181510] text-[20px]"
+            className="mb-6 text-[20px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             היסטוריית פעילות
@@ -1673,9 +1676,9 @@ export function SupplierDetail() {
           {activityHistory ? (
             activityHistory.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-3 py-12">
-                <History className="text-[#e7e1da]" size={48} />
+                <History className="text-border" size={48} />
                 <p
-                  className="text-[#8d785e] text-[15px]"
+                  className="text-[15px] text-muted-foreground"
                   style={{ fontWeight: 500 }}
                 >
                   אין היסטוריה עדיין
@@ -1684,7 +1687,7 @@ export function SupplierDetail() {
             ) : (
               <div className="relative space-y-0">
                 {/* Vertical timeline line */}
-                <div className="absolute top-2 right-[19px] bottom-2 w-[2px] bg-[#e7e1da]" />
+                <div className="absolute top-2 right-[19px] bottom-2 w-[2px] bg-border" />
                 {activityHistory.map((entry) => {
                   const ActionIcon =
                     entry.action === "created"
@@ -1697,12 +1700,12 @@ export function SupplierDetail() {
 
                   const actionColor =
                     entry.action === "created"
-                      ? "bg-green-100 text-green-600"
+                      ? "bg-success/15 text-success"
                       : entry.action === "updated"
-                        ? "bg-[#fff3e0] text-[#ff8c00]"
+                        ? "bg-[#fff3e0] text-primary"
                         : entry.action === "document_uploaded"
-                          ? "bg-blue-100 text-blue-600"
-                          : "bg-[#f5f3f0] text-[#8d785e]";
+                          ? "bg-info/15 text-info"
+                          : "bg-accent text-muted-foreground";
 
                   const relativeTime = (() => {
                     const now = Date.now();
@@ -1744,17 +1747,17 @@ export function SupplierDetail() {
                       </div>
                       <div className="min-w-0 flex-1 pt-1">
                         <p
-                          className="text-[#181510] text-[14px]"
+                          className="text-[14px] text-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           {entry.action}
                         </p>
                         {entry.details && (
-                          <p className="mt-0.5 text-[#8d785e] text-[13px]">
+                          <p className="mt-0.5 text-[13px] text-muted-foreground">
                             {entry.details}
                           </p>
                         )}
-                        <p className="mt-1 text-[#b5a99a] text-[12px]">
+                        <p className="mt-1 text-[12px] text-tertiary">
                           {relativeTime}
                         </p>
                       </div>
@@ -1765,7 +1768,10 @@ export function SupplierDetail() {
             )
           ) : (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="animate-spin text-[#8d785e]" size={24} />
+              <Loader2
+                className="animate-spin text-muted-foreground"
+                size={24}
+              />
             </div>
           )}
         </div>
@@ -1783,18 +1789,18 @@ export function SupplierDetail() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <div className="mb-4 flex items-center justify-between">
               <h3
-                className="text-[#181510] text-[20px]"
+                className="text-[20px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 הוספת איש קשר
               </h3>
               <button
-                className="text-[#8d785e] hover:text-[#181510]"
+                className="text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setShowAddContact(false);
                   contactForm.reset();
@@ -1849,7 +1855,7 @@ export function SupplierDetail() {
               />
               <div className="flex gap-3 pt-2">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                   disabled={saving || !contactForm.formState.isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -1862,7 +1868,7 @@ export function SupplierDetail() {
                   {saving ? "שומר..." : "הוסף"}
                 </button>
                 <button
-                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-xl border border-border px-5 transition-colors hover:bg-accent"
                   onClick={() => {
                     setShowAddContact(false);
                     contactForm.reset();
@@ -1889,18 +1895,18 @@ export function SupplierDetail() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <div className="mb-4 flex items-center justify-between">
               <h3
-                className="text-[#181510] text-[20px]"
+                className="text-[20px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 הוספת מוצר / שירות
               </h3>
               <button
-                className="text-[#8d785e] hover:text-[#181510]"
+                className="text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setShowAddProduct(false);
                   productForm.reset();
@@ -1955,7 +1961,7 @@ export function SupplierDetail() {
               />
               <div className="flex gap-3 pt-2">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                   disabled={saving || !productForm.formState.isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -1968,7 +1974,7 @@ export function SupplierDetail() {
                   {saving ? "שומר..." : "הוסף מוצר"}
                 </button>
                 <button
-                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-xl border border-border px-5 transition-colors hover:bg-accent"
                   onClick={() => {
                     setShowAddProduct(false);
                     productForm.reset();
@@ -2004,18 +2010,18 @@ export function SupplierDetail() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <div className="mb-4 flex items-center justify-between">
               <h3
-                className="text-[#181510] text-[20px]"
+                className="text-[20px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 העברה לארכיון
               </h3>
               <button
-                className="text-[#8d785e] hover:text-[#181510]"
+                className="text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setShowArchiveConfirm(false);
                 }}
@@ -2025,15 +2031,15 @@ export function SupplierDetail() {
               </button>
             </div>
             <div className="space-y-4">
-              <p className="text-[#8d785e] text-[14px]">
+              <p className="text-[14px] text-muted-foreground">
                 האם אתה בטוח שברצונך להעביר את הספק{" "}
-                <strong className="text-[#181510]">{supplier?.name}</strong>{" "}
+                <strong className="text-foreground">{supplier?.name}</strong>{" "}
                 לארכיון? הספק לא יופיע יותר בבנק הספקים, אך ניתן יהיה לשחזר אותו
                 מעמוד הארכיון.
               </p>
               <div className="flex items-center gap-3">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                   disabled={archiving}
                   onClick={archiveSupplier}
                   style={{ fontWeight: 600 }}
@@ -2047,7 +2053,7 @@ export function SupplierDetail() {
                   {archiving ? "מעביר..." : "העבר לארכיון"}
                 </button>
                 <button
-                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-xl border border-border px-5 transition-colors hover:bg-accent"
                   onClick={() => {
                     setShowArchiveConfirm(false);
                   }}
@@ -2071,29 +2077,29 @@ export function SupplierDetail() {
         >
           <div
             aria-modal="true"
-            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl"
+            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-card p-6 shadow-2xl"
             dir="rtl"
             role="dialog"
           >
             <div className="mb-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff8c00]/10">
-                  <Pencil className="text-[#ff8c00]" size={18} />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                  <Pencil className="text-primary" size={18} />
                 </div>
                 <div>
                   <h3
-                    className="text-[#181510] text-[20px]"
+                    className="text-[20px] text-foreground"
                     style={{ fontWeight: 700 }}
                   >
                     עריכת פרטי ספק
                   </h3>
-                  <p className="text-[#8d785e] text-[12px]">
+                  <p className="text-[12px] text-muted-foreground">
                     עדכון פרטים בסיסיים של הספק
                   </p>
                 </div>
               </div>
               <button
-                className="text-[#8d785e] transition-colors hover:text-[#181510]"
+                className="text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => setShowEditSupplier(false)}
                 type="button"
               >
@@ -2169,13 +2175,13 @@ export function SupplierDetail() {
               {/* קטגוריות — multi-select */}
               <fieldset>
                 <legend
-                  className="mb-2 block text-[#8d785e] text-[13px]"
+                  className="mb-2 block text-[13px] text-muted-foreground"
                   style={{ fontWeight: 600 }}
                 >
-                  קטגוריות <span className="text-[#ff8c00]">*</span>
+                  קטגוריות <span className="text-primary">*</span>
                   {selectedCategories.length > 0 && (
                     <span
-                      className="mr-1 text-[#b5a48b] text-[11px]"
+                      className="mr-1 text-[11px] text-tertiary"
                       style={{ fontWeight: 400 }}
                     >
                       ({selectedCategories.length} נבחרו)
@@ -2189,8 +2195,8 @@ export function SupplierDetail() {
                       <button
                         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-2 text-[12px] transition-all ${
                           isSelected
-                            ? "border-[#ff8c00] bg-[#ff8c00]/10 shadow-sm"
-                            : "border-[#e7e1da] bg-white hover:border-[#d5cdc0] hover:bg-[#faf9f7]"
+                            ? "border-primary bg-primary/10 shadow-sm"
+                            : "border-border bg-card hover:border-border hover:bg-surface"
                         }`}
                         key={opt.value}
                         onClick={() => {
@@ -2206,8 +2212,8 @@ export function SupplierDetail() {
                         <div
                           className={`flex h-4 w-4 flex-shrink-0 items-center justify-center rounded border transition-all ${
                             isSelected
-                              ? "border-[#ff8c00] bg-[#ff8c00]"
-                              : "border-[#d5cdc0] bg-white"
+                              ? "border-primary bg-primary"
+                              : "border-border bg-card"
                           }`}
                         >
                           {isSelected && (
@@ -2235,7 +2241,9 @@ export function SupplierDetail() {
                         />
                         <span
                           className={
-                            isSelected ? "text-[#181510]" : "text-[#6b5d45]"
+                            isSelected
+                              ? "text-foreground"
+                              : "text-muted-foreground"
                           }
                         >
                           {opt.value}
@@ -2245,7 +2253,7 @@ export function SupplierDetail() {
                   })}
                 </div>
                 {selectedCategories.length === 0 && (
-                  <p className="mt-1 text-[11px] text-red-500">
+                  <p className="mt-1 text-[11px] text-destructive">
                     יש לבחור לפחות קטגוריה אחת
                   </p>
                 )}
@@ -2269,19 +2277,19 @@ export function SupplierDetail() {
               <div className="grid grid-cols-2 gap-3">
                 <fieldset>
                   <legend
-                    className="mb-1 block text-[#8d785e] text-[13px]"
+                    className="mb-1 block text-[13px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     דירוג
                   </legend>
-                  <div className="flex items-center gap-1 rounded-lg border border-[#e7e1da] bg-white px-3 py-2.5">
+                  <div className="flex items-center gap-1 rounded-lg border border-border bg-card px-3 py-2.5">
                     {[1, 2, 3, 4, 5].map((star) => {
                       const currentRating = Number.parseFloat(
                         editSupplierForm.watch("rating") || "0"
                       );
                       return (
                         <button
-                          className={`text-[22px] transition-colors ${star <= currentRating ? "text-[#ff8c00]" : "text-[#ddd6cb] hover:text-[#ff8c00]/50"}`}
+                          className={`text-[22px] transition-colors ${star <= currentRating ? "text-primary" : "text-tertiary hover:text-primary/50"}`}
                           key={star}
                           onClick={() =>
                             editSupplierForm.setValue("rating", String(star), {
@@ -2322,7 +2330,7 @@ export function SupplierDetail() {
 
               <div className="flex gap-3 pt-2">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                   disabled={
                     savingSupplier ||
                     !editSupplierForm.formState.isValid ||
@@ -2339,7 +2347,7 @@ export function SupplierDetail() {
                   {savingSupplier ? "שומר..." : "שמור שינויים"}
                 </button>
                 <button
-                  className="rounded-xl border border-[#e7e1da] px-5 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-xl border border-border px-5 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
                   onClick={() => setShowEditSupplier(false)}
                   style={{ fontWeight: 500 }}
                   type="button"

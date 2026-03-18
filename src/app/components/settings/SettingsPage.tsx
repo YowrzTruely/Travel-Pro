@@ -39,14 +39,15 @@ interface PasswordFormData {
 /* ─── Shared styles ─────────────────────────────────────────── */
 
 const cardClass =
-  "rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-sm text-right";
-const labelClass = "mb-1 block text-sm font-semibold text-[#181510] text-right";
+  "rounded-2xl border border-border bg-card p-6 shadow-sm text-right";
+const labelClass =
+  "mb-1 block text-sm font-semibold text-foreground text-right";
 const inputClass =
-  "w-full rounded-xl border border-[#e7e1da] bg-[#f8f7f5] px-4 py-2.5 text-sm text-[#181510] text-right outline-none transition focus:border-[#ff8c00] focus:ring-2 focus:ring-[#ff8c00]/20 font-['Assistant',sans-serif]";
+  "w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground text-right outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 font-['Assistant',sans-serif]";
 const btnPrimaryClass =
-  "inline-flex items-center gap-2 rounded-xl bg-[#ff8c00] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#e07b00] disabled:opacity-50";
+  "inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#e07b00] disabled:opacity-50";
 const btnDangerClass =
-  "inline-flex items-center gap-2 rounded-xl bg-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700";
+  "inline-flex items-center gap-2 rounded-xl bg-destructive px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700";
 
 /* ─── Component ─────────────────────────────────────────────── */
 
@@ -247,7 +248,7 @@ export function SettingsPage() {
   if (!profile) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <p className="font-['Assistant',sans-serif] text-[#8d785e] text-sm">
+        <p className="font-['Assistant',sans-serif] text-muted-foreground text-sm">
           טוען...
         </p>
       </div>
@@ -256,12 +257,12 @@ export function SettingsPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#f8f7f5] p-6 font-['Assistant',sans-serif]"
+      className="min-h-screen bg-background p-6 font-['Assistant',sans-serif]"
       dir="rtl"
     >
       <div className="mx-auto max-w-3xl">
         {/* Header */}
-        <h1 className="mb-6 font-bold text-2xl text-[#181510]">הגדרות</h1>
+        <h1 className="mb-6 font-bold text-2xl text-foreground">הגדרות</h1>
 
         <Tabs
           defaultValue="profile"
@@ -298,14 +299,14 @@ export function SettingsPage() {
               >
                 {activeTab === "profile" && (
                   <div className={cardClass}>
-                    <h2 className="mb-4 font-bold text-[#181510] text-lg">
+                    <h2 className="mb-4 font-bold text-foreground text-lg">
                       פרטי פרופיל
                     </h2>
 
                     {/* Avatar */}
                     <div className="mb-6 flex items-center gap-4">
                       <button
-                        className="group relative h-20 w-20 overflow-hidden rounded-full border-2 border-[#e7e1da] bg-[#f8f7f5] transition hover:border-[#ff8c00]"
+                        className="group relative h-20 w-20 overflow-hidden rounded-full border-2 border-border bg-background transition hover:border-primary"
                         onClick={handleAvatarClick}
                         type="button"
                       >
@@ -318,7 +319,7 @@ export function SettingsPage() {
                             width={80}
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center font-bold text-2xl text-[#8d785e]">
+                          <div className="flex h-full w-full items-center justify-center font-bold text-2xl text-muted-foreground">
                             {profile.name.charAt(0)}
                           </div>
                         )}
@@ -327,10 +328,10 @@ export function SettingsPage() {
                         </div>
                       </button>
                       <div>
-                        <p className="font-semibold text-[#181510] text-sm">
+                        <p className="font-semibold text-foreground text-sm">
                           תמונת פרופיל
                         </p>
-                        <p className="text-[#8d785e] text-xs">
+                        <p className="text-muted-foreground text-xs">
                           לחץ על התמונה כדי לשנות
                         </p>
                       </div>
@@ -360,7 +361,7 @@ export function SettingsPage() {
                           })}
                         />
                         {profileForm.formState.errors.name && (
-                          <p className="mt-1 text-red-500 text-xs">
+                          <p className="mt-1 text-destructive text-xs">
                             {profileForm.formState.errors.name.message}
                           </p>
                         )}
@@ -417,7 +418,7 @@ export function SettingsPage() {
 
                 {activeTab === "notifications" && (
                   <div className={cardClass}>
-                    <h2 className="mb-4 font-bold text-[#181510] text-lg">
+                    <h2 className="mb-4 font-bold text-foreground text-lg">
                       העדפות התראות
                     </h2>
 
@@ -462,7 +463,7 @@ export function SettingsPage() {
 
                 {activeTab === "pricing" && profile.role === "producer" && (
                   <div className={cardClass}>
-                    <h2 className="mb-4 font-bold text-[#181510] text-lg">
+                    <h2 className="mb-4 font-bold text-foreground text-lg">
                       הגדרות תמחור
                     </h2>
 
@@ -497,14 +498,14 @@ export function SettingsPage() {
                           })}
                         />
                         {pricingForm.formState.errors.defaultMarginPercent && (
-                          <p className="mt-1 text-red-500 text-xs">
+                          <p className="mt-1 text-destructive text-xs">
                             {
                               pricingForm.formState.errors.defaultMarginPercent
                                 .message
                             }
                           </p>
                         )}
-                        <p className="mt-2 text-[#8d785e] text-xs">
+                        <p className="mt-2 text-muted-foreground text-xs">
                           אחוז הרווח שיוחל כברירת מחדל על פריטי הצעת מחיר חדשים
                         </p>
                       </div>
@@ -527,7 +528,7 @@ export function SettingsPage() {
                   <div className="space-y-6">
                     {/* Change password */}
                     <div className={cardClass}>
-                      <h2 className="mb-4 font-bold text-[#181510] text-lg">
+                      <h2 className="mb-4 font-bold text-foreground text-lg">
                         שינוי סיסמה
                       </h2>
 
@@ -551,7 +552,7 @@ export function SettingsPage() {
                             })}
                           />
                           {passwordForm.formState.errors.currentPassword && (
-                            <p className="mt-1 text-red-500 text-xs">
+                            <p className="mt-1 text-destructive text-xs">
                               {
                                 passwordForm.formState.errors.currentPassword
                                   .message
@@ -577,7 +578,7 @@ export function SettingsPage() {
                             })}
                           />
                           {passwordForm.formState.errors.newPassword && (
-                            <p className="mt-1 text-red-500 text-xs">
+                            <p className="mt-1 text-destructive text-xs">
                               {
                                 passwordForm.formState.errors.newPassword
                                   .message
@@ -602,7 +603,7 @@ export function SettingsPage() {
                             })}
                           />
                           {passwordForm.formState.errors.confirmPassword && (
-                            <p className="mt-1 text-red-500 text-xs">
+                            <p className="mt-1 text-destructive text-xs">
                               {
                                 passwordForm.formState.errors.confirmPassword
                                   .message
@@ -630,10 +631,10 @@ export function SettingsPage() {
 
                     {/* Logout */}
                     <div className={cardClass}>
-                      <h2 className="mb-2 font-bold text-[#181510] text-lg">
+                      <h2 className="mb-2 font-bold text-foreground text-lg">
                         התנתקות
                       </h2>
-                      <p className="mb-4 text-[#8d785e] text-sm">
+                      <p className="mb-4 text-muted-foreground text-sm">
                         לחץ כדי להתנתק מהמערכת
                       </p>
                       <button
@@ -690,7 +691,7 @@ function GlassTabBar({
 
   return (
     <div
-      className="relative mb-6 flex rounded-2xl bg-[#eae6e0]/60 p-1.5 backdrop-blur-sm"
+      className="relative mb-6 flex rounded-2xl bg-accent/60 p-1.5 backdrop-blur-sm"
       ref={containerRef}
     >
       {/* Sliding glass indicator */}
@@ -755,15 +756,15 @@ function NotificationToggle({
     : never;
 }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between rounded-xl border border-[#e7e1da] bg-[#f8f7f5] px-4 py-3 transition hover:border-[#ff8c00]/40">
+    <label className="flex cursor-pointer items-center justify-between rounded-xl border border-border bg-background px-4 py-3 transition hover:border-primary/40">
       <div>
-        <p className="font-semibold text-[#181510] text-sm">{label}</p>
-        <p className="text-[#8d785e] text-xs">{description}</p>
+        <p className="font-semibold text-foreground text-sm">{label}</p>
+        <p className="text-muted-foreground text-xs">{description}</p>
       </div>
       <div className="relative">
         <input className="peer sr-only" type="checkbox" {...register} />
-        <div className="h-6 w-11 rounded-full bg-[#e7e1da] transition peer-checked:bg-[#ff8c00]" />
-        <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition peer-checked:translate-x-5" />
+        <div className="h-6 w-11 rounded-full bg-border transition peer-checked:bg-primary" />
+        <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-card shadow-sm transition peer-checked:translate-x-5" />
       </div>
     </label>
   );

@@ -188,11 +188,11 @@ export function DigitalAssetsPanel({
     <div className="space-y-6" dir="rtl">
       {/* Header */}
       <h2
-        className="flex items-center gap-2 text-[#181510] text-[18px]"
+        className="flex items-center gap-2 text-[18px] text-foreground"
         style={{ fontWeight: 700 }}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-          <FileText className="text-[#ff8c00]" size={15} />
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+          <FileText className="text-primary" size={15} />
         </div>
         נכסים דיגיטליים
       </h2>
@@ -200,7 +200,7 @@ export function DigitalAssetsPanel({
       {/* PDF Actions */}
       <div>
         <h3
-          className="mb-3 text-[#8d785e] text-[13px]"
+          className="mb-3 text-[13px] text-muted-foreground"
           style={{ fontWeight: 600 }}
         >
           מסמכים
@@ -208,13 +208,13 @@ export function DigitalAssetsPanel({
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {pdfActions.map((item) => (
             <button
-              className="flex items-center gap-3 rounded-xl border border-[#e7e1da] bg-white p-4 text-right transition-colors hover:bg-[#f8f7f5] disabled:opacity-50"
+              className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 text-right transition-colors hover:bg-background disabled:opacity-50"
               disabled={loadingAction === item.id || !project}
               key={item.id}
               onClick={item.action}
               type="button"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#3b82f6]/10 text-[#3b82f6]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-info/10 text-info">
                 {loadingAction === item.id ? (
                   <Loader2 className="animate-spin" size={18} />
                 ) : (
@@ -223,12 +223,12 @@ export function DigitalAssetsPanel({
               </div>
               <div className="min-w-0">
                 <div
-                  className="text-[#181510] text-[14px]"
+                  className="text-[14px] text-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {item.label}
                 </div>
-                <div className="text-[#8d785e] text-[12px]">
+                <div className="text-[12px] text-muted-foreground">
                   {item.description}
                 </div>
               </div>
@@ -240,7 +240,7 @@ export function DigitalAssetsPanel({
       {/* Digital Links */}
       <div>
         <h3
-          className="mb-3 text-[#8d785e] text-[13px]"
+          className="mb-3 text-[13px] text-muted-foreground"
           style={{ fontWeight: 600 }}
         >
           דפים ציבוריים
@@ -248,23 +248,23 @@ export function DigitalAssetsPanel({
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {digitalLinks.map((item) => (
             <a
-              className="flex items-center gap-3 rounded-xl border border-[#e7e1da] bg-white p-4 text-right transition-colors hover:bg-[#f8f7f5]"
+              className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 text-right transition-colors hover:bg-background"
               href={item.href}
               key={item.id}
               rel="noopener noreferrer"
               target="_blank"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#ff8c00]/10 text-[#ff8c00]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 {item.icon}
               </div>
               <div className="min-w-0">
                 <div
-                  className="text-[#181510] text-[14px]"
+                  className="text-[14px] text-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {item.label}
                 </div>
-                <div className="text-[#8d785e] text-[12px]">
+                <div className="text-[12px] text-muted-foreground">
                   {item.description}
                 </div>
               </div>
@@ -276,28 +276,28 @@ export function DigitalAssetsPanel({
       {/* Save the Date */}
       <div>
         <h3
-          className="mb-3 text-[#8d785e] text-[13px]"
+          className="mb-3 text-[13px] text-muted-foreground"
           style={{ fontWeight: 600 }}
         >
           הזמנות
         </h3>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <button
-            className="flex items-center gap-3 rounded-xl border border-[#e7e1da] bg-white p-4 text-right transition-colors hover:bg-[#f8f7f5]"
+            className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 text-right transition-colors hover:bg-background"
             onClick={() => setShowSaveTheDate(true)}
             type="button"
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#ff8c00]/10 text-[#ff8c00]">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <Clock size={18} />
             </div>
             <div className="min-w-0">
               <div
-                className="text-[#181510] text-[14px]"
+                className="text-[14px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 Save the Date
               </div>
-              <div className="text-[#8d785e] text-[12px]">
+              <div className="text-[12px] text-muted-foreground">
                 הזמנה דיגיטלית לאירוע
               </div>
             </div>
@@ -324,7 +324,7 @@ export function DigitalAssetsPanel({
       {/* Coming Soon */}
       <div>
         <h3
-          className="mb-3 text-[#8d785e] text-[13px]"
+          className="mb-3 text-[13px] text-muted-foreground"
           style={{ fontWeight: 600 }}
         >
           בקרוב
@@ -332,28 +332,28 @@ export function DigitalAssetsPanel({
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {comingSoon.map((item) => (
             <div
-              className="flex items-center gap-3 rounded-xl border border-[#e7e1da] border-dashed bg-[#f8f7f5] p-4 opacity-60"
+              className="flex items-center gap-3 rounded-xl border border-border border-dashed bg-background p-4 opacity-60"
               key={item.id}
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#e7e1da]/50 text-[#8d785e]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-border/50 text-muted-foreground">
                 {item.icon}
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span
-                    className="text-[#181510] text-[14px]"
+                    className="text-[14px] text-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     {item.label}
                   </span>
                   <span
-                    className="rounded-full bg-[#ff8c00]/10 px-2 py-0.5 text-[#ff8c00] text-[10px]"
+                    className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary"
                     style={{ fontWeight: 700 }}
                   >
                     בקרוב
                   </span>
                 </div>
-                <div className="text-[#8d785e] text-[12px]">
+                <div className="text-[12px] text-muted-foreground">
                   {item.description}
                 </div>
               </div>

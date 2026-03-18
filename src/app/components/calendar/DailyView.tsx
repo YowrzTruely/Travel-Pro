@@ -38,28 +38,28 @@ export function DailyView({
   return (
     <div className="space-y-4">
       {/* Day header */}
-      <div className="rounded-xl border border-[#e7e1da] bg-white p-5 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+      <div className="rounded-xl border border-border bg-card p-5 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
         <div className="flex items-center justify-between">
           <div>
             <h3
-              className="text-[#181510] text-[20px]"
+              className="text-[20px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               {format(currentDate, "EEEE", { locale: he })}
             </h3>
-            <p className="mt-0.5 text-[#8d785e] text-[14px]">
+            <p className="mt-0.5 text-[14px] text-muted-foreground">
               {format(currentDate, "d MMMM yyyy", { locale: he })}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <span
-              className="rounded-lg bg-[#f5f3f0] px-3 py-1.5 text-[#8d785e] text-[13px]"
+              className="rounded-lg bg-accent px-3 py-1.5 text-[13px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               {dayEvents.length} אירועים
             </span>
             <button
-              className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[13px] text-white transition-colors hover:bg-[#e67e00]"
+              className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-[13px] text-white transition-colors hover:bg-primary-hover"
               onClick={() => onNewEvent(currentDate)}
               style={{ fontWeight: 600 }}
               type="button"
@@ -73,24 +73,24 @@ export function DailyView({
 
       {/* Events */}
       {dayEvents.length === 0 ? (
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-10 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+        <div className="rounded-xl border border-border bg-card p-10 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
           <div className="flex flex-col items-center justify-center text-center">
             <CalendarDays
-              className="mb-3 text-[#e7e1da]"
+              className="mb-3 text-border"
               size={40}
               strokeWidth={1.5}
             />
             <h4
-              className="mb-1 text-[#181510] text-[16px]"
+              className="mb-1 text-[16px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               אין אירועים ביום זה
             </h4>
-            <p className="mb-4 text-[#8d785e] text-[13px]">
+            <p className="mb-4 text-[13px] text-muted-foreground">
               לחץ על "אירוע חדש" כדי להוסיף אירוע
             </p>
             <button
-              className="flex items-center gap-2 text-[#ff8c00] text-[13px] transition-colors hover:text-[#e67e00]"
+              className="flex items-center gap-2 text-[13px] text-primary transition-colors hover:text-primary-hover"
               onClick={() => onNewEvent(currentDate)}
               style={{ fontWeight: 600 }}
               type="button"
@@ -105,7 +105,7 @@ export function DailyView({
           {dayEvents.map((ev, idx) => (
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl border border-[#e7e1da] bg-white p-4 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] transition-colors hover:border-[#d6cfc6]"
+              className="rounded-xl border border-border bg-card p-4 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] transition-colors hover:border-[#d6cfc6]"
               initial={{ opacity: 0, y: 10 }}
               key={ev.id}
               transition={{ duration: 0.3, delay: idx * 0.05 }}
@@ -122,14 +122,17 @@ export function DailyView({
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <h4
-                        className="truncate text-[#181510] text-[16px]"
+                        className="truncate text-[16px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {ev.title}
                       </h4>
                       <div className="mt-1 flex items-center gap-2">
-                        <Clock className="shrink-0 text-[#8d785e]" size={12} />
-                        <span className="text-[#8d785e] text-[13px]">
+                        <Clock
+                          className="shrink-0 text-muted-foreground"
+                          size={12}
+                        />
+                        <span className="text-[13px] text-muted-foreground">
                           {ev.startTime} - {ev.endTime}
                         </span>
                       </div>
@@ -150,7 +153,7 @@ export function DailyView({
 
                       {/* Project badge */}
                       {ev.source === "project" && (
-                        <span className="flex items-center gap-1 rounded-full bg-[#ff8c00]/10 px-2.5 py-1 text-[#ff8c00] text-[11px]">
+                        <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] text-primary">
                           <FolderOpen size={10} />
                           פרויקט
                         </span>
@@ -160,16 +163,16 @@ export function DailyView({
 
                   {/* Description */}
                   {ev.description && (
-                    <p className="mt-2 text-[#8d785e]/80 text-[13px] leading-relaxed">
+                    <p className="mt-2 text-[13px] text-muted-foreground/80 leading-relaxed">
                       {ev.description}
                     </p>
                   )}
 
                   {/* Actions for calendar events */}
                   {ev.source === "calendar" && (
-                    <div className="mt-3 flex items-center gap-3 border-[#f5f3f0] border-t pt-3">
+                    <div className="mt-3 flex items-center gap-3 border-accent border-t pt-3">
                       <button
-                        className="flex items-center gap-1.5 text-[#8d785e] text-[12px] transition-colors hover:text-[#181510]"
+                        className="flex items-center gap-1.5 text-[12px] text-muted-foreground transition-colors hover:text-foreground"
                         onClick={() => onEventClick(ev)}
                         style={{ fontWeight: 500 }}
                         type="button"
@@ -178,7 +181,7 @@ export function DailyView({
                         עריכה
                       </button>
                       <button
-                        className="flex items-center gap-1.5 text-[#8d785e] text-[12px] transition-colors hover:text-red-500"
+                        className="flex items-center gap-1.5 text-[12px] text-muted-foreground transition-colors hover:text-destructive"
                         onClick={() =>
                           ev.originalEvent && onDeleteEvent(ev.originalEvent)
                         }
@@ -193,9 +196,9 @@ export function DailyView({
 
                   {/* Project link for project events */}
                   {ev.source === "project" && (
-                    <div className="mt-3 flex items-center gap-3 border-[#f5f3f0] border-t pt-3">
+                    <div className="mt-3 flex items-center gap-3 border-accent border-t pt-3">
                       <button
-                        className="flex items-center gap-1.5 text-[#ff8c00] text-[12px] transition-colors hover:text-[#e67e00]"
+                        className="flex items-center gap-1.5 text-[12px] text-primary transition-colors hover:text-primary-hover"
                         onClick={() => onEventClick(ev)}
                         style={{ fontWeight: 500 }}
                         type="button"

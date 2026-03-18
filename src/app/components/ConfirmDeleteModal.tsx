@@ -62,7 +62,7 @@ export function ConfirmDeleteModal({
         >
           <motion.div
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="w-full max-w-[400px] overflow-hidden rounded-2xl bg-white shadow-2xl"
+            className="w-full max-w-[400px] overflow-hidden rounded-2xl bg-card shadow-2xl"
             dir="rtl"
             exit={{ opacity: 0, scale: 0.92, y: 20 }}
             initial={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -72,23 +72,23 @@ export function ConfirmDeleteModal({
             {/* Header */}
             <div className="flex items-start justify-between p-6 pb-0">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-red-50">
-                  <AlertTriangle className="text-red-500" size={24} />
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-destructive/10">
+                  <AlertTriangle className="text-destructive" size={24} />
                 </div>
                 <div>
                   <h3
-                    className="text-[#181510] text-[17px] leading-tight"
+                    className="text-[17px] text-foreground leading-tight"
                     style={{ fontWeight: 700 }}
                   >
                     {title}
                   </h3>
-                  <p className="mt-0.5 text-[#8d785e] text-[12px]">
+                  <p className="mt-0.5 text-[12px] text-muted-foreground">
                     פעולה זו אינה ניתנת לביטול
                   </p>
                 </div>
               </div>
               <button
-                className="mt-1 text-[#b5a48b] transition-colors hover:text-[#181510]"
+                className="mt-1 text-tertiary transition-colors hover:text-foreground"
                 onClick={onCancel}
                 type="button"
               >
@@ -99,31 +99,34 @@ export function ConfirmDeleteModal({
             {/* Body */}
             <div className="px-6 py-4">
               {description && (
-                <p className="mb-1 text-[#3d3322] text-[14px] leading-relaxed">
+                <p className="mb-1 text-[14px] text-foreground leading-relaxed">
                   {description}
                 </p>
               )}
               {itemName && (
-                <p className="mb-4 text-[#181510] text-[14px]">
+                <p className="mb-4 text-[14px] text-foreground">
                   האם אתה בטוח שברצונך למחוק את{" "}
-                  <span className="text-red-600" style={{ fontWeight: 700 }}>
+                  <span
+                    className="text-destructive"
+                    style={{ fontWeight: 700 }}
+                  >
                     &quot;{itemName}&quot;
                   </span>
                   ?
                 </p>
               )}
               {!(itemName || description) && (
-                <p className="mb-4 text-[#181510] text-[14px]">
+                <p className="mb-4 text-[14px] text-foreground">
                   האם אתה בטוח שברצונך לבצע מחיקה זו?
                 </p>
               )}
 
               {/* Type to confirm */}
               <div className="rounded-xl border border-red-100 bg-[#fef2f2] p-4">
-                <p className="mb-2.5 text-[#3d3322] text-[13px] leading-relaxed">
+                <p className="mb-2.5 text-[13px] text-foreground leading-relaxed">
                   לאישור, הקלד{" "}
                   <span
-                    className="rounded bg-red-100 px-1.5 py-0.5 font-mono text-[13px] text-red-700"
+                    className="rounded bg-destructive/15 px-1.5 py-0.5 font-mono text-[13px] text-destructive"
                     style={{ fontWeight: 700 }}
                   >
                     {CONFIRM_WORD}
@@ -132,12 +135,12 @@ export function ConfirmDeleteModal({
                 </p>
                 <input
                   autoComplete="off"
-                  className={`w-full rounded-lg border-2 bg-white px-3 py-2.5 text-[14px] outline-none transition-colors placeholder:text-[#c4b89a] ${
+                  className={`w-full rounded-lg border-2 bg-card px-3 py-2.5 text-[14px] outline-none transition-colors placeholder:text-tertiary ${
                     typed.length === 0
-                      ? "border-[#e7e1da] focus:border-red-300"
+                      ? "border-border focus:border-destructive/40"
                       : isMatch
-                        ? "border-green-400 bg-green-50/50"
-                        : "border-red-300"
+                        ? "border-green-400 bg-success/10/50"
+                        : "border-destructive/40"
                   }`}
                   dir="rtl"
                   onChange={(e) => setTyped(e.target.value)}
@@ -156,8 +159,8 @@ export function ConfirmDeleteModal({
               <button
                 className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[14px] transition-all ${
                   isMatch && !loading
-                    ? "bg-red-500 text-white shadow-sm hover:bg-red-600"
-                    : "cursor-not-allowed bg-[#e7e1da] text-[#b5a48b]"
+                    ? "bg-destructive/100 text-white shadow-sm hover:bg-destructive"
+                    : "cursor-not-allowed bg-border text-tertiary"
                 }`}
                 disabled={!isMatch || loading}
                 onClick={onConfirm}
@@ -172,7 +175,7 @@ export function ConfirmDeleteModal({
                 {loading ? "מוחק..." : "אישור מחיקה"}
               </button>
               <button
-                className="rounded-xl border border-[#e7e1da] px-5 py-2.5 text-[#3d3322] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+                className="rounded-xl border border-border px-5 py-2.5 text-[14px] text-foreground transition-colors hover:bg-accent"
                 onClick={onCancel}
                 style={{ fontWeight: 600 }}
                 type="button"

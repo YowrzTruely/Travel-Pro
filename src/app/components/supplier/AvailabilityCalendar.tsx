@@ -126,7 +126,7 @@ export function AvailabilityCalendar() {
   if (!supplierId) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <p className="text-[#8d785e] text-[14px]">
+        <p className="text-[14px] text-muted-foreground">
           לא נמצא חיבור לספק. פנה למנהל המערכת.
         </p>
       </div>
@@ -136,7 +136,7 @@ export function AvailabilityCalendar() {
   if (availability === undefined) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <Loader2 className="animate-spin text-[#ff8c00]" size={32} />
+        <Loader2 className="animate-spin text-primary" size={32} />
       </div>
     );
   }
@@ -149,39 +149,39 @@ export function AvailabilityCalendar() {
 
   return (
     <FeatureGate featureName="זמינות" requiredStage="stage2">
-      <div className="min-h-screen bg-[#f8f7f5] p-6" dir="rtl">
+      <div className="min-h-screen bg-background p-6" dir="rtl">
         {/* Header */}
         <div className="mb-6">
           <h1
-            className="mb-1 text-[#181510] text-[22px]"
+            className="mb-1 text-[22px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             זמינות
           </h1>
-          <p className="text-[#8d785e] text-[13px]">
+          <p className="text-[13px] text-muted-foreground">
             לחץ על תאריך כדי לסמן זמינות או חוסר זמינות
           </p>
         </div>
 
         {/* Calendar card */}
-        <div className="mx-auto max-w-2xl rounded-2xl border border-[#e7e1da] bg-white p-6">
+        <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-card p-6">
           {/* Month navigation */}
           <div className="mb-6 flex items-center justify-between">
             <button
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent"
               onClick={handleNextMonth}
               type="button"
             >
               <ChevronRight size={18} />
             </button>
             <h2
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               {HEBREW_MONTHS[currentMonth]} {currentYear}
             </h2>
             <button
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent"
               onClick={handlePrevMonth}
               type="button"
             >
@@ -193,7 +193,7 @@ export function AvailabilityCalendar() {
           <div className="mb-2 grid grid-cols-7 gap-1">
             {HEBREW_DAYS.map((day) => (
               <div
-                className="py-2 text-center text-[#8d785e] text-[13px]"
+                className="py-2 text-center text-[13px] text-muted-foreground"
                 key={day}
                 style={{ fontWeight: 600 }}
               >
@@ -213,14 +213,14 @@ export function AvailabilityCalendar() {
               const status = availabilityMap.get(dateStr);
               const isToday = dateStr === todayStr;
 
-              let bgClass = "bg-gray-50 text-[#8d785e]"; // no data
-              let hoverClass = "hover:bg-gray-100";
+              let bgClass = "bg-accent text-muted-foreground"; // no data
+              let hoverClass = "hover:bg-accent";
               if (status) {
                 if (status.available) {
-                  bgClass = "bg-green-100 text-green-800";
+                  bgClass = "bg-success/15 text-green-800";
                   hoverClass = "hover:bg-green-200";
                 } else {
-                  bgClass = "bg-red-100 text-red-800";
+                  bgClass = "bg-destructive/15 text-red-800";
                   hoverClass = "hover:bg-red-200";
                 }
               }
@@ -246,18 +246,18 @@ export function AvailabilityCalendar() {
           </div>
 
           {/* Legend */}
-          <div className="mt-6 flex items-center justify-center gap-6 border-[#e7e1da] border-t pt-4">
+          <div className="mt-6 flex items-center justify-center gap-6 border-border border-t pt-4">
             <div className="flex items-center gap-2 text-[13px]">
-              <div className="h-4 w-4 rounded bg-green-100" />
-              <span className="text-[#8d785e]">זמין</span>
+              <div className="h-4 w-4 rounded bg-success/15" />
+              <span className="text-muted-foreground">זמין</span>
             </div>
             <div className="flex items-center gap-2 text-[13px]">
-              <div className="h-4 w-4 rounded bg-red-100" />
-              <span className="text-[#8d785e]">לא זמין</span>
+              <div className="h-4 w-4 rounded bg-destructive/15" />
+              <span className="text-muted-foreground">לא זמין</span>
             </div>
             <div className="flex items-center gap-2 text-[13px]">
-              <div className="h-4 w-4 rounded border border-gray-200 bg-gray-50" />
-              <span className="text-[#8d785e]">לא הוגדר</span>
+              <div className="h-4 w-4 rounded border border-border bg-accent" />
+              <span className="text-muted-foreground">לא הוגדר</span>
             </div>
           </div>
         </div>

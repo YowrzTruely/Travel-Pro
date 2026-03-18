@@ -181,7 +181,7 @@ export function Breadcrumbs() {
   });
 
   return (
-    <div className="bg-[#f8f7f5] px-4 py-4 lg:px-8">
+    <div className="bg-background px-4 py-4 lg:px-8">
       <div className="flex items-center gap-2">
         {items.map((item, idx) => {
           const isLast = idx === items.length - 1;
@@ -191,7 +191,7 @@ export function Breadcrumbs() {
             <div className="flex items-center gap-2" key={item.path}>
               {/* Separator */}
               {idx > 0 && (
-                <ChevronLeft className="mx-0.5 text-[#c4b89a]" size={18} />
+                <ChevronLeft className="mx-0.5 text-tertiary" size={18} />
               )}
 
               {isLast ? (
@@ -215,12 +215,12 @@ export function Breadcrumbs() {
               ) : (
                 /* Clickable parent crumb */
                 <button
-                  className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 text-[#8d785e] text-[15px] transition-all hover:bg-[#ece8e3]"
+                  className="group inline-flex items-center gap-2 rounded-xl px-3 py-2 text-[15px] text-muted-foreground transition-all hover:bg-accent"
                   onClick={() => navigate(item.path)}
                   type="button"
                 >
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#ece8e3] transition-colors group-hover:bg-[#e0d9ce]">
-                    <Icon className="text-[#8d785e]" size={16} />
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent transition-colors group-hover:bg-accent">
+                    <Icon className="text-muted-foreground" size={16} />
                   </span>
                   {item.label}
                 </button>

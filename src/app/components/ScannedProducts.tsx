@@ -84,25 +84,25 @@ export function ScannedProducts() {
 
   return (
     <div
-      className="min-h-full bg-[#f8f7f5] font-['Assistant',sans-serif]"
+      className="min-h-full bg-background font-['Assistant',sans-serif]"
       dir="rtl"
     >
       {/* Header */}
-      <div className="border-[#e7e1da] border-b bg-white px-4 py-4 lg:px-6">
+      <div className="border-border border-b bg-card px-4 py-4 lg:px-6">
         <div className="flex items-center gap-3">
           <button
-            className="text-[#8d785e] transition-colors hover:text-[#181510]"
+            className="text-muted-foreground transition-colors hover:text-foreground"
             onClick={() => navigate("/suppliers")}
             type="button"
           >
             <ArrowRight size={20} />
           </button>
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
               <span className="text-[16px]">🔍</span>
             </div>
             <h1
-              className="text-[#181510] text-[22px]"
+              className="text-[22px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               ניהול ספקים
@@ -115,18 +115,18 @@ export function ScannedProducts() {
         {/* Title */}
         <div className="text-center">
           <span
-            className="rounded-full bg-green-50 px-3 py-1 text-[12px] text-green-600"
+            className="rounded-full bg-success/10 px-3 py-1 text-[12px] text-success"
             style={{ fontWeight: 600 }}
           >
             ✨ סריקה אוטומטית הושלמה
           </span>
           <h2
-            className="mt-3 text-[#181510] text-[26px]"
+            className="mt-3 text-[26px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             מוצרים מוצעים מסריקת אתר
           </h2>
-          <p className="mx-auto mt-1 max-w-xl text-[#8d785e] text-[14px]">
+          <p className="mx-auto mt-1 max-w-xl text-[14px] text-muted-foreground">
             האלגוריתם שלנו זיהה מוצרים חדשים באתר הספק. באפשרותך לאשר אותם
             להוספה לקטלוג, לערוך את הפרטים או להסיר פריטים שאינם רלוונטיים.
           </p>
@@ -136,18 +136,18 @@ export function ScannedProducts() {
         <div className="space-y-5">
           {activeProducts.map((product) => (
             <div
-              className={`overflow-hidden rounded-2xl border bg-white shadow-sm transition-all ${
+              className={`overflow-hidden rounded-2xl border bg-card shadow-sm transition-all ${
                 product.approved
-                  ? "border-green-200"
+                  ? "border-success/30"
                   : product.status === "incomplete"
-                    ? "border-yellow-200"
-                    : "border-[#e7e1da]"
+                    ? "border-warning/30"
+                    : "border-border"
               }`}
               key={product.id}
             >
               <div className="flex flex-col md:flex-row">
                 {/* Image */}
-                <div className="relative h-48 shrink-0 overflow-hidden bg-[#f5f3f0] md:h-auto md:w-72">
+                <div className="relative h-48 shrink-0 overflow-hidden bg-accent md:h-auto md:w-72">
                   <ImageWithFallback
                     alt={product.name}
                     className="h-full w-full object-cover"
@@ -155,7 +155,7 @@ export function ScannedProducts() {
                   />
                   {product.status === "complete" && !product.approved && (
                     <span
-                      className="absolute top-3 right-3 rounded-md bg-[#ff8c00] px-2 py-0.5 text-[11px] text-white"
+                      className="absolute top-3 right-3 rounded-md bg-primary px-2 py-0.5 text-[11px] text-white"
                       style={{ fontWeight: 600 }}
                     >
                       ✓ אימות בוצע
@@ -163,15 +163,15 @@ export function ScannedProducts() {
                   )}
                   {product.status === "incomplete" && (
                     <span
-                      className="absolute top-3 right-3 rounded-md bg-yellow-500 px-2 py-0.5 text-[11px] text-white"
+                      className="absolute top-3 right-3 rounded-md bg-warning/100 px-2 py-0.5 text-[11px] text-white"
                       style={{ fontWeight: 600 }}
                     >
                       ⚠ נדרש אימות
                     </span>
                   )}
                   {product.approved && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-green-500/10">
-                      <div className="rounded-full bg-green-500 p-2 text-white">
+                    <div className="absolute inset-0 flex items-center justify-center bg-success/100/10">
+                      <div className="rounded-full bg-success/100 p-2 text-white">
                         <Check size={24} />
                       </div>
                     </div>
@@ -182,22 +182,22 @@ export function ScannedProducts() {
                 <div className="flex-1 p-5">
                   <div className="mb-2 flex items-start justify-between">
                     <div>
-                      <div className="mb-0.5 text-[#8d785e] text-[11px]">
+                      <div className="mb-0.5 text-[11px] text-muted-foreground">
                         שם מוצר שזוהה
                       </div>
                       <h3
-                        className="text-[#181510] text-[18px]"
+                        className="text-[18px] text-foreground"
                         style={{ fontWeight: 700 }}
                       >
                         {product.name}
                       </h3>
                     </div>
                     <div className="text-left">
-                      <div className="mb-0.5 text-[#8d785e] text-[11px]">
+                      <div className="mb-0.5 text-[11px] text-muted-foreground">
                         הערכת מחיר
                       </div>
                       <div
-                        className="text-[#ff8c00] text-[20px]"
+                        className="text-[20px] text-primary"
                         style={{ fontWeight: 700 }}
                       >
                         {product.price > 0
@@ -208,31 +208,31 @@ export function ScannedProducts() {
                   </div>
 
                   <div className="mb-3">
-                    <div className="mb-0.5 text-[#8d785e] text-[11px]">
+                    <div className="mb-0.5 text-[11px] text-muted-foreground">
                       תיאור מוצר
                     </div>
-                    <p className="text-[#6b5d45] text-[13px]">
+                    <p className="text-[13px] text-muted-foreground">
                       {product.description}
                     </p>
                   </div>
 
                   {product.category && (
-                    <div className="mb-2 text-[#8d785e] text-[12px]">
+                    <div className="mb-2 text-[12px] text-muted-foreground">
                       <span>🏷️ {product.category}</span>
                     </div>
                   )}
 
                   <div className="mb-4 flex items-center gap-2">
                     <a
-                      className="flex items-center gap-1 text-[#ff8c00] text-[12px] hover:text-[#e67e00]"
+                      className="flex items-center gap-1 text-[12px] text-primary hover:text-primary-hover"
                       href={product.sourceUrl}
                       rel="noopener noreferrer"
                       target="_blank"
                     >
                       🔗 {product.sourceUrl}
                     </a>
-                    <span className="text-[#c4b89a] text-[12px]">|</span>
-                    <span className="text-[#8d785e] text-[12px]">
+                    <span className="text-[12px] text-tertiary">|</span>
+                    <span className="text-[12px] text-muted-foreground">
                       🔒 פרטנות אחסון
                     </span>
                   </div>
@@ -242,7 +242,7 @@ export function ScannedProducts() {
                     {!product.approved && product.status === "complete" && (
                       <>
                         <button
-                          className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00] px-4 py-2 text-[13px] text-white transition-colors hover:bg-[#e67e00]"
+                          className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-[13px] text-white transition-colors hover:bg-primary-hover"
                           onClick={() => approveProduct(product.id)}
                           style={{ fontWeight: 600 }}
                           type="button"
@@ -250,7 +250,7 @@ export function ScannedProducts() {
                           <Check size={14} /> אישור מוצר
                         </button>
                         <button
-                          className="flex items-center gap-1.5 rounded-lg border border-[#ff8c00] px-4 py-2 text-[#ff8c00] text-[13px] transition-colors hover:bg-[#ff8c00]/5"
+                          className="flex items-center gap-1.5 rounded-lg border border-primary px-4 py-2 text-[13px] text-primary transition-colors hover:bg-primary/5"
                           style={{ fontWeight: 600 }}
                           type="button"
                         >
@@ -260,7 +260,7 @@ export function ScannedProducts() {
                     )}
                     {product.status === "incomplete" && (
                       <button
-                        className="flex items-center gap-1.5 rounded-lg border border-[#ff8c00] px-4 py-2 text-[#ff8c00] text-[13px] transition-colors hover:bg-[#ff8c00]/5"
+                        className="flex items-center gap-1.5 rounded-lg border border-primary px-4 py-2 text-[13px] text-primary transition-colors hover:bg-primary/5"
                         style={{ fontWeight: 600 }}
                         type="button"
                       >
@@ -269,14 +269,14 @@ export function ScannedProducts() {
                     )}
                     {product.approved && (
                       <span
-                        className="flex items-center gap-1 text-[13px] text-green-600"
+                        className="flex items-center gap-1 text-[13px] text-success"
                         style={{ fontWeight: 600 }}
                       >
                         <Check size={14} /> אושר והוסף לקטלוג
                       </span>
                     )}
                     <button
-                      className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-[#8d785e] text-[13px] transition-colors hover:text-red-500"
+                      className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:text-destructive"
                       onClick={() => removeProduct(product.id)}
                       type="button"
                     >
@@ -290,30 +290,30 @@ export function ScannedProducts() {
         </div>
 
         {/* Summary bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#e7e1da] bg-white p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2">
             <span className="text-[14px]">📊</span>
             <div
-              className="text-[#181510] text-[14px]"
+              className="text-[14px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               סיכום סריקה
             </div>
-            <span className="text-[#8d785e] text-[12px]">
+            <span className="text-[12px] text-muted-foreground">
               {activeProducts.length} מוצרים נמצאו &bull; {approvedCount} אושרו
               &bull; {incompleteCount} דורשים השלמה
             </span>
           </div>
           <div className="flex gap-2">
             <button
-              className="rounded-lg border border-[#e7e1da] px-4 py-2 text-[#8d785e] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+              className="rounded-lg border border-border px-4 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-accent"
               onClick={() => navigate("/suppliers")}
               type="button"
             >
               סגירה
             </button>
             <button
-              className="rounded-lg bg-[#ff8c00] px-4 py-2 text-[13px] text-white transition-colors hover:bg-[#e67e00]"
+              className="rounded-lg bg-primary px-4 py-2 text-[13px] text-white transition-colors hover:bg-primary-hover"
               onClick={() => {
                 appToast.success(
                   "הسكירה הושלמה בהצלחה!",
@@ -329,7 +329,7 @@ export function ScannedProducts() {
           </div>
         </div>
 
-        <div className="py-4 text-center text-[#8d785e] text-[12px]">
+        <div className="py-4 text-center text-[12px] text-muted-foreground">
           מערכת ניהול ספקים חכמה © 2024 &bull; הופעל על ידי בינה מלאכותית
         </div>
       </div>

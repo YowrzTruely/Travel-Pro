@@ -52,7 +52,7 @@ function getStatusColor(
   expiry: string | undefined
 ): { color: string; label: string; icon: typeof CheckCircle } {
   if (!status || status === "expired") {
-    return { color: "text-red-500", label: "פג תוקף", icon: XCircle };
+    return { color: "text-destructive", label: "פג תוקף", icon: XCircle };
   }
 
   if (expiry) {
@@ -62,7 +62,7 @@ function getStatusColor(
       (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
 
     if (diffDays < 0) {
-      return { color: "text-red-500", label: "פג תוקף", icon: XCircle };
+      return { color: "text-destructive", label: "פג תוקף", icon: XCircle };
     }
     if (diffDays <= 30) {
       return {
@@ -71,11 +71,11 @@ function getStatusColor(
         icon: AlertTriangle,
       };
     }
-    return { color: "text-green-500", label: "בתוקף", icon: CheckCircle };
+    return { color: "text-success", label: "בתוקף", icon: CheckCircle };
   }
 
   if (status === "valid") {
-    return { color: "text-green-500", label: "בתוקף", icon: CheckCircle };
+    return { color: "text-success", label: "בתוקף", icon: CheckCircle };
   }
   if (status === "warning") {
     return {
@@ -85,7 +85,7 @@ function getStatusColor(
     };
   }
 
-  return { color: "text-gray-400", label: "חסר", icon: Clock };
+  return { color: "text-muted-foreground", label: "חסר", icon: Clock };
 }
 
 export function MyDocuments() {
@@ -122,7 +122,7 @@ export function MyDocuments() {
   if (!supplierId) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center" dir="rtl">
-        <p className="text-[#8d785e]">לא נמצא ספק מקושר לחשבון שלך</p>
+        <p className="text-muted-foreground">לא נמצא ספק מקושר לחשבון שלך</p>
       </div>
     );
   }
@@ -130,7 +130,7 @@ export function MyDocuments() {
   if (documents === undefined || supplier === undefined) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center" dir="rtl">
-        <Loader2 className="h-6 w-6 animate-spin text-[#ff8c00]" />
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
   }
@@ -259,12 +259,12 @@ export function MyDocuments() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1
-            className="text-[#181510] text-[22px]"
+            className="text-[22px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             המסמכים שלי
           </h1>
-          <p className="mt-1 text-[#8d785e] text-[13px]">
+          <p className="mt-1 text-[13px] text-muted-foreground">
             ניהול מסמכים, ביטוחים ותקינות
           </p>
         </div>
@@ -272,8 +272,8 @@ export function MyDocuments() {
           <div
             className={`flex items-center gap-2 rounded-full px-4 py-2 ${
               compliance.compliant
-                ? "bg-green-50 text-green-700"
-                : "bg-red-50 text-red-700"
+                ? "bg-success/10 text-success"
+                : "bg-destructive/10 text-destructive"
             }`}
           >
             {compliance.compliant ? (
@@ -299,18 +299,18 @@ export function MyDocuments() {
               ? getStatusColor(existingDoc?.status, existingDoc?.expiry)
               : isAcknowledged
                 ? {
-                    color: "text-gray-400",
+                    color: "text-muted-foreground",
                     label: 'סומן "אין לי"',
                     icon: Clock,
                   }
-                : { color: "text-gray-400", label: "חסר", icon: Clock };
+                : { color: "text-muted-foreground", label: "חסר", icon: Clock };
 
             const StatusIcon = statusInfo.icon;
             const isUploading = uploading === docType.key;
 
             return (
               <div
-                className="rounded-xl border border-[#e7e1da] bg-white p-4 transition-shadow hover:shadow-sm"
+                className="rounded-xl border border-border bg-card p-4 transition-shadow hover:shadow-sm"
                 key={docType.key}
               >
                 <div className="flex items-center justify-between">
@@ -320,18 +320,18 @@ export function MyDocuments() {
                     <div>
                       <div className="flex items-center gap-2">
                         <span
-                          className="text-[#181510] text-[14px]"
+                          className="text-[14px] text-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           {docType.label}
                         </span>
                         {"mandatory" in docType && docType.mandatory && (
-                          <span className="rounded bg-red-50 px-1.5 py-0.5 text-[10px] text-red-600">
+                          <span className="rounded bg-destructive/10 px-1.5 py-0.5 text-[10px] text-destructive">
                             חובה
                           </span>
                         )}
                         {"recommended" in docType && docType.recommended && (
-                          <span className="rounded bg-yellow-50 px-1.5 py-0.5 text-[10px] text-yellow-700">
+                          <span className="rounded bg-warning/10 px-1.5 py-0.5 text-[10px] text-yellow-700">
                             מומלץ
                           </span>
                         )}
@@ -350,20 +350,20 @@ export function MyDocuments() {
                         {editingExpiry === docType.key ? (
                           <div className="flex items-center gap-1">
                             <input
-                              className="rounded border border-[#e7e1da] px-2 py-1 text-[12px]"
+                              className="rounded border border-border px-2 py-1 text-[12px]"
                               onChange={(e) => setExpiryValue(e.target.value)}
                               type="date"
                               value={expiryValue}
                             />
                             <button
-                              className="rounded bg-[#ff8c00] px-2 py-1 text-[11px] text-white"
+                              className="rounded bg-primary px-2 py-1 text-[11px] text-white"
                               onClick={() => handleSaveExpiry(existingDoc.id)}
                               type="button"
                             >
                               שמור
                             </button>
                             <button
-                              className="rounded px-2 py-1 text-[#8d785e] text-[11px]"
+                              className="rounded px-2 py-1 text-[11px] text-muted-foreground"
                               onClick={() => setEditingExpiry(null)}
                               type="button"
                             >
@@ -372,7 +372,7 @@ export function MyDocuments() {
                           </div>
                         ) : (
                           <button
-                            className="text-[#8d785e] text-[11px] hover:text-[#181510]"
+                            className="text-[11px] text-muted-foreground hover:text-foreground"
                             onClick={() => {
                               setEditingExpiry(docType.key);
                               setExpiryValue(existingDoc.expiry ?? "");
@@ -386,14 +386,14 @@ export function MyDocuments() {
                         )}
 
                         {/* File name */}
-                        <span className="flex items-center gap-1 text-[#8d785e] text-[11px]">
+                        <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                           <FileText size={12} />
                           {existingDoc.fileName ?? "קובץ"}
                         </span>
 
                         {/* Download */}
                         <button
-                          className="rounded-lg p-1.5 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+                          className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent"
                           title="הורדה"
                           type="button"
                         >
@@ -402,7 +402,7 @@ export function MyDocuments() {
 
                         {/* Delete */}
                         <button
-                          className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-red-50"
+                          className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-destructive/10"
                           onClick={() => handleDeleteDoc(existingDoc.id)}
                           title="מחק"
                           type="button"
@@ -435,7 +435,7 @@ export function MyDocuments() {
                           type="file"
                         />
                         <button
-                          className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#e07d00] disabled:opacity-50"
+                          className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                           disabled={isUploading}
                           onClick={() =>
                             handleUpload(
@@ -456,7 +456,7 @@ export function MyDocuments() {
                         {/* "אין לי" button */}
                         {!isAcknowledged && (
                           <button
-                            className="rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
+                            className="rounded-lg border border-border px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-accent"
                             onClick={() =>
                               handleMarkMissing(
                                 docType.key as DocumentTypeKey,
@@ -481,7 +481,7 @@ export function MyDocuments() {
         {documents && documents.filter((d) => !d.documentType).length > 0 && (
           <div className="mt-8">
             <h2
-              className="mb-3 text-[#181510] text-[16px]"
+              className="mb-3 text-[16px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               מסמכים נוספים
@@ -494,22 +494,22 @@ export function MyDocuments() {
                   const StatusIcon = statusInfo.icon;
                   return (
                     <div
-                      className="flex items-center justify-between rounded-lg border border-[#e7e1da] bg-white px-4 py-3"
+                      className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
                       key={doc.id}
                     >
                       <div className="flex items-center gap-3">
                         <StatusIcon className={`h-4 w-4 ${statusInfo.color}`} />
-                        <span className="text-[#181510] text-[13px]">
+                        <span className="text-[13px] text-foreground">
                           {doc.name}
                         </span>
                         {doc.expiry && (
-                          <span className="text-[#8d785e] text-[11px]">
+                          <span className="text-[11px] text-muted-foreground">
                             תוקף: {doc.expiry}
                           </span>
                         )}
                       </div>
                       <button
-                        className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-red-50"
+                        className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-destructive/10"
                         onClick={() => handleDeleteDoc(doc.id)}
                         type="button"
                       >

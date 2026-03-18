@@ -39,6 +39,7 @@ import { OPERATING_REGIONS } from "./constants/supplierConstants";
 import { FormField, FormSelect, rules } from "./FormField";
 import { GlobalSearch } from "./GlobalSearch";
 import { NotificationsPanel } from "./NotificationsPanel";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface NewProjectForm {
   client: string;
@@ -215,7 +216,7 @@ export function Layout() {
 
   return (
     <div
-      className="flex h-screen bg-[#f8f7f5] font-['Assistant',sans-serif]"
+      className="flex h-screen bg-background font-['Assistant',sans-serif]"
       dir="rtl"
     >
       {/* Mobile overlay */}
@@ -229,10 +230,10 @@ export function Layout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 right-0 z-50 w-[256px] transform bg-white transition-transform duration-300 ease-in-out lg:static ${sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"} flex flex-col border-[#e7e1da] border-l`}
+        className={`fixed inset-y-0 right-0 z-50 w-[256px] transform bg-card transition-transform duration-300 ease-in-out lg:static ${sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"} flex flex-col border-border border-l`}
       >
         {/* Logo */}
-        <div className="border-[#f5f3f0] border-b">
+        <div className="border-accent border-b">
           <button
             className="flex w-full cursor-pointer items-center gap-3 px-6 py-6 text-left"
             onClick={() => navigate("/")}
@@ -247,18 +248,18 @@ export function Layout() {
             />
             <div>
               <div
-                className="text-[#181510] text-[18px]"
+                className="text-[18px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 יום כיף
               </div>
-              <div className="text-[#8d785e] text-[12px]">
+              <div className="text-[12px] text-muted-foreground">
                 ערן לוי - הפקת אירועים
               </div>
             </div>
           </button>
           <button
-            className="absolute top-5 left-4 text-[#8d785e] lg:hidden"
+            className="absolute top-5 left-4 text-muted-foreground lg:hidden"
             onClick={() => setSidebarOpen(false)}
             type="button"
           >
@@ -277,7 +278,7 @@ export function Layout() {
 
           <div className="flex-1" />
 
-          <div className="border-[#f5f3f0] border-t pt-4">
+          <div className="border-accent border-t pt-4">
             <SidebarNavGroup
               isActive={isActive}
               items={bottomNavItems}
@@ -288,7 +289,7 @@ export function Layout() {
         </nav>
 
         {/* User + New project */}
-        <div className="space-y-3 border-[#f5f3f0] border-t bg-[#fcfbf9] p-4">
+        <div className="space-y-3 border-accent border-t bg-surface p-4">
           <div className="flex items-center gap-3">
             <div
               className="h-10 w-10 shrink-0 rounded-full border-2 border-white bg-center bg-cover shadow-sm"
@@ -296,12 +297,12 @@ export function Layout() {
             />
             <div className="min-w-0 flex-1">
               <div
-                className="truncate text-[#181510] text-[14px]"
+                className="truncate text-[14px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 {profile?.name || user?.email?.split("@")[0] || "משתמש"}
               </div>
-              <div className="truncate text-[#8d785e] text-[12px]">
+              <div className="truncate text-[12px] text-muted-foreground">
                 {profile?.role === "supplier"
                   ? "ספק"
                   : profile?.role === "admin"
@@ -310,7 +311,7 @@ export function Layout() {
               </div>
             </div>
             <button
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-red-50 hover:text-[#ef4444]"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
               onClick={logout}
               title="התנתק"
               type="button"
@@ -320,7 +321,7 @@ export function Layout() {
           </div>
           {isProducer && (
             <button
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#ff8c00] py-2.5 text-white shadow-sm transition-all hover:bg-[#e67e00]"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-white shadow-sm transition-all hover:bg-primary-hover"
               onClick={() => setShowNewProject(true)}
               style={{ fontWeight: 600 }}
               type="button"
@@ -334,9 +335,9 @@ export function Layout() {
       {/* Main content */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex h-16 shrink-0 items-center gap-4 border-[#e7e1da] border-b bg-white px-4 lg:px-8">
+        <header className="flex h-16 shrink-0 items-center gap-4 border-border border-b bg-card px-4 lg:px-8">
           <button
-            className="shrink-0 text-[#181510] lg:hidden"
+            className="shrink-0 text-foreground lg:hidden"
             onClick={() => setSidebarOpen(true)}
             type="button"
           >
@@ -346,6 +347,7 @@ export function Layout() {
           <GlobalSearch />
           <div className="flex-1" />
           <div className="flex shrink-0 items-center gap-1">
+            <ThemeToggle />
             <NotificationsPanel />
           </div>
         </header>
@@ -372,13 +374,13 @@ export function Layout() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-2xl"
             dir="rtl"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
           >
             <h2
-              className="mb-4 text-[#181510] text-[22px]"
+              className="mb-4 text-[22px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               פרויקט חדש
@@ -430,7 +432,7 @@ export function Layout() {
               </FormSelect>
               <div className="flex gap-3 pt-2">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={npSaving || !isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -439,7 +441,7 @@ export function Layout() {
                   {npSaving ? "יוצר..." : "צור פרויקט"}
                 </button>
                 <button
-                  className="rounded-lg border border-[#e7e1da] px-6 py-2.5 text-[#181510] transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-lg border border-border px-6 py-2.5 text-foreground transition-colors hover:bg-accent"
                   onClick={handleCloseModal}
                   type="button"
                 >
@@ -572,10 +574,10 @@ function SidebarNavGroup({
           <button
             className={`relative z-10 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] transition-colors duration-200 ${
               locked
-                ? "cursor-not-allowed text-[#b8a990]"
+                ? "cursor-not-allowed text-tertiary"
                 : active
-                  ? "text-[#ff8c00]"
-                  : "text-[#181510] hover:bg-[#f5f3f0]"
+                  ? "text-primary"
+                  : "text-foreground hover:bg-accent"
             }`}
             dir="rtl"
             key={item.path}

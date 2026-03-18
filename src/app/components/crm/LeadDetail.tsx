@@ -145,13 +145,13 @@ export function LeadDetail() {
   if (lead === undefined) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <Loader2 className="animate-spin text-[#ff8c00]" size={32} />
+        <Loader2 className="animate-spin text-primary" size={32} />
       </div>
     );
   }
   if (lead === null) {
     return (
-      <div className="p-8 text-center text-[#8d785e]" dir="rtl">
+      <div className="p-8 text-center text-muted-foreground" dir="rtl">
         ליד לא נמצא
       </div>
     );
@@ -224,7 +224,7 @@ export function LeadDetail() {
     <div className="p-4 lg:p-8" dir="rtl">
       {/* Back button */}
       <button
-        className="mb-4 flex items-center gap-2 text-[#8d785e] text-[14px] transition-colors hover:text-[#181510]"
+        className="mb-4 flex items-center gap-2 text-[14px] text-muted-foreground transition-colors hover:text-foreground"
         onClick={() => navigate("/crm")}
         type="button"
       >
@@ -234,7 +234,7 @@ export function LeadDetail() {
 
       {/* Header */}
       <div className="mb-6 flex flex-wrap items-center gap-4">
-        <h1 className="text-[#181510] text-[28px]" style={{ fontWeight: 700 }}>
+        <h1 className="text-[28px] text-foreground" style={{ fontWeight: 700 }}>
           {lead.name}
         </h1>
         <div
@@ -243,7 +243,7 @@ export function LeadDetail() {
         >
           {statusInfo.label}
         </div>
-        <div className="flex items-center gap-1 text-[#8d785e] text-[13px]">
+        <div className="flex items-center gap-1 text-[13px] text-muted-foreground">
           <SourceIcon size={14} />
           {SOURCE_LABELS[lead.source] || lead.source}
         </div>
@@ -252,10 +252,10 @@ export function LeadDetail() {
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Left: Details */}
         <div className="lg:col-span-2">
-          <div className="rounded-xl border border-[#e7e1da] bg-white p-6">
+          <div className="rounded-xl border border-border bg-card p-6">
             <div className="mb-4 flex items-center justify-between">
               <h2
-                className="text-[#181510] text-[18px]"
+                className="text-[18px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 פרטי ליד
@@ -263,7 +263,7 @@ export function LeadDetail() {
               {editing ? (
                 <div className="flex gap-2">
                   <button
-                    className="flex items-center gap-1 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[13px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                    className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-[13px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                     disabled={saving}
                     onClick={handleSave}
                     type="button"
@@ -276,7 +276,7 @@ export function LeadDetail() {
                     שמור
                   </button>
                   <button
-                    className="rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#181510] text-[13px] hover:bg-[#f5f3f0]"
+                    className="rounded-lg border border-border px-3 py-1.5 text-[13px] text-foreground hover:bg-accent"
                     onClick={() => setEditing(false)}
                     type="button"
                   >
@@ -285,7 +285,7 @@ export function LeadDetail() {
                 </div>
               ) : (
                 <button
-                  className="flex items-center gap-1 rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#181510] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+                  className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-[13px] text-foreground transition-colors hover:bg-accent"
                   onClick={() => setEditing(true)}
                   type="button"
                 >
@@ -347,14 +347,14 @@ export function LeadDetail() {
                 />
                 <div className="sm:col-span-2">
                   <label
-                    className="mb-1 block text-[#8d785e] text-[13px]"
+                    className="mb-1 block text-[13px] text-muted-foreground"
                     htmlFor="edit-preferences"
                     style={{ fontWeight: 600 }}
                   >
                     העדפות
                   </label>
                   <textarea
-                    className="w-full resize-none rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                    className="w-full resize-none rounded-lg border border-border px-3 py-2 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     id="edit-preferences"
                     onChange={(e) =>
                       setEditData((d) => ({
@@ -368,14 +368,14 @@ export function LeadDetail() {
                 </div>
                 <div className="sm:col-span-2">
                   <label
-                    className="mb-1 block text-[#8d785e] text-[13px]"
+                    className="mb-1 block text-[13px] text-muted-foreground"
                     htmlFor="edit-notes"
                     style={{ fontWeight: 600 }}
                   >
                     הערות
                   </label>
                   <textarea
-                    className="w-full resize-none rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                    className="w-full resize-none rounded-lg border border-border px-3 py-2 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     id="edit-notes"
                     onChange={(e) =>
                       setEditData((d) => ({ ...d, notes: e.target.value }))
@@ -425,12 +425,12 @@ export function LeadDetail() {
                 {lead.preferences && (
                   <div className="sm:col-span-2">
                     <span
-                      className="text-[#8d785e] text-[12px]"
+                      className="text-[12px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       העדפות
                     </span>
-                    <p className="mt-0.5 text-[#181510] text-[14px]">
+                    <p className="mt-0.5 text-[14px] text-foreground">
                       {lead.preferences}
                     </p>
                   </div>
@@ -438,12 +438,12 @@ export function LeadDetail() {
                 {lead.notes && (
                   <div className="sm:col-span-2">
                     <span
-                      className="text-[#8d785e] text-[12px]"
+                      className="text-[12px] text-muted-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       הערות
                     </span>
-                    <p className="mt-0.5 text-[#181510] text-[14px]">
+                    <p className="mt-0.5 text-[14px] text-foreground">
                       {lead.notes}
                     </p>
                   </div>
@@ -453,16 +453,16 @@ export function LeadDetail() {
           </div>
 
           {/* Communications timeline */}
-          <div className="mt-6 rounded-xl border border-[#e7e1da] bg-white p-6">
+          <div className="mt-6 rounded-xl border border-border bg-card p-6">
             <div className="mb-4 flex items-center justify-between">
               <h2
-                className="text-[#181510] text-[18px]"
+                className="text-[18px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 היסטוריית תקשורת
               </h2>
               <button
-                className="flex items-center gap-1 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[13px] text-white transition-colors hover:bg-[#e67e00]"
+                className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-[13px] text-white transition-colors hover:bg-primary-hover"
                 onClick={() => setShowCommModal(true)}
                 style={{ fontWeight: 600 }}
                 type="button"
@@ -474,10 +474,13 @@ export function LeadDetail() {
 
             {communications === undefined ? (
               <div className="flex justify-center py-4">
-                <Loader2 className="animate-spin text-[#8d785e]" size={20} />
+                <Loader2
+                  className="animate-spin text-muted-foreground"
+                  size={20}
+                />
               </div>
             ) : communications.length === 0 ? (
-              <p className="py-4 text-center text-[#8d785e] text-[14px]">
+              <p className="py-4 text-center text-[14px] text-muted-foreground">
                 אין תקשורת עדיין
               </p>
             ) : (
@@ -488,30 +491,30 @@ export function LeadDetail() {
                     const CommIcon = COMM_ICONS[comm.type] || Globe;
                     return (
                       <div
-                        className="flex gap-3 rounded-lg border border-[#e7e1da] p-3"
+                        className="flex gap-3 rounded-lg border border-border p-3"
                         key={comm.id}
                       >
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f5f3f0] text-[#8d785e]">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-muted-foreground">
                           <CommIcon size={14} />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="mb-1 flex items-center gap-2">
                             <span
-                              className="text-[#181510] text-[13px]"
+                              className="text-[13px] text-foreground"
                               style={{ fontWeight: 600 }}
                             >
                               {COMM_LABELS[comm.type] || comm.type}
                             </span>
                             {comm.duration && (
-                              <span className="text-[#8d785e] text-[12px]">
+                              <span className="text-[12px] text-muted-foreground">
                                 {comm.duration} דקות
                               </span>
                             )}
-                            <span className="mr-auto text-[#8d785e] text-[12px]">
+                            <span className="mr-auto text-[12px] text-muted-foreground">
                               {new Date(comm.createdAt).toLocaleString("he-IL")}
                             </span>
                           </div>
-                          <p className="text-[#181510] text-[14px]">
+                          <p className="text-[14px] text-foreground">
                             {comm.content}
                           </p>
                         </div>
@@ -525,9 +528,9 @@ export function LeadDetail() {
 
         {/* Right: Status actions */}
         <div>
-          <div className="rounded-xl border border-[#e7e1da] bg-white p-6">
+          <div className="rounded-xl border border-border bg-card p-6">
             <h3
-              className="mb-4 text-[#181510] text-[16px]"
+              className="mb-4 text-[16px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               פעולות מהירות
@@ -551,7 +554,7 @@ export function LeadDetail() {
 
             {lead.status !== "closed_won" && lead.status !== "closed_lost" && (
               <button
-                className="mb-3 w-full rounded-lg border border-[#10b981] py-2.5 text-[#10b981] text-[14px] transition-colors hover:bg-[#10b981]/10"
+                className="mb-3 w-full rounded-lg border border-success py-2.5 text-[14px] text-success transition-colors hover:bg-success/10"
                 onClick={() => handleStatusChange("closed_won")}
                 style={{ fontWeight: 600 }}
                 type="button"
@@ -561,9 +564,9 @@ export function LeadDetail() {
             )}
 
             {/* All statuses */}
-            <div className="mt-4 border-[#e7e1da] border-t pt-4">
+            <div className="mt-4 border-border border-t pt-4">
               <p
-                className="mb-2 text-[#8d785e] text-[12px]"
+                className="mb-2 text-[12px] text-muted-foreground"
                 style={{ fontWeight: 600 }}
               >
                 שנה סטטוס
@@ -580,7 +583,7 @@ export function LeadDetail() {
                       className={`rounded-md px-2 py-1 text-[11px] transition-colors ${
                         isCurrent
                           ? "text-white"
-                          : "border border-[#e7e1da] text-[#181510] hover:bg-[#f5f3f0]"
+                          : "border border-border text-foreground hover:bg-accent"
                       }`}
                       disabled={isCurrent}
                       key={s}
@@ -627,15 +630,15 @@ function DetailItem({
   return (
     <div>
       <div className="mb-0.5 flex items-center gap-1">
-        {Icon && <Icon className="text-[#8d785e]" size={12} />}
+        {Icon && <Icon className="text-muted-foreground" size={12} />}
         <span
-          className="text-[#8d785e] text-[12px]"
+          className="text-[12px] text-muted-foreground"
           style={{ fontWeight: 600 }}
         >
           {label}
         </span>
       </div>
-      <p className="text-[#181510] text-[14px]">{value || "—"}</p>
+      <p className="text-[14px] text-foreground">{value || "—"}</p>
     </div>
   );
 }
@@ -654,13 +657,13 @@ function EditField({
   return (
     <label className="block">
       <span
-        className="mb-1 block text-[#8d785e] text-[13px]"
+        className="mb-1 block text-[13px] text-muted-foreground"
         style={{ fontWeight: 600 }}
       >
         {label}
       </span>
       <input
-        className="w-full rounded-lg border border-[#e7e1da] px-3 py-2 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+        className="w-full rounded-lg border border-border px-3 py-2 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
         onChange={(e) => onChange(e.target.value)}
         type={type}
         value={value}

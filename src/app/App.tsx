@@ -1,4 +1,5 @@
 import { useMutation } from "convex/react";
+import { ThemeProvider } from "next-themes";
 import { useEffect, useMemo, useRef } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
@@ -53,12 +54,12 @@ const publicRouter = createBrowserRouter([
 function LoadingSpinner({ message }: { message: string }) {
   return (
     <div
-      className="flex h-screen items-center justify-center bg-[#f8f7f5]"
+      className="flex h-screen items-center justify-center bg-background font-['Assistant',sans-serif]"
       dir="rtl"
     >
       <div className="flex flex-col items-center gap-4">
-        <div className="h-10 w-10 animate-spin rounded-full border-3 border-[#ff8c00] border-t-transparent" />
-        <p className="font-['Assistant',sans-serif] text-[#8d785e] text-[15px]">
+        <div className="h-10 w-10 animate-spin rounded-full border-3 border-primary border-t-transparent" />
+        <p className="font-['Assistant',sans-serif] text-[15px] text-muted-foreground">
           {message}
         </p>
       </div>
@@ -125,21 +126,21 @@ function AppInner() {
     if (profileCreateFailed) {
       return (
         <div
-          className="flex min-h-screen items-center justify-center bg-[#f8f7f5] p-4 font-['Assistant',sans-serif]"
+          className="flex min-h-screen items-center justify-center bg-background p-4 font-['Assistant',sans-serif]"
           dir="rtl"
         >
-          <div className="flex flex-col items-center gap-4 rounded-2xl bg-white p-8 shadow-lg">
+          <div className="flex flex-col items-center gap-4 rounded-2xl bg-card p-8 shadow-lg">
             <p
-              className="text-[#181510] text-[16px]"
+              className="text-[16px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               לא הצלחנו ליצור את הפרופיל
             </p>
-            <p className="text-[#8d785e] text-[14px]">
+            <p className="text-[14px] text-muted-foreground">
               נסה לרענן את הדף כדי להמשיך
             </p>
             <button
-              className="rounded-xl bg-[#ff8c00] px-6 py-3 text-[14px] text-white transition-colors hover:bg-[#e67e00]"
+              className="rounded-xl bg-primary px-6 py-3 text-[14px] text-primary-foreground transition-colors hover:bg-primary-hover"
               onClick={() => window.location.reload()}
               style={{ fontWeight: 600 }}
               type="button"
@@ -179,19 +180,25 @@ function RoleRouter({ role }: { role: string }) {
 
 export default function App() {
   return (
-    <ConvexProvider>
-      <AuthProvider>
-        <AppInner />
-        <Toaster
-          dir="rtl"
-          gap={10}
-          position="bottom-left"
-          toastOptions={{
-            unstyled: true,
-            style: { background: "transparent", boxShadow: "none", padding: 0 },
-          }}
-        />
-      </AuthProvider>
-    </ConvexProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ConvexProvider>
+        <AuthProvider>
+          <AppInner />
+          <Toaster
+            dir="rtl"
+            gap={10}
+            position="bottom-left"
+            toastOptions={{
+              unstyled: true,
+              style: {
+                background: "transparent",
+                boxShadow: "none",
+                padding: 0,
+              },
+            }}
+          />
+        </AuthProvider>
+      </ConvexProvider>
+    </ThemeProvider>
   );
 }

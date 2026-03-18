@@ -262,13 +262,13 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
   };
 
   return (
-    <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+    <div className="rounded-xl border border-border bg-card p-5">
       <h3
-        className="mb-3 text-[#181510] text-[14px]"
+        className="mb-3 text-[14px] text-foreground"
         style={{ fontWeight: 700 }}
       >
         <span className="flex items-center gap-2">
-          <MapPin className="text-[#ff8c00]" size={15} />
+          <MapPin className="text-primary" size={15} />
           מיקום
         </span>
       </h3>
@@ -277,7 +277,7 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
       <div className="relative mb-3" ref={suggestionsRef}>
         <div className="relative">
           <input
-            className="w-full rounded-lg border border-[#e7e1da] bg-[#f8f7f5] py-2.5 pr-9 pl-9 text-[#181510] text-[13px] transition-colors placeholder:text-[#b5a48b] focus:border-[#ff8c00] focus:outline-none focus:ring-1 focus:ring-[#ff8c00]/30"
+            className="w-full rounded-lg border border-border bg-background py-2.5 pr-9 pl-9 text-[13px] text-foreground transition-colors placeholder:text-tertiary focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
             dir="rtl"
             onChange={(e) => handleInputChange(e.target.value)}
             onFocus={() => {
@@ -291,17 +291,17 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
             value={address}
           />
           <Search
-            className="absolute top-1/2 right-3 -translate-y-1/2 text-[#8d785e]"
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground"
             size={14}
           />
           {searching ? (
             <Loader2
-              className="absolute top-1/2 left-3 -translate-y-1/2 animate-spin text-[#ff8c00]"
+              className="absolute top-1/2 left-3 -translate-y-1/2 animate-spin text-primary"
               size={14}
             />
           ) : address && hasLocation ? (
             <button
-              className="absolute top-1/2 left-3 -translate-y-1/2 text-[#8d785e] transition-colors hover:text-red-500"
+              className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-destructive"
               onClick={() =>
                 requestLocationDelete({
                   title: "מחיקת מיקום",
@@ -318,16 +318,16 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
 
         {/* Autocomplete suggestions dropdown — opens upward to avoid map overlap */}
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute bottom-full z-[100] mb-1 max-h-[220px] w-full overflow-hidden overflow-y-auto rounded-lg border border-[#e7e1da] bg-white shadow-xl">
+          <div className="absolute bottom-full z-[100] mb-1 max-h-[220px] w-full overflow-hidden overflow-y-auto rounded-lg border border-border bg-card shadow-xl">
             {suggestions.map((s, i) => (
               <button
-                className="flex w-full items-start gap-2 border-[#f0ece6] border-b px-3 py-2.5 text-right text-[#3d3322] text-[12px] transition-colors last:border-b-0 hover:bg-[#fff8f0]"
+                className="flex w-full items-start gap-2 border-accent border-b px-3 py-2.5 text-right text-[12px] text-foreground transition-colors last:border-b-0 hover:bg-[#fff8f0]"
                 key={`${s.lat}-${s.lon}-${i}`}
                 onClick={() => selectSuggestion(s)}
                 type="button"
               >
                 <Navigation
-                  className="mt-0.5 flex-shrink-0 text-[#ff8c00]"
+                  className="mt-0.5 flex-shrink-0 text-primary"
                   size={12}
                 />
                 <span className="leading-relaxed">{s.display_name}</span>
@@ -338,25 +338,25 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
       </div>
 
       {/* Map */}
-      <div className="relative overflow-hidden rounded-lg border border-[#e7e1da]">
+      <div className="relative overflow-hidden rounded-lg border border-border">
         <div
           className="h-44 w-full"
           ref={mapContainerRef}
           style={{ background: "#f0ece6" }}
         />
         {!hasLocation && (
-          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center bg-[#f5f3f0]/80">
-            <MapPin className="mb-1 text-[#b5a48b]" size={24} />
-            <span className="text-[#8d785e] text-[11px]">
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center bg-accent/80">
+            <MapPin className="mb-1 text-tertiary" size={24} />
+            <span className="text-[11px] text-muted-foreground">
               הזן כתובת כדי לראות על המפה
             </span>
           </div>
         )}
         {saving && (
-          <div className="absolute top-2 left-2 flex items-center gap-1.5 rounded-lg border border-[#e7e1da] bg-white/90 px-2.5 py-1.5 shadow-sm backdrop-blur-sm">
-            <Loader2 className="animate-spin text-[#ff8c00]" size={12} />
+          <div className="absolute top-2 left-2 flex items-center gap-1.5 rounded-lg border border-border bg-card/90 px-2.5 py-1.5 shadow-sm backdrop-blur-sm">
+            <Loader2 className="animate-spin text-primary" size={12} />
             <span
-              className="text-[#8d785e] text-[10px]"
+              className="text-[10px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               שומר...
@@ -367,15 +367,15 @@ export function SupplierLocationMap({ supplier, onUpdate }: Props) {
 
       {/* Current address display */}
       {hasLocation && address && (
-        <div className="mt-3 flex items-start gap-2 text-[#8d785e] text-[12px]">
-          <MapPin className="mt-0.5 flex-shrink-0 text-[#ff8c00]" size={13} />
+        <div className="mt-3 flex items-start gap-2 text-[12px] text-muted-foreground">
+          <MapPin className="mt-0.5 flex-shrink-0 text-primary" size={13} />
           <span className="leading-relaxed">
             {address.split(",").slice(0, 3).join(", ")}
           </span>
         </div>
       )}
       {!hasLocation && supplier.region && (
-        <div className="mt-3 flex items-center gap-2 text-[#8d785e] text-[13px]">
+        <div className="mt-3 flex items-center gap-2 text-[13px] text-muted-foreground">
           <MapPin size={13} /> {supplier.region}
         </div>
       )}

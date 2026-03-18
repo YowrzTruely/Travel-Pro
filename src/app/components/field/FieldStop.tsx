@@ -52,27 +52,27 @@ function formatDelta(minutes: number): string {
 
 const statusConfig = {
   upcoming: {
-    bg: "bg-gray-50",
-    border: "border-gray-200",
-    badge: "bg-gray-100 text-gray-600",
+    bg: "bg-accent",
+    border: "border-border",
+    badge: "bg-accent text-muted-foreground",
     label: "ממתין",
   },
   in_progress: {
-    bg: "bg-orange-50",
-    border: "border-[#ff8c00]",
-    badge: "bg-[#ff8c00] text-white animate-pulse",
+    bg: "bg-primary/10",
+    border: "border-primary",
+    badge: "bg-primary text-white animate-pulse",
     label: "בביצוע",
   },
   completed: {
-    bg: "bg-green-50",
-    border: "border-green-300",
-    badge: "bg-green-100 text-green-700",
+    bg: "bg-success/10",
+    border: "border-success/40",
+    badge: "bg-success/15 text-success",
     label: "הושלם",
   },
   skipped: {
-    bg: "bg-red-50",
-    border: "border-red-200",
-    badge: "bg-red-100 text-red-600",
+    bg: "bg-destructive/10",
+    border: "border-destructive/30",
+    badge: "bg-destructive/15 text-destructive",
     label: "דולג",
   },
 };
@@ -144,11 +144,11 @@ export function FieldStop({ stop }: FieldStopProps) {
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#181510] text-[12px] text-white">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-[12px] text-white">
             {stop.orderIndex + 1}
           </span>
           <span
-            className="text-[#181510] text-[16px]"
+            className="text-[16px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {stop.supplierName}
@@ -165,23 +165,23 @@ export function FieldStop({ stop }: FieldStopProps) {
       {/* Times */}
       <div className="mb-3 space-y-1">
         <div className="flex items-center gap-2 text-[14px]">
-          <Clock className="text-[#8d785e]" size={14} />
-          <span className="text-[#8d785e]">מתוכנן:</span>
-          <span className="text-[#181510]" style={{ fontWeight: 600 }}>
+          <Clock className="text-muted-foreground" size={14} />
+          <span className="text-muted-foreground">מתוכנן:</span>
+          <span className="text-foreground" style={{ fontWeight: 600 }}>
             {stop.plannedStartTime} - {stop.plannedEndTime}
           </span>
         </div>
         {(stop.actualStartTime || stop.actualEndTime) && (
           <div className="flex items-center gap-2 text-[14px]">
-            <Clock className="text-[#ff8c00]" size={14} />
-            <span className="text-[#8d785e]">בפועל:</span>
-            <span className="text-[#181510]" style={{ fontWeight: 600 }}>
+            <Clock className="text-primary" size={14} />
+            <span className="text-muted-foreground">בפועל:</span>
+            <span className="text-foreground" style={{ fontWeight: 600 }}>
               {stop.actualStartTime ?? "--:--"} -{" "}
               {stop.actualEndTime ?? "--:--"}
             </span>
             {startDelta !== null && (
               <span
-                className={`text-[12px] ${startDelta > 0 ? "text-red-600" : startDelta < 0 ? "text-green-600" : "text-gray-500"}`}
+                className={`text-[12px] ${startDelta > 0 ? "text-destructive" : startDelta < 0 ? "text-success" : "text-muted-foreground"}`}
               >
                 ({formatDelta(startDelta)})
               </span>
@@ -193,15 +193,15 @@ export function FieldStop({ stop }: FieldStopProps) {
       {/* Quantity */}
       <div className="mb-3 flex items-center gap-3">
         <div className="flex items-center gap-1 text-[14px]">
-          <Hash className="text-[#8d785e]" size={14} />
-          <span className="text-[#8d785e]">מתוכנן:</span>
+          <Hash className="text-muted-foreground" size={14} />
+          <span className="text-muted-foreground">מתוכנן:</span>
           <span style={{ fontWeight: 600 }}>{stop.plannedQuantity}</span>
         </div>
         {stop.status !== "upcoming" && (
           <div className="flex items-center gap-1">
-            <span className="text-[#8d785e] text-[14px]">בפועל:</span>
+            <span className="text-[14px] text-muted-foreground">בפועל:</span>
             <input
-              className="w-20 rounded-lg border border-[#e7e1da] px-2 py-1 text-center text-[14px] outline-none focus:border-[#ff8c00]"
+              className="w-20 rounded-lg border border-border px-2 py-1 text-center text-[14px] outline-none focus:border-primary"
               inputMode="numeric"
               onBlur={handleQuantityBlur}
               onChange={(e) => setQuantityValue(e.target.value)}
@@ -212,7 +212,7 @@ export function FieldStop({ stop }: FieldStopProps) {
             {stop.actualQuantity !== undefined &&
               stop.actualQuantity !== stop.plannedQuantity && (
                 <span
-                  className={`text-[12px] ${stop.actualQuantity > stop.plannedQuantity ? "text-green-600" : "text-red-600"}`}
+                  className={`text-[12px] ${stop.actualQuantity > stop.plannedQuantity ? "text-success" : "text-destructive"}`}
                 >
                   ({stop.actualQuantity > stop.plannedQuantity ? "+" : ""}
                   {stop.actualQuantity - stop.plannedQuantity})
@@ -224,7 +224,7 @@ export function FieldStop({ stop }: FieldStopProps) {
 
       {/* Signature indicator */}
       {stop.supplierSignature && (
-        <div className="mb-3 flex items-center gap-1 text-[13px] text-green-600">
+        <div className="mb-3 flex items-center gap-1 text-[13px] text-success">
           <Check size={14} />
           <span>חתימה נשמרה</span>
         </div>
@@ -234,7 +234,7 @@ export function FieldStop({ stop }: FieldStopProps) {
       <div className="flex flex-wrap gap-2">
         {stop.status === "upcoming" && (
           <button
-            className="flex min-h-11 items-center gap-2 rounded-lg bg-[#ff8c00] px-4 py-2 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+            className="flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 py-2 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
             disabled={starting}
             onClick={handleStart}
             style={{ fontWeight: 600 }}
@@ -251,7 +251,7 @@ export function FieldStop({ stop }: FieldStopProps) {
 
         {stop.status === "in_progress" && (
           <button
-            className="flex min-h-11 items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-[14px] text-white transition-colors hover:bg-green-700 disabled:opacity-50"
+            className="flex min-h-11 items-center gap-2 rounded-lg bg-success px-4 py-2 text-[14px] text-white transition-colors hover:bg-green-700 disabled:opacity-50"
             disabled={ending}
             onClick={handleEnd}
             style={{ fontWeight: 600 }}
@@ -270,7 +270,7 @@ export function FieldStop({ stop }: FieldStopProps) {
           !stop.supplierSignature &&
           !showSignature && (
             <button
-              className="flex min-h-11 items-center gap-2 rounded-lg border border-[#e7e1da] px-4 py-2 text-[#181510] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+              className="flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 py-2 text-[14px] text-foreground transition-colors hover:bg-accent"
               onClick={() => setShowSignature(true)}
               style={{ fontWeight: 600 }}
               type="button"
@@ -293,14 +293,14 @@ export function FieldStop({ stop }: FieldStopProps) {
       {/* End time delta */}
       {endDelta !== null && (
         <div className="mt-2 text-[12px]">
-          <span className="text-[#8d785e]">סיום: </span>
+          <span className="text-muted-foreground">סיום: </span>
           <span
             className={
               endDelta > 0
-                ? "text-red-600"
+                ? "text-destructive"
                 : endDelta < 0
-                  ? "text-green-600"
-                  : "text-gray-500"
+                  ? "text-success"
+                  : "text-muted-foreground"
             }
           >
             {formatDelta(endDelta)}

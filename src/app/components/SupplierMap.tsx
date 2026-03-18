@@ -198,7 +198,7 @@ export function SupplierMap() {
   const resetView = useCallback(() => setActiveRegion(null), []);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#e7e1da] bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
       <style>{`
         @keyframes leafpin { 75%, 100% { transform: scale(1.6); opacity: 0; } }
         .supplier-map-popup .leaflet-popup-content-wrapper { border-radius: 14px !important; box-shadow: 0 8px 32px rgba(0,0,0,0.13) !important; border: 1px solid #e7e1da !important; padding: 0 !important; overflow: hidden; }
@@ -209,20 +209,20 @@ export function SupplierMap() {
       `}</style>
 
       {/* Header */}
-      <div className="border-[#f0ece6] border-b px-6 pt-5 pb-4">
+      <div className="border-accent border-b px-6 pt-5 pb-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fff3e0]">
-              <MapPin className="text-[#ff8c00]" size={16} />
+              <MapPin className="text-primary" size={16} />
             </div>
             <div>
               <h2
-                className="text-[#181510] text-[18px]"
+                className="text-[18px] text-foreground"
                 style={{ fontWeight: 600 }}
               >
                 מפת ספקים ארצית
               </h2>
-              <p className="mt-0.5 text-[#8d785e] text-[12px]">
+              <p className="mt-0.5 text-[12px] text-muted-foreground">
                 התפלגות ספקים לפי אזור — לחץ על פין לצפייה בפרטים
               </p>
             </div>
@@ -245,9 +245,11 @@ export function SupplierMap() {
                     transition: "transform 0.2s",
                   }}
                 />
-                <span className="text-[#8d785e] text-[11px]">{r.name}</span>
+                <span className="text-[11px] text-muted-foreground">
+                  {r.name}
+                </span>
                 <span
-                  className="text-[#181510] text-[12px]"
+                  className="text-[12px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   {(suppliersByRegion[r.id] || []).length}
@@ -268,7 +270,7 @@ export function SupplierMap() {
           />
           {activeRegion && (
             <button
-              className="absolute top-3 left-3 z-[1000] flex items-center gap-1.5 rounded-xl border border-[#e7e1da] bg-white px-3 py-2 text-[#181510] text-[12px] shadow-md transition-all hover:border-[#ff8c00] hover:text-[#ff8c00]"
+              className="absolute top-3 left-3 z-[1000] flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-2 text-[12px] text-foreground shadow-md transition-all hover:border-primary hover:text-primary"
               onClick={resetView}
               style={{ fontWeight: 600 }}
               type="button"
@@ -279,10 +281,10 @@ export function SupplierMap() {
         </div>
 
         {/* Sidebar */}
-        <div className="flex h-full flex-col overflow-hidden border-[#f0ece6] border-r bg-[#fdfcfa] lg:w-[240px]">
+        <div className="flex h-full flex-col overflow-hidden border-accent border-r bg-surface lg:w-[240px]">
           <div className="px-4 pt-4 pb-2">
             <p
-              className="text-[#181510] text-[13px]"
+              className="text-[13px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               ספקים לפי אזור
@@ -323,7 +325,7 @@ export function SupplierMap() {
                         }}
                       />
                       <span
-                        className="text-[#181510] text-[13px]"
+                        className="text-[13px] text-foreground"
                         style={{ fontWeight: isActive ? 700 : 500 }}
                       >
                         {pin.label}
@@ -336,7 +338,7 @@ export function SupplierMap() {
                       {list.length}
                     </span>
                   </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-[#f0ece6]">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-accent">
                     <motion.div
                       animate={{ width: `${pct}%` }}
                       className="h-full rounded-full"
@@ -346,11 +348,11 @@ export function SupplierMap() {
                     />
                   </div>
                   <div className="mt-1 flex items-center justify-between">
-                    <span className="text-[#b09d84] text-[10px]">
+                    <span className="text-[10px] text-tertiary">
                       {pct}% מהמאגר
                     </span>
                     {list.length > 0 && (
-                      <span className="text-[#b09d84] text-[10px]">
+                      <span className="text-[10px] text-tertiary">
                         {
                           list.filter(
                             (s: any) => s.verificationStatus === "verified"
@@ -361,10 +363,10 @@ export function SupplierMap() {
                     )}
                   </div>
                   {isActive && list.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1.5 border-[#f0ece6] border-t pt-2">
+                    <div className="mt-2 flex flex-wrap gap-1.5 border-accent border-t pt-2">
                       {list.map((s: any) => (
                         <button
-                          className="flex items-center gap-1 rounded-md border border-[#e7e1da] bg-white px-1.5 py-1 text-[10px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                          className="flex items-center gap-1 rounded-md border border-border bg-card px-1.5 py-1 text-[10px] transition-colors hover:border-primary hover:text-primary"
                           key={s._id}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -388,22 +390,22 @@ export function SupplierMap() {
               );
             })}
           </div>
-          <div className="shrink-0 border-[#f0ece6] border-t bg-[#fdfcfa] px-4 py-3">
+          <div className="shrink-0 border-accent border-t bg-surface px-4 py-3">
             <div className="mb-1 flex items-center gap-2">
-              <Users className="text-[#8d785e]" size={13} />
-              <span className="text-[#8d785e] text-[12px]">
+              <Users className="text-muted-foreground" size={13} />
+              <span className="text-[12px] text-muted-foreground">
                 {'סה"כ במאגר:'}
               </span>
               <span
-                className="text-[#181510] text-[14px]"
+                className="text-[14px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 {suppliers.length} ספקים
               </span>
             </div>
-            <div className="flex items-center gap-3 text-[#b09d84] text-[10px]">
+            <div className="flex items-center gap-3 text-[10px] text-tertiary">
               <span className="flex items-center gap-0.5">
-                <CheckCircle className="text-green-500" size={9} />
+                <CheckCircle className="text-success" size={9} />
                 {
                   suppliers.filter(
                     (s: any) => s.verificationStatus === "verified"
@@ -421,7 +423,7 @@ export function SupplierMap() {
                 ממתינים
               </span>
               <span className="flex items-center gap-0.5">
-                <AlertTriangle className="text-[#8d785e]" size={9} />
+                <AlertTriangle className="text-muted-foreground" size={9} />
                 {
                   suppliers.filter(
                     (s: any) => s.verificationStatus === "unverified"

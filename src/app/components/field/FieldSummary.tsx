@@ -18,12 +18,12 @@ function timeDeltaMinutes(planned: string, actual: string): number {
 function deltaColor(minutes: number): string {
   const abs = Math.abs(minutes);
   if (abs <= 0) {
-    return "text-green-600";
+    return "text-success";
   }
   if (abs <= 15) {
-    return "text-yellow-600";
+    return "text-warning";
   }
-  return "text-red-600";
+  return "text-destructive";
 }
 
 function formatDuration(ms: number): string {
@@ -59,9 +59,9 @@ export function FieldSummary({
     startedAt && completedAt ? completedAt - startedAt : undefined;
 
   return (
-    <div className="rounded-xl border-2 border-green-300 bg-green-50 p-4">
+    <div className="rounded-xl border-2 border-success/40 bg-success/10 p-4">
       <h3
-        className="mb-4 text-[#181510] text-[18px]"
+        className="mb-4 text-[18px] text-foreground"
         style={{ fontWeight: 700 }}
       >
         סיכום יום שטח
@@ -69,10 +69,10 @@ export function FieldSummary({
 
       {/* Duration */}
       {duration !== undefined && (
-        <div className="mb-4 flex items-center gap-2 rounded-lg bg-white p-3 text-[14px]">
-          <Clock className="text-[#ff8c00]" size={16} />
-          <span className="text-[#8d785e]">משך כולל:</span>
-          <span className="text-[#181510]" style={{ fontWeight: 600 }}>
+        <div className="mb-4 flex items-center gap-2 rounded-lg bg-card p-3 text-[14px]">
+          <Clock className="text-primary" size={16} />
+          <span className="text-muted-foreground">משך כולל:</span>
+          <span className="text-foreground" style={{ fontWeight: 600 }}>
             {formatDuration(duration)}
           </span>
         </div>
@@ -80,7 +80,7 @@ export function FieldSummary({
 
       {/* Stops table */}
       <div className="mb-4 space-y-2">
-        <p className="text-[#181510] text-[14px]" style={{ fontWeight: 600 }}>
+        <p className="text-[14px] text-foreground" style={{ fontWeight: 600 }}>
           עצירות
         </p>
         {stops.map((stop) => {
@@ -92,21 +92,21 @@ export function FieldSummary({
             : null;
 
           return (
-            <div className="rounded-lg bg-white p-3" key={stop.id}>
+            <div className="rounded-lg bg-card p-3" key={stop.id}>
               <div className="mb-1 flex items-center justify-between">
                 <span
-                  className="text-[#181510] text-[14px]"
+                  className="text-[14px] text-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {stop.orderIndex + 1}. {stop.supplierName}
                 </span>
                 {stop.supplierSignature ? (
-                  <span className="flex items-center gap-1 text-[12px] text-green-600">
+                  <span className="flex items-center gap-1 text-[12px] text-success">
                     <Check size={12} />
                     חתימה
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1 text-[12px] text-red-500">
+                  <span className="flex items-center gap-1 text-[12px] text-destructive">
                     <X size={12} />
                     ללא חתימה
                   </span>
@@ -115,13 +115,13 @@ export function FieldSummary({
 
               {/* Times */}
               <div className="mb-1 flex items-center gap-3 text-[13px]">
-                <Clock className="text-[#8d785e]" size={12} />
-                <span className="text-[#8d785e]">
+                <Clock className="text-muted-foreground" size={12} />
+                <span className="text-muted-foreground">
                   מתוכנן: {stop.plannedStartTime}-{stop.plannedEndTime}
                 </span>
                 {stop.actualStartTime && (
                   <span>
-                    <span className="text-[#8d785e]">בפועל: </span>
+                    <span className="text-muted-foreground">בפועל: </span>
                     <span
                       className={
                         startDelta !== null ? deltaColor(startDelta) : ""
@@ -149,20 +149,20 @@ export function FieldSummary({
 
               {/* Quantity */}
               <div className="flex items-center gap-3 text-[13px]">
-                <Hash className="text-[#8d785e]" size={12} />
-                <span className="text-[#8d785e]">
+                <Hash className="text-muted-foreground" size={12} />
+                <span className="text-muted-foreground">
                   מתוכנן: {stop.plannedQuantity}
                 </span>
                 {stop.actualQuantity !== undefined && (
                   <span>
-                    <span className="text-[#8d785e]">בפועל: </span>
+                    <span className="text-muted-foreground">בפועל: </span>
                     <span
                       className={
                         stop.actualQuantity !== stop.plannedQuantity
                           ? stop.actualQuantity > stop.plannedQuantity
-                            ? "text-green-600"
-                            : "text-red-600"
-                          : "text-green-600"
+                            ? "text-success"
+                            : "text-destructive"
+                          : "text-success"
                       }
                       style={{ fontWeight: 600 }}
                     >
@@ -177,23 +177,23 @@ export function FieldSummary({
       </div>
 
       {/* Signatures summary */}
-      <div className="mb-4 flex items-center gap-2 rounded-lg bg-white p-3 text-[14px]">
-        <Check className="text-green-600" size={16} />
-        <span className="text-[#8d785e]">חתימות:</span>
-        <span className="text-[#181510]" style={{ fontWeight: 600 }}>
+      <div className="mb-4 flex items-center gap-2 rounded-lg bg-card p-3 text-[14px]">
+        <Check className="text-success" size={16} />
+        <span className="text-muted-foreground">חתימות:</span>
+        <span className="text-foreground" style={{ fontWeight: 600 }}>
           {stopsWithSignatures.length}/{stops.length}
         </span>
       </div>
 
       {/* Total expenses */}
-      <div className="flex items-center gap-2 rounded-lg bg-white p-3 text-[14px]">
-        <Receipt className="text-[#ff8c00]" size={16} />
-        <span className="text-[#8d785e]">סה"כ הוצאות:</span>
-        <span className="text-[#ff8c00]" style={{ fontWeight: 700 }}>
+      <div className="flex items-center gap-2 rounded-lg bg-card p-3 text-[14px]">
+        <Receipt className="text-primary" size={16} />
+        <span className="text-muted-foreground">סה"כ הוצאות:</span>
+        <span className="text-primary" style={{ fontWeight: 700 }}>
           ₪{totalExpenses.toLocaleString()}
         </span>
         {expenses && (
-          <span className="text-[#8d785e] text-[12px]">
+          <span className="text-[12px] text-muted-foreground">
             ({expenses.length} פריטים)
           </span>
         )}

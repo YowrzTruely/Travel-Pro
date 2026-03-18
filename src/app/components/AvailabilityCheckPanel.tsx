@@ -121,26 +121,26 @@ export function AvailabilityCheckPanel({
   return (
     <div className="space-y-5">
       <h2
-        className="flex items-center gap-2 text-[#181510] text-[18px]"
+        className="flex items-center gap-2 text-[18px] text-foreground"
         style={{ fontWeight: 700 }}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#8b5cf6]/10">
-          <Search className="text-[#8b5cf6]" size={15} />
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-chart-5/10">
+          <Search className="text-chart-5" size={15} />
         </div>
         בדיקת זמינות ({itemsWithSupplier.length})
       </h2>
 
       {itemsWithSupplier.length === 0 ? (
-        <div className="rounded-xl border border-[#e7e1da] bg-white py-12 text-center">
+        <div className="rounded-xl border border-border bg-card py-12 text-center">
           <div className="mb-3 flex justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f5f3f0]">
-              <Search className="text-[#8d785e]" size={22} />
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent">
+              <Search className="text-muted-foreground" size={22} />
             </div>
           </div>
-          <p className="mb-2 text-[#8d785e] text-[16px]">
+          <p className="mb-2 text-[16px] text-muted-foreground">
             אין רכיבים עם ספק מקושר
           </p>
-          <p className="text-[#b8a990] text-[13px]">
+          <p className="text-[13px] text-tertiary">
             הוסף רכיבים ובחר ספק מהרשימה כדי לבדוק זמינות
           </p>
         </div>
@@ -157,12 +157,12 @@ export function AvailabilityCheckPanel({
 
             return (
               <div
-                className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white"
+                className="overflow-hidden rounded-xl border border-border bg-card"
                 key={item._id}
               >
                 <div className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f5f3f0]">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
                       <span className="text-[16px]">
                         {item.type === "תחבורה"
                           ? "🚌"
@@ -179,12 +179,12 @@ export function AvailabilityCheckPanel({
                     </div>
                     <div>
                       <div
-                        className="text-[#181510] text-[14px]"
+                        className="text-[14px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {item.name || item.type}
                       </div>
-                      <div className="text-[#8d785e] text-[12px]">
+                      <div className="text-[12px] text-muted-foreground">
                         {item.supplier} &bull; ₪{item.cost.toLocaleString()}
                       </div>
                     </div>
@@ -205,7 +205,7 @@ export function AvailabilityCheckPanel({
 
                     {status === "not_checked" && (
                       <button
-                        className="flex items-center gap-1.5 rounded-lg bg-[#8b5cf6] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#7c3aed] disabled:opacity-50"
+                        className="flex items-center gap-1.5 rounded-lg bg-chart-5 px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-chart-5/80 disabled:opacity-50"
                         disabled={isSending}
                         onClick={() => handleSendRequest(item)}
                         style={{ fontWeight: 600 }}
@@ -221,7 +221,7 @@ export function AvailabilityCheckPanel({
                     )}
 
                     {hasPendingRequest && (
-                      <span className="text-[#b8a990] text-[11px]">
+                      <span className="text-[11px] text-tertiary">
                         נשלח{" "}
                         {request?.requestedAt
                           ? new Date(request.requestedAt).toLocaleDateString(
@@ -235,8 +235,8 @@ export function AvailabilityCheckPanel({
 
                 {/* Response details */}
                 {request?.responseNotes && (
-                  <div className="border-[#e7e1da] border-t bg-[#f8f7f5] px-4 py-3">
-                    <p className="text-[#6b5d45] text-[13px]">
+                  <div className="border-border border-t bg-background px-4 py-3">
+                    <p className="text-[13px] text-muted-foreground">
                       <span style={{ fontWeight: 600 }}>תגובת הספק: </span>
                       {request.responseNotes}
                     </p>
@@ -250,9 +250,9 @@ export function AvailabilityCheckPanel({
 
       {/* Items without supplier */}
       {itemsWithoutSupplier.length > 0 && (
-        <div className="rounded-xl border border-[#e7e1da] border-dashed bg-[#f8f7f5] p-4">
+        <div className="rounded-xl border border-border border-dashed bg-background p-4">
           <p
-            className="mb-2 text-[#8d785e] text-[13px]"
+            className="mb-2 text-[13px] text-muted-foreground"
             style={{ fontWeight: 600 }}
           >
             {itemsWithoutSupplier.length} רכיבים ללא ספק מקושר:
@@ -260,7 +260,7 @@ export function AvailabilityCheckPanel({
           <div className="flex flex-wrap gap-2">
             {itemsWithoutSupplier.map((item) => (
               <span
-                className="rounded-full border border-[#e7e1da] bg-white px-3 py-1 text-[#8d785e] text-[12px]"
+                className="rounded-full border border-border bg-card px-3 py-1 text-[12px] text-muted-foreground"
                 key={item._id}
               >
                 {item.name || item.type}
@@ -268,7 +268,7 @@ export function AvailabilityCheckPanel({
               </span>
             ))}
           </div>
-          <p className="mt-2 text-[#b8a990] text-[11px]">
+          <p className="mt-2 text-[11px] text-tertiary">
             ערוך את הרכיב ובחר ספק מהרשימה כדי לאפשר בדיקת זמינות
           </p>
         </div>

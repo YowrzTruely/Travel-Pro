@@ -42,7 +42,7 @@ export function LossReasonModal({
     >
       <div
         aria-modal="true"
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+        className="w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl"
         dir="rtl"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.key === "Escape" && onClose()}
@@ -50,13 +50,13 @@ export function LossReasonModal({
       >
         <div className="mb-4 flex items-center justify-between">
           <h2
-            className="text-[#181510] text-[20px]"
+            className="text-[20px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             סיבת הפסד
           </h2>
           <button
-            className="rounded-lg p-1 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+            className="rounded-lg p-1 text-muted-foreground transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >
@@ -64,7 +64,7 @@ export function LossReasonModal({
           </button>
         </div>
 
-        <p className="mb-4 text-[#8d785e] text-[14px]">
+        <p className="mb-4 text-[14px] text-muted-foreground">
           למה הליד <strong>{leadName}</strong> נסגר כהפסד?
         </p>
 
@@ -73,27 +73,27 @@ export function LossReasonModal({
             <label
               className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 transition-colors ${
                 reason === opt.value
-                  ? "border-[#ef4444] bg-red-50"
-                  : "border-[#e7e1da] hover:bg-[#f5f3f0]"
+                  ? "border-destructive bg-destructive/10"
+                  : "border-border hover:bg-accent"
               }`}
               key={opt.value}
             >
               <input
                 checked={reason === opt.value}
-                className="accent-[#ef4444]"
+                className="accent-destructive"
                 name="lossReason"
                 onChange={() => setReason(opt.value)}
                 type="radio"
                 value={opt.value}
               />
-              <span className="text-[#181510] text-[14px]">{opt.label}</span>
+              <span className="text-[14px] text-foreground">{opt.label}</span>
             </label>
           ))}
         </div>
 
         {reason === "other" && (
           <textarea
-            className="mb-4 w-full resize-none rounded-lg border border-[#e7e1da] px-3 py-2.5 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+            className="mb-4 w-full resize-none rounded-lg border border-border px-3 py-2.5 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
             onChange={(e) => setNotes(e.target.value)}
             placeholder="פרט את הסיבה..."
             rows={3}
@@ -103,7 +103,7 @@ export function LossReasonModal({
 
         <div className="flex gap-3">
           <button
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#ef4444] py-2.5 text-white transition-colors hover:bg-[#dc2626] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-destructive py-2.5 text-white transition-colors hover:bg-destructive disabled:cursor-not-allowed disabled:opacity-50"
             disabled={saving}
             onClick={handleConfirm}
             style={{ fontWeight: 600 }}
@@ -113,7 +113,7 @@ export function LossReasonModal({
             {saving ? "שומר..." : "אישור"}
           </button>
           <button
-            className="rounded-lg border border-[#e7e1da] px-6 py-2.5 text-[#181510] transition-colors hover:bg-[#f5f3f0]"
+            className="rounded-lg border border-border px-6 py-2.5 text-foreground transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >

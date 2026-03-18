@@ -47,7 +47,7 @@ export function SupplierPreview() {
   if (!supplierId) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <p className="text-[#8d785e] text-[15px]">לא נמצא ספק מקושר</p>
+        <p className="text-[15px] text-muted-foreground">לא נמצא ספק מקושר</p>
       </div>
     );
   }
@@ -60,7 +60,7 @@ export function SupplierPreview() {
   ) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#ff8c00] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary border-t-transparent" />
       </div>
     );
   }
@@ -68,7 +68,7 @@ export function SupplierPreview() {
   if (!supplier) {
     return (
       <div className="flex h-64 items-center justify-center" dir="rtl">
-        <p className="text-[#8d785e] text-[15px]">ספק לא נמצא</p>
+        <p className="text-[15px] text-muted-foreground">ספק לא נמצא</p>
       </div>
     );
   }
@@ -103,29 +103,29 @@ export function SupplierPreview() {
 
   return (
     <FeatureGate featureName="תצוגה מקדימה" requiredStage="stage2">
-      <div className="min-h-screen bg-[#f8f7f5] p-6" dir="rtl">
+      <div className="min-h-screen bg-background p-6" dir="rtl">
         <div className="mx-auto max-w-4xl">
           {/* Header */}
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h1
-                className="text-[#181510] text-[24px]"
+                className="text-[24px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 כך אני נראה
               </h1>
-              <p className="mt-1 text-[#8d785e] text-[14px]">
+              <p className="mt-1 text-[14px] text-muted-foreground">
                 תצוגה מקדימה של הפרופיל שלך כפי שנראה למפיקים ולקוחות
               </p>
             </div>
 
             {/* View toggle */}
-            <div className="flex gap-2 rounded-xl border border-[#e7e1da] bg-white p-1">
+            <div className="flex gap-2 rounded-xl border border-border bg-card p-1">
               <button
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] transition-colors ${
                   viewMode === "producer"
-                    ? "bg-[#ff8c00] text-white"
-                    : "text-[#8d785e] hover:bg-[#f5f3f0]"
+                    ? "bg-primary text-white"
+                    : "text-muted-foreground hover:bg-accent"
                 }`}
                 onClick={() => setViewMode("producer")}
                 style={{ fontWeight: 600 }}
@@ -137,8 +137,8 @@ export function SupplierPreview() {
               <button
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] transition-colors ${
                   viewMode === "client"
-                    ? "bg-[#ff8c00] text-white"
-                    : "text-[#8d785e] hover:bg-[#f5f3f0]"
+                    ? "bg-primary text-white"
+                    : "text-muted-foreground hover:bg-accent"
                 }`}
                 onClick={() => setViewMode("client")}
                 style={{ fontWeight: 600 }}
@@ -151,19 +151,19 @@ export function SupplierPreview() {
           </div>
 
           {/* Supplier card */}
-          <div className="mb-6 rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-sm">
+          <div className="mb-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
             <div className="flex items-start gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ff8c00]/10">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
                 <span className="text-[32px]">{supplier.icon || "🏢"}</span>
               </div>
               <div className="flex-1">
                 <h2
-                  className="text-[#181510] text-[20px]"
+                  className="text-[20px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   {supplier.name}
                 </h2>
-                <div className="mt-1 flex flex-wrap items-center gap-3 text-[#8d785e] text-[13px]">
+                <div className="mt-1 flex flex-wrap items-center gap-3 text-[13px] text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Tag size={12} />
                     {categoryDisplayLabel(supplier.category)}
@@ -175,13 +175,13 @@ export function SupplierPreview() {
                     </span>
                   )}
                   <span className="flex items-center gap-1">
-                    <Star className="text-[#ff8c00]" size={12} />
+                    <Star className="text-primary" size={12} />
                     {avgRating.toFixed(1)} ({ratings.length} דירוגים)
                   </span>
                 </div>
                 {supplier.verificationStatus === "verified" && (
                   <span
-                    className="mt-2 inline-block rounded-full bg-green-50 px-2 py-0.5 text-[11px] text-green-600"
+                    className="mt-2 inline-block rounded-full bg-success/10 px-2 py-0.5 text-[11px] text-success"
                     style={{ fontWeight: 600 }}
                   >
                     מאומת ✓
@@ -191,40 +191,40 @@ export function SupplierPreview() {
             </div>
 
             {supplier.notes && (
-              <p className="mt-4 text-[#8d785e] text-[14px] leading-relaxed">
+              <p className="mt-4 text-[14px] text-muted-foreground leading-relaxed">
                 {supplier.notes}
               </p>
             )}
           </div>
 
           {/* Products */}
-          <div className="mb-6 rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-sm">
+          <div className="mb-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
             <h3
-              className="mb-4 flex items-center gap-2 text-[#181510] text-[16px]"
+              className="mb-4 flex items-center gap-2 text-[16px] text-foreground"
               style={{ fontWeight: 700 }}
             >
-              <Package className="text-[#ff8c00]" size={18} />
+              <Package className="text-primary" size={18} />
               מוצרים ({products.length})
             </h3>
             {products.length === 0 ? (
-              <p className="text-[#8d785e] text-[14px]">
+              <p className="text-[14px] text-muted-foreground">
                 עדיין לא נוספו מוצרים
               </p>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
                 {products.map((product) => (
                   <div
-                    className="rounded-xl border border-[#e7e1da] p-4"
+                    className="rounded-xl border border-border p-4"
                     key={product.id}
                   >
                     <div
-                      className="text-[#181510] text-[14px]"
+                      className="text-[14px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {product.name}
                     </div>
                     {product.description && (
-                      <p className="mt-1 line-clamp-2 text-[#8d785e] text-[12px]">
+                      <p className="mt-1 line-clamp-2 text-[12px] text-muted-foreground">
                         {viewMode === "client"
                           ? (product.aiDescription ?? product.description)
                           : product.description}
@@ -232,7 +232,7 @@ export function SupplierPreview() {
                     )}
                     <div className="mt-2 flex items-center justify-between">
                       <span
-                        className="text-[#ff8c00] text-[14px]"
+                        className="text-[14px] text-primary"
                         style={{ fontWeight: 700 }}
                       >
                         {viewMode === "producer"
@@ -242,13 +242,13 @@ export function SupplierPreview() {
                       {viewMode === "producer" &&
                         product.producerPrice &&
                         product.listPrice && (
-                          <span className="text-[#8d785e] text-[11px]">
+                          <span className="text-[11px] text-muted-foreground">
                             מחיר מחירון: ₪{product.listPrice.toLocaleString()}
                           </span>
                         )}
                     </div>
                     {product.unit && (
-                      <span className="text-[#8d785e] text-[11px]">
+                      <span className="text-[11px] text-muted-foreground">
                         ל{product.unit}
                       </span>
                     )}
@@ -260,9 +260,9 @@ export function SupplierPreview() {
 
           {/* Active promotions */}
           {activePromotions.length > 0 && (
-            <div className="mb-6 rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-sm">
+            <div className="mb-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
               <h3
-                className="mb-4 text-[#181510] text-[16px]"
+                className="mb-4 text-[16px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 🔥 מבצעים פעילים ({activePromotions.length})
@@ -270,22 +270,22 @@ export function SupplierPreview() {
               <div className="space-y-3">
                 {activePromotions.map((promo) => (
                   <div
-                    className="rounded-xl border border-orange-200 bg-orange-50 p-4"
+                    className="rounded-xl border border-primary/30 bg-primary/10 p-4"
                     key={promo.id}
                   >
                     <div
-                      className="text-[#181510] text-[14px]"
+                      className="text-[14px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {promo.title}
                     </div>
                     {promo.description && (
-                      <p className="mt-1 text-[#8d785e] text-[12px]">
+                      <p className="mt-1 text-[12px] text-muted-foreground">
                         {promo.description}
                       </p>
                     )}
                     <div
-                      className="mt-2 text-[#ff8c00] text-[13px]"
+                      className="mt-2 text-[13px] text-primary"
                       style={{ fontWeight: 600 }}
                     >
                       {promo.discountPercent
@@ -302,16 +302,16 @@ export function SupplierPreview() {
 
           {/* Ratings summary */}
           {ratings.length > 0 && (
-            <div className="mb-6 rounded-2xl border border-[#e7e1da] bg-white p-6 shadow-sm">
+            <div className="mb-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
               <h3
-                className="mb-4 text-[#181510] text-[16px]"
+                className="mb-4 text-[16px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 דירוגים ({ratings.length})
               </h3>
               <div className="flex items-center gap-3">
                 <span
-                  className="text-[#ff8c00] text-[32px]"
+                  className="text-[32px] text-primary"
                   style={{ fontWeight: 700 }}
                 >
                   {avgRating.toFixed(1)}
@@ -321,15 +321,15 @@ export function SupplierPreview() {
                     <Star
                       className={
                         s <= Math.round(avgRating)
-                          ? "fill-[#ff8c00] text-[#ff8c00]"
-                          : "text-[#e7e1da]"
+                          ? "fill-primary text-primary"
+                          : "text-border"
                       }
                       key={s}
                       size={20}
                     />
                   ))}
                 </div>
-                <span className="text-[#8d785e] text-[13px]">
+                <span className="text-[13px] text-muted-foreground">
                   ({ratings.length} דירוגים)
                 </span>
               </div>
@@ -338,21 +338,21 @@ export function SupplierPreview() {
 
           {/* Missing fields */}
           {missingFields.length > 0 && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
+            <div className="rounded-2xl border border-warning/30 bg-warning/10 p-6">
               <h3
-                className="mb-3 flex items-center gap-2 text-[15px] text-amber-800"
+                className="mb-3 flex items-center gap-2 text-[15px] text-warning"
                 style={{ fontWeight: 700 }}
               >
                 <AlertCircle size={18} />
                 שדות חסרים ({missingFields.length})
               </h3>
-              <p className="mb-3 text-[13px] text-amber-700">
+              <p className="mb-3 text-[13px] text-warning">
                 השלם את השדות הבאים כדי לשפר את הפרופיל שלך:
               </p>
               <div className="flex flex-wrap gap-2">
                 {missingFields.map((field) => (
                   <Link
-                    className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-[12px] text-amber-700 transition-colors hover:bg-amber-100"
+                    className="rounded-lg border border-warning/40 bg-card px-3 py-1.5 text-[12px] text-warning transition-colors hover:bg-warning/15"
                     key={field.label}
                     style={{ fontWeight: 600 }}
                     to={field.link}

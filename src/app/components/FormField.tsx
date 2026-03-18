@@ -97,12 +97,12 @@ const baseInput =
 
 function inputClasses(error?: FieldError, isDirty?: boolean) {
   if (error) {
-    return `${baseInput} border-red-400 focus:ring-red-200 focus:border-red-400 bg-red-50/30`;
+    return `${baseInput} border-red-400 focus:ring-red-200 focus:border-red-400 bg-destructive/10/30`;
   }
   if (isDirty) {
     return `${baseInput} border-green-400 focus:ring-green-200 focus:border-green-400`;
   }
-  return `${baseInput} border-[#e7e1da] focus:ring-[#ff8c00]/30 focus:border-[#ff8c00]`;
+  return `${baseInput} border-border focus:ring-primary/30 focus:border-primary`;
 }
 
 // ─── FormField component ───
@@ -125,7 +125,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
     return (
       <div className={className}>
         <label
-          className="mb-1 flex items-center gap-1 text-[#8d785e] text-[13px]"
+          className="mb-1 flex items-center gap-1 text-[13px] text-muted-foreground"
           htmlFor={inputId}
           style={{ fontWeight: 600 }}
         >
@@ -153,7 +153,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
             )}
             {!error && isDirty && (
               <CheckCircle
-                className="absolute top-1/2 left-3 -translate-y-1/2 text-green-500"
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-success"
                 size={16}
               />
             )}
@@ -162,7 +162,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
         {/* Error message */}
         {error && (
           <p
-            className="mt-1 flex items-center gap-1 text-[12px] text-red-500"
+            className="mt-1 flex items-center gap-1 text-[12px] text-destructive"
             style={{ fontWeight: 500 }}
           >
             <AlertCircle size={12} />
@@ -191,15 +191,15 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
     const selectId = rest.id || generatedId;
 
     const selectClass = error
-      ? `${baseInput} border-red-400 focus:ring-red-200 focus:border-red-400 bg-red-50/30 bg-white`
+      ? `${baseInput} border-red-400 focus:ring-red-200 focus:border-red-400 bg-destructive/10/30 bg-card`
       : isDirty
-        ? `${baseInput} border-green-400 focus:ring-green-200 focus:border-green-400 bg-white`
-        : `${baseInput} border-[#e7e1da] focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] bg-white`;
+        ? `${baseInput} border-green-400 focus:ring-green-200 focus:border-green-400 bg-card`
+        : `${baseInput} border-border focus:ring-primary/30 focus:border-primary bg-card`;
 
     return (
       <div className={className}>
         <label
-          className="mb-1 block text-[#8d785e] text-[13px]"
+          className="mb-1 block text-[13px] text-muted-foreground"
           htmlFor={selectId}
           style={{ fontWeight: 600 }}
         >
@@ -210,7 +210,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
         </select>
         {error && (
           <p
-            className="mt-1 flex items-center gap-1 text-[12px] text-red-500"
+            className="mt-1 flex items-center gap-1 text-[12px] text-destructive"
             style={{ fontWeight: 500 }}
           >
             <AlertCircle size={12} />
@@ -236,15 +236,15 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
     const textareaId = rest.id || generatedId;
 
     const textareaClass = error
-      ? `${baseInput} border-red-400 focus:ring-red-200 focus:border-red-400 bg-red-50/30 resize-none`
+      ? `${baseInput} border-red-400 focus:ring-red-200 focus:border-red-400 bg-destructive/10/30 resize-none`
       : isDirty
         ? `${baseInput} border-green-400 focus:ring-green-200 focus:border-green-400 resize-none`
-        : `${baseInput} border-[#e7e1da] focus:ring-[#ff8c00]/30 focus:border-[#ff8c00] resize-none`;
+        : `${baseInput} border-border focus:ring-primary/30 focus:border-primary resize-none`;
 
     return (
       <div className={className}>
         <label
-          className="mb-1 block text-[#8d785e] text-[13px]"
+          className="mb-1 block text-[13px] text-muted-foreground"
           htmlFor={textareaId}
           style={{ fontWeight: 600 }}
         >
@@ -258,7 +258,7 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
         />
         {error && (
           <p
-            className="mt-1 flex items-center gap-1 text-[12px] text-red-500"
+            className="mt-1 flex items-center gap-1 text-[12px] text-destructive"
             style={{ fontWeight: 500 }}
           >
             <AlertCircle size={12} />

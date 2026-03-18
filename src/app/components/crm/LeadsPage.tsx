@@ -111,11 +111,11 @@ export function LeadsPage() {
   return (
     <div className="p-4 lg:p-8" dir="rtl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-[#181510] text-[28px]" style={{ fontWeight: 700 }}>
+        <h1 className="text-[28px] text-foreground" style={{ fontWeight: 700 }}>
           ניהול לידים
         </h1>
         <button
-          className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-lg bg-[#ff8c00] px-4 py-2.5 text-white transition-colors hover:bg-[#e67e00]"
+          className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-white transition-colors hover:bg-primary-hover"
           onClick={() => setShowNewLead(true)}
           style={{ fontWeight: 600 }}
           type="button"
@@ -136,8 +136,8 @@ export function LeadsPage() {
             <div
               className={`flex w-[260px] min-w-[260px] snap-start flex-col rounded-xl border transition-colors ${
                 isOver
-                  ? "border-[#ff8c00] bg-[rgba(255,140,0,0.05)]"
-                  : "border-[#e7e1da] bg-[#f8f7f5]"
+                  ? "border-primary bg-[rgba(255,140,0,0.05)]"
+                  : "border-border bg-background"
               }`}
               key={status.key}
               onDragLeave={() => setDragOverCol(null)}
@@ -162,13 +162,13 @@ export function LeadsPage() {
                     style={{ backgroundColor: status.color }}
                   />
                   <span
-                    className="text-[#181510] text-[13px]"
+                    className="text-[13px] text-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     {status.label}
                   </span>
                 </div>
-                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#e7e1da] px-1.5 text-[#8d785e] text-[11px]">
+                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-border px-1.5 text-[11px] text-muted-foreground">
                   {count}
                 </span>
               </div>
@@ -177,7 +177,7 @@ export function LeadsPage() {
               <div className="flex flex-1 flex-col gap-2 p-2 pt-0">
                 {status.key === "new" && (
                   <button
-                    className="flex min-h-[44px] items-center justify-center gap-1 rounded-lg border border-[#e7e1da] border-dashed py-2 text-[#8d785e] text-[13px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                    className="flex min-h-[44px] items-center justify-center gap-1 rounded-lg border border-border border-dashed py-2 text-[13px] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                     onClick={() => setShowNewLead(true)}
                     type="button"
                   >
@@ -196,7 +196,7 @@ export function LeadsPage() {
                   />
                 ))}
                 {colLeads.length === 0 && status.key !== "new" && (
-                  <div className="py-4 text-center text-[#8d785e] text-[12px]">
+                  <div className="py-4 text-center text-[12px] text-muted-foreground">
                     אין לידים
                   </div>
                 )}

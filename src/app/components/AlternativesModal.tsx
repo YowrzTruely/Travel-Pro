@@ -104,20 +104,20 @@ export function AlternativesModal({
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
             <div
-              className="w-full max-w-2xl rounded-xl border border-[#e7e1da] bg-[#f8f7f5] shadow-2xl"
+              className="w-full max-w-2xl rounded-xl border border-border bg-background shadow-2xl"
               dir="rtl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="flex items-center justify-between rounded-t-xl border-[#e7e1da] border-b bg-white px-5 py-4">
+              <div className="flex items-center justify-between rounded-t-xl border-border border-b bg-card px-5 py-4">
                 <div>
                   <h2
-                    className="text-[#181510] text-[17px]"
+                    className="text-[17px] text-foreground"
                     style={{ fontWeight: 700 }}
                   >
                     חלופות — {category}
                   </h2>
-                  <p className="text-[#8d785e] text-[12px]">
+                  <p className="text-[12px] text-muted-foreground">
                     בחר עד 4 ספקים חלופיים
                     {region
                       ? ` באזור ${regionDisplayLabel(region) || region}`
@@ -125,7 +125,7 @@ export function AlternativesModal({
                   </p>
                 </div>
                 <button
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                   onClick={onClose}
                   type="button"
                 >
@@ -137,7 +137,7 @@ export function AlternativesModal({
               <div className="max-h-[60vh] overflow-y-auto p-4">
                 {suppliers ? (
                   suppliers.length === 0 ? (
-                    <div className="py-12 text-center text-[#8d785e] text-[14px]">
+                    <div className="py-12 text-center text-[14px] text-muted-foreground">
                       לא נמצאו ספקים חלופיים בקטגוריה זו
                     </div>
                   ) : (
@@ -148,10 +148,10 @@ export function AlternativesModal({
                         const hasPromo = promotionSupplierIds.has(sid);
                         return (
                           <button
-                            className={`relative rounded-xl border-2 bg-white p-4 text-right transition-all ${
+                            className={`relative rounded-xl border-2 bg-card p-4 text-right transition-all ${
                               isSelected
-                                ? "border-[#ff8c00] bg-[#ff8c00]/5 shadow-sm"
-                                : "border-[#e7e1da] hover:border-[#ff8c00]/50"
+                                ? "border-primary bg-primary/5 shadow-sm"
+                                : "border-border hover:border-primary/50"
                             } ${
                               !isSelected && selected.size >= 4
                                 ? "cursor-not-allowed opacity-50"
@@ -163,7 +163,7 @@ export function AlternativesModal({
                           >
                             {/* Selection check */}
                             {isSelected && (
-                              <div className="absolute top-3 left-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#ff8c00]">
+                              <div className="absolute top-3 left-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary">
                                 <Check className="text-white" size={14} />
                               </div>
                             )}
@@ -171,14 +171,14 @@ export function AlternativesModal({
                             {/* Supplier name + promo badge */}
                             <div className="mb-2 flex items-center gap-2">
                               <span
-                                className="text-[#181510] text-[15px]"
+                                className="text-[15px] text-foreground"
                                 style={{ fontWeight: 600 }}
                               >
                                 {s.name}
                               </span>
                               {hasPromo && (
                                 <span
-                                  className="flex items-center gap-1 rounded-full bg-[#ff8c00]/10 px-2 py-0.5 text-[#ff8c00] text-[10px]"
+                                  className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary"
                                   style={{ fontWeight: 600 }}
                                 >
                                   <Tag size={10} />
@@ -193,8 +193,8 @@ export function AlternativesModal({
                                 <Star
                                   className={
                                     w <= (s.rating || 0)
-                                      ? "text-[#ff8c00]"
-                                      : "text-[#ddd6cb]"
+                                      ? "text-primary"
+                                      : "text-tertiary"
                                   }
                                   fill={
                                     w <= (s.rating || 0) ? "#ff8c00" : "none"
@@ -203,13 +203,13 @@ export function AlternativesModal({
                                   size={14}
                                 />
                               ))}
-                              <span className="mr-1 text-[#8d785e] text-[11px]">
+                              <span className="mr-1 text-[11px] text-muted-foreground">
                                 ({s.rating || 0})
                               </span>
                             </div>
 
                             {/* Region + category */}
-                            <div className="flex items-center gap-3 text-[#8d785e] text-[12px]">
+                            <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
                               {s.region && (
                                 <span className="flex items-center gap-1">
                                   <MapPin size={11} />
@@ -224,29 +224,29 @@ export function AlternativesModal({
                     </div>
                   )
                 ) : (
-                  <div className="py-12 text-center text-[#8d785e] text-[14px]">
+                  <div className="py-12 text-center text-[14px] text-muted-foreground">
                     טוען ספקים...
                   </div>
                 )}
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-between rounded-b-xl border-[#e7e1da] border-t bg-white px-5 py-3">
-                <span className="text-[#8d785e] text-[13px]">
+              <div className="flex items-center justify-between rounded-b-xl border-border border-t bg-card px-5 py-3">
+                <span className="text-[13px] text-muted-foreground">
                   {selected.size > 0
                     ? `${selected.size} ספקים נבחרו`
                     : "לא נבחרו ספקים"}
                 </span>
                 <div className="flex gap-2">
                   <button
-                    className="rounded-xl border border-[#e7e1da] px-4 py-2 text-[#8d785e] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+                    className="rounded-xl border border-border px-4 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-accent"
                     onClick={onClose}
                     type="button"
                   >
                     ביטול
                   </button>
                   <button
-                    className="rounded-xl bg-[#ff8c00] px-5 py-2 text-[13px] text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-xl bg-primary px-5 py-2 text-[13px] text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={selected.size === 0}
                     onClick={handleConfirm}
                     style={{ fontWeight: 600 }}

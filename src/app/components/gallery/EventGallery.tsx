@@ -78,7 +78,7 @@ export function EventGallery({ projectId }: { projectId: Id<"projects"> }) {
   if (items === undefined || stats === undefined) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-[#b8a990]" size={24} />
+        <Loader2 className="animate-spin text-tertiary" size={24} />
       </div>
     );
   }
@@ -88,17 +88,17 @@ export function EventGallery({ projectId }: { projectId: Id<"projects"> }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2
-          className="flex items-center gap-2 text-[#181510] text-[18px]"
+          className="flex items-center gap-2 text-[18px] text-foreground"
           style={{ fontWeight: 700 }}
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-            <Camera className="text-[#ff8c00]" size={15} />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+            <Camera className="text-primary" size={15} />
           </div>
           גלריית אירוע
         </h2>
         <div className="flex items-center gap-2">
           <button
-            className="flex items-center gap-1.5 rounded-xl border border-[#e7e1da] bg-white px-4 py-2 text-[#181510] text-[13px] transition-colors hover:bg-[#f8f7f5]"
+            className="flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2 text-[13px] text-foreground transition-colors hover:bg-background"
             onClick={() => setShowShareLink(!showShareLink)}
             style={{ fontWeight: 600 }}
             type="button"
@@ -107,7 +107,7 @@ export function EventGallery({ projectId }: { projectId: Id<"projects"> }) {
             שתף עם משתתפים
           </button>
           <button
-            className="flex items-center gap-1.5 rounded-xl bg-[#ff8c00] px-4 py-2 text-[13px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-[13px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
             disabled={uploading}
             onClick={() => fileInputRef.current?.click()}
             style={{ fontWeight: 600 }}
@@ -133,22 +133,22 @@ export function EventGallery({ projectId }: { projectId: Id<"projects"> }) {
 
       {/* Share link panel */}
       {showShareLink && (
-        <div className="rounded-xl border border-[#e7e1da] bg-[#f8f7f5] p-4">
+        <div className="rounded-xl border border-border bg-background p-4">
           <p
-            className="mb-2 text-[#181510] text-[14px]"
+            className="mb-2 text-[14px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             קישור ציבורי לגלריה
           </p>
           <div className="flex items-center gap-2">
             <input
-              className="flex-1 rounded-lg border border-[#e7e1da] bg-white px-3 py-2 text-[#8d785e] text-[13px]"
+              className="flex-1 rounded-lg border border-border bg-card px-3 py-2 text-[13px] text-muted-foreground"
               dir="ltr"
               readOnly
               value={publicUrl}
             />
             <button
-              className="flex items-center gap-1 rounded-lg bg-[#181510] px-3 py-2 text-[13px] text-white transition-colors hover:bg-[#2a2520]"
+              className="flex items-center gap-1 rounded-lg bg-foreground px-3 py-2 text-[13px] text-white transition-colors hover:bg-foreground/90"
               onClick={handleCopyLink}
               style={{ fontWeight: 600 }}
               type="button"
@@ -162,19 +162,19 @@ export function EventGallery({ projectId }: { projectId: Id<"projects"> }) {
 
       {/* Stats */}
       <div className="flex gap-4">
-        <div className="flex items-center gap-2 rounded-lg bg-[#f8f7f5] px-4 py-2">
-          <ImageIcon className="text-[#8d785e]" size={16} />
+        <div className="flex items-center gap-2 rounded-lg bg-background px-4 py-2">
+          <ImageIcon className="text-muted-foreground" size={16} />
           <span
-            className="text-[#181510] text-[14px]"
+            className="text-[14px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             {stats.photos} תמונות
           </span>
         </div>
-        <div className="flex items-center gap-2 rounded-lg bg-[#f8f7f5] px-4 py-2">
-          <Video className="text-[#8d785e]" size={16} />
+        <div className="flex items-center gap-2 rounded-lg bg-background px-4 py-2">
+          <Video className="text-muted-foreground" size={16} />
           <span
-            className="text-[#181510] text-[14px]"
+            className="text-[14px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             {stats.videos} סרטונים
@@ -184,12 +184,12 @@ export function EventGallery({ projectId }: { projectId: Id<"projects"> }) {
 
       {/* Gallery Grid */}
       {items.length === 0 ? (
-        <div className="rounded-xl border border-[#e7e1da] bg-white py-16 text-center">
-          <Camera className="mx-auto mb-3 text-[#b8a990]" size={40} />
-          <p className="text-[#8d785e] text-[16px]">
+        <div className="rounded-xl border border-border bg-card py-16 text-center">
+          <Camera className="mx-auto mb-3 text-tertiary" size={40} />
+          <p className="text-[16px] text-muted-foreground">
             אין תמונות או סרטונים עדיין
           </p>
-          <p className="mt-1 text-[#b8a990] text-[13px]">
+          <p className="mt-1 text-[13px] text-tertiary">
             העלו תמונות וסרטונים מהאירוע
           </p>
         </div>
@@ -230,11 +230,11 @@ function GalleryItem({
   );
 
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-[#e7e1da] bg-[#f8f7f5]">
+    <div className="group relative overflow-hidden rounded-xl border border-border bg-background">
       <div className="aspect-square">
         {fileType === "video" ? (
-          <div className="flex h-full w-full items-center justify-center bg-[#181510]/5">
-            <Video className="text-[#8d785e]" size={32} />
+          <div className="flex h-full w-full items-center justify-center bg-foreground/5">
+            <Video className="text-muted-foreground" size={32} />
           </div>
         ) : imageUrl ? (
           <img
@@ -246,7 +246,7 @@ function GalleryItem({
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <Loader2 className="animate-spin text-[#b8a990]" size={20} />
+            <Loader2 className="animate-spin text-tertiary" size={20} />
           </div>
         )}
       </div>
@@ -259,7 +259,7 @@ function GalleryItem({
             </span>
           )}
           <button
-            className="mr-auto rounded-lg bg-red-500/80 p-1.5 text-white transition-colors hover:bg-red-500"
+            className="mr-auto rounded-lg bg-destructive/100/80 p-1.5 text-white transition-colors hover:bg-destructive/100"
             onClick={() => onDelete(id)}
             type="button"
           >

@@ -60,7 +60,7 @@ export function LogCommunicationModal({
     >
       <div
         aria-modal="true"
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+        className="w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl"
         dir="rtl"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.key === "Escape" && onClose()}
@@ -68,13 +68,13 @@ export function LogCommunicationModal({
       >
         <div className="mb-4 flex items-center justify-between">
           <h2
-            className="text-[#181510] text-[20px]"
+            className="text-[20px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             הוסף תקשורת
           </h2>
           <button
-            className="rounded-lg p-1 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+            className="rounded-lg p-1 text-muted-foreground transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >
@@ -86,7 +86,7 @@ export function LogCommunicationModal({
           {/* Type selector */}
           <div>
             <span
-              className="mb-1 block text-[#8d785e] text-[13px]"
+              className="mb-1 block text-[13px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               סוג
@@ -96,8 +96,8 @@ export function LogCommunicationModal({
                 <button
                   className={`rounded-lg border px-3 py-1.5 text-[13px] transition-colors ${
                     commType === t.value
-                      ? "border-[#ff8c00] bg-[rgba(255,140,0,0.1)] text-[#ff8c00]"
-                      : "border-[#e7e1da] text-[#181510] hover:bg-[#f5f3f0]"
+                      ? "border-primary bg-[rgba(255,140,0,0.1)] text-primary"
+                      : "border-border text-foreground hover:bg-accent"
                   }`}
                   key={t.value}
                   onClick={() => setCommType(t.value)}
@@ -113,14 +113,14 @@ export function LogCommunicationModal({
           {/* Content */}
           <div>
             <label
-              className="mb-1 block text-[#8d785e] text-[13px]"
+              className="mb-1 block text-[13px] text-muted-foreground"
               htmlFor="comm-content"
               style={{ fontWeight: 600 }}
             >
               תוכן
             </label>
             <textarea
-              className="w-full resize-none rounded-lg border border-[#e7e1da] px-3 py-2.5 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full resize-none rounded-lg border border-border px-3 py-2.5 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               id="comm-content"
               onChange={(e) => setContent(e.target.value)}
               placeholder="תאר את התקשורת..."
@@ -133,14 +133,14 @@ export function LogCommunicationModal({
           {commType === "call" && (
             <div>
               <label
-                className="mb-1 block text-[#8d785e] text-[13px]"
+                className="mb-1 block text-[13px] text-muted-foreground"
                 htmlFor="comm-duration"
                 style={{ fontWeight: 600 }}
               >
                 משך (דקות)
               </label>
               <input
-                className="w-full rounded-lg border border-[#e7e1da] px-3 py-2.5 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                className="w-full rounded-lg border border-border px-3 py-2.5 text-[14px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 id="comm-duration"
                 onChange={(e) => setDuration(e.target.value)}
                 placeholder="5"
@@ -153,7 +153,7 @@ export function LogCommunicationModal({
 
         <div className="flex gap-3">
           <button
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             disabled={saving || !content.trim()}
             onClick={handleSubmit}
             style={{ fontWeight: 600 }}
@@ -163,7 +163,7 @@ export function LogCommunicationModal({
             {saving ? "שומר..." : "שמור"}
           </button>
           <button
-            className="rounded-lg border border-[#e7e1da] px-6 py-2.5 text-[#181510] transition-colors hover:bg-[#f5f3f0]"
+            className="rounded-lg border border-border px-6 py-2.5 text-foreground transition-colors hover:bg-accent"
             onClick={onClose}
             type="button"
           >

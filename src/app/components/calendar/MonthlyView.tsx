@@ -66,12 +66,12 @@ export function MonthlyView({
   return (
     <div className="space-y-4">
       {/* Calendar Grid */}
-      <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
         {/* Day name headers */}
-        <div className="grid grid-cols-7 border-[#e7e1da] border-b">
+        <div className="grid grid-cols-7 border-border border-b">
           {DAY_NAMES.map((name, i) => (
             <div
-              className="py-3 text-center text-[#8d785e] text-[13px]"
+              className="py-3 text-center text-[13px] text-muted-foreground"
               key={i}
               style={{ fontWeight: 600 }}
             >
@@ -91,8 +91,8 @@ export function MonthlyView({
 
             return (
               <button
-                className={`relative min-h-[80px] border-[#f5f3f0] border-b border-l p-2 text-right transition-colors lg:min-h-[100px] ${inMonth ? "bg-white hover:bg-[#fdfcfb]" : "bg-[#fdfcfb]"}
-                  ${selected ? "bg-[#ff8c00]/5 ring-1 ring-[#ff8c00] ring-inset" : ""}
+                className={`relative min-h-[80px] border-accent border-b border-l p-2 text-right transition-colors lg:min-h-[100px] ${inMonth ? "bg-card hover:bg-surface" : "bg-surface"}
+                  ${selected ? "bg-primary/5 ring-1 ring-[#ff8c00] ring-inset" : ""}
                 `}
                 key={i}
                 onClick={() => onSelectDate(day)}
@@ -100,9 +100,9 @@ export function MonthlyView({
                 type="button"
               >
                 <span
-                  className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-[13px] ${inMonth ? "text-[#181510]" : "text-[#8d785e]/40"}
-                    ${today ? "bg-[#ff8c00] text-white" : ""}
-                    ${selected && !today ? "bg-[#ff8c00]/15 text-[#ff8c00]" : ""}
+                  className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-[13px] ${inMonth ? "text-foreground" : "text-muted-foreground/40"}
+                    ${today ? "bg-primary text-white" : ""}
+                    ${selected && !today ? "bg-primary/15 text-primary" : ""}
                   `}
                   style={{ fontWeight: today || selected ? 700 : 400 }}
                 >
@@ -121,7 +121,7 @@ export function MonthlyView({
                       />
                     ))}
                     {dayEvents.length > 3 && (
-                      <span className="text-[#8d785e] text-[10px]">
+                      <span className="text-[10px] text-muted-foreground">
                         +{dayEvents.length - 3}
                       </span>
                     )}
@@ -144,7 +144,7 @@ export function MonthlyView({
                     </div>
                   ))}
                   {dayEvents.length > 2 && (
-                    <div className="px-1 text-[#8d785e] text-[10px]">
+                    <div className="px-1 text-[10px] text-muted-foreground">
                       +{dayEvents.length - 2} נוספים
                     </div>
                   )}
@@ -156,16 +156,16 @@ export function MonthlyView({
       </div>
 
       {/* Selected date events panel */}
-      <div className="rounded-xl border border-[#e7e1da] bg-white p-5 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+      <div className="rounded-xl border border-border bg-card p-5 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
         <div className="mb-4 flex items-center justify-between">
           <h3
-            className="text-[#181510] text-[16px]"
+            className="text-[16px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             {format(selectedDate, "EEEE, d MMMM yyyy", { locale: he })}
           </h3>
           <button
-            className="flex items-center gap-1.5 text-[#ff8c00] text-[13px] transition-colors hover:text-[#e67e00]"
+            className="flex items-center gap-1.5 text-[13px] text-primary transition-colors hover:text-primary-hover"
             onClick={() => onNewEvent(selectedDate)}
             style={{ fontWeight: 600 }}
             type="button"
@@ -178,13 +178,15 @@ export function MonthlyView({
         {selectedDateEvents.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <CalendarDays
-              className="mb-2 text-[#e7e1da]"
+              className="mb-2 text-border"
               size={32}
               strokeWidth={1.5}
             />
-            <p className="text-[#8d785e] text-[14px]">אין אירועים ביום זה</p>
+            <p className="text-[14px] text-muted-foreground">
+              אין אירועים ביום זה
+            </p>
             <button
-              className="mt-3 text-[#ff8c00] text-[13px] hover:underline"
+              className="mt-3 text-[13px] text-primary hover:underline"
               onClick={() => onNewEvent(selectedDate)}
               style={{ fontWeight: 600 }}
               type="button"
@@ -196,7 +198,7 @@ export function MonthlyView({
           <div className="space-y-3">
             {selectedDateEvents.map((ev) => (
               <div
-                className="flex cursor-pointer items-start gap-3 rounded-lg border border-[#f5f3f0] p-3 transition-all hover:border-[#e7e1da] hover:bg-[#fdfcfb]"
+                className="flex cursor-pointer items-start gap-3 rounded-lg border border-accent p-3 transition-all hover:border-border hover:bg-surface"
                 key={ev.id}
                 onClick={() => onEventClick(ev)}
               >
@@ -207,23 +209,23 @@ export function MonthlyView({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span
-                      className="truncate text-[#181510] text-[14px]"
+                      className="truncate text-[14px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {ev.title}
                     </span>
                     {ev.source === "project" && (
-                      <span className="flex shrink-0 items-center gap-1 rounded-full bg-[#ff8c00]/10 px-2 py-0.5 text-[#ff8c00] text-[10px]">
+                      <span className="flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary">
                         <FolderOpen size={10} />
                         פרויקט
                       </span>
                     )}
                   </div>
-                  <div className="mt-0.5 text-[#8d785e] text-[12px]">
+                  <div className="mt-0.5 text-[12px] text-muted-foreground">
                     {ev.startTime} - {ev.endTime}
                   </div>
                   {ev.description && (
-                    <p className="mt-1 truncate text-[#8d785e]/80 text-[12px]">
+                    <p className="mt-1 truncate text-[12px] text-muted-foreground/80">
                       {ev.description}
                     </p>
                   )}

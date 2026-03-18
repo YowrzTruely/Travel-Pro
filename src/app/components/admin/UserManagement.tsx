@@ -25,9 +25,9 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
-  active: "bg-green-100 text-green-700",
+  active: "bg-success/15 text-success",
   pending: "bg-yellow-100 text-yellow-700",
-  suspended: "bg-red-100 text-red-700",
+  suspended: "bg-destructive/15 text-destructive",
 };
 
 function formatHebrewDate(timestamp: number): string {
@@ -81,16 +81,16 @@ export function UserManagement() {
 
   return (
     <div
-      className="min-h-screen bg-[#f8f7f5] font-['Assistant',sans-serif] text-[#181510]"
+      className="min-h-screen bg-background font-['Assistant',sans-serif] text-foreground"
       dir="rtl"
     >
       <div className="mx-auto max-w-7xl p-6">
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
-          <Shield className="h-7 w-7 text-[#ff8c00]" />
+          <Shield className="h-7 w-7 text-primary" />
           <h1 className="font-bold text-2xl">ניהול משתמשים</h1>
           {users && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#ff8c00]/10 px-3 py-1 font-medium text-[#ff8c00] text-sm">
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 font-medium text-primary text-sm">
               <Users className="h-4 w-4" />
               {searchQuery ? (filteredUsers?.length ?? 0) : users.length}{" "}
               משתמשים
@@ -99,11 +99,11 @@ export function UserManagement() {
         </div>
 
         {/* Search Bar */}
-        <div className="mb-6 rounded-2xl border border-[#e7e1da] bg-white p-4 shadow-sm">
+        <div className="mb-6 rounded-2xl border border-border bg-card p-4 shadow-sm">
           <div className="relative">
-            <Search className="absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-[#8d785e]" />
+            <Search className="absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
             <input
-              className="w-full rounded-xl border border-[#e7e1da] bg-[#f8f7f5] py-2.5 pr-10 pl-4 text-sm placeholder:text-[#8d785e] focus:border-[#ff8c00] focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+              className="w-full rounded-xl border border-border bg-background py-2.5 pr-10 pl-4 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="חיפוש לפי שם, אימייל או חברה..."
               type="text"
@@ -113,14 +113,14 @@ export function UserManagement() {
         </div>
 
         {/* Table */}
-        <div className="rounded-2xl border border-[#e7e1da] bg-white shadow-sm">
+        <div className="rounded-2xl border border-border bg-card shadow-sm">
           {users === undefined ? (
-            <div className="flex items-center justify-center p-12 text-[#181510]/50">
+            <div className="flex items-center justify-center p-12 text-foreground/50">
               טוען...
             </div>
           ) : filteredUsers && filteredUsers.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-2 p-12 text-[#181510]/50">
-              <Users className="h-10 w-10 text-[#e7e1da]" />
+            <div className="flex flex-col items-center justify-center gap-2 p-12 text-foreground/50">
+              <Users className="h-10 w-10 text-border" />
               <p className="text-lg">
                 {searchQuery ? "לא נמצאו תוצאות" : "אין משתמשים במערכת"}
               </p>
@@ -131,36 +131,36 @@ export function UserManagement() {
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-[#e7e1da]">
-                  <TableHead className="text-right text-[#181510]/70">
+                <TableRow className="border-border">
+                  <TableHead className="text-right text-foreground/70">
                     שם
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     אימייל
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     תפקיד
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     סטטוס
                   </TableHead>
-                  <TableHead className="text-right text-[#181510]/70">
+                  <TableHead className="text-right text-foreground/70">
                     תאריך יצירה
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredUsers?.map((user) => (
-                  <TableRow className="border-[#e7e1da]" key={user._id}>
+                  <TableRow className="border-border" key={user._id}>
                     <TableCell className="font-medium">
                       {user.name || "---"}
                     </TableCell>
-                    <TableCell className="text-[#181510]/80">
+                    <TableCell className="text-foreground/80">
                       {user.email || "---"}
                     </TableCell>
                     <TableCell>
                       <select
-                        className="rounded-lg border border-[#e7e1da] bg-white px-2 py-1 text-sm focus:border-[#ff8c00] focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+                        className="rounded-lg border border-border bg-card px-2 py-1 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                         onChange={(e) =>
                           handleRoleChange(
                             user.id,
@@ -177,7 +177,7 @@ export function UserManagement() {
                     </TableCell>
                     <TableCell>
                       <select
-                        className={`rounded-lg border border-transparent px-2 py-1 font-medium text-sm focus:border-[#ff8c00] focus:outline-none focus:ring-1 focus:ring-[#ff8c00] ${STATUS_STYLES[user.status || ""] || "bg-gray-100 text-gray-600"}`}
+                        className={`rounded-lg border border-transparent px-2 py-1 font-medium text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${STATUS_STYLES[user.status || ""] || "bg-accent text-muted-foreground"}`}
                         onChange={(e) =>
                           handleStatusChange(
                             user.id,
@@ -194,7 +194,7 @@ export function UserManagement() {
                         </option>
                       </select>
                     </TableCell>
-                    <TableCell className="text-[#181510]/80">
+                    <TableCell className="text-foreground/80">
                       {user.createdAt
                         ? formatHebrewDate(user.createdAt)
                         : "---"}

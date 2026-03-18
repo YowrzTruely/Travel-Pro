@@ -212,7 +212,7 @@ export function SupplierOnboarding() {
       dir="rtl"
       style={{ backgroundColor: "#f8f7f5" }}
     >
-      <div className="flex w-full max-w-lg flex-col gap-8 rounded-2xl bg-white p-10 shadow-lg">
+      <div className="flex w-full max-w-lg flex-col gap-8 rounded-2xl bg-card p-10 shadow-lg">
         {/* Stepper */}
         <div className="flex items-center justify-center gap-2">
           {STEPS.map((step, i) => (
@@ -258,7 +258,7 @@ export function SupplierOnboarding() {
           >
             <FormField error={errors.businessName} label="שם מלא / שם עסק">
               <input
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-right focus:outline-none"
+                className="w-full rounded-lg border border-border px-4 py-3 text-right focus:outline-none"
                 style={{ borderColor: "#d4c9b8" }}
                 type="text"
                 {...register("businessName", {
@@ -269,7 +269,7 @@ export function SupplierOnboarding() {
 
             <FormField error={errors.phone} label="טלפון">
               <input
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-right focus:outline-none"
+                className="w-full rounded-lg border border-border px-4 py-3 text-right focus:outline-none"
                 style={{ borderColor: "#d4c9b8" }}
                 type="tel"
                 {...register("phone", {
@@ -280,7 +280,7 @@ export function SupplierOnboarding() {
 
             <FormField error={errors.email} label="אימייל">
               <input
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-right focus:outline-none"
+                className="w-full rounded-lg border border-border px-4 py-3 text-right focus:outline-none"
                 style={{ borderColor: "#d4c9b8" }}
                 type="email"
                 {...register("email", {
@@ -321,7 +321,7 @@ export function SupplierOnboarding() {
 
             <FormField error={errors.firstProduct} label="מוצר / שירות ראשון">
               <input
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-right focus:outline-none"
+                className="w-full rounded-lg border border-border px-4 py-3 text-right focus:outline-none"
                 placeholder='לדוגמה: "סיור ביקב", "הסעת VIP"...'
                 style={{ borderColor: "#d4c9b8" }}
                 type="text"
@@ -491,14 +491,14 @@ function Step2Products({
         <div className="flex flex-col gap-2">
           {products.map((product: any) => (
             <div
-              className="flex items-center justify-between rounded-lg border border-[#e7e1da] bg-[#faf9f7] px-4 py-3"
+              className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3"
               key={product.id}
             >
               <div className="flex flex-col">
-                <span className="font-semibold text-[#181510] text-sm">
+                <span className="font-semibold text-foreground text-sm">
                   {product.name}
                 </span>
-                <span className="text-[#8d785e] text-xs">
+                <span className="text-muted-foreground text-xs">
                   {product.price > 0 && `₪${product.price}`}
                   {product.price > 0 && product.unit && " / "}
                   {product.unit}
@@ -506,14 +506,14 @@ function Step2Products({
               </div>
               <div className="flex gap-2">
                 <button
-                  className="rounded-md p-1.5 text-[#8d785e] transition-colors hover:bg-[#f0ece7]"
+                  className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent"
                   onClick={() => startEdit(product)}
                   type="button"
                 >
                   <Pencil size={14} />
                 </button>
                 <button
-                  className="rounded-md p-1.5 text-red-400 transition-colors hover:bg-red-50"
+                  className="rounded-md p-1.5 text-red-400 transition-colors hover:bg-destructive/10"
                   onClick={() => handleDeleteProduct(product.id)}
                   type="button"
                 >
@@ -527,16 +527,16 @@ function Step2Products({
 
       {/* Add/Edit product form */}
       {showForm ? (
-        <div className="flex flex-col gap-3 rounded-lg border border-[#ff8c00]/30 bg-[#fff8f0] p-4">
+        <div className="flex flex-col gap-3 rounded-lg border border-primary/30 bg-[#fff8f0] p-4">
           <input
-            className="w-full rounded-lg border border-[#d4c9b8] px-4 py-2.5 text-right text-sm focus:outline-none"
+            className="w-full rounded-lg border border-border px-4 py-2.5 text-right text-sm focus:outline-none"
             onChange={(e) => setName(e.target.value)}
             placeholder="שם המוצר / שירות *"
             type="text"
             value={name}
           />
           <textarea
-            className="w-full rounded-lg border border-[#d4c9b8] px-4 py-2.5 text-right text-sm focus:outline-none"
+            className="w-full rounded-lg border border-border px-4 py-2.5 text-right text-sm focus:outline-none"
             onChange={(e) => setDescription(e.target.value)}
             placeholder="תיאור (אופציונלי)"
             rows={2}
@@ -544,7 +544,7 @@ function Step2Products({
           />
           <div className="flex gap-3">
             <input
-              className="w-1/2 rounded-lg border border-[#d4c9b8] px-4 py-2.5 text-right text-sm focus:outline-none"
+              className="w-1/2 rounded-lg border border-border px-4 py-2.5 text-right text-sm focus:outline-none"
               onChange={(e) => setPrice(e.target.value)}
               placeholder="מחיר (₪)"
               type="number"
@@ -585,7 +585,7 @@ function Step2Products({
               )}
             </button>
             <button
-              className="rounded-lg border border-[#d4c9b8] px-4 py-2 text-[#8d785e] text-sm"
+              className="rounded-lg border border-border px-4 py-2 text-muted-foreground text-sm"
               onClick={resetForm}
               type="button"
             >
@@ -595,7 +595,7 @@ function Step2Products({
         </div>
       ) : (
         <button
-          className="flex items-center justify-center gap-2 rounded-lg border border-[#d4c9b8] border-dashed px-4 py-3 text-[#8d785e] text-sm transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00]"
+          className="flex items-center justify-center gap-2 rounded-lg border border-border border-dashed px-4 py-3 text-muted-foreground text-sm transition-colors hover:border-primary hover:text-primary"
           onClick={() => setShowForm(true)}
           type="button"
         >
@@ -615,7 +615,7 @@ function Step2Products({
           שמירה והמשך
         </button>
         <button
-          className="rounded-xl border border-[#d4c9b8] px-6 py-4 font-semibold text-[#8d785e] text-sm transition-colors hover:bg-[#f5f3f0]"
+          className="rounded-xl border border-border px-6 py-4 font-semibold text-muted-foreground text-sm transition-colors hover:bg-accent"
           onClick={handleSkip}
           type="button"
         >
@@ -712,7 +712,7 @@ function Step3Documents({
       </div>
 
       {/* Info banner */}
-      <div className="rounded-lg bg-[#fff3e0] px-4 py-3 text-[#b8860b] text-xs">
+      <div className="rounded-lg bg-[#fff3e0] px-4 py-3 text-warning text-xs">
         מסמכי ביטוח הם חובה לאחר סגירת עסקה ראשונה. ניתן להשלים גם מאוחר יותר.
       </div>
 
@@ -724,12 +724,12 @@ function Step3Documents({
 
           return (
             <div
-              className="flex items-center justify-between rounded-lg border border-[#e7e1da] bg-[#faf9f7] px-4 py-3"
+              className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3"
               key={docDef.type}
             >
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-[#181510] text-sm">
+                  <span className="font-semibold text-foreground text-sm">
                     {docDef.label}
                   </span>
                   <span
@@ -743,14 +743,14 @@ function Step3Documents({
                   </span>
                 </div>
                 {uploaded && (
-                  <span className="flex items-center gap-1 text-green-600 text-xs">
+                  <span className="flex items-center gap-1 text-success text-xs">
                     <CheckCircle2 size={12} />
                     {uploaded.fileName}
                   </span>
                 )}
                 {!uploaded && (
                   <input
-                    className="mt-1 w-36 rounded border border-[#d4c9b8] px-2 py-1 text-xs"
+                    className="mt-1 w-36 rounded border border-border px-2 py-1 text-xs"
                     onChange={(e) =>
                       setExpiryDates((prev) => ({
                         ...prev,
@@ -765,7 +765,7 @@ function Step3Documents({
               </div>
               <div>
                 {uploaded ? (
-                  <span className="text-green-500">
+                  <span className="text-success">
                     <CheckCircle2 size={20} />
                   </span>
                 ) : (
@@ -785,7 +785,7 @@ function Step3Documents({
                       type="file"
                     />
                     <button
-                      className="flex items-center gap-1 rounded-lg border border-[#d4c9b8] px-3 py-2 text-[#8d785e] text-xs transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00] disabled:opacity-50"
+                      className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-muted-foreground text-xs transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
                       disabled={isUploading}
                       onClick={() =>
                         fileInputRefs.current[docDef.type]?.click()
@@ -818,7 +818,7 @@ function Step3Documents({
           סיום הרשמה
         </button>
         <button
-          className="rounded-xl border border-[#d4c9b8] px-6 py-4 font-semibold text-[#8d785e] text-sm transition-colors hover:bg-[#f5f3f0]"
+          className="rounded-xl border border-border px-6 py-4 font-semibold text-muted-foreground text-sm transition-colors hover:bg-accent"
           onClick={handleSkipFinish}
           type="button"
         >

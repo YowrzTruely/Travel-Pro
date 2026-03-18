@@ -224,7 +224,7 @@ function SectionIcon({
     size === "sm" ? "w-7 h-7" : size === "lg" ? "w-10 h-10" : "w-8 h-8";
   return (
     <span
-      className={`${dims} flex shrink-0 items-center justify-center rounded-full bg-[#ff8c00] text-white`}
+      className={`${dims} flex shrink-0 items-center justify-center rounded-full bg-primary text-white`}
     >
       {children}
     </span>
@@ -246,7 +246,7 @@ function TypeBadge({
   const lucideIcon = TYPE_ICON_MAP[type];
   return (
     <span
-      className={`${dims} flex shrink-0 items-center justify-center rounded-lg bg-[#ff8c00]/10 text-[#ff8c00]`}
+      className={`${dims} flex shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary`}
     >
       {lucideIcon ? (
         React.cloneElement(lucideIcon as React.ReactElement, { size: iconSize })
@@ -591,8 +591,8 @@ export function QuoteEditor() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-        <p className="text-[#8d785e] text-[14px]">טוען נתוני הצעה...</p>
+        <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+        <p className="text-[14px] text-muted-foreground">טוען נתוני הצעה...</p>
       </div>
     );
   }
@@ -600,9 +600,9 @@ export function QuoteEditor() {
   if (!project) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <p className="mb-4 text-[#8d785e] text-[18px]">פרויקט לא נמצא</p>
+        <p className="mb-4 text-[18px] text-muted-foreground">פרויקט לא נמצא</p>
         <button
-          className="text-[#ff8c00] hover:underline"
+          className="text-primary hover:underline"
           onClick={() => navigate("/projects")}
           type="button"
         >
@@ -618,7 +618,7 @@ export function QuoteEditor() {
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <button
-            className="text-[#8d785e] transition-colors hover:text-[#181510]"
+            className="text-muted-foreground transition-colors hover:text-foreground"
             onClick={() => navigate(-1)}
             type="button"
           >
@@ -626,16 +626,16 @@ export function QuoteEditor() {
           </button>
           <div>
             <h1
-              className="text-[#181510] text-[22px]"
+              className="text-[22px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               פרויקט: {project.name}
             </h1>
-            <p className="text-[#8d785e] text-[12px]">
+            <p className="text-[12px] text-muted-foreground">
               מזהה פרויקט: #{projectId} &bull; {project.company}
               {project.quoteVersion != null && (
                 <span
-                  className="mr-2 rounded-full bg-[#ff8c00]/10 px-2 py-0.5 text-[#ff8c00] text-[11px]"
+                  className="mr-2 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] text-primary"
                   style={{ fontWeight: 600 }}
                 >
                   גרסה {project.quoteVersion}
@@ -647,7 +647,7 @@ export function QuoteEditor() {
         <div className="flex flex-wrap items-center gap-2">
           {/* Duplicate version button */}
           <button
-            className="flex items-center gap-2 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-accent"
             onClick={async () => {
               if (!(project?._id && projectId)) {
                 return;
@@ -691,7 +691,7 @@ export function QuoteEditor() {
             שכפל גרסה
           </button>
           <button
-            className="flex items-center gap-2 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-accent"
             onClick={() => navigate(`/quote/${projectId}`)}
             type="button"
           >
@@ -699,7 +699,7 @@ export function QuoteEditor() {
             תצוגה מקדימה ללקוח
           </button>
           <button
-            className="flex items-center gap-2 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-accent"
             onClick={() => {
               if (currentItems.length === 0) {
                 appToast.warning("אין רכיבים", "הוסף לפחות רכיב אחד להצעה");
@@ -716,7 +716,7 @@ export function QuoteEditor() {
             בדיקה לפני שליחה
           </button>
           <button
-            className="flex items-center gap-2 rounded-lg bg-[#ff8c00] px-4 py-2 text-[13px] text-white shadow-sm transition-colors hover:bg-[#e67e00]"
+            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-[13px] text-white shadow-sm transition-colors hover:bg-primary-hover"
             onClick={() => setShowPreview(true)}
             style={{ fontWeight: 600 }}
             type="button"
@@ -753,15 +753,15 @@ export function QuoteEditor() {
           },
         ].map((card) => (
           <div
-            className="rounded-xl border border-[#e7e1da] bg-white p-3.5 text-center"
+            className="rounded-xl border border-border bg-card p-3.5 text-center"
             key={card.label}
           >
-            <div className="mb-1 flex items-center justify-center gap-1.5 text-[#8d785e] text-[11px]">
-              <span className="text-[#b8a990]">{card.icon}</span>
+            <div className="mb-1 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+              <span className="text-tertiary">{card.icon}</span>
               <span>{card.label}</span>
             </div>
             <div
-              className="text-[#181510] text-[15px]"
+              className="text-[15px] text-foreground"
               style={{ fontWeight: 600, color: card.color || "#181510" }}
             >
               {card.value}
@@ -771,13 +771,13 @@ export function QuoteEditor() {
       </div>
 
       {/* Trip name + Opening paragraph (PRD §4.2) */}
-      <div className="mb-4 rounded-xl border border-[#e7e1da] bg-white p-4">
+      <div className="mb-4 rounded-xl border border-border bg-card p-4">
         <div className="mb-3 flex items-center gap-2">
           <SectionIcon size="sm">
             <FileText size={14} />
           </SectionIcon>
           <span
-            className="text-[#181510] text-[14px]"
+            className="text-[14px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             שם טיול ופסקת פתיחה
@@ -786,14 +786,14 @@ export function QuoteEditor() {
         <div className="space-y-3">
           <div>
             <label
-              className="mb-1 block text-[#8d785e] text-[12px]"
+              className="mb-1 block text-[12px] text-muted-foreground"
               htmlFor="trip-name"
               style={{ fontWeight: 600 }}
             >
               שם הטיול
             </label>
             <input
-              className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full rounded-lg border border-border bg-input-background px-3 py-2 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               id="trip-name"
               onBlur={async () => {
                 if (projectId && tripName !== (project?.tripName ?? "")) {
@@ -808,14 +808,14 @@ export function QuoteEditor() {
           <div>
             <div className="mb-1 flex items-center justify-between">
               <label
-                className="text-[#8d785e] text-[12px]"
+                className="text-[12px] text-muted-foreground"
                 htmlFor="opening-paragraph"
                 style={{ fontWeight: 600 }}
               >
                 פסקת פתיחה
               </label>
               <button
-                className="flex items-center gap-1 rounded-lg bg-gradient-to-l from-[#ff8c00] to-[#e67e00] px-2.5 py-1 text-[11px] text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                className="flex items-center gap-1 rounded-lg bg-gradient-to-l from-primary to-primary-hover px-2.5 py-1 text-[11px] text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                 disabled={generatingParagraph}
                 onClick={async () => {
                   setGeneratingParagraph(true);
@@ -855,7 +855,7 @@ export function QuoteEditor() {
               </button>
             </div>
             <textarea
-              className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] leading-relaxed transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full resize-none rounded-lg border border-border bg-input-background px-3 py-2 text-[13px] leading-relaxed transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
               id="opening-paragraph"
               onBlur={async () => {
                 if (
@@ -910,7 +910,7 @@ export function QuoteEditor() {
           <div className="flex items-center gap-2.5">
             <User className="text-white/60" size={16} />
             <div className="text-center">
-              <div className="text-[#c4b89a] text-[11px]">מחיר לאדם</div>
+              <div className="text-[11px] text-tertiary">מחיר לאדם</div>
               <div
                 className="text-[22px] text-white"
                 style={{ fontWeight: 700 }}
@@ -919,13 +919,11 @@ export function QuoteEditor() {
               </div>
             </div>
           </div>
-          <div className="h-10 w-px bg-white/20" />
+          <div className="h-10 w-px bg-card/20" />
           <div className="flex items-center gap-2.5">
             <Receipt className="text-white/60" size={16} />
             <div className="text-center">
-              <div className="text-[#c4b89a] text-[11px]">
-                מחיר כולל (משוער)
-              </div>
+              <div className="text-[11px] text-tertiary">מחיר כולל (משוער)</div>
               <div
                 className="text-[22px] text-white"
                 style={{ fontWeight: 700 }}
@@ -936,9 +934,9 @@ export function QuoteEditor() {
           </div>
           {totalAddons > 0 && (
             <>
-              <div className="h-10 w-px bg-white/20" />
+              <div className="h-10 w-px bg-card/20" />
               <div className="text-center">
-                <div className="text-[#c4b89a] text-[11px]">תוספות</div>
+                <div className="text-[11px] text-tertiary">תוספות</div>
                 <div
                   className="text-[18px] text-white"
                   style={{ fontWeight: 600 }}
@@ -1000,13 +998,13 @@ export function QuoteEditor() {
       </div>
 
       {/* Tabs with glass indicator */}
-      <div className="relative mb-5 flex gap-1 rounded-lg bg-[#ece8e3] p-1">
+      <div className="relative mb-5 flex gap-1 rounded-lg bg-accent p-1">
         {tabs.map((tab) => (
           <button
             className={`relative z-10 flex-1 rounded-md px-3 py-2 text-[13px] transition-colors ${
               activeTab === tab.id
-                ? "text-[#181510]"
-                : "text-[#8d785e] hover:text-[#181510]"
+                ? "text-foreground"
+                : "text-muted-foreground hover:text-foreground"
             }`}
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
@@ -1043,7 +1041,7 @@ export function QuoteEditor() {
         <div className="space-y-5" data-section="components">
           <div className="flex items-center justify-between">
             <h2
-              className="flex items-center gap-2 text-[#181510] text-[18px]"
+              className="flex items-center gap-2 text-[18px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               <SectionIcon>
@@ -1052,7 +1050,7 @@ export function QuoteEditor() {
               רכיבים וספקים ({currentItems.length})
             </h2>
             <button
-              className="flex items-center gap-1 text-[#ff8c00] text-[13px] hover:text-[#e67e00]"
+              className="flex items-center gap-1 text-[13px] text-primary hover:text-primary-hover"
               onClick={() => setShowAddComponent(true)}
               style={{ fontWeight: 600 }}
               type="button"
@@ -1063,16 +1061,16 @@ export function QuoteEditor() {
           </div>
 
           {currentItems.length === 0 && (
-            <div className="rounded-xl border border-[#e7e1da] bg-white py-12 text-center">
+            <div className="rounded-xl border border-border bg-card py-12 text-center">
               <div className="mb-3 flex justify-center">
                 <SectionIcon size="lg">
                   <Package size={22} />
                 </SectionIcon>
               </div>
-              <p className="mb-2 text-[#8d785e] text-[16px]">
+              <p className="mb-2 text-[16px] text-muted-foreground">
                 אין רכיבים בהצעה
               </p>
-              <p className="text-[#b8a990] text-[13px]">
+              <p className="text-[13px] text-tertiary">
                 הוסף רכיבים כמו תחבורה, פעילויות, ארוחות ועוד
               </p>
             </div>
@@ -1084,16 +1082,16 @@ export function QuoteEditor() {
             const imageCount = item.images?.length || 0;
             return (
               <div
-                className="group/card overflow-hidden rounded-xl border border-[#e7e1da] bg-white transition-shadow hover:shadow-md"
+                className="group/card overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-md"
                 key={item.id}
               >
-                <div className="flex items-center justify-between border-[#e7e1da] border-b bg-[#f5f3f0] p-4">
+                <div className="flex items-center justify-between border-border border-b bg-accent p-4">
                   <div className="flex items-center gap-2">
                     <SectionIcon size="sm">
                       {getItemIcon(item.type)}
                     </SectionIcon>
                     <span
-                      className="text-[#181510] text-[15px]"
+                      className="text-[15px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {item.type}
@@ -1101,7 +1099,7 @@ export function QuoteEditor() {
                   </div>
                   <div className="flex items-center gap-2">
                     {imageCount > 0 && (
-                      <span className="flex items-center gap-1 rounded-full border border-[#e7e1da] bg-white px-2 py-0.5 text-[#8d785e] text-[11px]">
+                      <span className="flex items-center gap-1 rounded-full border border-border bg-card px-2 py-0.5 text-[11px] text-muted-foreground">
                         <Camera size={11} />
                         {imageCount}
                       </span>
@@ -1128,12 +1126,12 @@ export function QuoteEditor() {
                       />
                       <div>
                         <div
-                          className="flex items-center gap-1.5 text-[#181510] text-[15px]"
+                          className="flex items-center gap-1.5 text-[15px] text-foreground"
                           style={{ fontWeight: 600 }}
                         >
                           {item.name || item.supplier}
                         </div>
-                        <div className="text-[#8d785e] text-[12px]">
+                        <div className="text-[12px] text-muted-foreground">
                           {item.description}
                         </div>
                       </div>
@@ -1141,7 +1139,7 @@ export function QuoteEditor() {
                     <div className="flex items-center gap-3">
                       {/* Edit button - always visible */}
                       <button
-                        className="flex items-center gap-1.5 rounded-lg bg-[#ff8c00]/10 px-3 py-1.5 text-[#ff8c00] text-[12px] transition-all hover:bg-[#ff8c00] hover:text-white"
+                        className="flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-[12px] text-primary transition-all hover:bg-primary hover:text-white"
                         onClick={() => setEditingItem(item)}
                         style={{ fontWeight: 600 }}
                         type="button"
@@ -1150,7 +1148,7 @@ export function QuoteEditor() {
                         עריכה
                       </button>
                       <button
-                        className="text-[#8d785e] transition-colors hover:text-red-500 disabled:opacity-50"
+                        className="text-muted-foreground transition-colors hover:text-destructive disabled:opacity-50"
                         disabled={deletingItemId === item.id}
                         onClick={() =>
                           requestDelete({
@@ -1169,9 +1167,11 @@ export function QuoteEditor() {
                         )}
                       </button>
                       <div className="text-left">
-                        <div className="text-[#8d785e] text-[11px]">עלות</div>
+                        <div className="text-[11px] text-muted-foreground">
+                          עלות
+                        </div>
                         <div
-                          className="text-[#181510] text-[16px]"
+                          className="text-[16px] text-foreground"
                           style={{ fontWeight: 700 }}
                         >
                           ₪{item.cost.toLocaleString()}
@@ -1182,10 +1182,10 @@ export function QuoteEditor() {
 
                   {/* Image preview strip */}
                   {imageCount > 0 && (
-                    <div className="mt-3 flex gap-2 border-[#f5f3f0] border-t pt-3">
+                    <div className="mt-3 flex gap-2 border-accent border-t pt-3">
                       {(item.images || []).slice(0, 4).map((img, _idx) => (
                         <div
-                          className="h-12 w-16 cursor-pointer overflow-hidden rounded-lg border border-[#e7e1da] transition-all hover:border-[#ff8c00]"
+                          className="h-12 w-16 cursor-pointer overflow-hidden rounded-lg border border-border transition-all hover:border-primary"
                           key={img.id}
                           onClick={() => setEditingItem(item)}
                         >
@@ -1200,11 +1200,11 @@ export function QuoteEditor() {
                       ))}
                       {imageCount > 4 && (
                         <div
-                          className="flex h-12 w-16 cursor-pointer items-center justify-center rounded-lg border border-[#e7e1da] bg-[#f5f3f0] transition-all hover:border-[#ff8c00]"
+                          className="flex h-12 w-16 cursor-pointer items-center justify-center rounded-lg border border-border bg-accent transition-all hover:border-primary"
                           onClick={() => setEditingItem(item)}
                         >
                           <span
-                            className="text-[#8d785e] text-[11px]"
+                            className="text-[11px] text-muted-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             +{imageCount - 4}
@@ -1216,8 +1216,8 @@ export function QuoteEditor() {
 
                   {/* Alternatives */}
                   {item.alternatives && item.alternatives.length > 0 && (
-                    <div className="mt-4 border-[#f5f3f0] border-t pt-3">
-                      <div className="mb-3 text-[#8d785e] text-[13px]">
+                    <div className="mt-4 border-accent border-t pt-3">
+                      <div className="mb-3 text-[13px] text-muted-foreground">
                         חלופות לבחירה:
                       </div>
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -1225,33 +1225,33 @@ export function QuoteEditor() {
                           <div
                             className={`relative rounded-xl border-2 p-3 transition-all ${
                               alt.selected
-                                ? "border-[#ff8c00] bg-[#ff8c00]/5"
-                                : "border-[#e7e1da]"
+                                ? "border-primary bg-primary/5"
+                                : "border-border"
                             }`}
                             key={alt.id}
                           >
                             <div
-                              className="text-[#181510] text-[13px]"
+                              className="text-[13px] text-foreground"
                               style={{ fontWeight: 600 }}
                             >
                               {alt.name}
                             </div>
-                            <div className="text-[#8d785e] text-[11px]">
+                            <div className="text-[11px] text-muted-foreground">
                               {alt.description}
                             </div>
                             <div className="mt-2 flex items-center justify-between">
-                              <span className="text-[#8d785e] text-[11px]">
+                              <span className="text-[11px] text-muted-foreground">
                                 עלות לאדם
                               </span>
                               <span
-                                className="text-[#181510] text-[14px]"
+                                className="text-[14px] text-foreground"
                                 style={{ fontWeight: 700 }}
                               >
                                 ₪{alt.costPerPerson}
                               </span>
                             </div>
                             {alt.selected && (
-                              <div className="absolute top-2 left-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#ff8c00]">
+                              <div className="absolute top-2 left-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary">
                                 <span className="text-[12px] text-white">
                                   ✓
                                 </span>
@@ -1268,7 +1268,7 @@ export function QuoteEditor() {
           })}
 
           <button
-            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#e7e1da] border-dashed p-4 text-[#8d785e] transition-all hover:border-[#ff8c00] hover:text-[#ff8c00]"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-border border-dashed p-4 text-muted-foreground transition-all hover:border-primary hover:text-primary"
             onClick={() => setShowAddComponent(true)}
             type="button"
           >
@@ -1285,7 +1285,7 @@ export function QuoteEditor() {
         <>
           <div className="space-y-5" data-section="pricing">
             <h2
-              className="flex items-center gap-2 text-[#181510] text-[18px]"
+              className="flex items-center gap-2 text-[18px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               <SectionIcon>
@@ -1295,16 +1295,16 @@ export function QuoteEditor() {
             </h2>
 
             {currentItems.length === 0 ? (
-              <div className="rounded-xl border border-[#e7e1da] bg-white py-12 text-center">
-                <p className="text-[#8d785e] text-[16px]">
+              <div className="rounded-xl border border-border bg-card py-12 text-center">
+                <p className="text-[16px] text-muted-foreground">
                   הוסף רכיבים כדי לראות תמחור
                 </p>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white">
+              <div className="overflow-hidden rounded-xl border border-border bg-card">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-[#e7e1da] border-b bg-[#f5f3f0] text-[#8d785e] text-[12px]">
+                    <tr className="border-border border-b bg-accent text-[12px] text-muted-foreground">
                       <th
                         className="p-3 text-right"
                         style={{ fontWeight: 600 }}
@@ -1318,7 +1318,7 @@ export function QuoteEditor() {
                         <div className="relative flex items-center gap-1">
                           <span>תמחור ישיר</span>
                           <button
-                            className="text-[#b8a990] transition-colors hover:text-[#ff8c00]"
+                            className="text-tertiary transition-colors hover:text-primary"
                             onClick={() =>
                               setShowDirectPriceTooltip((prev) => !prev)
                             }
@@ -1333,7 +1333,7 @@ export function QuoteEditor() {
                           </button>
                           {showDirectPriceTooltip && (
                             <div
-                              className="absolute top-full right-0 z-10 mt-1 w-52 rounded-lg bg-[#181510] px-3 py-2 text-[11px] text-white shadow-lg"
+                              className="absolute top-full right-0 z-10 mt-1 w-52 rounded-lg bg-foreground px-3 py-2 text-[11px] text-white shadow-lg"
                               style={{ fontWeight: 400 }}
                             >
                               המחיר שהלקוח היה משלם אם היה פונה ישירות לספק, ללא
@@ -1374,13 +1374,13 @@ export function QuoteEditor() {
                       const savingsVsDirect =
                         dp > 0 ? dp - item.sellingPrice : 0;
                       return (
-                        <tr className="border-[#e7e1da] border-b" key={item.id}>
+                        <tr className="border-border border-b" key={item.id}>
                           <td
                             className="p-3 text-[14px]"
                             style={{ fontWeight: 500 }}
                           >
                             <span className="inline-flex items-center gap-1.5">
-                              <span className="text-[#ff8c00]">
+                              <span className="text-primary">
                                 {getItemIcon(item.type)}
                               </span>
                               {item.type}
@@ -1390,11 +1390,11 @@ export function QuoteEditor() {
                             {editingDirectPriceId === item.id ? (
                               <div className="flex items-center gap-1">
                                 <div className="relative">
-                                  <span className="absolute top-1/2 right-2 -translate-y-1/2 text-[#8d785e] text-[12px]">
+                                  <span className="absolute top-1/2 right-2 -translate-y-1/2 text-[12px] text-muted-foreground">
                                     ₪
                                   </span>
                                   <input
-                                    className="w-24 rounded-lg border border-[#ff8c00] bg-[#ff8c00]/5 py-1 pr-6 pl-1 text-[#181510] text-[13px] focus:outline-none focus:ring-1 focus:ring-[#ff8c00]"
+                                    className="w-24 rounded-lg border border-primary bg-primary/5 py-1 pr-6 pl-1 text-[13px] text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                                     onChange={(e) =>
                                       setEditingDirectPriceValue(e.target.value)
                                     }
@@ -1413,7 +1413,7 @@ export function QuoteEditor() {
                                   />
                                 </div>
                                 <button
-                                  className="p-0.5 text-green-600 hover:text-green-700"
+                                  className="p-0.5 text-success hover:text-success"
                                   onClick={() => saveDirectPrice(item)}
                                   title="שמור מחיר ישיר"
                                   type="button"
@@ -1421,7 +1421,7 @@ export function QuoteEditor() {
                                   <Check size={14} />
                                 </button>
                                 <button
-                                  className="p-0.5 text-[#8d785e] hover:text-red-500"
+                                  className="p-0.5 text-muted-foreground hover:text-destructive"
                                   onClick={cancelEditDirectPrice}
                                   title="בטל עריכה"
                                   type="button"
@@ -1436,7 +1436,7 @@ export function QuoteEditor() {
                                 type="button"
                               >
                                 <span
-                                  className="text-[#8d785e] text-[14px] transition-colors group-hover/dp:text-[#ff8c00]"
+                                  className="text-[14px] text-muted-foreground transition-colors group-hover/dp:text-primary"
                                   style={{ fontWeight: 500 }}
                                 >
                                   {dp > 0
@@ -1445,7 +1445,7 @@ export function QuoteEditor() {
                                 </span>
                                 {savingsVsDirect > 0 && (
                                   <span
-                                    className="rounded-full bg-green-50 px-1.5 py-0.5 text-[10px] text-green-600"
+                                    className="rounded-full bg-success/10 px-1.5 py-0.5 text-[10px] text-success"
                                     style={{ fontWeight: 600 }}
                                   >
                                     חיסכון ₪{savingsVsDirect.toLocaleString()}
@@ -1454,7 +1454,7 @@ export function QuoteEditor() {
                               </button>
                             )}
                           </td>
-                          <td className="p-3 text-[#6b5d45] text-[14px]">
+                          <td className="p-3 text-[14px] text-muted-foreground">
                             ₪{item.cost.toLocaleString()}
                           </td>
                           <td
@@ -1464,7 +1464,7 @@ export function QuoteEditor() {
                             ₪{item.sellingPrice.toLocaleString()}
                           </td>
                           <td
-                            className="p-3 text-[14px] text-green-600"
+                            className="p-3 text-[14px] text-success"
                             style={{ fontWeight: 600 }}
                           >
                             ₪{(item.sellingPrice - item.cost).toLocaleString()}
@@ -1482,8 +1482,8 @@ export function QuoteEditor() {
                                   <Star
                                     className={
                                       w <= item.profitWeight
-                                        ? "text-[#ff8c00]"
-                                        : "text-[#ddd6cb]"
+                                        ? "text-primary"
+                                        : "text-tertiary"
                                     }
                                     fill={
                                       w <= item.profitWeight
@@ -1501,7 +1501,7 @@ export function QuoteEditor() {
                     })}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-[#181510] text-white">
+                    <tr className="bg-foreground text-white">
                       <td
                         className="p-3 text-[14px]"
                         style={{ fontWeight: 600 }}
@@ -1530,7 +1530,7 @@ export function QuoteEditor() {
                       >
                         ₪{totalProfit.toLocaleString()} ({profitPercent}%)
                       </td>
-                      <td className="p-3 text-[#c4b89a] text-[14px]">
+                      <td className="p-3 text-[14px] text-tertiary">
                         ממוצע:{" "}
                         {currentItems.length > 0
                           ? (
@@ -1557,7 +1557,7 @@ export function QuoteEditor() {
                 type="button"
               >
                 <h2
-                  className="flex items-center gap-2 text-[#181510] text-[18px]"
+                  className="flex items-center gap-2 text-[18px] text-foreground"
                   style={{ fontWeight: 700 }}
                 >
                   <SectionIcon>
@@ -1566,27 +1566,27 @@ export function QuoteEditor() {
                   ציוד נדרש ({aggregatedEquipment.size})
                 </h2>
                 <ChevronDown
-                  className={`text-[#8d785e] transition-transform ${equipmentOpen ? "rotate-180" : ""}`}
+                  className={`text-muted-foreground transition-transform ${equipmentOpen ? "rotate-180" : ""}`}
                   size={18}
                 />
               </button>
               {equipmentOpen && (
-                <div className="space-y-2 rounded-xl border border-[#e7e1da] bg-white p-4">
+                <div className="space-y-2 rounded-xl border border-border bg-card p-4">
                   {Array.from(aggregatedEquipment.entries()).map(
                     ([eq, activities]: [string, string[]]) => (
                       <div
                         className="flex items-start gap-2 text-[13px]"
                         key={eq}
                       >
-                        <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ff8c00]" />
+                        <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                         <div>
                           <span
-                            className="text-[#181510]"
+                            className="text-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             {eq}
                           </span>
-                          <span className="mr-2 text-[#8d785e]">
+                          <span className="mr-2 text-muted-foreground">
                             ({activities.join(", ")})
                           </span>
                         </div>
@@ -1605,7 +1605,7 @@ export function QuoteEditor() {
         <div className="space-y-5" data-section="timeline">
           <div className="flex items-center justify-between">
             <h2
-              className="flex items-center gap-2 text-[#181510] text-[18px]"
+              className="flex items-center gap-2 text-[18px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               <SectionIcon>
@@ -1616,8 +1616,8 @@ export function QuoteEditor() {
             <button
               className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] transition-all ${
                 project?.timelineHidden
-                  ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
-                  : "border-[#e7e1da] text-[#8d785e] hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border text-muted-foreground hover:border-primary hover:text-primary"
               }`}
               onClick={async () => {
                 if (!projectId) {
@@ -1650,40 +1650,40 @@ export function QuoteEditor() {
           </div>
 
           {currentTimeline.length === 0 ? (
-            <div className="rounded-xl border border-[#e7e1da] bg-white py-12 text-center">
+            <div className="rounded-xl border border-border bg-card py-12 text-center">
               <div className="mb-3 flex justify-center">
                 <SectionIcon size="lg">
                   <Clock size={22} />
                 </SectionIcon>
               </div>
-              <p className="text-[#8d785e] text-[16px]">
+              <p className="text-[16px] text-muted-foreground">
                 אין אירועי לו"ז לפרויקט זה
               </p>
             </div>
           ) : (
-            <div className="rounded-xl border border-[#e7e1da] bg-white p-5">
+            <div className="rounded-xl border border-border bg-card p-5">
               {/* Visual time span header */}
-              <div className="mb-4 flex items-center gap-2 rounded-lg bg-[#f5f3f0] px-4 py-2.5">
-                <Clock className="text-[#ff8c00]" size={14} />
+              <div className="mb-4 flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5">
+                <Clock className="text-primary" size={14} />
                 <span
-                  className="text-[#8d785e] text-[12px]"
+                  className="text-[12px] text-muted-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {currentTimeline[0]?.time}
                 </span>
                 <div className="flex flex-1 items-center gap-1 px-2">
-                  <div className="h-0.5 flex-1 bg-gradient-to-l from-[#ff8c00]/40 via-[#ff8c00]/20 to-[#ff8c00]/40" />
-                  <ArrowRight className="text-[#ff8c00]/50" size={12} />
+                  <div className="h-0.5 flex-1 bg-gradient-to-l from-primary/40 via-primary/20 to-primary/40" />
+                  <ArrowRight className="text-primary/50" size={12} />
                 </div>
                 <span
-                  className="text-[#8d785e] text-[12px]"
+                  className="text-[12px] text-muted-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {/* biome-ignore lint/style/useAtIndex: TS target doesn't support .at() */}
                   {currentTimeline[currentTimeline.length - 1]?.time}
                 </span>
                 <span
-                  className="mr-2 rounded-full bg-[#ff8c00]/10 px-2 py-0.5 text-[#ff8c00] text-[11px]"
+                  className="mr-2 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] text-primary"
                   style={{ fontWeight: 600 }}
                 >
                   {currentTimeline.length} פעילויות
@@ -1756,7 +1756,7 @@ export function QuoteEditor() {
                       </div>
 
                       {/* Event card */}
-                      <div className="mb-3 flex-1 rounded-xl border border-[#e7e1da] bg-[#fdfcfb] px-4 py-3 transition-colors hover:bg-[#f5f3f0]">
+                      <div className="mb-3 flex-1 rounded-xl border border-border bg-surface px-4 py-3 transition-colors hover:bg-accent">
                         <div className="mb-1 flex items-center gap-2">
                           <span
                             className="rounded-md px-2 py-0.5 text-[13px]"
@@ -1769,14 +1769,14 @@ export function QuoteEditor() {
                             {event.time}
                           </span>
                           <span
-                            className="text-[#181510] text-[14px]"
+                            className="text-[14px] text-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             {event.title}
                           </span>
                         </div>
                         {event.description && (
-                          <p className="text-[#8d785e] text-[13px]">
+                          <p className="text-[13px] text-muted-foreground">
                             {event.description}
                           </p>
                         )}
@@ -1804,9 +1804,9 @@ export function QuoteEditor() {
       <div className="h-16 md:h-0" />
 
       {/* Bottom sticky action bar */}
-      <div className="fixed right-0 bottom-0 left-0 z-30 mt-8 flex flex-wrap items-center gap-2 border-[#e7e1da] border-t bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md md:sticky md:rounded-xl md:border">
+      <div className="fixed right-0 bottom-0 left-0 z-30 mt-8 flex flex-wrap items-center gap-2 border-border border-t bg-card/95 px-4 py-3 shadow-lg backdrop-blur-md md:sticky md:rounded-xl md:border">
         <button
-          className="flex min-h-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-5 py-2.5 text-[13px] text-white shadow-sm transition-colors hover:bg-[#e67e00]"
+          className="flex min-h-[44px] items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-[13px] text-white shadow-sm transition-colors hover:bg-primary-hover"
           onClick={() => setShowSendDialog(true)}
           style={{ fontWeight: 600 }}
           type="button"
@@ -1815,7 +1815,7 @@ export function QuoteEditor() {
           שלח הצעה ללקוח
         </button>
         <button
-          className="flex min-h-[44px] items-center gap-2 rounded-xl bg-[#181510] px-5 py-2.5 text-[13px] text-white transition-colors hover:bg-[#2a2518] disabled:opacity-50"
+          className="flex min-h-[44px] items-center gap-2 rounded-xl bg-foreground px-5 py-2.5 text-[13px] text-white transition-colors hover:bg-foreground disabled:opacity-50"
           disabled={saving}
           onClick={saveDraft}
           style={{ fontWeight: 600 }}
@@ -1829,7 +1829,7 @@ export function QuoteEditor() {
           {saving ? "שומר..." : "שמור טיוטה"}
         </button>
         <button
-          className="flex min-h-[44px] items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+          className="flex min-h-[44px] items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-[13px] text-muted-foreground transition-colors hover:bg-accent"
           onClick={() => {
             const printWin = window.open("", "_blank");
             if (!printWin) {
@@ -1863,7 +1863,7 @@ export function QuoteEditor() {
           ייצא PDF
         </button>
         <button
-          className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#6b5d45] text-[13px] transition-colors hover:bg-[#f5f3f0]"
+          className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-[13px] text-muted-foreground transition-colors hover:bg-accent"
           onClick={() => {
             const url = `${window.location.origin}/quote/${projectId}?mode=noPrices`;
             navigator.clipboard.writeText(url);
@@ -1876,7 +1876,7 @@ export function QuoteEditor() {
         </button>
         {project?.status === "בביצוע" && (
           <button
-            className="flex items-center gap-2 rounded-xl bg-[#22c55e] px-4 py-2.5 text-[13px] text-white transition-colors hover:bg-[#16a34a]"
+            className="flex items-center gap-2 rounded-xl bg-success px-4 py-2.5 text-[13px] text-white transition-colors hover:bg-success"
             onClick={async () => {
               if (!projectId) {
                 return;
@@ -1897,7 +1897,7 @@ export function QuoteEditor() {
         )}
         {project?.status !== "בוטל" && (
           <button
-            className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-[13px] text-red-600 transition-colors hover:bg-red-100"
+            className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-[13px] text-destructive transition-colors hover:bg-destructive/15"
             onClick={async () => {
               // biome-ignore lint/suspicious/noAlert: intentional confirmation dialog for destructive action
               const confirmed = window.confirm(
@@ -1931,7 +1931,7 @@ export function QuoteEditor() {
       {activeTab === "orders" && showOrders && project?._id && (
         <div className="space-y-5" data-section="orders">
           <h2
-            className="flex items-center gap-2 text-[#181510] text-[18px]"
+            className="flex items-center gap-2 text-[18px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             <Receipt size={15} />
@@ -1963,47 +1963,47 @@ export function QuoteEditor() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <h3
-              className="mb-3 text-[#181510] text-[20px]"
+              className="mb-3 text-[20px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               יצירת גרסת הצעה
             </h3>
-            <p className="mb-4 text-[#8d785e] text-[14px]">
+            <p className="mb-4 text-[14px] text-muted-foreground">
               הגרסה הנוכחית תינעל ויווצר קישור לשליחה ללקוח.
             </p>
-            <div className="mb-4 rounded-xl bg-[#f5f3f0] p-4">
+            <div className="mb-4 rounded-xl bg-accent p-4">
               <div className="mb-2 flex justify-between text-[13px]">
-                <span className="text-[#8d785e]">גרסה:</span>
-                <span className="text-[#181510]" style={{ fontWeight: 600 }}>
+                <span className="text-muted-foreground">גרסה:</span>
+                <span className="text-foreground" style={{ fontWeight: 600 }}>
                   V1.0
                 </span>
               </div>
               <div className="mb-2 flex justify-between text-[13px]">
-                <span className="text-[#8d785e]">רכיבים:</span>
-                <span className="text-[#181510]" style={{ fontWeight: 600 }}>
+                <span className="text-muted-foreground">רכיבים:</span>
+                <span className="text-foreground" style={{ fontWeight: 600 }}>
                   {currentItems.length}
                 </span>
               </div>
               <div className="mb-2 flex justify-between text-[13px]">
-                <span className="text-[#8d785e]">סה"כ:</span>
-                <span className="text-[#181510]" style={{ fontWeight: 600 }}>
+                <span className="text-muted-foreground">סה"כ:</span>
+                <span className="text-foreground" style={{ fontWeight: 600 }}>
                   ₪{totalSelling.toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between text-[13px]">
-                <span className="text-[#8d785e]">רווחיות:</span>
-                <span className="text-green-600" style={{ fontWeight: 600 }}>
+                <span className="text-muted-foreground">רווחיות:</span>
+                <span className="text-success" style={{ fontWeight: 600 }}>
                   {profitPercent}%
                 </span>
               </div>
             </div>
             <div className="flex gap-3">
               <button
-                className="flex-1 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00]"
+                className="flex-1 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover"
                 onClick={async () => {
                   await saveDraft();
                   setShowPreview(false);
@@ -2019,7 +2019,7 @@ export function QuoteEditor() {
                 צור ושלח ללקוח
               </button>
               <button
-                className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                className="rounded-xl border border-border px-5 transition-colors hover:bg-accent"
                 onClick={() => setShowPreview(false)}
                 type="button"
               >
@@ -2044,11 +2044,11 @@ export function QuoteEditor() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <h3
-              className="mb-4 text-[#181510] text-[20px]"
+              className="mb-4 text-[20px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               הוספת רכיב חדש
@@ -2056,7 +2056,7 @@ export function QuoteEditor() {
             <div className="grid grid-cols-2 gap-3">
               {COMPONENT_TYPES.map((ct) => (
                 <button
-                  className="flex items-center gap-3 rounded-xl border border-[#e7e1da] p-3 transition-all hover:border-[#ff8c00] hover:bg-[#ff8c00]/5"
+                  className="flex items-center gap-3 rounded-xl border border-border p-3 transition-all hover:border-primary hover:bg-primary/5"
                   key={ct.type}
                   onClick={() => {
                     setShowAddForm(ct.type);
@@ -2066,7 +2066,7 @@ export function QuoteEditor() {
                 >
                   <TypeBadge size="md" type={ct.type} />
                   <span
-                    className="text-[#181510] text-[14px]"
+                    className="text-[14px] text-foreground"
                     style={{ fontWeight: 500 }}
                   >
                     {ct.label}
@@ -2092,11 +2092,11 @@ export function QuoteEditor() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <h3
-              className="mb-4 text-[#181510] text-[20px]"
+              className="mb-4 text-[20px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               הוספת {showAddForm} להצעה
@@ -2158,7 +2158,7 @@ export function QuoteEditor() {
               </div>
               <div className="flex gap-3 pt-2">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
                   disabled={saving || !addForm.formState.isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -2171,7 +2171,7 @@ export function QuoteEditor() {
                   {saving ? "מוסיף..." : "הוסף רכיב"}
                 </button>
                 <button
-                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-xl border border-border px-5 transition-colors hover:bg-accent"
                   onClick={() => {
                     setShowAddForm(null);
                     addForm.reset();

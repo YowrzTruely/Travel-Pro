@@ -37,8 +37,10 @@ export function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-        <p className="text-[#8d785e] text-[14px]">טוען נתוני דשבורד...</p>
+        <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+        <p className="text-[14px] text-muted-foreground">
+          טוען נתוני דשבורד...
+        </p>
       </div>
     );
   }
@@ -76,12 +78,12 @@ export function AdminDashboard() {
         transition={{ duration: 0.5 }}
       >
         <h1
-          className="text-[#181510] text-[30px] tracking-[-0.75px]"
+          className="text-[30px] text-foreground tracking-[-0.75px]"
           style={{ fontWeight: 600 }}
         >
           לוח בקרה - מנהל מערכת
         </h1>
-        <p className="mt-1 text-[#8d785e] text-[16px]">
+        <p className="mt-1 text-[16px] text-muted-foreground">
           שלום, {profile?.name || "מנהל"}. סקירה כללית של הפלטפורמה.
         </p>
       </motion.div>
@@ -121,32 +123,32 @@ export function AdminDashboard() {
       {/* Pending Supplier Approval Queue */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+        className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
         <div className="flex items-center gap-2 px-6 py-4">
-          <Shield className="text-[#ff8c00]" size={18} />
+          <Shield className="text-primary" size={18} />
           <h2
-            className="text-[#181510] text-[18px]"
+            className="text-[18px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             תור אישור ספקים
           </h2>
           {pendingSuppliers.length > 0 && (
             <span
-              className="rounded-full bg-[#ff8c00] px-2 py-0.5 text-[11px] text-white"
+              className="rounded-full bg-primary px-2 py-0.5 text-[11px] text-white"
               style={{ fontWeight: 600 }}
             >
               {pendingSuppliers.length}
             </span>
           )}
         </div>
-        <div className="border-[#f5f3f0] border-t px-6 py-4">
+        <div className="border-accent border-t px-6 py-4">
           {pendingSuppliers.length === 0 ? (
             <div className="flex flex-col items-center py-6">
-              <CheckCircle className="mb-2 text-[#22c55e]" size={24} />
-              <p className="text-[#8d785e] text-[14px]">
+              <CheckCircle className="mb-2 text-success" size={24} />
+              <p className="text-[14px] text-muted-foreground">
                 אין ספקים ממתינים לאישור
               </p>
             </div>
@@ -154,21 +156,21 @@ export function AdminDashboard() {
             <div className="space-y-3">
               {pendingSuppliers.map((supplier) => (
                 <div
-                  className="flex items-center justify-between rounded-lg border border-[#f5f3f0] bg-[#fdfcfb] px-4 py-3"
+                  className="flex items-center justify-between rounded-lg border border-accent bg-surface px-4 py-3"
                   key={supplier.id}
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#fff7ed]">
-                      <Users className="text-[#ff8c00]" size={16} />
+                      <Users className="text-primary" size={16} />
                     </div>
                     <div>
                       <p
-                        className="text-[#181510] text-[14px]"
+                        className="text-[14px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {supplier.name}
                       </p>
-                      <div className="flex items-center gap-3 text-[#8d785e] text-[12px]">
+                      <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
                         <span>{supplier.category}</span>
                         {supplier.region && <span>{supplier.region}</span>}
                         {supplier.email && <span>{supplier.email}</span>}
@@ -177,7 +179,7 @@ export function AdminDashboard() {
                   </div>
                   <div className="flex gap-2">
                     <button
-                      className="flex items-center gap-1 rounded-lg bg-[#22c55e] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#16a34a]"
+                      className="flex items-center gap-1 rounded-lg bg-success px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-success"
                       onClick={() =>
                         handleApproveSupplier(supplier.id as Id<"suppliers">)
                       }
@@ -188,7 +190,7 @@ export function AdminDashboard() {
                       אשר
                     </button>
                     <button
-                      className="flex items-center gap-1 rounded-lg bg-[#ef4444] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#dc2626]"
+                      className="flex items-center gap-1 rounded-lg bg-destructive px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-destructive"
                       onClick={() =>
                         handleRejectSupplier(supplier.id as Id<"suppliers">)
                       }
@@ -210,20 +212,20 @@ export function AdminDashboard() {
       {adminKPIs && (
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+          className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <div className="flex items-center gap-2 px-6 py-4">
-            <BarChart3 className="text-[#8b5cf6]" size={18} />
+            <BarChart3 className="text-chart-5" size={18} />
             <h2
-              className="text-[#181510] text-[18px]"
+              className="text-[18px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               מדדי ביצוע
             </h2>
           </div>
-          <div className="grid grid-cols-2 gap-4 border-[#f5f3f0] border-t px-6 py-5 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 border-accent border-t px-6 py-5 lg:grid-cols-4">
             <KPICard
               color="#3B82F6"
               label="ספקים רשומים"
@@ -255,20 +257,20 @@ export function AdminDashboard() {
       {/* Recent Activity (static placeholder) */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+        className="overflow-hidden rounded-xl border border-border bg-card shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5, delay: 0.6 }}
       >
         <div className="flex items-center gap-2 px-6 py-4">
-          <TrendingUp className="text-[#ff8c00]" size={18} />
+          <TrendingUp className="text-primary" size={18} />
           <h2
-            className="text-[#181510] text-[18px]"
+            className="text-[18px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             פעילות אחרונה
           </h2>
         </div>
-        <div className="border-[#f5f3f0] border-t px-6 py-5">
+        <div className="border-accent border-t px-6 py-5">
           <div className="space-y-4">
             <ActivityRow
               color="#22c55e"
@@ -309,7 +311,7 @@ function KPICard({
   target?: string;
 }) {
   return (
-    <div className="rounded-lg border border-[#f5f3f0] bg-[#fdfcfb] p-4 text-center">
+    <div className="rounded-lg border border-accent bg-surface p-4 text-center">
       <p
         className="text-[28px] leading-tight"
         style={{ color, fontWeight: 700 }}
@@ -317,13 +319,13 @@ function KPICard({
         {value}
       </p>
       <p
-        className="mt-1 text-[#8d785e] text-[12px]"
+        className="mt-1 text-[12px] text-muted-foreground"
         style={{ fontWeight: 500 }}
       >
         {label}
       </p>
       {target && (
-        <p className="mt-1 text-[#b8a990] text-[10px]">יעד: {target}</p>
+        <p className="mt-1 text-[10px] text-tertiary">יעד: {target}</p>
       )}
     </div>
   );
@@ -347,12 +349,12 @@ function ActivityRow({
         style={{ backgroundColor: color }}
       />
       <div className="min-w-0 flex-1">
-        <p className="text-[#181510] text-[14px]" style={{ fontWeight: 600 }}>
+        <p className="text-[14px] text-foreground" style={{ fontWeight: 600 }}>
           {title}
         </p>
-        <p className="text-[#8d785e] text-[12px]">{subtitle}</p>
+        <p className="text-[12px] text-muted-foreground">{subtitle}</p>
       </div>
-      <span className="shrink-0 text-[#c4b89a] text-[11px]">{time}</span>
+      <span className="shrink-0 text-[11px] text-tertiary">{time}</span>
     </div>
   );
 }

@@ -44,17 +44,19 @@ export function FeatureGate({
     <div className="relative">
       <div className="pointer-events-none opacity-40">{children}</div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#e7e1da] bg-[#f8f7f5] px-8 py-6 shadow-lg">
-          <Lock className="text-[#181510]" size={32} />
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-background px-8 py-6 shadow-lg">
+          <Lock className="text-foreground" size={32} />
           <p
-            className="text-center text-[#181510] text-[15px]"
+            className="text-center text-[15px] text-foreground"
             style={{ fontWeight: 600 }}
           >
             השלם את הפרופיל שלך כדי לפתוח תכונה זו
           </p>
-          <span className="text-[#8d785e] text-[13px]">{featureName}</span>
+          <span className="text-[13px] text-muted-foreground">
+            {featureName}
+          </span>
           <Link
-            className="mt-1 rounded-xl bg-[#ff8c00] px-5 py-2 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
+            className="mt-1 rounded-xl bg-primary px-5 py-2 text-[14px] text-white transition-colors hover:bg-[#e07b00]"
             style={{ fontWeight: 600 }}
             to="/profile"
           >

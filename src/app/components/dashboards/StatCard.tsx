@@ -89,23 +89,23 @@ export function StatCard({
 
   const trendBg =
     trend?.positive === true
-      ? "#f0fdf4"
+      ? "var(--success)"
       : trend?.positive === false
-        ? "#fef2f2"
-        : "#f5f3f0";
+        ? "var(--destructive)"
+        : "var(--muted)";
   const trendColor =
     trend?.positive === true
-      ? "#078810"
+      ? "var(--success-foreground)"
       : trend?.positive === false
-        ? "#e71008"
-        : "#8d785e";
+        ? "var(--destructive-foreground)"
+        : "var(--muted-foreground)";
 
   const sparkData = sparklineData?.map((v) => ({ v })) ?? [];
 
   return (
     <motion.button
       animate={{ opacity: 1, y: 0 }}
-      className="group relative flex cursor-pointer flex-col gap-1 overflow-hidden rounded-xl border border-[#e7e1da] bg-white p-5 pb-2 text-right shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#d4cdc3] hover:shadow-lg"
+      className="group relative flex cursor-pointer flex-col gap-1 overflow-hidden rounded-xl border border-border bg-card p-5 pb-2 text-right shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:border-tertiary hover:shadow-lg"
       initial={{ opacity: 0, y: 24 }}
       onClick={onClick}
       transition={{
@@ -129,14 +129,14 @@ export function StatCard({
         )}
         <div
           className="flex h-[36px] w-[34px] items-center justify-center rounded-lg"
-          style={{ backgroundColor: color.iconBg }}
+          style={{ backgroundColor: `color-mix(in srgb, ${color.icon} 15%, var(--card))` }}
         >
           <Icon size={18} style={{ color: color.icon }} />
         </div>
       </div>
-      <p className="mt-1 text-[#8d785e] text-[14px]">{title}</p>
+      <p className="mt-1 text-[14px] text-muted-foreground">{title}</p>
       <p
-        className="text-[#181510] text-[30px] leading-[36px]"
+        className="text-[30px] text-foreground leading-[36px]"
         ref={counter.ref as React.Ref<HTMLParagraphElement>}
         style={{ fontWeight: 700 }}
       >

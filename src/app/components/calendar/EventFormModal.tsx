@@ -106,19 +106,19 @@ export function EventFormModal({
     >
       <div
         aria-modal="true"
-        className="w-full max-w-lg rounded-2xl bg-white p-6 font-['Assistant',sans-serif] shadow-2xl"
+        className="w-full max-w-lg rounded-2xl bg-card p-6 font-['Assistant',sans-serif] shadow-2xl"
         dir="rtl"
         role="dialog"
       >
         <div className="mb-5 flex items-center justify-between">
           <h3
-            className="text-[#181510] text-[20px]"
+            className="text-[20px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {editingEvent ? "עריכת אירוע" : "אירוע חדש"}
           </h3>
           <button
-            className="text-[#8d785e] transition-colors hover:text-[#181510]"
+            className="text-muted-foreground transition-colors hover:text-foreground"
             onClick={onClose}
             type="button"
           >
@@ -208,7 +208,7 @@ export function EventFormModal({
 
           <div className="flex gap-3 pt-2">
             <button
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
               disabled={saving || !isValid}
               style={{ fontWeight: 600 }}
               type="submit"
@@ -223,7 +223,7 @@ export function EventFormModal({
               {saving ? "שומר..." : editingEvent ? "עדכן אירוע" : "צור אירוע"}
             </button>
             <button
-              className="rounded-xl border border-[#e7e1da] px-5 text-[#181510] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+              className="rounded-xl border border-border px-5 text-[14px] text-foreground transition-colors hover:bg-accent"
               onClick={onClose}
               style={{ fontWeight: 600 }}
               type="button"

@@ -228,7 +228,7 @@ export function ProductEditor({
           {/* Drawer */}
           <motion.div
             animate={{ x: 0, opacity: 1 }}
-            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-xl flex-col overflow-hidden bg-[#f8f7f5] shadow-2xl"
+            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-xl flex-col overflow-hidden bg-background shadow-2xl"
             dir="rtl"
             exit={{ x: "100%", opacity: 0 }}
             initial={{ x: "100%", opacity: 0.5 }}
@@ -237,28 +237,28 @@ export function ProductEditor({
             {/* Header */}
             <motion.div
               animate={{ y: 0, opacity: 1 }}
-              className="flex items-center justify-between border-[#e7e1da] border-b bg-white px-5 py-4"
+              className="flex items-center justify-between border-border border-b bg-card px-5 py-4"
               initial={{ y: -20, opacity: 0 }}
               transition={{ delay: 0.15 }}
             >
               <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ff8c00] text-white">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white">
                   <Package size={18} />
                 </span>
                 <div>
                   <h2
-                    className="text-[#181510] text-[17px]"
+                    className="text-[17px] text-foreground"
                     style={{ fontWeight: 700 }}
                   >
                     עריכת מוצר
                   </h2>
-                  <p className="text-[#8d785e] text-[12px]">
+                  <p className="text-[12px] text-muted-foreground">
                     מזהה: {product.id}
                   </p>
                 </div>
               </div>
               <button
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 onClick={onClose}
                 type="button"
               >
@@ -278,7 +278,7 @@ export function ProductEditor({
                 {images && images.length > 0 ? (
                   <div className="relative">
                     {/* Main image */}
-                    <div className="relative h-56 overflow-hidden bg-[#181510]">
+                    <div className="relative h-56 overflow-hidden bg-foreground">
                       <AnimatePresence mode="wait">
                         <motion.img
                           alt={images[activeImageIdx]?.name}
@@ -301,7 +301,7 @@ export function ProductEditor({
                       {images.length > 1 && (
                         <>
                           <button
-                            className="absolute top-1/2 left-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#181510] shadow-lg transition-all hover:bg-white"
+                            className="absolute top-1/2 left-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-card/90 text-foreground shadow-lg transition-all hover:bg-card"
                             onClick={() =>
                               setActiveImageIdx((i) => (i + 1) % images.length)
                             }
@@ -310,7 +310,7 @@ export function ProductEditor({
                             <ChevronLeft size={16} />
                           </button>
                           <button
-                            className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#181510] shadow-lg transition-all hover:bg-white"
+                            className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-card/90 text-foreground shadow-lg transition-all hover:bg-card"
                             onClick={() =>
                               setActiveImageIdx(
                                 (i) => (i - 1 + images.length) % images.length
@@ -323,7 +323,7 @@ export function ProductEditor({
                         </>
                       )}
                       <button
-                        className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-red-500/80 px-2.5 py-1 text-[11px] text-white backdrop-blur-md transition-colors hover:bg-red-500"
+                        className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-destructive/100/80 px-2.5 py-1 text-[11px] text-white backdrop-blur-md transition-colors hover:bg-destructive/100"
                         onClick={() =>
                           images[activeImageIdx] &&
                           requestDelete({
@@ -338,26 +338,26 @@ export function ProductEditor({
                         <Trash2 size={11} /> מחק
                       </button>
                       {/* Price overlay */}
-                      <div className="absolute right-3 bottom-3 rounded-lg bg-white/95 px-3 py-1.5 text-[#181510] shadow-lg backdrop-blur-md">
+                      <div className="absolute right-3 bottom-3 rounded-lg bg-card/95 px-3 py-1.5 text-foreground shadow-lg backdrop-blur-md">
                         <span
                           className="text-[18px]"
                           style={{ fontWeight: 800 }}
                         >
                           ₪{price.toLocaleString()}
                         </span>
-                        <span className="text-[#8d785e] text-[11px]">
+                        <span className="text-[11px] text-muted-foreground">
                           /{unit}
                         </span>
                       </div>
                     </div>
                     {/* Thumbnails */}
                     {images.length > 1 && (
-                      <div className="flex gap-2 overflow-x-auto border-[#e7e1da] border-b bg-white p-3">
+                      <div className="flex gap-2 overflow-x-auto border-border border-b bg-card p-3">
                         {images.map((img, idx) => (
                           <button
                             className={`h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
                               idx === activeImageIdx
-                                ? "scale-105 border-[#ff8c00] shadow-md"
+                                ? "scale-105 border-primary shadow-md"
                                 : "border-transparent opacity-60 hover:opacity-100"
                             }`}
                             key={img.id}
@@ -374,7 +374,7 @@ export function ProductEditor({
                           </button>
                         ))}
                         <button
-                          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border-2 border-[#e7e1da] border-dashed text-[#b8a990] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border-2 border-border border-dashed text-tertiary transition-colors hover:border-primary hover:text-primary"
                           onClick={() => fileInputRef.current?.click()}
                           type="button"
                         >
@@ -388,8 +388,8 @@ export function ProductEditor({
                   <div
                     className={`relative m-4 cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300 ${
                       isDragging
-                        ? "scale-[1.02] border-[#ff8c00] bg-[#ff8c00]/5"
-                        : "border-[#e7e1da] bg-white hover:border-[#ff8c00]/50"
+                        ? "scale-[1.02] border-primary bg-primary/5"
+                        : "border-border bg-card hover:border-primary/50"
                     }`}
                     onClick={() => fileInputRef.current?.click()}
                     onDragLeave={handleDragLeave}
@@ -421,8 +421,8 @@ export function ProductEditor({
                         }
                         className={`mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors duration-300 ${
                           isDragging
-                            ? "bg-[#ff8c00]/15 text-[#ff8c00]"
-                            : "bg-[#f5f3f0] text-[#b8a990]"
+                            ? "bg-primary/15 text-primary"
+                            : "bg-accent text-tertiary"
                         }`}
                         transition={{
                           duration: 0.8,
@@ -431,7 +431,7 @@ export function ProductEditor({
                       >
                         {uploading ? (
                           <Loader2
-                            className="animate-spin text-[#ff8c00]"
+                            className="animate-spin text-primary"
                             size={28}
                           />
                         ) : (
@@ -439,7 +439,7 @@ export function ProductEditor({
                         )}
                       </motion.div>
                       <p
-                        className="mb-1 text-[#181510] text-[15px]"
+                        className="mb-1 text-[15px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {isDragging
@@ -448,7 +448,7 @@ export function ProductEditor({
                             ? "מעלה תמונה..."
                             : "הוסף תמונות למוצר"}
                       </p>
-                      <p className="text-[#b8a990] text-[12px]">
+                      <p className="text-[12px] text-tertiary">
                         גרור לכאן או לחץ לבחירת קובץ &bull; JPG, PNG עד 5MB
                       </p>
                     </div>
@@ -469,7 +469,7 @@ export function ProductEditor({
                 {images && images.length > 0 && (
                   <div className="px-4 pb-2">
                     <button
-                      className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#e7e1da] border-dashed p-3 text-[#8d785e] text-[13px] transition-all hover:border-[#ff8c00] hover:text-[#ff8c00]"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-border border-dashed p-3 text-[13px] text-muted-foreground transition-all hover:border-primary hover:text-primary"
                       onClick={() => fileInputRef.current?.click()}
                       onDragLeave={handleDragLeave}
                       onDragOver={handleDragOver}
@@ -492,27 +492,27 @@ export function ProductEditor({
                 {/* Basic info */}
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+                  className="space-y-3 rounded-xl border border-border bg-card p-4"
                   initial={{ opacity: 0, y: 15 }}
                   transition={{ delay: 0.25 }}
                 >
                   <div
-                    className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                    className="mb-1 flex items-center gap-2 text-[13px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
-                    <FileText className="text-[#ff8c00]" size={14} />
+                    <FileText className="text-primary" size={14} />
                     פרטי המוצר
                   </div>
 
                   <div>
                     <label
-                      className="mb-1 block text-[#8d785e] text-[11px]"
+                      className="mb-1 block text-[11px] text-muted-foreground"
                       htmlFor="product-name"
                     >
                       שם המוצר
                     </label>
                     <input
-                      className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2.5 text-[15px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                      className="w-full rounded-lg border border-border bg-input-background px-3 py-2.5 text-[15px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                       id="product-name"
                       onChange={(e) => setName(e.target.value)}
                       placeholder="שם המוצר..."
@@ -523,13 +523,13 @@ export function ProductEditor({
 
                   <div>
                     <label
-                      className="mb-1 block text-[#8d785e] text-[11px]"
+                      className="mb-1 block text-[11px] text-muted-foreground"
                       htmlFor="product-description"
                     >
                       תיאור
                     </label>
                     <textarea
-                      className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                      className="w-full resize-none rounded-lg border border-border bg-input-background px-3 py-2 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                       id="product-description"
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="תיאור המוצר..."
@@ -542,32 +542,32 @@ export function ProductEditor({
                 {/* Pricing */}
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+                  className="space-y-3 rounded-xl border border-border bg-card p-4"
                   initial={{ opacity: 0, y: 15 }}
                   transition={{ delay: 0.35 }}
                 >
                   <div
-                    className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                    className="mb-1 flex items-center gap-2 text-[13px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
-                    <Banknote className="text-[#ff8c00]" size={14} />
+                    <Banknote className="text-primary" size={14} />
                     תמחור
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label
-                        className="mb-1 block text-[#8d785e] text-[11px]"
+                        className="mb-1 block text-[11px] text-muted-foreground"
                         htmlFor="product-price"
                       >
                         מחיר
                       </label>
                       <div className="relative">
-                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#b8a990] text-[13px]">
+                        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[13px] text-tertiary">
                           ₪
                         </span>
                         <input
-                          className="w-full rounded-lg border border-[#e7e1da] bg-[#fafaf8] py-2.5 pr-7 pl-2 text-[16px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                          className="w-full rounded-lg border border-border bg-input-background py-2.5 pr-7 pl-2 text-[16px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                           id="product-price"
                           onChange={(e) =>
                             setPrice(Number.parseFloat(e.target.value) || 0)
@@ -580,7 +580,7 @@ export function ProductEditor({
                     </div>
                     <div>
                       <fieldset>
-                        <legend className="mb-1 block text-[#8d785e] text-[11px]">
+                        <legend className="mb-1 block text-[11px] text-muted-foreground">
                           יחידת מדידה
                         </legend>
                         <div className="flex flex-wrap gap-1.5">
@@ -588,8 +588,8 @@ export function ProductEditor({
                             <button
                               className={`rounded-lg border px-3 py-2 text-[12px] transition-all ${
                                 unit === u
-                                  ? "border-[#ff8c00] bg-[#ff8c00]/10 text-[#ff8c00]"
-                                  : "border-[#e7e1da] bg-[#fafaf8] text-[#8d785e] hover:border-[#ff8c00]/40"
+                                  ? "border-primary bg-primary/10 text-primary"
+                                  : "border-border bg-input-background text-muted-foreground hover:border-primary/40"
                               }`}
                               key={u}
                               onClick={() => setUnit(u)}
@@ -605,19 +605,19 @@ export function ProductEditor({
                   </div>
 
                   {/* Price display card */}
-                  <div className="rounded-xl border border-[#ff8c00]/20 bg-gradient-to-l from-[#ff8c00]/10 to-[#ff8c00]/5 p-4">
+                  <div className="rounded-xl border border-primary/20 bg-gradient-to-l from-primary/10 to-primary/5 p-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-[#8d785e] text-[13px]">
+                      <span className="text-[13px] text-muted-foreground">
                         מחיר סופי
                       </span>
                       <div>
                         <span
-                          className="text-[#181510] text-[24px]"
+                          className="text-[24px] text-foreground"
                           style={{ fontWeight: 800 }}
                         >
                           ₪{price.toLocaleString()}
                         </span>
-                        <span className="mr-1 text-[#8d785e] text-[13px]">
+                        <span className="mr-1 text-[13px] text-muted-foreground">
                           /{unit}
                         </span>
                       </div>
@@ -628,19 +628,19 @@ export function ProductEditor({
                 {/* Notes */}
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-xl border border-[#e7e1da] bg-white p-4"
+                  className="rounded-xl border border-border bg-card p-4"
                   initial={{ opacity: 0, y: 15 }}
                   transition={{ delay: 0.45 }}
                 >
                   <div
-                    className="mb-2 flex items-center gap-2 text-[#8d785e] text-[13px]"
+                    className="mb-2 flex items-center gap-2 text-[13px] text-muted-foreground"
                     style={{ fontWeight: 600 }}
                   >
-                    <StickyNote className="text-[#ff8c00]" size={14} />
+                    <StickyNote className="text-primary" size={14} />
                     הערות פנימיות
                   </div>
                   <textarea
-                    className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+                    className="w-full resize-none rounded-lg border border-border bg-input-background px-3 py-2 text-[13px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="הערות פנימיות, דגשים על המוצר..."
                     rows={3}
@@ -655,17 +655,17 @@ export function ProductEditor({
             {/* Bottom bar */}
             <motion.div
               animate={{ y: 0, opacity: 1 }}
-              className="sticky bottom-0 flex items-center gap-3 border-[#e7e1da] border-t bg-white/95 px-4 py-3 backdrop-blur-md"
+              className="sticky bottom-0 flex items-center gap-3 border-border border-t bg-card/95 px-4 py-3 backdrop-blur-md"
               initial={{ y: 20, opacity: 0 }}
               transition={{ delay: 0.4 }}
             >
               <motion.button
                 className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-[14px] transition-all ${
                   saveSuccess
-                    ? "bg-green-500 text-white"
+                    ? "bg-success/100 text-white"
                     : hasChanges
-                      ? "bg-[#ff8c00] text-white shadow-[#ff8c00]/25 shadow-lg hover:bg-[#e67e00]"
-                      : "cursor-not-allowed bg-[#e7e1da] text-[#b8a990]"
+                      ? "bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary-hover"
+                      : "cursor-not-allowed bg-border text-tertiary"
                 }`}
                 disabled={saving || !(hasChanges || saveSuccess)}
                 onClick={handleSave}
@@ -687,7 +687,7 @@ export function ProductEditor({
                 )}
               </motion.button>
               <button
-                className="rounded-xl border border-[#e7e1da] px-5 py-3 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+                className="rounded-xl border border-border px-5 py-3 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
                 onClick={onClose}
                 type="button"
               >

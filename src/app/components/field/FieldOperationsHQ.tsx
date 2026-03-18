@@ -26,9 +26,9 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  planned: "bg-gray-100 text-gray-600",
-  in_progress: "bg-[#ff8c00] text-white animate-pulse",
-  completed: "bg-green-100 text-green-700",
+  planned: "bg-accent text-muted-foreground",
+  in_progress: "bg-primary text-white animate-pulse",
+  completed: "bg-success/15 text-success",
 };
 
 export function FieldOperationsHQ() {
@@ -67,10 +67,10 @@ export function FieldOperationsHQ() {
   if (project === undefined || (project && fieldOperation === undefined)) {
     return (
       <div
-        className="flex min-h-screen items-center justify-center bg-[#faf9f7]"
+        className="flex min-h-screen items-center justify-center bg-surface"
         dir="rtl"
       >
-        <Loader2 className="animate-spin text-[#ff8c00]" size={32} />
+        <Loader2 className="animate-spin text-primary" size={32} />
       </div>
     );
   }
@@ -79,12 +79,12 @@ export function FieldOperationsHQ() {
   if (project === null) {
     return (
       <div
-        className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#faf9f7]"
+        className="flex min-h-screen flex-col items-center justify-center gap-4 bg-surface"
         dir="rtl"
       >
-        <p className="text-[#8d785e] text-[16px]">הפרויקט לא נמצא</p>
+        <p className="text-[16px] text-muted-foreground">הפרויקט לא נמצא</p>
         <button
-          className="flex min-h-11 items-center gap-2 rounded-xl bg-[#ff8c00] px-6 py-3 text-white transition-colors hover:bg-[#e67e00]"
+          className="flex min-h-11 items-center gap-2 rounded-xl bg-primary px-6 py-3 text-white transition-colors hover:bg-primary-hover"
           onClick={() => navigate("/projects")}
           style={{ fontWeight: 600 }}
           type="button"
@@ -142,25 +142,25 @@ export function FieldOperationsHQ() {
   if (!fieldOperation) {
     return (
       <div
-        className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[#faf9f7] p-4"
+        className="flex min-h-screen flex-col items-center justify-center gap-6 bg-surface p-4"
         dir="rtl"
       >
-        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[#ff8c00]/10">
-          <MapPin className="text-[#ff8c00]" size={40} />
+        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10">
+          <MapPin className="text-primary" size={40} />
         </div>
         <div className="text-center">
           <h2
-            className="mb-2 text-[#181510] text-[20px]"
+            className="mb-2 text-[20px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             מבצע שטח — {project.name}
           </h2>
-          <p className="text-[#8d785e] text-[14px]">
+          <p className="text-[14px] text-muted-foreground">
             אין עדיין מבצע שטח לפרויקט זה. צור מבצע חדש כדי להתחיל.
           </p>
         </div>
         <button
-          className="flex min-h-11 items-center gap-2 rounded-xl bg-[#ff8c00] px-6 py-3 text-[16px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+          className="flex min-h-11 items-center gap-2 rounded-xl bg-primary px-6 py-3 text-[16px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
           disabled={creating}
           onClick={handleCreate}
           style={{ fontWeight: 700 }}
@@ -182,13 +182,13 @@ export function FieldOperationsHQ() {
     : [];
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]" dir="rtl">
+    <div className="min-h-screen bg-surface" dir="rtl">
       {/* Header */}
-      <div className="sticky top-0 z-10 border-[#e7e1da] border-b bg-white px-4 py-3 shadow-sm">
+      <div className="sticky top-0 z-10 border-border border-b bg-card px-4 py-3 shadow-sm">
         <div className="mx-auto flex max-w-lg items-center justify-between">
           <div className="flex items-center gap-3">
             <button
-              className="rounded-lg p-2 text-[#8d785e] transition-colors hover:bg-[#f5f3f0]"
+              className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
               onClick={() => navigate(-1)}
               type="button"
             >
@@ -196,12 +196,12 @@ export function FieldOperationsHQ() {
             </button>
             <div>
               <h1
-                className="text-[#181510] text-[18px]"
+                className="text-[18px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 {project.name}
               </h1>
-              <p className="text-[#8d785e] text-[12px]">מבצע שטח</p>
+              <p className="text-[12px] text-muted-foreground">מבצע שטח</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -223,11 +223,11 @@ export function FieldOperationsHQ() {
       )}
 
       {/* Action buttons — fixed on mobile */}
-      <div className="fixed inset-x-0 bottom-0 z-20 border-[#e7e1da] border-t bg-white px-4 py-3 shadow-lg sm:static sm:z-auto sm:mx-auto sm:max-w-lg sm:border-t-0 sm:bg-transparent sm:shadow-none">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-border border-t bg-card px-4 py-3 shadow-lg sm:static sm:z-auto sm:mx-auto sm:max-w-lg sm:border-t-0 sm:bg-transparent sm:shadow-none">
         <div className="mx-auto flex max-w-lg gap-2">
           {fieldOperation.status === "planned" && (
             <button
-              className="flex min-h-[44px] min-w-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-[#e67e00] disabled:opacity-50"
+              className="flex min-h-[44px] min-w-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
               disabled={actionLoading}
               onClick={handleStart}
               style={{ fontWeight: 700 }}
@@ -243,7 +243,7 @@ export function FieldOperationsHQ() {
           )}
           {fieldOperation.status === "in_progress" && (
             <button
-              className="flex min-h-[44px] min-w-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-green-700 disabled:opacity-50"
+              className="flex min-h-[44px] min-w-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-success px-4 py-2.5 text-[14px] text-white transition-colors hover:bg-green-700 disabled:opacity-50"
               disabled={actionLoading}
               onClick={handleComplete}
               style={{ fontWeight: 700 }}
@@ -258,7 +258,7 @@ export function FieldOperationsHQ() {
             </button>
           )}
           <button
-            className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#181510] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+            className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-[14px] text-foreground transition-colors hover:bg-accent"
             onClick={() => setShowExpenseForm(true)}
             style={{ fontWeight: 600 }}
             type="button"
@@ -272,9 +272,9 @@ export function FieldOperationsHQ() {
       {/* Timeline of stops */}
       <div className="mx-auto max-w-lg space-y-3 px-4 pb-32 sm:pb-24">
         {sortedStops.length === 0 ? (
-          <div className="rounded-xl border border-[#e7e1da] border-dashed p-8 text-center">
-            <MapPin className="mx-auto mb-2 text-[#8d785e]" size={24} />
-            <p className="text-[#8d785e] text-[14px]">
+          <div className="rounded-xl border border-border border-dashed p-8 text-center">
+            <MapPin className="mx-auto mb-2 text-muted-foreground" size={24} />
+            <p className="text-[14px] text-muted-foreground">
               אין עצירות עדיין. הוסף עצירות דרך עמוד הפרויקט.
             </p>
           </div>
@@ -295,7 +295,7 @@ export function FieldOperationsHQ() {
       {/* Floating action button for time shift */}
       {fieldOperation.status !== "completed" && sortedStops.length > 0 && (
         <button
-          className="fixed bottom-20 left-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#181510] text-white shadow-lg transition-transform hover:scale-105 active:scale-95 sm:bottom-6"
+          className="fixed bottom-20 left-6 flex h-14 w-14 items-center justify-center rounded-full bg-foreground text-white shadow-lg transition-transform hover:scale-105 active:scale-95 sm:bottom-6"
           onClick={() => setShowTimeShift(true)}
           title="הזזת לוח זמנים"
           type="button"
@@ -330,18 +330,18 @@ function ParticipantAlert({ planned }: { planned: number }) {
   const diff = Number.isNaN(actualNum) ? 0 : planned - actualNum;
 
   return (
-    <div className="rounded-xl border border-[#e7e1da] bg-white p-3">
+    <div className="rounded-xl border border-border bg-card p-3">
       <div className="flex items-center gap-3">
         <div className="flex-1">
           <label
-            className="mb-1 block text-[#8d785e] text-[12px]"
+            className="mb-1 block text-[12px] text-muted-foreground"
             htmlFor="actual-participants"
             style={{ fontWeight: 600 }}
           >
             משתתפים בפועל (מתוכנן: {planned})
           </label>
           <input
-            className="w-full rounded-lg border border-[#e7e1da] bg-[#f5f3f0] px-3 py-2 text-[14px] outline-none focus:border-[#ff8c00]"
+            className="w-full rounded-lg border border-border bg-accent px-3 py-2 text-[14px] outline-none focus:border-primary"
             id="actual-participants"
             onChange={(e) => setActual(e.target.value)}
             placeholder={String(planned)}
@@ -351,7 +351,7 @@ function ParticipantAlert({ planned }: { planned: number }) {
         </div>
       </div>
       {diff > 0 && actual !== "" && (
-        <div className="mt-2 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-[13px] text-amber-700">
+        <div className="mt-2 flex items-center gap-2 rounded-lg bg-warning/10 px-3 py-2 text-[13px] text-warning">
           <span style={{ fontWeight: 600 }}>{diff} פחות משתתפים מהמתוכנן</span>
           <span className="text-amber-500">— יש לעדכן את הספקים</span>
         </div>

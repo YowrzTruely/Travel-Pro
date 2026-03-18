@@ -120,12 +120,12 @@ export function GlobalSearch() {
     <div className="relative w-full max-w-[448px]" ref={wrapperRef}>
       <div className="relative">
         <Search
-          className="pointer-events-none absolute top-1/2 right-3 z-10 -translate-y-1/2 text-[#8d785e]"
+          className="pointer-events-none absolute top-1/2 right-3 z-10 -translate-y-1/2 text-muted-foreground"
           size={14}
         />
         <input
           autoComplete="off"
-          className="w-full rounded-lg border-0 bg-[#f5f3f0] px-4 py-2 pr-10 text-[#181510] text-[14px] placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+          className="w-full rounded-lg border-0 bg-accent px-4 py-2 pr-10 text-[14px] text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           onChange={(e) => handleChange(e.target.value)}
           onFocus={() => {
             if (query.trim()) {
@@ -139,7 +139,7 @@ export function GlobalSearch() {
         />
         {query && (
           <button
-            className="absolute top-1/2 left-3 -translate-y-1/2 text-[#b8a990] hover:text-[#181510]"
+            className="absolute top-1/2 left-3 -translate-y-1/2 text-tertiary hover:text-foreground"
             onClick={() => {
               setQuery("");
               setOpen(false);
@@ -152,16 +152,16 @@ export function GlobalSearch() {
       </div>
 
       {open && (query.trim() || loading) && (
-        <div className="absolute top-full z-50 mt-2 w-full overflow-hidden rounded-xl border border-[#e7e1da] bg-white shadow-2xl">
+        <div className="absolute top-full z-50 mt-2 w-full overflow-hidden rounded-xl border border-border bg-card shadow-2xl">
           {loading && (
             <div className="flex items-center justify-center py-4">
-              <Loader2 className="animate-spin text-[#ff8c00]" size={18} />
+              <Loader2 className="animate-spin text-primary" size={18} />
             </div>
           )}
 
           {!loading && results.length === 0 && query.trim() && (
             <div className="p-4 text-center">
-              <p className="text-[#8d785e] text-[13px]">
+              <p className="text-[13px] text-muted-foreground">
                 לא נמצאו תוצאות עבור "{query}"
               </p>
             </div>
@@ -171,7 +171,7 @@ export function GlobalSearch() {
             <>
               <div className="px-3 pt-3 pb-1">
                 <span
-                  className="text-[#b8a990] text-[11px]"
+                  className="text-[11px] text-tertiary"
                   style={{ fontWeight: 600 }}
                 >
                   {results.length} תוצאות
@@ -179,30 +179,30 @@ export function GlobalSearch() {
               </div>
               {results.map((result) => (
                 <button
-                  className="flex w-full items-center gap-3 border-[#f5f3f0] border-b px-4 py-3 text-right transition-colors last:border-b-0 hover:bg-[#f5f3f0]"
+                  className="flex w-full items-center gap-3 border-accent border-b px-4 py-3 text-right transition-colors last:border-b-0 hover:bg-accent"
                   key={`${result.type}-${result.id}`}
                   onClick={() => selectResult(result)}
                   type="button"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f5f3f0] text-[16px]">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-[16px]">
                     {result.icon}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div
-                      className="truncate text-[#181510] text-[13px]"
+                      className="truncate text-[13px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {result.title}
                     </div>
-                    <div className="truncate text-[#8d785e] text-[11px]">
+                    <div className="truncate text-[11px] text-muted-foreground">
                       {result.subtitle}
                     </div>
                   </div>
                   <span
                     className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] ${
                       result.type === "project"
-                        ? "bg-blue-50 text-blue-600"
-                        : "bg-purple-50 text-purple-600"
+                        ? "bg-info/10 text-info"
+                        : "bg-chart-5/10 text-chart-5"
                     }`}
                     style={{ fontWeight: 600 }}
                   >

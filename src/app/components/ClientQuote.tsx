@@ -183,32 +183,32 @@ export function ClientQuote() {
   if (loading) {
     return (
       <div
-        className="flex h-screen flex-col items-center justify-center bg-white font-['Assistant',sans-serif]"
+        className="flex h-screen flex-col items-center justify-center bg-card font-['Assistant',sans-serif]"
         dir="rtl"
       >
-        <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-        <p className="text-[#8d785e] text-[14px]">טוען הצעת מחיר...</p>
+        <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+        <p className="text-[14px] text-muted-foreground">טוען הצעת מחיר...</p>
       </div>
     );
   }
 
   return (
     <div
-      className="min-h-screen bg-white font-['Assistant',sans-serif]"
+      className="min-h-screen bg-card font-['Assistant',sans-serif]"
       dir="rtl"
     >
       {/* No-prices banner */}
       {noPrices && (
-        <div className="bg-[#fff7ed] px-4 py-2 text-center font-semibold text-[#9a3412] text-[13px]">
+        <div className="bg-[#fff7ed] px-4 py-2 text-center font-semibold text-[13px] text-destructive">
           תצוגה ללא מחירים — לצפייה בלבד
         </div>
       )}
 
       {/* Top nav */}
-      <div className="sticky top-0 z-40 flex items-center justify-between border-[#e7e1da] border-b bg-white px-4 py-3">
+      <div className="sticky top-0 z-40 flex items-center justify-between border-border border-b bg-card px-4 py-3">
         <div className="flex items-center gap-3">
           <button
-            className="flex min-h-[44px] items-center gap-1.5 rounded-lg bg-[#f5f3f0] py-1.5 pr-2 pl-3 text-[#8d785e] text-[13px] transition-colors hover:bg-[#ece8e3] hover:text-[#181510]"
+            className="flex min-h-[44px] items-center gap-1.5 rounded-lg bg-accent py-1.5 pr-2 pl-3 text-[13px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             onClick={goBack}
             style={{ fontWeight: 600 }}
             type="button"
@@ -216,35 +216,35 @@ export function ClientQuote() {
             חזרה
             <ArrowRight size={15} />
           </button>
-          <div className="h-6 w-px bg-[#e7e1da]" />
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]">
+          <div className="h-6 w-px bg-border" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
             <span className="text-[14px] text-white">✈</span>
           </div>
           <span
-            className="text-[#181510] text-[16px]"
+            className="text-[16px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             Eventos
           </span>
         </div>
-        <div className="hidden items-center gap-2 text-[#8d785e] text-[13px] sm:flex">
+        <div className="hidden items-center gap-2 text-[13px] text-muted-foreground sm:flex">
           <span>הצעת מחיר | {projectName}</span>
           {quoteData?.quoteVersion && (
-            <span className="rounded-full bg-[#f5f3f0] px-2 py-0.5 font-semibold text-[11px]">
+            <span className="rounded-full bg-accent px-2 py-0.5 font-semibold text-[11px]">
               V{quoteData.quoteVersion}
             </span>
           )}
         </div>
         <div className="flex items-center gap-2">
           <button
-            className="min-h-[44px] min-w-[44px] rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
+            className="min-h-[44px] min-w-[44px] rounded-lg border border-border px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-accent"
             onClick={() => setShowVersions(true)}
             type="button"
           >
             גרסאות
           </button>
           <button
-            className="flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-lg bg-[#ff8c00] px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-[#e67e00]"
+            className="flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-primary-hover"
             onClick={() => window.print()}
             style={{ fontWeight: 600 }}
             type="button"
@@ -265,7 +265,7 @@ export function ClientQuote() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute right-0 bottom-0 left-0 p-6 text-right md:p-10">
           <span
-            className="text-[#ffb74d] text-[12px] tracking-wider"
+            className="text-[12px] text-primary/80 tracking-wider"
             style={{ fontWeight: 600 }}
           >
             החוויה הגלילית שלכם
@@ -287,7 +287,7 @@ export function ClientQuote() {
         {/* Quick timeline */}
         <div>
           <h2
-            className="mb-4 text-[#181510] text-[22px]"
+            className="mb-4 text-[22px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             ⏰ לו"ז מקוצר
@@ -295,14 +295,14 @@ export function ClientQuote() {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {timelineItems.map((item: any, idx: number) => (
               <button
-                className="flex min-h-[44px] items-center gap-3 rounded-xl border-2 border-[#ff8c00]/20 bg-white p-4 transition-all hover:border-[#ff8c00]"
+                className="flex min-h-[44px] items-center gap-3 rounded-xl border-2 border-primary/20 bg-card p-4 transition-all hover:border-primary"
                 key={idx}
                 onClick={() =>
                   setExpandedTimeline(expandedTimeline === idx ? null : idx)
                 }
                 type="button"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#ff8c00]/10 text-[#ff8c00]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <CategoryIcon
                     category={item.iconKey}
                     color="#ff8c00"
@@ -311,13 +311,13 @@ export function ClientQuote() {
                 </span>
                 <div className="text-right">
                   <div
-                    className="text-[#181510] text-[14px]"
+                    className="text-[14px] text-foreground"
                     style={{ fontWeight: 600 }}
                   >
                     {item.title}
                   </div>
                   <div
-                    className="text-[#ff8c00] text-[12px]"
+                    className="text-[12px] text-primary"
                     style={{ fontWeight: 600 }}
                   >
                     {item.time}
@@ -331,7 +331,7 @@ export function ClientQuote() {
         {/* Activities */}
         <div>
           <h2
-            className="mb-4 text-[#181510] text-[22px]"
+            className="mb-4 text-[22px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             📋 פירוט הפעילויות
@@ -339,11 +339,11 @@ export function ClientQuote() {
           <div className="space-y-5">
             {activities.map((activity: any, idx: number) => (
               <div
-                className="overflow-hidden rounded-2xl border border-[#e7e1da] bg-white shadow-sm transition-shadow hover:shadow-md"
+                className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
                 key={idx}
               >
                 <div className="flex flex-col md:flex-row">
-                  <div className="h-56 w-full shrink-0 overflow-hidden bg-[#f5f3f0] sm:w-auto md:h-auto md:w-80">
+                  <div className="h-56 w-full shrink-0 overflow-hidden bg-accent sm:w-auto md:h-auto md:w-80">
                     <ImageWithFallback
                       alt={activity.title}
                       className="h-full w-full object-cover"
@@ -353,14 +353,14 @@ export function ClientQuote() {
                   <div className="flex-1 p-5">
                     {activity.subtitle && (
                       <div
-                        className="mb-1 text-[#ff8c00] text-[11px]"
+                        className="mb-1 text-[11px] text-primary"
                         style={{ fontWeight: 600 }}
                       >
                         {activity.subtitle}
                       </div>
                     )}
                     <h3
-                      className="mb-2 text-[#181510] text-[18px]"
+                      className="mb-2 text-[18px] text-foreground"
                       style={{ fontWeight: 700 }}
                     >
                       {activity.title}
@@ -368,7 +368,7 @@ export function ClientQuote() {
 
                     {/* Time display */}
                     {(activity.grossTime || activity.netTime) && (
-                      <div className="mb-2 flex items-center gap-3 text-[#8d785e] text-[12px]">
+                      <div className="mb-2 flex items-center gap-3 text-[12px] text-muted-foreground">
                         <Clock className="shrink-0" size={13} />
                         {activity.grossTime && (
                           <span>זמן ברוטו: {activity.grossTime}</span>
@@ -381,14 +381,14 @@ export function ClientQuote() {
 
                     {/* Equipment requirements */}
                     {activity.equipmentRequirements && (
-                      <div className="mb-2 rounded-lg bg-[#f5f3f0] px-3 py-1.5 text-[#8d785e] text-[12px]">
+                      <div className="mb-2 rounded-lg bg-accent px-3 py-1.5 text-[12px] text-muted-foreground">
                         ציוד נדרש: {activity.equipmentRequirements}
                       </div>
                     )}
 
                     {/* Per-item price (hidden in noPrices mode) */}
                     {!noPrices && activity.sellingPrice != null && (
-                      <div className="mb-2 font-bold text-[#ff8c00] text-[14px]">
+                      <div className="mb-2 font-bold text-[14px] text-primary">
                         ₪{Number(activity.sellingPrice).toLocaleString()}
                       </div>
                     )}
@@ -398,10 +398,10 @@ export function ClientQuote() {
                     >
                       {activity.bullets.map((bullet: string, bIdx: number) => (
                         <div
-                          className="flex gap-2 text-[#8d785e] text-[13px]"
+                          className="flex gap-2 text-[13px] text-muted-foreground"
                           key={bIdx}
                         >
-                          <span className="shrink-0 text-[#ff8c00]">•</span>
+                          <span className="shrink-0 text-primary">•</span>
                           <span>{bullet}</span>
                         </div>
                       ))}
@@ -412,7 +412,7 @@ export function ClientQuote() {
                     </div>
                     {activity.bullets.length > 2 && (
                       <button
-                        className="mt-2 flex min-h-[44px] items-center gap-1 text-[#ff8c00] text-[12px]"
+                        className="mt-2 flex min-h-[44px] items-center gap-1 text-[12px] text-primary"
                         onClick={() => toggleActivity(idx)}
                         style={{ fontWeight: 600 }}
                         type="button"
@@ -429,9 +429,9 @@ export function ClientQuote() {
                     {/* Upsell addons */}
                     {activity.selectedAddons &&
                       activity.selectedAddons.length > 0 && (
-                        <div className="mt-3 space-y-1.5 border-[#e7e1da] border-t pt-3">
+                        <div className="mt-3 space-y-1.5 border-border border-t pt-3">
                           <div
-                            className="text-[#181510] text-[12px]"
+                            className="text-[12px] text-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             תוספות זמינות
@@ -444,7 +444,7 @@ export function ClientQuote() {
                               >
                                 <input
                                   checked={addon.selected ?? false}
-                                  className="h-3.5 w-3.5 accent-[#ff8c00]"
+                                  className="h-3.5 w-3.5 accent-primary"
                                   onChange={(e) => {
                                     if (!(projectId && activity.quoteItemId)) {
                                       return;
@@ -461,10 +461,10 @@ export function ClientQuote() {
                                   }}
                                   type="checkbox"
                                 />
-                                <span className="text-[#8d785e] text-[12px]">
+                                <span className="text-[12px] text-muted-foreground">
                                   {addon.name}
                                   {!noPrices && addon.price != null && (
-                                    <span className="mr-1 text-[#ff8c00]">
+                                    <span className="mr-1 text-primary">
                                       (+₪{Number(addon.price).toLocaleString()})
                                     </span>
                                   )}
@@ -478,9 +478,9 @@ export function ClientQuote() {
                     {/* Alternative items */}
                     {activity.alternativeItems &&
                       activity.alternativeItems.length > 0 && (
-                        <div className="mt-3 space-y-1.5 border-[#e7e1da] border-t pt-3">
+                        <div className="mt-3 space-y-1.5 border-border border-t pt-3">
                           <div
-                            className="text-[#181510] text-[12px]"
+                            className="text-[12px] text-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             חלופות
@@ -488,7 +488,7 @@ export function ClientQuote() {
                           <label className="flex cursor-pointer items-center gap-2">
                             <input
                               checked={activity.selectedByClient !== false}
-                              className="h-3.5 w-3.5 accent-[#ff8c00]"
+                              className="h-3.5 w-3.5 accent-primary"
                               name={`alt-${activity.quoteItemId}`}
                               onChange={() => {
                                 if (!activity.quoteItemId) {
@@ -501,7 +501,7 @@ export function ClientQuote() {
                               }}
                               type="radio"
                             />
-                            <span className="text-[#8d785e] text-[12px]">
+                            <span className="text-[12px] text-muted-foreground">
                               {activity.title} (מקורי)
                             </span>
                           </label>
@@ -513,7 +513,7 @@ export function ClientQuote() {
                               >
                                 <input
                                   checked={false}
-                                  className="h-3.5 w-3.5 accent-[#ff8c00]"
+                                  className="h-3.5 w-3.5 accent-primary"
                                   name={`alt-${activity.quoteItemId}`}
                                   onChange={() => {
                                     if (!activity.quoteItemId) {
@@ -526,10 +526,10 @@ export function ClientQuote() {
                                   }}
                                   type="radio"
                                 />
-                                <span className="text-[#8d785e] text-[12px]">
+                                <span className="text-[12px] text-muted-foreground">
                                   {alt.name}
                                   {!noPrices && alt.price != null && (
-                                    <span className="mr-1 text-[#ff8c00]">
+                                    <span className="mr-1 text-primary">
                                       (₪{Number(alt.price).toLocaleString()})
                                     </span>
                                   )}
@@ -549,7 +549,7 @@ export function ClientQuote() {
         {/* Tips */}
         <div>
           <h2
-            className="mb-4 text-[#181510] text-[22px]"
+            className="mb-4 text-[22px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             💡 חשוב לדעת
@@ -557,16 +557,18 @@ export function ClientQuote() {
           <div className="grid gap-4 md:grid-cols-2">
             {tips.map((tip, idx) => (
               <div
-                className="rounded-xl border border-[#ff8c00]/20 bg-[#fff7ed] p-4"
+                className="rounded-xl border border-primary/20 bg-[#fff7ed] p-4"
                 key={idx}
               >
                 <div
-                  className="mb-1 text-[#181510] text-[14px]"
+                  className="mb-1 text-[14px] text-foreground"
                   style={{ fontWeight: 600 }}
                 >
                   {tip.title}
                 </div>
-                <div className="text-[#8d785e] text-[12px]">{tip.desc}</div>
+                <div className="text-[12px] text-muted-foreground">
+                  {tip.desc}
+                </div>
               </div>
             ))}
           </div>
@@ -574,7 +576,7 @@ export function ClientQuote() {
 
         {/* Price summary — hidden in noPrices mode */}
         {!noPrices && (
-          <div className="rounded-2xl bg-gradient-to-l from-[#181510] to-[#2a2518] p-6 text-white">
+          <div className="rounded-2xl bg-gradient-to-l from-foreground to-foreground p-6 text-white">
             <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
               <div>
                 <h2
@@ -583,13 +585,13 @@ export function ClientQuote() {
                 >
                   סיכום הצעת מחיר
                 </h2>
-                <p className="mt-1 text-[#c4b89a] text-[13px]">
+                <p className="mt-1 text-[13px] text-tertiary">
                   החבילה המומלצת על {participants} משתתפים
                 </p>
               </div>
               <div className="flex items-end gap-6">
                 <div className="text-center">
-                  <div className="text-[#c4b89a] text-[11px]">מחיר לאדם</div>
+                  <div className="text-[11px] text-tertiary">מחיר לאדם</div>
                   <div
                     className="text-[20px] text-white"
                     style={{ fontWeight: 700 }}
@@ -598,14 +600,14 @@ export function ClientQuote() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-[#c4b89a] text-[11px]">מחיר כולל</div>
+                  <div className="text-[11px] text-tertiary">מחיר כולל</div>
                   <div
-                    className="text-[#ff8c00] text-[32px]"
+                    className="text-[32px] text-primary"
                     style={{ fontWeight: 700 }}
                   >
                     ₪{totalPrice.toLocaleString()}
                   </div>
-                  <div className="text-[#c4b89a] text-[11px]">
+                  <div className="text-[11px] text-tertiary">
                     כולל מע"מ על בסיס {participants} משתתפים
                   </div>
                 </div>
@@ -615,7 +617,7 @@ export function ClientQuote() {
               {!confirmed && (
                 <>
                   <button
-                    className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-[#ff8c00] px-8 py-3 text-white shadow-[#ff8c00]/20 shadow-lg transition-all hover:bg-[#e67e00]"
+                    className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl bg-primary px-8 py-3 text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-hover"
                     onClick={handleApprove}
                     style={{ fontWeight: 700 }}
                     type="button"
@@ -624,7 +626,7 @@ export function ClientQuote() {
                     אישור הזמנה
                   </button>
                   <button
-                    className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl border border-[#c4b89a]/40 px-6 py-3 text-[#c4b89a] transition-colors hover:bg-white/5"
+                    className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl border border-tertiary/40 px-6 py-3 text-tertiary transition-colors hover:bg-card/5"
                     onClick={() => setShowChangeRequest(true)}
                     type="button"
                   >
@@ -634,7 +636,7 @@ export function ClientQuote() {
                 </>
               )}
               <button
-                className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl border border-[#c4b89a]/40 px-6 py-3 text-[#c4b89a] transition-colors hover:bg-white/5"
+                className="flex min-h-[44px] min-w-[44px] items-center gap-2 rounded-xl border border-tertiary/40 px-6 py-3 text-tertiary transition-colors hover:bg-card/5"
                 onClick={async () => {
                   try {
                     if (navigator.share) {
@@ -661,31 +663,33 @@ export function ClientQuote() {
 
       {/* Post-approval confirmation overlay */}
       {confirmed && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/95 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-card/95 backdrop-blur-sm">
           <div className="mx-4 max-w-md text-center">
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-100">
-              <Check className="text-green-600" size={48} />
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-success/15">
+              <Check className="text-success" size={48} />
             </div>
             <h2
-              className="mb-2 text-[#181510] text-[28px]"
+              className="mb-2 text-[28px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               ההזמנה אושרה!
             </h2>
-            <p className="mb-1 text-[#8d785e] text-[16px]">{projectName}</p>
+            <p className="mb-1 text-[16px] text-muted-foreground">
+              {projectName}
+            </p>
             {quoteData?.date && (
-              <p className="mb-4 text-[#8d785e] text-[14px]">
+              <p className="mb-4 text-[14px] text-muted-foreground">
                 {quoteData.date}
               </p>
             )}
             <p
-              className="mb-6 text-[#181510] text-[16px]"
+              className="mb-6 text-[16px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               נציג יצור איתך קשר בקרוב
             </p>
             <button
-              className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-6 py-3 text-[#8d785e] text-[14px] opacity-50"
+              className="flex items-center gap-2 rounded-xl border border-border px-6 py-3 text-[14px] text-muted-foreground opacity-50"
               disabled
               type="button"
             >
@@ -697,26 +701,26 @@ export function ClientQuote() {
       )}
 
       {/* Footer */}
-      <footer className="mt-10 bg-[#181510] py-8 text-white">
+      <footer className="mt-10 bg-foreground py-8 text-white">
         <div className="mx-auto max-w-4xl px-4 md:px-8">
           <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <span className="text-[14px] text-white">✈</span>
               </div>
               <span className="text-[16px]" style={{ fontWeight: 700 }}>
                 Eventos
               </span>
             </div>
-            <div className="text-[#8d785e] text-[12px]">
+            <div className="text-[12px] text-muted-foreground">
               &copy; 2026 Eventos Productions
             </div>
-            <div className="flex gap-4 text-[#8d785e] text-[12px]">
+            <div className="flex gap-4 text-[12px] text-muted-foreground">
               <span>info@travelpro.co.il</span>
               <span>073-123-4567</span>
             </div>
           </div>
-          <div className="mt-4 flex gap-4 text-[#8d785e] text-[12px]">
+          <div className="mt-4 flex gap-4 text-[12px] text-muted-foreground">
             <button
               className="transition-colors hover:text-white"
               type="button"
@@ -749,11 +753,11 @@ export function ClientQuote() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <h3
-              className="mb-4 text-[#181510] text-[20px]"
+              className="mb-4 text-[20px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               גרסאות הצעה
@@ -783,22 +787,22 @@ export function ClientQuote() {
                 },
               ].map((v) => (
                 <div
-                  className={`flex items-center justify-between rounded-xl border p-3 ${v.active ? "border-[#ff8c00] bg-[#ff8c00]/5" : "border-[#e7e1da]"}`}
+                  className={`flex items-center justify-between rounded-xl border p-3 ${v.active ? "border-primary bg-primary/5" : "border-border"}`}
                   key={v.version}
                 >
                   <div>
                     <div
-                      className="text-[#181510] text-[14px]"
+                      className="text-[14px] text-foreground"
                       style={{ fontWeight: 600 }}
                     >
                       {v.version}
                     </div>
-                    <div className="text-[#8d785e] text-[12px]">
+                    <div className="text-[12px] text-muted-foreground">
                       {v.date} &bull; {v.price}
                     </div>
                   </div>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] ${v.active ? "bg-[#ff8c00] text-white" : "bg-[#f5f3f0] text-[#8d785e]"}`}
+                    className={`rounded-full px-2 py-0.5 text-[11px] ${v.active ? "bg-primary text-white" : "bg-accent text-muted-foreground"}`}
                     style={{ fontWeight: 600 }}
                   >
                     {v.status}
@@ -807,7 +811,7 @@ export function ClientQuote() {
               ))}
             </div>
             <button
-              className="mt-4 w-full rounded-xl border border-[#e7e1da] py-2 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
+              className="mt-4 w-full rounded-xl border border-border py-2 text-[14px] text-muted-foreground transition-colors hover:bg-accent"
               onClick={() => setShowVersions(false)}
               type="button"
             >

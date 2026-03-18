@@ -217,11 +217,11 @@ export function ClientsPage() {
       {/* Header */}
       <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff8c00]/10">
-            <UserCircle className="text-[#ff8c00]" size={22} />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <UserCircle className="text-primary" size={22} />
           </div>
           <h1
-            className="text-[#181510] text-[26px]"
+            className="text-[26px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {
@@ -230,7 +230,7 @@ export function ClientsPage() {
           </h1>
         </div>
         <button
-          className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white shadow-[#ff8c00]/20 shadow-lg transition-all hover:bg-[#e67e00]"
+          className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-[14px] text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-hover"
           onClick={() => setShowAddClient(true)}
           style={{ fontWeight: 600 }}
           type="button"
@@ -244,79 +244,79 @@ export function ClientsPage() {
 
       {/* Stat cards */}
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-4">
+        <div className="rounded-xl border border-border bg-card p-4">
           <div className="mb-2 flex items-center justify-between">
             <span
-              className="text-[#8d785e] text-[12px]"
+              className="text-[12px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               {'\u05e1\u05d4"\u05db \u05dc\u05e7\u05d5\u05d7\u05d5\u05ea'}
             </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff8c00]/10">
-              <Users className="text-[#ff8c00]" size={16} />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <Users className="text-primary" size={16} />
             </div>
           </div>
           <div
-            className="text-[#181510] text-[24px]"
+            className="text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {totalClients}
           </div>
         </div>
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-4">
+        <div className="rounded-xl border border-border bg-card p-4">
           <div className="mb-2 flex items-center justify-between">
             <span
-              className="text-[#8d785e] text-[12px]"
+              className="text-[12px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               {
                 "\u05dc\u05e7\u05d5\u05d7\u05d5\u05ea \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd"
               }
             </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#22c55e]/10">
-              <UserCircle className="text-[#22c55e]" size={16} />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-success/10">
+              <UserCircle className="text-success" size={16} />
             </div>
           </div>
           <div
-            className="text-[#181510] text-[24px]"
+            className="text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {activeCount}
           </div>
         </div>
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-4">
+        <div className="rounded-xl border border-border bg-card p-4">
           <div className="mb-2 flex items-center justify-between">
             <span
-              className="text-[#8d785e] text-[12px]"
+              className="text-[12px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               {"\u05dc\u05d9\u05d3\u05d9\u05dd"}
             </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#3b82f6]/10">
-              <TrendingUp className="text-[#3b82f6]" size={16} />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-info/10">
+              <TrendingUp className="text-info" size={16} />
             </div>
           </div>
           <div
-            className="text-[#181510] text-[24px]"
+            className="text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {leadCount}
           </div>
         </div>
-        <div className="rounded-xl border border-[#e7e1da] bg-white p-4">
+        <div className="rounded-xl border border-border bg-card p-4">
           <div className="mb-2 flex items-center justify-between">
             <span
-              className="text-[#8d785e] text-[12px]"
+              className="text-[12px] text-muted-foreground"
               style={{ fontWeight: 600 }}
             >
               {"\u05d4\u05db\u05e0\u05e1\u05d4 \u05db\u05d5\u05dc\u05dc\u05ea"}
             </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#8b5cf6]/10">
-              <DollarSign className="text-[#8b5cf6]" size={16} />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-chart-5/10">
+              <DollarSign className="text-chart-5" size={16} />
             </div>
           </div>
           <div
-            className="text-[#181510] text-[24px]"
+            className="text-[24px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             {"\u20aa"}
@@ -328,11 +328,11 @@ export function ClientsPage() {
       {/* Search */}
       <div className="relative mb-4">
         <Search
-          className="absolute top-1/2 right-3 -translate-y-1/2 text-[#8d785e]"
+          className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground"
           size={18}
         />
         <input
-          className="w-full rounded-xl border border-[#e7e1da] bg-white py-3 pr-10 pl-4 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+          className="w-full rounded-xl border border-border bg-card py-3 pr-10 pl-4 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
           onChange={(e) => {
             setSearch(e.target.value);
             setCurrentPage(1);
@@ -346,13 +346,13 @@ export function ClientsPage() {
 
       {/* Status filter pills */}
       <div className="mb-5 flex items-center gap-2">
-        <div className="flex gap-1 overflow-x-auto rounded-lg border border-[#e7e1da] bg-white p-1">
+        <div className="flex gap-1 overflow-x-auto rounded-lg border border-border bg-card p-1">
           {STATUS_OPTIONS.map((status) => (
             <button
               className={`whitespace-nowrap rounded-md px-3 py-1.5 text-[12px] transition-all ${
                 statusFilter === status
-                  ? "bg-[#181510] text-white"
-                  : "text-[#8d785e] hover:bg-[#f5f3f0]"
+                  ? "bg-foreground text-white"
+                  : "text-muted-foreground hover:bg-accent"
               }`}
               key={status}
               onClick={() => {
@@ -368,7 +368,7 @@ export function ClientsPage() {
         </div>
         {(search || statusFilter !== "\u05d4\u05db\u05dc") && (
           <button
-            className="flex items-center gap-1 rounded-lg border border-[#e7e1da] px-3 py-1.5 text-[#8d785e] text-[12px] transition-colors hover:text-[#ff8c00]"
+            className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:text-primary"
             onClick={() => {
               setSearch("");
               setStatusFilter("\u05d4\u05db\u05dc");
@@ -386,32 +386,35 @@ export function ClientsPage() {
 
       {/* Table */}
       {loading ? (
-        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-[#e7e1da] bg-white py-16 shadow-sm">
-          <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-          <p className="text-[#8d785e] text-[14px]">
+        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-border bg-card py-16 shadow-sm">
+          <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+          <p className="text-[14px] text-muted-foreground">
             {"\u05d8\u05d5\u05e2\u05df \u05dc\u05e7\u05d5\u05d7\u05d5\u05ea..."}
           </p>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-[#e7e1da] bg-white py-16 shadow-sm">
+        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-border bg-card py-16 shadow-sm">
           <span className="mb-3 text-[40px]">{"\ud83d\udc65"}</span>
-          <p className="text-[#8d785e] text-[16px]" style={{ fontWeight: 600 }}>
+          <p
+            className="text-[16px] text-muted-foreground"
+            style={{ fontWeight: 600 }}
+          >
             {
               "\u05dc\u05d0 \u05e0\u05de\u05e6\u05d0\u05d5 \u05dc\u05e7\u05d5\u05d7\u05d5\u05ea"
             }
           </p>
-          <p className="mt-1 text-[#8d785e] text-[13px]">
+          <p className="mt-1 text-[13px] text-muted-foreground">
             {
               "\u05e0\u05e1\u05d4 \u05dc\u05e9\u05e0\u05d5\u05ea \u05d0\u05ea \u05d4\u05e1\u05d9\u05e0\u05d5\u05df \u05d0\u05d5 \u05dc\u05d4\u05d5\u05e1\u05d9\u05e3 \u05dc\u05e7\u05d5\u05d7 \u05d7\u05d3\u05e9"
             }
           </p>
         </div>
       ) : (
-        <div className="mb-5 overflow-hidden rounded-2xl border border-[#e7e1da] bg-white shadow-sm">
+        <div className="mb-5 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-[#e7e1da] border-b bg-[#f5f3f0]">
+                <tr className="border-border border-b bg-accent">
                   {[
                     "\u05dc\u05e7\u05d5\u05d7",
                     "\u05d8\u05dc\u05e4\u05d5\u05df",
@@ -422,7 +425,7 @@ export function ClientsPage() {
                     "\u05e4\u05e2\u05d5\u05dc\u05d5\u05ea",
                   ].map((h) => (
                     <th
-                      className="whitespace-nowrap p-3 text-right text-[#8d785e] text-[12px]"
+                      className="whitespace-nowrap p-3 text-right text-[12px] text-muted-foreground"
                       key={h}
                       style={{ fontWeight: 600 }}
                     >
@@ -439,33 +442,33 @@ export function ClientsPage() {
                   )
                   .map((client) => (
                     <tr
-                      className="border-[#ece8e3] border-b transition-colors hover:bg-[#f5f3f0]/50"
+                      className="border-accent border-b transition-colors hover:bg-accent/50"
                       key={client.id}
                     >
                       <td className="p-3">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#06b6d4]/10">
-                            <UserCircle className="text-[#06b6d4]" size={18} />
+                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-info/10">
+                            <UserCircle className="text-info" size={18} />
                           </div>
                           <div>
                             <div
-                              className="text-[#181510] text-[14px]"
+                              className="text-[14px] text-foreground"
                               style={{ fontWeight: 600 }}
                             >
                               {client.name}
                             </div>
-                            <div className="text-[#8d785e] text-[11px]">
+                            <div className="text-[11px] text-muted-foreground">
                               {client.company}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="p-3 text-[#6b5d45] text-[13px]">
+                      <td className="p-3 text-[13px] text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Phone size={12} /> {client.phone || "-"}
                         </span>
                       </td>
-                      <td className="max-w-[200px] p-3 text-[#6b5d45] text-[13px]">
+                      <td className="max-w-[200px] p-3 text-[13px] text-muted-foreground">
                         <span className="flex items-center gap-1 truncate">
                           <Mail size={12} /> {client.email || "-"}
                         </span>
@@ -483,13 +486,13 @@ export function ClientsPage() {
                         </span>
                       </td>
                       <td
-                        className="p-3 text-[#181510] text-[13px]"
+                        className="p-3 text-[13px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {client.totalProjects || 0}
                       </td>
                       <td
-                        className="p-3 text-[#181510] text-[13px]"
+                        className="p-3 text-[13px] text-foreground"
                         style={{ fontWeight: 600 }}
                       >
                         {client.totalRevenue
@@ -499,14 +502,14 @@ export function ClientsPage() {
                       <td className="p-3">
                         <div className="flex items-center gap-1">
                           <button
-                            className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ff8c00]/10 hover:text-[#ff8c00]"
+                            className="rounded-lg p-1.5 text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
                             onClick={() => openEdit(client as any)}
                             type="button"
                           >
                             <Edit2 size={15} />
                           </button>
                           <button
-                            className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-red-50 hover:text-red-500"
+                            className="rounded-lg p-1.5 text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive"
                             onClick={() => setDeletingClient(client as any)}
                             type="button"
                           >
@@ -521,8 +524,8 @@ export function ClientsPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between border-[#e7e1da] border-t bg-[#f5f3f0] p-3">
-            <span className="text-[#8d785e] text-[12px]">
+          <div className="flex items-center justify-between border-border border-t bg-accent p-3">
+            <span className="text-[12px] text-muted-foreground">
               {"\u05de\u05e6\u05d9\u05d2"}{" "}
               {Math.min(
                 (currentPage - 1) * ITEMS_PER_PAGE + 1,
@@ -540,7 +543,7 @@ export function ClientsPage() {
               return (
                 <div className="flex items-center gap-1">
                   <button
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-white disabled:opacity-30"
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-card disabled:opacity-30"
                     disabled={currentPage <= 1}
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     type="button"
@@ -552,8 +555,8 @@ export function ClientsPage() {
                       <button
                         className={`flex h-7 w-7 items-center justify-center rounded-md text-[12px] transition-colors ${
                           currentPage === page
-                            ? "bg-[#ff8c00] text-white"
-                            : "text-[#8d785e] hover:bg-white"
+                            ? "bg-primary text-white"
+                            : "text-muted-foreground hover:bg-card"
                         }`}
                         key={page}
                         onClick={() => setCurrentPage(page)}
@@ -565,7 +568,7 @@ export function ClientsPage() {
                     )
                   )}
                   <button
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-white disabled:opacity-30"
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-card disabled:opacity-30"
                     disabled={currentPage >= totalPages}
                     onClick={() =>
                       setCurrentPage((p) => Math.min(totalPages, p + 1))
@@ -593,12 +596,12 @@ export function ClientsPage() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <div className="mb-4 flex items-center justify-between">
               <h2
-                className="text-[#181510] text-[20px]"
+                className="text-[20px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 {
@@ -606,7 +609,7 @@ export function ClientsPage() {
                 }
               </h2>
               <button
-                className="text-[#8d785e] hover:text-[#181510]"
+                className="text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setShowAddClient(false);
                   addForm.reset();
@@ -680,7 +683,7 @@ export function ClientsPage() {
               />
               <div className="flex gap-3 pt-2">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={saving || !addForm.formState.isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -692,7 +695,7 @@ export function ClientsPage() {
                   )}
                 </button>
                 <button
-                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-xl border border-border px-5 transition-colors hover:bg-accent"
                   onClick={() => {
                     setShowAddClient(false);
                     addForm.reset();
@@ -719,18 +722,18 @@ export function ClientsPage() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <div className="mb-4 flex items-center justify-between">
               <h2
-                className="text-[#181510] text-[20px]"
+                className="text-[20px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 {"\u05e2\u05e8\u05d9\u05db\u05ea \u05dc\u05e7\u05d5\u05d7"}
               </h2>
               <button
-                className="text-[#8d785e] hover:text-[#181510]"
+                className="text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setEditingClient(null);
                   editForm.reset();
@@ -804,7 +807,7 @@ export function ClientsPage() {
               />
               <div className="flex gap-3 pt-2">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={saving || !editForm.formState.isValid}
                   style={{ fontWeight: 600 }}
                   type="submit"
@@ -816,7 +819,7 @@ export function ClientsPage() {
                   )}
                 </button>
                 <button
-                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-xl border border-border px-5 transition-colors hover:bg-accent"
                   onClick={() => {
                     setEditingClient(null);
                     editForm.reset();
@@ -841,25 +844,25 @@ export function ClientsPage() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl"
+            className="w-full max-w-sm rounded-2xl bg-card p-6 text-center shadow-2xl"
             role="dialog"
           >
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50">
-              <Trash2 className="text-red-500" size={22} />
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+              <Trash2 className="text-destructive" size={22} />
             </div>
             <h2
-              className="mb-1 text-[#181510] text-[18px]"
+              className="mb-1 text-[18px] text-foreground"
               style={{ fontWeight: 700 }}
             >
               {"\u05de\u05d7\u05d9\u05e7\u05ea \u05dc\u05e7\u05d5\u05d7"}
             </h2>
-            <p className="mb-4 text-[#8d785e] text-[13px]">
+            <p className="mb-4 text-[13px] text-muted-foreground">
               {
                 "\u05d4\u05d0\u05dd \u05d0\u05ea\u05d4 \u05d1\u05d8\u05d5\u05d7 \u05e9\u05d1\u05e8\u05e6\u05d5\u05e0\u05da \u05dc\u05de\u05d7\u05d5\u05e7 \u05d0\u05ea \u05d4\u05dc\u05e7\u05d5\u05d7"
               }{" "}
               <strong>"{deletingClient.name}"</strong>?
               <br />
-              <span className="text-red-500">
+              <span className="text-destructive">
                 {
                   "\u05e4\u05e2\u05d5\u05dc\u05d4 \u05d6\u05d5 \u05d0\u05d9\u05e0\u05d4 \u05e0\u05d9\u05ea\u05e0\u05ea \u05dc\u05d1\u05d9\u05d8\u05d5\u05dc."
                 }
@@ -867,7 +870,7 @@ export function ClientsPage() {
             </p>
             <div className="flex gap-3">
               <button
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-white transition-colors hover:bg-red-600 disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-destructive/100 py-2.5 text-white transition-colors hover:bg-destructive disabled:opacity-50"
                 disabled={saving}
                 onClick={confirmDelete}
                 style={{ fontWeight: 600 }}
@@ -880,7 +883,7 @@ export function ClientsPage() {
                 )}
               </button>
               <button
-                className="flex-1 rounded-xl border border-[#e7e1da] py-2.5 transition-colors hover:bg-[#f5f3f0]"
+                className="flex-1 rounded-xl border border-border py-2.5 transition-colors hover:bg-accent"
                 onClick={() => setDeletingClient(null)}
                 style={{ fontWeight: 600 }}
                 type="button"

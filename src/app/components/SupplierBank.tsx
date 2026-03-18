@@ -232,11 +232,11 @@ export function SupplierBank() {
       {/* Header */}
       <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff8c00]/10">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
             <CategoryIcon category="אולמות וגנים" color="#ff8c00" size={22} />
           </div>
           <h1
-            className="text-[#181510] text-[26px]"
+            className="text-[26px] text-foreground"
             style={{ fontWeight: 700 }}
           >
             בנק ספקים
@@ -245,7 +245,7 @@ export function SupplierBank() {
         <div className="flex items-center gap-3">
           {archivedCount > 0 && (
             <button
-              className="flex items-center gap-2 rounded-xl border border-[#e7e1da] px-4 py-2.5 text-[#8d785e] text-[14px] transition-all hover:border-[#b8a990] hover:text-[#181510]"
+              className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-[14px] text-muted-foreground transition-all hover:border-tertiary hover:text-foreground"
               onClick={() => navigate("/suppliers/archive")}
               style={{ fontWeight: 600 }}
               type="button"
@@ -255,7 +255,7 @@ export function SupplierBank() {
             </button>
           )}
           <button
-            className="flex items-center gap-2 rounded-xl bg-[#ff8c00] px-4 py-2.5 text-[14px] text-white shadow-[#ff8c00]/20 shadow-lg transition-all hover:bg-[#e67e00]"
+            className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-[14px] text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-hover"
             onClick={() => setShowAddSupplier(true)}
             style={{ fontWeight: 600 }}
             type="button"
@@ -269,11 +269,11 @@ export function SupplierBank() {
       {/* Search bar */}
       <div className="relative mb-4">
         <Search
-          className="absolute top-1/2 right-3 -translate-y-1/2 text-[#8d785e]"
+          className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground"
           size={18}
         />
         <input
-          className="w-full rounded-xl border border-[#e7e1da] bg-white py-3 pr-10 pl-4 text-[14px] transition-all focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+          className="w-full rounded-xl border border-border bg-card py-3 pr-10 pl-4 text-[14px] transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
           onChange={(e) => setSearch(e.target.value)}
           placeholder="חיפוש ספקים, קטגוריות או אזורים..."
           value={search}
@@ -284,14 +284,14 @@ export function SupplierBank() {
       <div className="mb-5 flex flex-wrap gap-3">
         <div className="min-w-[160px] flex-1">
           <label
-            className="mb-1 block text-[#8d785e] text-[11px]"
+            className="mb-1 block text-[11px] text-muted-foreground"
             htmlFor="supplier-filter-category"
             style={{ fontWeight: 600 }}
           >
             קטגוריה
           </label>
           <select
-            className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+            className="w-full rounded-lg border border-border bg-card px-3 py-2 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
             id="supplier-filter-category"
             onChange={(e) => setSelectedCategory(e.target.value)}
             value={selectedCategory}
@@ -303,14 +303,14 @@ export function SupplierBank() {
         </div>
         <div className="min-w-[160px] flex-1">
           <label
-            className="mb-1 block text-[#8d785e] text-[11px]"
+            className="mb-1 block text-[11px] text-muted-foreground"
             htmlFor="supplier-filter-region"
             style={{ fontWeight: 600 }}
           >
             אזור פעילות
           </label>
           <select
-            className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+            className="w-full rounded-lg border border-border bg-card px-3 py-2 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
             id="supplier-filter-region"
             onChange={(e) => setSelectedRegion(e.target.value)}
             value={selectedRegion}
@@ -322,14 +322,14 @@ export function SupplierBank() {
         </div>
         <div className="min-w-[160px] flex-1">
           <label
-            className="mb-1 block text-[#8d785e] text-[11px]"
+            className="mb-1 block text-[11px] text-muted-foreground"
             htmlFor="supplier-filter-status"
             style={{ fontWeight: 600 }}
           >
             סטטוס אימות
           </label>
           <select
-            className="w-full rounded-lg border border-[#e7e1da] bg-white px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+            className="w-full rounded-lg border border-border bg-card px-3 py-2 text-[13px] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
             id="supplier-filter-status"
             onChange={(e) => setSelectedStatus(e.target.value)}
             value={selectedStatus}
@@ -341,7 +341,7 @@ export function SupplierBank() {
         </div>
         <div className="flex items-end">
           <button
-            className="flex items-center gap-1 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:text-[#ff8c00]"
+            className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-[12px] text-muted-foreground transition-colors hover:text-primary"
             onClick={clearFilters}
             type="button"
           >
@@ -353,21 +353,21 @@ export function SupplierBank() {
 
       {/* Table */}
       {loading ? (
-        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-[#e7e1da] bg-white py-16 shadow-sm">
-          <Loader2 className="mb-3 animate-spin text-[#ff8c00]" size={32} />
-          <p className="text-[#8d785e] text-[14px]">טוען ספקים...</p>
+        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-border bg-card py-16 shadow-sm">
+          <Loader2 className="mb-3 animate-spin text-primary" size={32} />
+          <p className="text-[14px] text-muted-foreground">טוען ספקים...</p>
         </div>
       ) : error ? (
-        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-[#e7e1da] bg-white py-16 shadow-sm">
-          <AlertTriangle className="mb-3 text-[#ef4444]" size={32} />
-          <p className="text-[#ef4444] text-[14px]">{error}</p>
+        <div className="mb-5 flex flex-col items-center justify-center rounded-2xl border border-border bg-card py-16 shadow-sm">
+          <AlertTriangle className="mb-3 text-destructive" size={32} />
+          <p className="text-[14px] text-destructive">{error}</p>
         </div>
       ) : (
-        <div className="mb-5 overflow-hidden rounded-2xl border border-[#e7e1da] bg-white shadow-sm">
+        <div className="mb-5 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-[#e7e1da] border-b bg-[#f5f3f0]">
+                <tr className="border-border border-b bg-accent">
                   {[
                     "ספק",
                     "קטגוריה",
@@ -378,7 +378,7 @@ export function SupplierBank() {
                     "פעולות",
                   ].map((h) => (
                     <th
-                      className="whitespace-nowrap p-3 text-right text-[#8d785e] text-[12px]"
+                      className="whitespace-nowrap p-3 text-right text-[12px] text-muted-foreground"
                       key={h}
                       style={{ fontWeight: 600 }}
                     >
@@ -395,7 +395,7 @@ export function SupplierBank() {
                   )
                   .map((supplier) => (
                     <tr
-                      className="border-[#ece8e3] border-b transition-colors hover:bg-[#f5f3f0]/50"
+                      className="border-accent border-b transition-colors hover:bg-accent/50"
                       key={supplier.id}
                     >
                       <td className="p-3">
@@ -417,12 +417,12 @@ export function SupplierBank() {
                           </div>
                           <div>
                             <div
-                              className="text-[#181510] text-[14px]"
+                              className="text-[14px] text-foreground"
                               style={{ fontWeight: 600 }}
                             >
                               {supplier.name}
                             </div>
-                            <div className="text-[#8d785e] text-[11px]">
+                            <div className="text-[11px] text-muted-foreground">
                               {supplier.phone}
                             </div>
                           </div>
@@ -461,13 +461,13 @@ export function SupplierBank() {
                             })}
                         </div>
                       </td>
-                      <td className="p-3 text-[#6b5d45] text-[13px]">
+                      <td className="p-3 text-[13px] text-muted-foreground">
                         {regionToHebrew(supplier.region)}
                       </td>
                       <td className="p-3">
                         <div className="flex items-center gap-1">
                           <span
-                            className="text-[#181510] text-[13px]"
+                            className="text-[13px] text-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             {supplier.rating}
@@ -477,8 +477,8 @@ export function SupplierBank() {
                               <Star
                                 className={
                                   s <= supplier.rating
-                                    ? "text-[#ff8c00]"
-                                    : "text-[#ddd6cb]"
+                                    ? "text-primary"
+                                    : "text-tertiary"
                                 }
                                 fill={s <= supplier.rating ? "#ff8c00" : "none"}
                                 key={s}
@@ -491,7 +491,7 @@ export function SupplierBank() {
                       <td className="p-3">
                         {supplier.verificationStatus === "verified" && (
                           <span
-                            className="flex items-center gap-1 text-[12px] text-green-600"
+                            className="flex items-center gap-1 text-[12px] text-success"
                             style={{ fontWeight: 600 }}
                           >
                             <CheckCircle size={14} /> מאומת
@@ -499,7 +499,7 @@ export function SupplierBank() {
                         )}
                         {supplier.verificationStatus === "pending" && (
                           <span
-                            className="flex items-center gap-1 text-[12px] text-yellow-600"
+                            className="flex items-center gap-1 text-[12px] text-warning"
                             style={{ fontWeight: 600 }}
                           >
                             <Clock size={14} /> ממתין
@@ -507,7 +507,7 @@ export function SupplierBank() {
                         )}
                         {supplier.verificationStatus === "unverified" && (
                           <span
-                            className="flex items-center gap-1 text-[#8d785e] text-[12px]"
+                            className="flex items-center gap-1 text-[12px] text-muted-foreground"
                             style={{ fontWeight: 600 }}
                           >
                             <AlertTriangle size={14} /> לא מאומת
@@ -521,7 +521,7 @@ export function SupplierBank() {
                             summaries?.[supplier.id]
                           );
                           if (notes.length === 0) {
-                            return <span className="text-[#b8a990]">-</span>;
+                            return <span className="text-tertiary">-</span>;
                           }
                           const first = notes[0];
                           const styles = noteLevelStyles(first.level);
@@ -538,7 +538,7 @@ export function SupplierBank() {
                               </span>
                               {notes.length > 1 && (
                                 <span
-                                  className="shrink-0 rounded-full bg-[#f5f3f0] px-1.5 py-0.5 text-[#b8a990] text-[10px]"
+                                  className="shrink-0 rounded-full bg-accent px-1.5 py-0.5 text-[10px] text-tertiary"
                                   style={{ fontWeight: 600 }}
                                 >
                                   +{notes.length - 1}
@@ -551,7 +551,7 @@ export function SupplierBank() {
                       <td className="p-3">
                         <div className="flex items-center gap-1">
                           <button
-                            className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ff8c00]/10 hover:text-[#ff8c00]"
+                            className="rounded-lg p-1.5 text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
                             onClick={() =>
                               navigate(`/suppliers/${supplier.id}`)
                             }
@@ -560,7 +560,7 @@ export function SupplierBank() {
                             <Eye size={15} />
                           </button>
                           <button
-                            className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ff8c00]/10 hover:text-[#ff8c00]"
+                            className="rounded-lg p-1.5 text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
                             onClick={() =>
                               navigate(`/suppliers/${supplier.id}`)
                             }
@@ -569,7 +569,7 @@ export function SupplierBank() {
                             <Edit2 size={15} />
                           </button>
                           <button
-                            className="rounded-lg p-1.5 text-[#8d785e] transition-all hover:bg-[#ece8e3] hover:text-[#181510]"
+                            className="rounded-lg p-1.5 text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
                             onClick={() => {
                               const text = `${supplier.name}\nקטגוריות: ${supplier.category
                                 .split(",")
@@ -605,8 +605,8 @@ export function SupplierBank() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between border-[#e7e1da] border-t bg-[#f5f3f0] p-3">
-            <span className="text-[#8d785e] text-[12px]">
+          <div className="flex items-center justify-between border-border border-t bg-accent p-3">
+            <span className="text-[12px] text-muted-foreground">
               מציג{" "}
               {Math.min(
                 (currentPage - 1) * ITEMS_PER_PAGE + 1,
@@ -623,7 +623,7 @@ export function SupplierBank() {
               return (
                 <div className="flex items-center gap-1">
                   <button
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-white disabled:opacity-30"
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-card disabled:opacity-30"
                     disabled={currentPage <= 1}
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     type="button"
@@ -635,8 +635,8 @@ export function SupplierBank() {
                       <button
                         className={`flex h-7 w-7 items-center justify-center rounded-md text-[12px] transition-colors ${
                           currentPage === page
-                            ? "bg-[#ff8c00] text-white"
-                            : "text-[#8d785e] hover:bg-white"
+                            ? "bg-primary text-white"
+                            : "text-muted-foreground hover:bg-card"
                         }`}
                         key={page}
                         onClick={() => setCurrentPage(page)}
@@ -648,7 +648,7 @@ export function SupplierBank() {
                     )
                   )}
                   <button
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#8d785e] transition-colors hover:bg-white disabled:opacity-30"
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-card disabled:opacity-30"
                     disabled={currentPage >= totalPages}
                     onClick={() =>
                       setCurrentPage((p) => Math.min(totalPages, p + 1))
@@ -681,18 +681,18 @@ export function SupplierBank() {
         >
           <div
             aria-modal="true"
-            className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-2xl"
             role="dialog"
           >
             <div className="mb-4 flex items-center justify-between">
               <h2
-                className="text-[#181510] text-[20px]"
+                className="text-[20px] text-foreground"
                 style={{ fontWeight: 700 }}
               >
                 הוספת ספק חדש
               </h2>
               <button
-                className="text-[#8d785e] hover:text-[#181510]"
+                className="text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setShowAddSupplier(false);
                   resetSupplierForm();
@@ -715,9 +715,9 @@ export function SupplierBank() {
                 {...register("name", rules.requiredMin("שם הספק", 2))}
               />
               {duplicates && duplicates.length > 0 && (
-                <div className="flex items-start gap-2 rounded-lg border border-yellow-300 bg-yellow-50 p-3">
+                <div className="flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 p-3">
                   <AlertTriangle
-                    className="mt-0.5 shrink-0 text-yellow-600"
+                    className="mt-0.5 shrink-0 text-warning"
                     size={16}
                   />
                   <div className="text-[12px] text-yellow-800">
@@ -735,13 +735,13 @@ export function SupplierBank() {
               {/* קטגוריות — multi-select */}
               <fieldset>
                 <legend
-                  className="mb-2 block text-[#8d785e] text-[13px]"
+                  className="mb-2 block text-[13px] text-muted-foreground"
                   style={{ fontWeight: 600 }}
                 >
-                  קטגוריות <span className="text-[#ff8c00]">*</span>
+                  קטגוריות <span className="text-primary">*</span>
                   {newSupplierCategories.length > 0 && (
                     <span
-                      className="mr-1 text-[#b5a48b] text-[11px]"
+                      className="mr-1 text-[11px] text-tertiary"
                       style={{ fontWeight: 400 }}
                     >
                       ({newSupplierCategories.length} נבחרו)
@@ -756,8 +756,8 @@ export function SupplierBank() {
                         <button
                           className={`flex items-center gap-1.5 rounded-lg border px-2 py-1.5 text-[12px] transition-all ${
                             isSelected
-                              ? "border-[#ff8c00] bg-[#ff8c00]/10 shadow-sm"
-                              : "border-[#e7e1da] bg-white hover:border-[#d5cdc0] hover:bg-[#faf9f7]"
+                              ? "border-primary bg-primary/10 shadow-sm"
+                              : "border-border bg-card hover:border-border hover:bg-surface"
                           }`}
                           key={cat}
                           onClick={() => {
@@ -773,8 +773,8 @@ export function SupplierBank() {
                           <div
                             className={`flex h-3.5 w-3.5 flex-shrink-0 items-center justify-center rounded border transition-all ${
                               isSelected
-                                ? "border-[#ff8c00] bg-[#ff8c00]"
-                                : "border-[#d5cdc0] bg-white"
+                                ? "border-primary bg-primary"
+                                : "border-border bg-card"
                             }`}
                           >
                             {isSelected && (
@@ -802,7 +802,9 @@ export function SupplierBank() {
                           />
                           <span
                             className={
-                              isSelected ? "text-[#181510]" : "text-[#6b5d45]"
+                              isSelected
+                                ? "text-foreground"
+                                : "text-muted-foreground"
                             }
                           >
                             {cat}
@@ -813,7 +815,7 @@ export function SupplierBank() {
                   )}
                 </div>
                 {newSupplierCategories.length === 0 && (
-                  <p className="mt-1 text-[11px] text-red-500">
+                  <p className="mt-1 text-[11px] text-destructive">
                     יש לבחור לפחות קטגוריה אחת
                   </p>
                 )}
@@ -839,7 +841,7 @@ export function SupplierBank() {
               />
               <div className="flex gap-3 pt-2">
                 <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#ff8c00] py-2.5 text-white transition-colors hover:bg-[#e67e00] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={
                     saving || !isValid || newSupplierCategories.length === 0
                   }
@@ -853,7 +855,7 @@ export function SupplierBank() {
                   )}
                 </button>
                 <button
-                  className="rounded-xl border border-[#e7e1da] px-5 transition-colors hover:bg-[#f5f3f0]"
+                  className="rounded-xl border border-border px-5 transition-colors hover:bg-accent"
                   onClick={() => {
                     setShowAddSupplier(false);
                     resetSupplierForm();
@@ -864,9 +866,9 @@ export function SupplierBank() {
                 </button>
               </div>
             </form>
-            <div className="mt-4 flex gap-2 border-[#e7e1da] border-t pt-4">
+            <div className="mt-4 flex gap-2 border-border border-t pt-4">
               <button
-                className="text-[#ff8c00] text-[13px] hover:text-[#e67e00]"
+                className="text-[13px] text-primary hover:text-primary-hover"
                 onClick={() => {
                   setShowAddSupplier(false);
                   resetSupplierForm();
@@ -877,9 +879,9 @@ export function SupplierBank() {
               >
                 ייבוא מאקסל →
               </button>
-              <span className="text-[#c4b89a]">|</span>
+              <span className="text-tertiary">|</span>
               <button
-                className="text-[#ff8c00] text-[13px] hover:text-[#e67e00]"
+                className="text-[13px] text-primary hover:text-primary-hover"
                 onClick={() => {
                   setShowAddSupplier(false);
                   resetSupplierForm();
