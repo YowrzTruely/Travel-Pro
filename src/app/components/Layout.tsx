@@ -311,12 +311,13 @@ export function Layout() {
               </div>
             </div>
             <button
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+              className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-lg px-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
               onClick={logout}
               title="התנתק"
               type="button"
             >
               <LogOut size={16} />
+              <span className="text-xs">יציאה</span>
             </button>
           </div>
           {isProducer && (
