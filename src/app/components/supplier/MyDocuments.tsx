@@ -5,18 +5,23 @@ import {
   Clock,
   Download,
   FileText,
+  GripVertical,
   Loader2,
+  Pencil,
+  Plus,
   ShieldCheck,
   Trash2,
   Upload,
+  UploadCloud,
   XCircle,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
 import { useAuth } from "../AuthContext";
 import { useImageUpload } from "../hooks/useImageUpload";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { FeatureGate } from "./FeatureGate";
 
 const DOCUMENT_TYPES = [
@@ -44,6 +49,8 @@ const DOCUMENT_TYPES = [
     categoryRequired: "food",
   },
 ] as const;
+
+const FILE_EXT_REGEX = /\.[^/.]+$/;
 
 type DocumentTypeKey = (typeof DOCUMENT_TYPES)[number]["key"];
 
@@ -114,10 +121,198 @@ export function MyDocuments() {
 
   const { upload } = useImageUpload();
 
-  const [uploading, setUploading] = useState<string | null>(null);
   const [editingExpiry, setEditingExpiry] = useState<string | null>(null);
   const [expiryValue, setExpiryValue] = useState("");
-  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
+  // Unified upload dialog state — works for both mandatory and custom docs
+  // uploadTarget: null = custom doc, string = mandatory doc type key
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [uploadTarget, setUploadTarget] = useState<{
+    key: string;
+    label: string;
+  } | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [dialogDocName, setDialogDocName] = useState("");
+  const [uploadingDialog, setUploadingDialog] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dialogFileInputRef = useRef<HTMLInputElement | null>(null);
+  const dialogDragCounter = useRef(0);
+
+  // Custom doc rename state
+  const [editingCustomName, setEditingCustomName] = useState<string | null>(
+    null
+  );
+  const [editNameValue, setEditNameValue] = useState("");
+
+  // Open the upload dialog for a mandatory doc type
+  const openUploadDialog = (docTypeKey: string, label: string) => {
+    setUploadTarget({ key: docTypeKey, label });
+    setDialogDocName(label);
+    setPendingFile(null);
+    setUploadDialogOpen(true);
+  };
+
+  // Open the upload dialog for a custom doc (no predefined type)
+  const openCustomUploadDialog = () => {
+    setUploadTarget(null);
+    setDialogDocName("");
+    setPendingFile(null);
+    setUploadDialogOpen(true);
+  };
+
+  const closeUploadDialog = () => {
+    setUploadDialogOpen(false);
+    setUploadTarget(null);
+    setPendingFile(null);
+    setDialogDocName("");
+  };
+
+  // Page-level drag overlay handlers
+  const pageDragCounter = useRef(0);
+  const handlePageDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    pageDragCounter.current += 1;
+    if (e.dataTransfer.types.includes("Files")) {
+      setIsDragging(true);
+    }
+  }, []);
+
+  const handlePageDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    pageDragCounter.current -= 1;
+    if (pageDragCounter.current === 0) {
+      setIsDragging(false);
+    }
+  }, []);
+
+  const handlePageDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handlePageDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    pageDragCounter.current = 0;
+
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const baseName = file.name.replace(FILE_EXT_REGEX, "");
+      setUploadTarget(null);
+      setDialogDocName(baseName);
+      setPendingFile(file);
+      setUploadDialogOpen(true);
+    }
+  }, []);
+
+  // Dialog-level drag & drop handlers
+  const handleDialogDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dialogDragCounter.current += 1;
+  }, []);
+
+  const handleDialogDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dialogDragCounter.current -= 1;
+  }, []);
+
+  const handleDialogDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDialogDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dialogDragCounter.current = 0;
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      setPendingFile(file);
+    }
+  }, []);
+
+  const handleDialogFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        setPendingFile(file);
+      }
+      e.target.value = "";
+    },
+    []
+  );
+
+  const handleConfirmUpload = async () => {
+    if (!(pendingFile && supplierId && dialogDocName.trim())) {
+      return;
+    }
+
+    setUploadingDialog(true);
+    try {
+      const storageId = await upload(pendingFile);
+
+      if (uploadTarget) {
+        // Mandatory doc — create or update by documentType
+        const existingDoc = (documents ?? []).find(
+          (d) => d.documentType === uploadTarget.key
+        );
+        if (existingDoc) {
+          await updateDoc({
+            id: existingDoc.id,
+            storageId,
+            fileName: pendingFile.name,
+            status: "valid",
+            acknowledged: false,
+          });
+        } else {
+          await createDoc({
+            supplierId,
+            name: uploadTarget.label,
+            documentType: uploadTarget.key,
+            storageId,
+            fileName: pendingFile.name,
+            status: "valid",
+          });
+        }
+      } else {
+        // Custom doc — no documentType
+        await createDoc({
+          supplierId,
+          name: dialogDocName.trim(),
+          storageId,
+          fileName: pendingFile.name,
+          status: "valid",
+        });
+      }
+
+      appToast.success("המסמך הועלה בהצלחה");
+      closeUploadDialog();
+    } catch (err) {
+      console.error("Upload failed:", err);
+      appToast.error("שגיאה בהעלאת המסמך");
+    } finally {
+      setUploadingDialog(false);
+    }
+  };
+
+  const handleRenameDoc = async (docId: Id<"supplierDocuments">) => {
+    if (!editNameValue.trim()) {
+      return;
+    }
+    try {
+      await updateDoc({ id: docId, name: editNameValue.trim() });
+      setEditingCustomName(null);
+      appToast.success("שם המסמך עודכן");
+    } catch (err) {
+      console.error("Rename failed:", err);
+      appToast.error("שגיאה בעדכון שם");
+    }
+  };
 
   if (!supplierId) {
     return (
@@ -158,50 +353,10 @@ export function MyDocuments() {
     }
   }
 
-  const handleUpload = async (docTypeKey: DocumentTypeKey, _label: string) => {
-    const input = fileInputRefs.current[docTypeKey];
-    if (!input) {
-      return;
-    }
-    input.click();
-  };
-
-  const handleFileSelected = async (
-    docTypeKey: DocumentTypeKey,
-    label: string,
-    file: File
-  ) => {
-    setUploading(docTypeKey);
-    try {
-      const storageId = await upload(file);
-      const existingDoc = docsByType[docTypeKey];
-
-      if (existingDoc) {
-        await updateDoc({
-          id: existingDoc.id,
-          storageId,
-          fileName: file.name,
-          status: "valid",
-          acknowledged: false,
-        });
-      } else {
-        await createDoc({
-          supplierId,
-          name: label,
-          documentType: docTypeKey,
-          storageId,
-          fileName: file.name,
-          status: "valid",
-        });
-      }
-      appToast.success("המסמך הועלה בהצלחה");
-    } catch (err) {
-      console.error("Upload failed:", err);
-      appToast.error("שגיאה בהעלאת המסמך");
-    } finally {
-      setUploading(null);
-    }
-  };
+  // Custom documents (no predefined documentType), sorted by creation time
+  const customDocs = (documents ?? [])
+    .filter((d) => !d.documentType)
+    .sort((a, b) => (a._creationTime ?? 0) - (b._creationTime ?? 0));
 
   const handleMarkMissing = async (
     docTypeKey: DocumentTypeKey,
@@ -253,8 +408,50 @@ export function MyDocuments() {
     }
   };
 
+  const fileExtIcon = (fileName: string | undefined) => {
+    if (!fileName) {
+      return null;
+    }
+    const ext = fileName.split(".").pop()?.toLowerCase();
+    if (ext === "pdf") {
+      return "PDF";
+    }
+    if (ext === "doc" || ext === "docx") {
+      return "DOC";
+    }
+    if (ext === "jpg" || ext === "jpeg" || ext === "png") {
+      return "IMG";
+    }
+    return ext?.toUpperCase() ?? null;
+  };
+
   return (
-    <div className="mx-auto max-w-3xl p-6" dir="rtl">
+    <div
+      className="mx-auto max-w-3xl p-6"
+      dir="rtl"
+      onDragEnter={handlePageDragEnter}
+      onDragLeave={handlePageDragLeave}
+      onDragOver={handlePageDragOver}
+      onDrop={handlePageDrop}
+    >
+      {/* Full-page drag overlay */}
+      {isDragging && (
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-primary border-dashed bg-card/95 px-12 py-10">
+            <UploadCloud className="h-12 w-12 text-primary" />
+            <span
+              className="text-[16px] text-foreground"
+              style={{ fontWeight: 600 }}
+            >
+              שחרר כאן להעלאת מסמך
+            </span>
+            <span className="text-[12px] text-muted-foreground">
+              PDF, DOCX, תמונות ועוד
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
@@ -306,7 +503,6 @@ export function MyDocuments() {
                 : { color: "text-muted-foreground", label: "חסר", icon: Clock };
 
             const StatusIcon = statusInfo.icon;
-            const isUploading = uploading === docType.key;
 
             return (
               <div
@@ -414,46 +610,17 @@ export function MyDocuments() {
 
                     {!hasFile && (
                       <>
-                        {/* Upload button */}
-                        <input
-                          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              handleFileSelected(
-                                docType.key as DocumentTypeKey,
-                                docType.label,
-                                file
-                              );
-                            }
-                            e.target.value = "";
-                          }}
-                          ref={(el) => {
-                            fileInputRefs.current[docType.key] = el;
-                          }}
-                          type="file"
-                        />
                         <button
-                          className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
-                          disabled={isUploading}
+                          className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-primary-hover"
                           onClick={() =>
-                            handleUpload(
-                              docType.key as DocumentTypeKey,
-                              docType.label
-                            )
+                            openUploadDialog(docType.key, docType.label)
                           }
                           type="button"
                         >
-                          {isUploading ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <Upload size={14} />
-                          )}
+                          <Upload size={14} />
                           העלאה
                         </button>
 
-                        {/* "אין לי" button */}
                         {!isAcknowledged && (
                           <button
                             className="rounded-lg border border-border px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-accent"
@@ -477,51 +644,317 @@ export function MyDocuments() {
           })}
         </div>
 
-        {/* Other documents (not matching predefined types) */}
-        {documents && documents.filter((d) => !d.documentType).length > 0 && (
-          <div className="mt-8">
+        {/* ── Custom documents section ── */}
+        <div className="mt-8">
+          <div className="mb-3 flex items-center justify-between">
             <h2
-              className="mb-3 text-[16px] text-foreground"
+              className="text-[16px] text-foreground"
               style={{ fontWeight: 600 }}
             >
               מסמכים נוספים
             </h2>
+            <button
+              className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-[12px] text-white transition-colors hover:bg-primary-hover"
+              onClick={openCustomUploadDialog}
+              type="button"
+            >
+              <Plus size={14} />
+              הוסף מסמך
+            </button>
+          </div>
+
+          {/* Custom docs list */}
+          {customDocs.length > 0 && (
             <div className="space-y-2">
-              {documents
-                .filter((d) => !d.documentType)
-                .map((doc) => {
-                  const statusInfo = getStatusColor(doc.status, doc.expiry);
-                  const StatusIcon = statusInfo.icon;
-                  return (
-                    <div
-                      className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
-                      key={doc.id}
-                    >
-                      <div className="flex items-center gap-3">
-                        <StatusIcon className={`h-4 w-4 ${statusInfo.color}`} />
-                        <span className="text-[13px] text-foreground">
-                          {doc.name}
-                        </span>
-                        {doc.expiry && (
-                          <span className="text-[11px] text-muted-foreground">
-                            תוקף: {doc.expiry}
-                          </span>
+              {customDocs.map((doc, index) => {
+                const statusInfo = getStatusColor(doc.status, doc.expiry);
+                const StatusIcon = statusInfo.icon;
+                const extLabel = fileExtIcon(doc.fileName);
+                const isEditingName = editingCustomName === doc.id;
+
+                return (
+                  <div
+                    className="group flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3 transition-shadow hover:shadow-sm"
+                    key={doc.id}
+                  >
+                    <div className="flex items-center gap-3">
+                      <GripVertical className="h-4 w-4 text-muted-foreground/40" />
+                      <span className="text-[12px] text-muted-foreground/60">
+                        {index + 1}
+                      </span>
+                      <StatusIcon className={`h-4 w-4 ${statusInfo.color}`} />
+                      <div className="flex flex-col">
+                        {isEditingName ? (
+                          <div className="flex items-center gap-1">
+                            <input
+                              autoFocus
+                              className="rounded border border-border bg-background px-2 py-0.5 text-[13px] text-foreground"
+                              onChange={(e) => setEditNameValue(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  handleRenameDoc(doc.id);
+                                }
+                                if (e.key === "Escape") {
+                                  setEditingCustomName(null);
+                                }
+                              }}
+                              value={editNameValue}
+                            />
+                            <button
+                              className="rounded bg-primary px-2 py-0.5 text-[11px] text-white"
+                              onClick={() => handleRenameDoc(doc.id)}
+                              type="button"
+                            >
+                              שמור
+                            </button>
+                            <button
+                              className="rounded px-2 py-0.5 text-[11px] text-muted-foreground"
+                              onClick={() => setEditingCustomName(null)}
+                              type="button"
+                            >
+                              ביטול
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-[13px] text-foreground"
+                              style={{ fontWeight: 500 }}
+                            >
+                              {doc.name}
+                            </span>
+                            <button
+                              className="opacity-0 transition-opacity group-hover:opacity-100"
+                              onClick={() => {
+                                setEditingCustomName(doc.id);
+                                setEditNameValue(doc.name);
+                              }}
+                              title="שנה שם"
+                              type="button"
+                            >
+                              <Pencil
+                                className="text-muted-foreground hover:text-foreground"
+                                size={12}
+                              />
+                            </button>
+                          </div>
                         )}
+                        <div className="flex items-center gap-2">
+                          {extLabel && (
+                            <span
+                              className="rounded bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground"
+                              style={{ fontWeight: 600 }}
+                            >
+                              {extLabel}
+                            </span>
+                          )}
+                          {doc.fileName && (
+                            <span className="text-[10px] text-muted-foreground">
+                              {doc.fileName}
+                            </span>
+                          )}
+                          {doc.expiry && (
+                            <span className="text-[10px] text-muted-foreground">
+                              · תוקף: {doc.expiry}
+                            </span>
+                          )}
+                        </div>
                       </div>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      {/* Expiry editing for custom docs */}
+                      {editingExpiry === doc.id ? (
+                        <div className="flex items-center gap-1">
+                          <input
+                            className="rounded border border-border px-2 py-1 text-[12px]"
+                            onChange={(e) => setExpiryValue(e.target.value)}
+                            type="date"
+                            value={expiryValue}
+                          />
+                          <button
+                            className="rounded bg-primary px-2 py-1 text-[11px] text-white"
+                            onClick={() => handleSaveExpiry(doc.id)}
+                            type="button"
+                          >
+                            שמור
+                          </button>
+                          <button
+                            className="rounded px-2 py-1 text-[11px] text-muted-foreground"
+                            onClick={() => setEditingExpiry(null)}
+                            type="button"
+                          >
+                            ביטול
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          className="rounded-lg p-1.5 text-[11px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                          onClick={() => {
+                            setEditingExpiry(doc.id);
+                            setExpiryValue(doc.expiry ?? "");
+                          }}
+                          title="הגדר תוקף"
+                          type="button"
+                        >
+                          <Clock size={14} />
+                        </button>
+                      )}
+                      <button
+                        className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent"
+                        title="הורדה"
+                        type="button"
+                      >
+                        <Download size={14} />
+                      </button>
                       <button
                         className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-destructive/10"
                         onClick={() => handleDeleteDoc(doc.id)}
+                        title="מחק"
                         type="button"
                       >
                         <Trash2 size={14} />
                       </button>
                     </div>
-                  );
-                })}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Drop zone hint (when no custom docs yet) */}
+          {customDocs.length === 0 && (
+            <button
+              className="flex w-full cursor-pointer flex-col items-center gap-2 rounded-xl border border-border border-dashed py-8 text-muted-foreground transition-colors hover:border-primary/50 hover:bg-primary/5"
+              onClick={openCustomUploadDialog}
+              type="button"
+            >
+              <UploadCloud className="h-8 w-8" />
+              <span className="text-[13px]">גרור קבצים לכאן או לחץ להעלאה</span>
+              <span className="text-[11px] text-muted-foreground/70">
+                PDF, DOCX, תמונות ועוד
+              </span>
+            </button>
+          )}
+        </div>
+      </FeatureGate>
+
+      {/* Unified upload dialog — handles both mandatory and custom docs */}
+      <Dialog
+        onOpenChange={(open) => {
+          if (!open) {
+            closeUploadDialog();
+          }
+        }}
+        open={uploadDialogOpen}
+      >
+        <DialogContent className="max-w-md" dir="rtl">
+          <DialogHeader>
+            <DialogTitle>
+              {uploadTarget ? `העלאת ${uploadTarget.label}` : "העלאת מסמך חדש"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            {/* Document name field */}
+            <div>
+              <label
+                className="mb-1.5 block text-[13px] text-muted-foreground"
+                htmlFor="upload-doc-name"
+              >
+                שם המסמך
+              </label>
+              <input
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-[14px] text-foreground outline-none focus:border-primary disabled:opacity-60"
+                disabled={!!uploadTarget}
+                id="upload-doc-name"
+                onChange={(e) => setDialogDocName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (
+                    e.key === "Enter" &&
+                    pendingFile &&
+                    dialogDocName.trim()
+                  ) {
+                    handleConfirmUpload();
+                  }
+                }}
+                placeholder="למשל: אישור ביטוח, רישיון רכב..."
+                value={dialogDocName}
+              />
+            </div>
+
+            {/* Drag & drop zone */}
+            <button
+              className={`flex w-full cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed px-4 py-6 transition-colors ${
+                pendingFile
+                  ? "border-primary/50 bg-primary/5"
+                  : "border-border hover:border-primary/40 hover:bg-primary/5"
+              }`}
+              onClick={() => dialogFileInputRef.current?.click()}
+              onDragEnter={handleDialogDragEnter}
+              onDragLeave={handleDialogDragLeave}
+              onDragOver={handleDialogDragOver}
+              onDrop={handleDialogDrop}
+              type="button"
+            >
+              <input
+                className="hidden"
+                onChange={handleDialogFileChange}
+                ref={dialogFileInputRef}
+                type="file"
+              />
+              {pendingFile ? (
+                <div className="flex items-center gap-3">
+                  <FileText className="h-6 w-6 text-primary" />
+                  <div className="flex flex-col text-start">
+                    <span className="text-[13px] text-foreground">
+                      {pendingFile.name}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground">
+                      {(pendingFile.size / 1024).toFixed(0)} KB — לחץ להחלפה
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <UploadCloud className="h-8 w-8 text-muted-foreground" />
+                  <span className="text-[13px] text-muted-foreground">
+                    גרור קובץ לכאן או לחץ לבחירה
+                  </span>
+                  <span className="text-[11px] text-muted-foreground/70">
+                    PDF, DOCX, תמונות ועוד
+                  </span>
+                </>
+              )}
+            </button>
+
+            {/* Action buttons */}
+            <div className="flex gap-2">
+              <button
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-[13px] text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
+                disabled={
+                  uploadingDialog || !pendingFile || !dialogDocName.trim()
+                }
+                onClick={handleConfirmUpload}
+                type="button"
+              >
+                {uploadingDialog ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload size={14} />
+                )}
+                העלה
+              </button>
+              <button
+                className="rounded-lg border border-border px-4 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-accent"
+                onClick={closeUploadDialog}
+                type="button"
+              >
+                ביטול
+              </button>
             </div>
           </div>
-        )}
-      </FeatureGate>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
