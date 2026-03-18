@@ -8,7 +8,7 @@
 
 **Tech Stack:** Convex (TypeScript), React 18, Vite
 
-**Spec:** `docs/superpowers/specs/2026-03-14-flow-completion-design.md`
+**Spec:** `docs/specs/2026-03-14-flow-completion-design.md`
 
 ---
 

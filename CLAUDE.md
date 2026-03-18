@@ -114,8 +114,8 @@ VITE_CONVEX_SITE_URL=https://unique-ermine-475.convex.site
 
 ## Testing
 
-No automated test suite. Playwright is installed (`@playwright/test`) but no test files exist. Testing is manual. See `docs/testing-plan-01-02.md` for planned testing strategy.
+No automated test suite. Playwright is installed (`@playwright/test`) but no test files exist. Testing is manual. See `docs/testing/testing-plan-01-02.md` for planned testing strategy.
 
 ## Project Status
 
-~60-65% of MVP spec built. Core CRUD works. Backend fully migrated from Supabase to Convex. Missing "smart" features: PDF export, WhatsApp/email sending, supplier recommendation engine, duplicate detection, profit distribution, travel time calculation, Google Calendar sync. See `docs/project-status.md` for details. Feature plans live in `docs/plans/`.
+~60-65% of MVP spec built. Core CRUD works. Backend fully migrated from Supabase to Convex. Missing "smart" features: PDF export, WhatsApp/email sending, supplier recommendation engine, duplicate detection, profit distribution, travel time calculation, Google Calendar sync. See `docs/planning/project-status.md` for details. Feature plans live in `docs/plans/`.
