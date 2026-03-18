@@ -116,8 +116,8 @@ export const generateMarketingDescription = action({
       .join("\n");
 
     return await callOpenRouter(
-      "You are a marketing copywriter for Israeli tourism. Write in Hebrew. Create a compelling, professional marketing description (3-5 sentences) for a supplier/venue that event producers would use for group trips and team-building events.",
-      `Write a marketing description for this supplier:\n${details}`
+      "You are a marketing copywriter for Israeli tourism. Write in Hebrew. Output ONLY the description text itself — nothing else. No titles, no headings, no introductory phrases like 'הנה תיאור' or 'בטח'. No markdown formatting whatsoever — no **, no ##, no bullet points, no dashes. Just plain Hebrew text with proper punctuation. Write a compelling, professional marketing description (3-5 sentences) for a supplier/venue that event producers would use for group trips and team-building events.",
+      `Write a marketing description for this supplier. Output ONLY the plain text description, no preamble:\n${details}`
     );
   },
 });

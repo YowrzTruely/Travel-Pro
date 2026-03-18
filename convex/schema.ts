@@ -152,6 +152,14 @@ export default defineSchema({
     // AI-generated content
     aiDescription: v.optional(v.string()),
     aiCleanedImageId: v.optional(v.string()),
+    // Background image
+    backgroundImage: v.optional(
+      v.object({
+        id: v.string(),
+        storageId: v.string(),
+        name: v.string(),
+      })
+    ),
   })
     .index("by_legacyId", ["legacyId"])
     .index("by_supplierId", ["supplierId"]),

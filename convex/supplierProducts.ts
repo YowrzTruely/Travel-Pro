@@ -1,6 +1,32 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
+/** Resolve all storage IDs to real URLs for a product */
+async function resolveProductUrls(
+  ctx: { storage: { getUrl: (id: any) => Promise<string | null> } },
+  product: any
+) {
+  const images = product.images
+    ? await Promise.all(
+        product.images.map(async (img: any) => ({
+          ...img,
+          url: (await ctx.storage.getUrl(img.storageId)) ?? img.storageId,
+        }))
+      )
+    : undefined;
+
+  const backgroundImage = product.backgroundImage
+    ? {
+        ...product.backgroundImage,
+        url:
+          (await ctx.storage.getUrl(product.backgroundImage.storageId)) ??
+          product.backgroundImage.storageId,
+      }
+    : undefined;
+
+  return { ...product, id: product._id, images, backgroundImage };
+}
+
 export const get = query({
   args: { id: v.id("supplierProducts") },
   handler: async (ctx, { id }) => {
@@ -8,7 +34,7 @@ export const get = query({
     if (!product) {
       return null;
     }
-    return { ...product, id: product._id };
+    return resolveProductUrls(ctx, product);
   },
 });
 
@@ -19,14 +45,7 @@ export const listBySupplierId = query({
       .query("supplierProducts")
       .withIndex("by_supplierId", (q) => q.eq("supplierId", supplierId))
       .collect();
-    return products.map((p) => ({
-      ...p,
-      id: p._id,
-      images: p.images?.map((img) => ({
-        ...img,
-        url: img.storageId, // Will be resolved on client via getImageUrl
-      })),
-    }));
+    return Promise.all(products.map((p) => resolveProductUrls(ctx, p)));
   },
 });
 
@@ -54,6 +73,13 @@ export const create = mutation({
     cancellationTerms: v.optional(v.string()),
     aiDescription: v.optional(v.string()),
     aiCleanedImageId: v.optional(v.string()),
+    backgroundImage: v.optional(
+      v.object({
+        id: v.string(),
+        storageId: v.string(),
+        name: v.string(),
+      })
+    ),
   },
   handler: async (ctx, args) => {
     const id = await ctx.db.insert("supplierProducts", {
@@ -79,6 +105,7 @@ export const create = mutation({
       cancellationTerms: args.cancellationTerms,
       aiDescription: args.aiDescription,
       aiCleanedImageId: args.aiCleanedImageId,
+      backgroundImage: args.backgroundImage,
     });
     const product = await ctx.db.get(id);
     if (!product) {
@@ -121,13 +148,25 @@ export const update = mutation({
     cancellationTerms: v.optional(v.string()),
     aiDescription: v.optional(v.string()),
     aiCleanedImageId: v.optional(v.string()),
+    backgroundImage: v.optional(
+      v.object({
+        id: v.string(),
+        storageId: v.string(),
+        name: v.string(),
+      })
+    ),
+    removeBackgroundImage: v.optional(v.boolean()),
   },
-  handler: async (ctx, { id, ...updates }) => {
+  handler: async (ctx, { id, removeBackgroundImage, ...updates }) => {
     const existing = await ctx.db.get(id);
     if (!existing) {
       throw new Error("Product not found");
     }
-    await ctx.db.patch(id, updates);
+    if (removeBackgroundImage) {
+      await ctx.db.patch(id, { ...updates, backgroundImage: undefined });
+    } else {
+      await ctx.db.patch(id, updates);
+    }
     const product = await ctx.db.get(id);
     if (!product) {
       throw new Error("Supplier product not found after update");

@@ -43,17 +43,8 @@ export function ProductEditPage() {
     );
   }
 
-  // Map backend shape to ProductData (images: storageId → url)
-  const productData = product
-    ? {
-        ...product,
-        id: product.id as string,
-        images: product.images?.map((img) => ({
-          ...img,
-          url: img.storageId,
-        })),
-      }
-    : null;
+  // Backend now resolves storage URLs, just cast the id
+  const productData = product ? { ...product, id: product.id as string } : null;
 
   // Product not found
   if (!isNew && product === null) {

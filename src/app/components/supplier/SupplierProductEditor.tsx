@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Clock,
   FileText,
+  ImageIcon,
   ImagePlus,
   Loader2,
   Package,
@@ -21,6 +22,7 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useBlocker } from "react-router";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
@@ -28,6 +30,15 @@ import { useConfirmDelete } from "../ConfirmDeleteModal";
 import { useImageUpload } from "../hooks/useImageUpload";
 
 const UNIT_OPTIONS = ["אדם", "אירוע", "יום", "קבוצה", "חבילה", "יחידה"];
+
+/** Auto-resize a textarea to fit its content */
+function autoResize(el: HTMLTextAreaElement | null) {
+  if (!el) {
+    return;
+  }
+  el.style.height = "auto";
+  el.style.height = `${el.scrollHeight}px`;
+}
 
 interface ProductFormValues {
   aiDescription: string;
@@ -51,6 +62,7 @@ interface ProductFormValues {
 
 interface ProductData {
   aiDescription?: string;
+  backgroundImage?: { id: string; url: string; name: string };
   cancellationTerms?: string;
   capacity?: number;
   clientPrice?: number;
@@ -119,8 +131,14 @@ export function SupplierProductEditor({
   const [aiLoading, setAiLoading] = useState(false);
   const [newAddonName, setNewAddonName] = useState("");
   const [newAddonPrice, setNewAddonPrice] = useState("");
+  const [backgroundImage, setBackgroundImage] = useState<
+    ProductData["backgroundImage"] | null
+  >(null);
+  const [uploadingBg, setUploadingBg] = useState(false);
+  const [isDraggingBg, setIsDraggingBg] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const bgFileInputRef = useRef<HTMLInputElement>(null);
   const { requestDelete, modal: deleteModal } = useConfirmDelete();
 
   const {
@@ -128,10 +146,15 @@ export function SupplierProductEditor({
     handleSubmit,
     reset,
     setValue,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<ProductFormValues>();
 
-  // Sync form when product changes
+  // Keep a ref for isDirty so useBlocker always reads fresh value
+  const isDirtyRef = useRef(false);
+  isDirtyRef.current = isDirty;
+
+  // Sync form only when product identity changes (not on every reactive update)
+  const productIdForSync = product?.id;
   useEffect(() => {
     if (product) {
       reset({
@@ -155,6 +178,7 @@ export function SupplierProductEditor({
       });
       setImages(product.images || []);
       setEquipment(product.equipmentRequirements || []);
+      setBackgroundImage(product.backgroundImage || null);
       setActiveImageIdx(0);
     } else {
       reset({
@@ -178,10 +202,12 @@ export function SupplierProductEditor({
       });
       setImages([]);
       setEquipment([]);
+      setBackgroundImage(null);
       setActiveImageIdx(0);
     }
     setSaveSuccess(false);
-  }, [product, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-sync when product identity changes, not on every reactive update
+  }, [productIdForSync, reset]);
 
   // ─── Image upload ───
   const handleImageUpload = useCallback(
@@ -202,16 +228,17 @@ export function SupplierProductEditor({
             continue;
           }
           const storageId = await upload(file);
+          const previewUrl = URL.createObjectURL(file);
           currentImages.push({
             id: storageId,
-            url: storageId,
+            url: previewUrl,
             name: file.name,
           });
           await updateProduct({
             id: productId,
             images: currentImages.map((img) => ({
               id: img.id,
-              storageId: img.url || img.id,
+              storageId: img.id,
               name: img.name,
             })),
           });
@@ -239,7 +266,7 @@ export function SupplierProductEditor({
         id: productId,
         images: newImages.map((img) => ({
           id: img.id,
-          storageId: img.url || img.id,
+          storageId: img.id,
           name: img.name,
         })),
       });
@@ -250,6 +277,70 @@ export function SupplierProductEditor({
       appToast.error("שגיאה", "לא ניתן למחוק את התמונה");
     }
   };
+
+  // ─── Cross-drag between background ↔ gallery ───
+  const INTERNAL_DRAG_TYPE = "application/x-product-image";
+
+  /** Drop a gallery image onto the background area */
+  const handleBgDropInternal = useCallback(
+    async (e: React.DragEvent) => {
+      const raw = e.dataTransfer.getData(INTERNAL_DRAG_TYPE);
+      if (!(raw && productId)) {
+        return;
+      }
+      const img = JSON.parse(raw) as {
+        id: string;
+        url: string;
+        name: string;
+      };
+      const bg = { id: img.id, storageId: img.id, name: img.name };
+      try {
+        await updateProduct({ id: productId, backgroundImage: bg });
+        setBackgroundImage(img);
+        appToast.success("רקע עודכן", img.name);
+      } catch {
+        appToast.error("שגיאה", "לא ניתן לעדכן את תמונת הרקע");
+      }
+    },
+    [productId, updateProduct]
+  );
+
+  /** Drop the background image into the gallery */
+  const handleGalleryDropBgImage = useCallback(
+    async (e: React.DragEvent) => {
+      const raw = e.dataTransfer.getData(INTERNAL_DRAG_TYPE);
+      if (!(raw && productId)) {
+        return;
+      }
+      const img = JSON.parse(raw) as {
+        id: string;
+        url: string;
+        name: string;
+      };
+      // Don't add duplicate
+      if (images?.some((existing) => existing.id === img.id)) {
+        appToast.warning("כבר קיים", "התמונה כבר נמצאת בגלריה");
+        return;
+      }
+      const newImages = [...(images || []), img];
+      try {
+        await updateProduct({
+          id: productId,
+          images: newImages.map((i) => ({
+            id: i.id,
+            storageId: i.id,
+            name: i.name,
+          })),
+        });
+        setImages(newImages);
+        setActiveImageIdx(newImages.length - 1);
+        appToast.success("תמונה נוספה", img.name);
+      } catch {
+        appToast.error("שגיאה", "לא ניתן להוסיף את התמונה");
+      }
+    },
+    [productId, images, updateProduct]
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -266,12 +357,94 @@ export function SupplierProductEditor({
       e.preventDefault();
       e.stopPropagation();
       setIsDragging(false);
+      // Internal drag from background
+      if (e.dataTransfer.getData(INTERNAL_DRAG_TYPE)) {
+        handleGalleryDropBgImage(e);
+        return;
+      }
+      // External file drop
       if (e.dataTransfer.files?.length) {
         handleImageUpload(e.dataTransfer.files);
       }
     },
-    [handleImageUpload]
+    [handleImageUpload, handleGalleryDropBgImage]
   );
+
+  // ─── Background image ───
+  const handleBgUpload = useCallback(
+    async (file: File) => {
+      if (!(isEditMode && productId)) {
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        appToast.warning("קובץ לא תקין", "הקובץ אינו תמונה");
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        appToast.warning("קובץ גדול מדי", "גודל מקסימלי 5MB");
+        return;
+      }
+      setUploadingBg(true);
+      try {
+        const storageId = await upload(file);
+        const bg = { id: storageId, storageId, name: file.name };
+        await updateProduct({ id: productId, backgroundImage: bg });
+        setBackgroundImage({
+          id: storageId,
+          url: URL.createObjectURL(file),
+          name: file.name,
+        });
+        appToast.success("רקע הועלה", "תמונת הרקע נשמרה");
+      } catch {
+        appToast.error("שגיאה בהעלאה", "לא ניתן להעלות את תמונת הרקע");
+      } finally {
+        setUploadingBg(false);
+      }
+    },
+    [isEditMode, productId, upload, updateProduct]
+  );
+
+  const handleBgDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingBg(true);
+  }, []);
+  const handleBgDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingBg(false);
+  }, []);
+  const handleBgDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDraggingBg(false);
+      // Internal drag from gallery
+      if (e.dataTransfer.getData(INTERNAL_DRAG_TYPE)) {
+        handleBgDropInternal(e);
+        return;
+      }
+      // External file drop
+      const file = e.dataTransfer.files?.[0];
+      if (file) {
+        handleBgUpload(file);
+      }
+    },
+    [handleBgUpload, handleBgDropInternal]
+  );
+
+  const handleRemoveBg = async () => {
+    if (!productId) {
+      return;
+    }
+    try {
+      await updateProduct({ id: productId, removeBackgroundImage: true });
+      setBackgroundImage(null);
+      appToast.success("רקע הוסר", "");
+    } catch {
+      appToast.error("שגיאה", "לא ניתן להסיר את תמונת הרקע");
+    }
+  };
 
   // ─── Equipment ───
   const addEquipmentItem = () => {
@@ -348,6 +521,41 @@ export function SupplierProductEditor({
     }
   };
 
+  // ─── Unsaved changes guard ───
+  useBlocker(({ currentLocation, nextLocation }) => {
+    if (!isDirtyRef.current) {
+      return false;
+    }
+    if (currentLocation.pathname === nextLocation.pathname) {
+      return false;
+    }
+    // biome-ignore lint/suspicious/noAlert: intentional browser-level confirm for unsaved changes
+    return !window.confirm("יש שינויים שלא נשמרו. האם לצאת בלי לשמור?");
+  });
+
+  useEffect(() => {
+    if (!isDirty) {
+      return;
+    }
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
+
+  const handleRequestClose = () => {
+    if (isDirty) {
+      // biome-ignore lint/suspicious/noAlert: intentional browser-level confirm for unsaved changes
+      const leave = window.confirm("יש שינויים שלא נשמרו. האם לצאת בלי לשמור?");
+      if (leave) {
+        onClose();
+      }
+    } else {
+      onClose();
+    }
+  };
+
   // ─── Save ───
   const onSubmit = async (data: ProductFormValues) => {
     setSaving(true);
@@ -401,6 +609,120 @@ export function SupplierProductEditor({
 
   const formContent = (
     <div className="flex-1 overflow-y-auto">
+      {/* Background image (edit mode only) */}
+      {isEditMode && (
+        <div className="px-4 pt-4 pb-2">
+          <div className="overflow-hidden rounded-xl border border-[#e7e1da] bg-white">
+            <div className="flex items-center gap-2 border-[#e7e1da] border-b px-4 py-3">
+              <ImageIcon className="text-[#8b5cf6]" size={16} />
+              <span
+                className="text-[#181510] text-[13px]"
+                style={{ fontWeight: 600 }}
+              >
+                תמונת רקע
+              </span>
+            </div>
+            {backgroundImage ? (
+              <div
+                className={`relative transition-all ${isDraggingBg ? "ring-2 ring-[#ff8c00] ring-inset" : ""}`}
+                onDragLeave={handleBgDragLeave}
+                onDragOver={handleBgDragOver}
+                onDrop={handleBgDrop}
+              >
+                <div className="relative h-32 overflow-hidden bg-[#181510]">
+                  <img
+                    alt={backgroundImage.name}
+                    className="h-full w-full cursor-grab object-cover active:cursor-grabbing"
+                    draggable
+                    height={128}
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData(
+                        INTERNAL_DRAG_TYPE,
+                        JSON.stringify(backgroundImage)
+                      );
+                      e.dataTransfer.effectAllowed = "copyMove";
+                    }}
+                    src={backgroundImage.url}
+                    width={576}
+                  />
+                  {isDraggingBg && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-[13px] text-white backdrop-blur-sm">
+                      שחרר לעדכון תמונת רקע
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center justify-between px-4 py-2">
+                  <span className="truncate text-[#8d785e] text-[12px]">
+                    {backgroundImage.name}
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-[#8d785e] text-[12px] transition-colors hover:bg-[#f5f3f0]"
+                      onClick={() => bgFileInputRef.current?.click()}
+                      type="button"
+                    >
+                      <Upload size={12} />
+                      החלף
+                    </button>
+                    <button
+                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-[12px] text-red-500 transition-colors hover:bg-red-50"
+                      onClick={() =>
+                        requestDelete({
+                          title: "הסרת רקע",
+                          itemName: "תמונת הרקע",
+                          onConfirm: handleRemoveBg,
+                        })
+                      }
+                      type="button"
+                    >
+                      <Trash2 size={12} />
+                      הסר
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <button
+                className={`flex w-full items-center justify-center gap-2 px-4 py-6 text-[#8d785e] text-[13px] transition-colors ${
+                  isDraggingBg
+                    ? "bg-[#ff8c00]/5 text-[#ff8c00]"
+                    : "hover:bg-[#f5f3f0]"
+                }`}
+                onClick={() => bgFileInputRef.current?.click()}
+                onDragLeave={handleBgDragLeave}
+                onDragOver={handleBgDragOver}
+                onDrop={handleBgDrop}
+                type="button"
+              >
+                {uploadingBg ? (
+                  <Loader2 className="animate-spin" size={14} />
+                ) : (
+                  <ImageIcon size={14} />
+                )}
+                {uploadingBg
+                  ? "מעלה..."
+                  : isDraggingBg
+                    ? "שחרר כאן להעלאת רקע"
+                    : "הוסף תמונת רקע — גרור או לחץ"}
+              </button>
+            )}
+          </div>
+          <input
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                handleBgUpload(file);
+              }
+              e.target.value = "";
+            }}
+            ref={bgFileInputRef}
+            type="file"
+          />
+        </div>
+      )}
+
       {/* Image gallery (edit mode only) */}
       {isEditMode && (
         <motion.div
@@ -410,21 +732,46 @@ export function SupplierProductEditor({
           transition={{ delay: 0.2 }}
         >
           {images && images.length > 0 ? (
-            <div className="relative">
+            <div
+              className={`relative ${isDragging ? "ring-2 ring-[#ff8c00] ring-inset" : ""}`}
+              onDragLeave={handleDragLeave}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
               <div className="relative h-48 overflow-hidden bg-[#181510]">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    alt={images[activeImageIdx]?.name}
-                    animate={{ opacity: 1 }}
-                    className="h-full w-full object-cover"
-                    exit={{ opacity: 0 }}
-                    height={192}
-                    initial={{ opacity: 0 }}
-                    key={images[activeImageIdx]?.id || activeImageIdx}
-                    src={images[activeImageIdx]?.url}
-                    width={576}
-                  />
-                </AnimatePresence>
+                {isDragging && (
+                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 text-[13px] text-white backdrop-blur-sm">
+                    שחרר להוספת תמונות
+                  </div>
+                )}
+                <div
+                  className="h-full w-full cursor-grab active:cursor-grabbing"
+                  draggable
+                  onDragStart={(e) => {
+                    const img = images[activeImageIdx];
+                    if (img) {
+                      e.dataTransfer.setData(
+                        INTERNAL_DRAG_TYPE,
+                        JSON.stringify(img)
+                      );
+                      e.dataTransfer.effectAllowed = "copyMove";
+                    }
+                  }}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      alt={images[activeImageIdx]?.name}
+                      animate={{ opacity: 1 }}
+                      className="pointer-events-none h-full w-full object-cover"
+                      exit={{ opacity: 0 }}
+                      height={192}
+                      initial={{ opacity: 0 }}
+                      key={images[activeImageIdx]?.id || activeImageIdx}
+                      src={images[activeImageIdx]?.url}
+                      width={576}
+                    />
+                  </AnimatePresence>
+                </div>
                 <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[11px] text-white backdrop-blur-md">
                   <Camera size={12} />
                   {activeImageIdx + 1}/{images.length}
@@ -473,18 +820,26 @@ export function SupplierProductEditor({
                 <div className="flex gap-2 overflow-x-auto border-[#e7e1da] border-b bg-white p-3">
                   {images.map((img, idx) => (
                     <button
-                      className={`h-12 w-12 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
+                      className={`h-12 w-12 shrink-0 cursor-grab overflow-hidden rounded-lg border-2 transition-all active:cursor-grabbing ${
                         idx === activeImageIdx
                           ? "border-[#ff8c00] shadow-md"
                           : "border-transparent opacity-60 hover:opacity-100"
                       }`}
+                      draggable
                       key={img.id}
                       onClick={() => setActiveImageIdx(idx)}
+                      onDragStart={(e) => {
+                        e.dataTransfer.setData(
+                          INTERNAL_DRAG_TYPE,
+                          JSON.stringify(img)
+                        );
+                        e.dataTransfer.effectAllowed = "copyMove";
+                      }}
                       type="button"
                     >
                       <img
                         alt={img.name}
-                        className="h-full w-full object-cover"
+                        className="pointer-events-none h-full w-full object-cover"
                         height={48}
                         src={img.url}
                         width={48}
@@ -617,11 +972,18 @@ export function SupplierProductEditor({
               תיאור
             </label>
             <textarea
-              className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full resize-none overflow-hidden rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[14px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
               id="pe-desc"
+              onInput={(e) => autoResize(e.currentTarget)}
               placeholder="תיאור המוצר..."
-              rows={3}
-              {...register("description")}
+              rows={2}
+              {...register("description", {
+                onChange: (e) => autoResize(e.target),
+              })}
+              ref={(el) => {
+                register("description").ref(el);
+                autoResize(el);
+              }}
             />
           </div>
 
@@ -644,6 +1006,75 @@ export function SupplierProductEditor({
                 </label>
               ))}
             </div>
+          </div>
+        </motion.div>
+
+        {/* AI tools */}
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
+          initial={{ opacity: 0, y: 15 }}
+          transition={{ delay: 0.27 }}
+        >
+          <div
+            className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
+            style={{ fontWeight: 600 }}
+          >
+            <Sparkles className="text-[#ff8c00]" size={14} />
+            כלי AI
+          </div>
+
+          <div>
+            <label
+              className="mb-1 block text-[#8d785e] text-[11px]"
+              htmlFor="pe-ai-desc"
+            >
+              תיאור שיווקי (AI)
+            </label>
+            <textarea
+              className="w-full resize-none overflow-hidden rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              id="pe-ai-desc"
+              onInput={(e) => autoResize(e.currentTarget)}
+              rows={2}
+              {...register("aiDescription", {
+                onChange: (e) => autoResize(e.target),
+              })}
+              ref={(el) => {
+                register("aiDescription").ref(el);
+                autoResize(el);
+              }}
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              className="flex items-center gap-1.5 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00] disabled:opacity-50"
+              disabled={aiLoading}
+              onClick={handleGenerateAiDescription}
+              type="button"
+            >
+              {aiLoading ? (
+                <Loader2 className="animate-spin" size={12} />
+              ) : (
+                <Sparkles size={12} />
+              )}
+              צור תיאור שיווקי
+            </button>
+            {isEditMode && (
+              <button
+                className="flex items-center gap-1.5 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00] disabled:opacity-50"
+                disabled={aiLoading}
+                onClick={handleCleanImage}
+                type="button"
+              >
+                {aiLoading ? (
+                  <Loader2 className="animate-spin" size={12} />
+                ) : (
+                  <Sparkles size={12} />
+                )}
+                נקה תמונה (AI)
+              </button>
+            )}
           </div>
         </motion.div>
 
@@ -887,10 +1318,17 @@ export function SupplierProductEditor({
               תנאי ביטול
             </label>
             <textarea
-              className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
+              className="w-full resize-none overflow-hidden rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
               id="pe-cancel"
+              onInput={(e) => autoResize(e.currentTarget)}
               rows={2}
-              {...register("cancellationTerms")}
+              {...register("cancellationTerms", {
+                onChange: (e) => autoResize(e.target),
+              })}
+              ref={(el) => {
+                register("cancellationTerms").ref(el);
+                autoResize(el);
+              }}
             />
           </div>
         </motion.div>
@@ -961,68 +1399,6 @@ export function SupplierProductEditor({
           </motion.div>
         )}
 
-        {/* AI buttons */}
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-3 rounded-xl border border-[#e7e1da] bg-white p-4"
-          initial={{ opacity: 0, y: 15 }}
-          transition={{ delay: 0.6 }}
-        >
-          <div
-            className="mb-1 flex items-center gap-2 text-[#8d785e] text-[13px]"
-            style={{ fontWeight: 600 }}
-          >
-            <Sparkles className="text-[#ff8c00]" size={14} />
-            כלי AI
-          </div>
-
-          <div>
-            <label
-              className="mb-1 block text-[#8d785e] text-[11px]"
-              htmlFor="pe-ai-desc"
-            >
-              תיאור שיווקי (AI)
-            </label>
-            <textarea
-              className="w-full resize-none rounded-lg border border-[#e7e1da] bg-[#fafaf8] px-3 py-2 text-[13px] focus:border-[#ff8c00] focus:outline-none focus:ring-2 focus:ring-[#ff8c00]/30"
-              id="pe-ai-desc"
-              rows={2}
-              {...register("aiDescription")}
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              className="flex items-center gap-1.5 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00] disabled:opacity-50"
-              disabled={aiLoading}
-              onClick={handleGenerateAiDescription}
-              type="button"
-            >
-              {aiLoading ? (
-                <Loader2 className="animate-spin" size={12} />
-              ) : (
-                <Sparkles size={12} />
-              )}
-              צור תיאור שיווקי
-            </button>
-            {isEditMode && (
-              <button
-                className="flex items-center gap-1.5 rounded-lg border border-[#e7e1da] px-3 py-2 text-[#8d785e] text-[12px] transition-colors hover:border-[#ff8c00] hover:text-[#ff8c00] disabled:opacity-50"
-                disabled={aiLoading}
-                onClick={handleCleanImage}
-                type="button"
-              >
-                {aiLoading ? (
-                  <Loader2 className="animate-spin" size={12} />
-                ) : (
-                  <Sparkles size={12} />
-                )}
-                נקה תמונה (AI)
-              </button>
-            )}
-          </div>
-        </motion.div>
-
         <div className="h-20" />
       </div>
     </div>
@@ -1062,7 +1438,7 @@ export function SupplierProductEditor({
       </motion.button>
       <button
         className="rounded-xl border border-[#e7e1da] px-5 py-3 text-[#8d785e] text-[14px] transition-colors hover:bg-[#f5f3f0]"
-        onClick={onClose}
+        onClick={handleRequestClose}
         type="button"
       >
         {mode === "page" ? "חזרה" : "סגור"}
@@ -1097,7 +1473,7 @@ export function SupplierProductEditor({
             className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={handleRequestClose}
             transition={{ duration: 0.3 }}
           />
 
@@ -1137,7 +1513,7 @@ export function SupplierProductEditor({
               </div>
               <button
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8d785e] transition-colors hover:bg-[#f5f3f0] hover:text-[#181510]"
-                onClick={onClose}
+                onClick={handleRequestClose}
                 type="button"
               >
                 <X size={18} />
