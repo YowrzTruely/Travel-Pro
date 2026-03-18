@@ -27,6 +27,7 @@ import { SettingsPage } from "./components/settings/SettingsPage";
 import { AvailabilityCalendar } from "./components/supplier/AvailabilityCalendar";
 import { MyDocuments } from "./components/supplier/MyDocuments";
 import { MyProducts } from "./components/supplier/MyProducts";
+import { ProductEditPage } from "./components/supplier/ProductEditPage";
 import { RequestsPage } from "./components/supplier/RequestsPage";
 import { SupplierPreview } from "./components/supplier/SupplierPreview";
 import { SupplierProfile } from "./components/supplier/SupplierProfile";
@@ -74,6 +75,7 @@ export function createSupplierRouter() {
       children: [
         { index: true, Component: SupplierDashboard },
         { path: "products", Component: MyProducts },
+        { path: "products/:id", Component: ProductEditPage },
         { path: "documents", Component: MyDocuments },
         { path: "availability", Component: AvailabilityCalendar },
         { path: "requests", Component: RequestsPage },

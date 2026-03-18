@@ -79,6 +79,7 @@ const parentLabels: Record<
   clients: { label: "פרטי לקוח", icon: UserCircle, color: "#06b6d4" },
   field: { label: 'חמ"ל שטח', icon: MapPin, color: "#16a34a" },
   quote: { label: "תצוגת לקוח", icon: FileText, color: "#ff8c00" },
+  products: { label: "פרטי מוצר", icon: Box, color: "#8b5cf6" },
 };
 
 interface BreadcrumbItem {
@@ -102,6 +103,7 @@ export function Breadcrumbs() {
         : undefined;
   const supplierSegment = segments[0] === "suppliers" ? segments[1] : undefined;
   const leadSegment = segments[0] === "crm" ? segments[1] : undefined;
+  const productSegment = segments[0] === "products" ? segments[1] : undefined;
 
   // Only query when we have a dynamic segment to resolve
   const project = useQuery(
@@ -122,6 +124,12 @@ export function Breadcrumbs() {
       ? { id: leadSegment as Id<"leads"> }
       : "skip"
   );
+  const supplierProduct = useQuery(
+    api.supplierProducts.get,
+    productSegment && productSegment !== "new" && !routeMeta[productSegment]
+      ? { id: productSegment as Id<"supplierProducts"> }
+      : "skip"
+  );
 
   if (location.pathname === "/") {
     return null;
@@ -137,6 +145,11 @@ export function Breadcrumbs() {
   }
   if (leadSegment && lead?.name) {
     resolvedNames[leadSegment] = lead.name;
+  }
+  if (productSegment === "new") {
+    resolvedNames[productSegment] = "מוצר חדש";
+  } else if (productSegment && supplierProduct?.name) {
+    resolvedNames[productSegment] = supplierProduct.name;
   }
 
   const items: BreadcrumbItem[] = [

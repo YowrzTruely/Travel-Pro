@@ -10,13 +10,13 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { appToast } from "../AppToast";
 import { useAuth } from "../AuthContext";
 import { useConfirmDelete } from "../ConfirmDeleteModal";
 import { FeatureGate } from "./FeatureGate";
-import { SupplierProductEditor } from "./SupplierProductEditor";
 
 type ViewMode = "grid" | "list";
 
@@ -42,23 +42,18 @@ export function MyProducts() {
     supplierId ? { supplierId } : "skip"
   );
 
+  const navigate = useNavigate();
   const removeProduct = useMutation(api.supplierProducts.remove);
   const { requestDelete, modal: deleteModal } = useConfirmDelete();
 
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [editorOpen, setEditorOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<ProductData | null>(
-    null
-  );
 
   const handleAdd = () => {
-    setEditingProduct(null);
-    setEditorOpen(true);
+    navigate("/products/new");
   };
 
   const handleEdit = (product: ProductData) => {
-    setEditingProduct(product);
-    setEditorOpen(true);
+    navigate(`/products/${product.id}`);
   };
 
   const handleDelete = (product: ProductData) => {
@@ -203,14 +198,6 @@ export function MyProducts() {
           </div>
         )}
       </FeatureGate>
-
-      {/* Editor drawer */}
-      <SupplierProductEditor
-        isOpen={editorOpen}
-        onClose={() => setEditorOpen(false)}
-        product={editingProduct}
-        supplierId={supplierId}
-      />
 
       {deleteModal}
     </div>
